@@ -86,3 +86,11 @@ void ImageIndex::setLayer(int layer)
     d->layer = layer;
 }
 
+bool operator ==(const ImageIndex &lhs, const ImageIndex &rhs)
+{
+    return lhs.mipmap() == rhs.mipmap()
+            && lhs.frame() == rhs.frame()
+            && lhs.side() == rhs.side()
+            && lhs.slice() == rhs.slice()
+            && lhs.layer() == rhs.layer();
+}

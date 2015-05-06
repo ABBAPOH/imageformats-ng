@@ -44,4 +44,11 @@ private:
     QSharedDataPointer<ImageIndexData> d;
 };
 
+bool operator ==(const ImageIndex &lhs, const ImageIndex &rhs);
+
+inline bool operator !=(const ImageIndex &lhs, const ImageIndex &rhs)
+{
+    return !(lhs == rhs);
+}
+
 #endif // IMAGEINDEX_H
