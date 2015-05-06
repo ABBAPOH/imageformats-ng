@@ -1,8 +1,9 @@
 #include "imagedocument.h"
 #include "imagedocument_p.h"
 
-#include "imageiohandler.h"
 #include "defaulthandler.h"
+#include "gifhandler.h"
+#include "imageiohandler.h"
 
 #include <QtCore/QMimeDatabase>
 
@@ -10,6 +11,7 @@ ImageIOHandlerDatabase::ImageIOHandlerDatabase()
 {
     map.insert("image/png", new DefaultHandlerPlugin());
     map.insert("image/jpeg", new DefaultHandlerPlugin());
+    map.insert("image/gif", new GifHandlerPlugin());
 }
 
 ImageIOHandlerDatabase::~ImageIOHandlerDatabase()
