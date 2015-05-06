@@ -2,6 +2,8 @@ import qbs.base 1.0
 
 Product {
     Depends { name: "cpp" }
+    Depends { name: "Qt.core" }
+    Depends { name: "Qt.test" }
 
     type: ["application", "autotest"]
 
