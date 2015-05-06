@@ -3,7 +3,7 @@
 
 #include "imagedocument.h"
 
-#include <QtCore/QHash>
+#include <QtCore/QMap>
 
 class ImageIOHandler;
 class ImageIOHandlerPlugin;
@@ -22,6 +22,8 @@ public:
     int frameCount;
     ImageIndex::Sides sides;
 //    int sliceCount;
+
+    QMap<ImageIndex, QImage> images;
 
     ImageIOHandler *handler;
 };

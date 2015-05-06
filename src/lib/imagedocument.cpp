@@ -213,12 +213,14 @@ void ImageDocument::setSides(ImageIndex::Sides sides)
 
 QImage ImageDocument::image(const ImageIndex &index) const
 {
-    return QImage();
+    Q_D(const ImageDocument);
+    return d->images.value(index);
 }
 
 void ImageDocument::setImage(const QImage &image, const ImageIndex &index)
 {
-
+    Q_D(ImageDocument);
+    d->images.insert(index, image);
 }
 
 //int ImageDocument::sliceCount() const
