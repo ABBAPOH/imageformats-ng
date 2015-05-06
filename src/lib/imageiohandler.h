@@ -8,6 +8,19 @@ class ImageIOHandler
 public:
     ImageIOHandler();
     virtual ~ImageIOHandler();
+
+    QIODevice *device() const;
+    void setDevice(QIODevice *device);
+
+    QMimeType mimeType() const;
+    void setMimeType(const QMimeType &mimeType);
+
+    virtual bool read(ImageDocument *document) = 0;
+    virtual bool write(const ImageDocument *document) = 0;
+
+private:
+    QIODevice *_device;
+    QMimeType _mimeType;
 };
 
 class ImageIOHandlerPlugin : public QObject

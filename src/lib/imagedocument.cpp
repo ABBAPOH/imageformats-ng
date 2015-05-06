@@ -36,6 +36,42 @@ void ImageDocumentPrivate::init()
     frameCount = 1;
     sides = ImageIndex::NoSides;
     sliceCount = 1;
+
+    handler = 0;
+}
+
+bool ImageDocumentPrivate::initHandler()
+{
+    if (handler)
+        return true;
+
+    if (!device) {
+        errorString = ImageDocument::tr("No device set");
+        return false;
+    }
+
+    if (!mimeType.isValid()) {
+        errorString = ImageDocument::tr("Mime type is invalid");
+        return false;
+    }
+
+    auto db = ImageIOHandlerDatabase::instance();
+    handler = db->create(mimeType);
+    if (!handler) {
+        errorString = ImageDocument::tr("No handler for mimetype %1").arg(mimeType.name());
+        return false;
+    }
+
+    handler->setDevice(device);
+    handler->setMimeType(mimeType);
+
+    return true;
+}
+
+void ImageDocumentPrivate::killHandler()
+{
+    delete handler;
+    handler = 0;
 }
 
 ImageDocument::ImageDocument(QObject *parent) :
@@ -61,6 +97,7 @@ void ImageDocument::setDevice(QIODevice *device)
 {
     Q_D(ImageDocument);
     d->device = device;
+    d->killHandler();
 }
 
 QMimeType ImageDocument::mimeType() const
@@ -75,6 +112,7 @@ void ImageDocument::setMimeType(const QMimeType &mimeType)
     if (d->mimeType == mimeType)
         return;
     d->mimeType = mimeType;
+    d->killHandler();
 }
 
 void ImageDocument::setMimeType(const QString &name)
@@ -95,6 +133,36 @@ QString ImageDocument::errorString() const
     if (d->errorString.isEmpty())
         return tr("No error");
     return d->errorString;
+}
+
+bool ImageDocument::read()
+{
+    Q_D(ImageDocument);
+
+    if (!d->initHandler())
+        return false;
+
+    if (!d->handler->read(this)) {
+        d->errorString = tr("Can't read image");
+        return false;
+    }
+
+    return true;
+}
+
+bool ImageDocument::write()
+{
+    Q_D(ImageDocument);
+
+    if (!d->initHandler())
+        return false;
+
+    if (!d->handler->write(this)) {
+        d->errorString = tr("Can't read image");
+        return false;
+    }
+
+    return true;
 }
 
 int ImageDocument::mipmapCount() const

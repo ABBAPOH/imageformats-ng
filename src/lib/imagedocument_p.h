@@ -5,10 +5,15 @@
 
 #include <QtCore/QHash>
 
+class ImageIOHandler;
+class ImageIOHandlerPlugin;
+
 class ImageDocumentPrivate
 {
 public:
     void init();
+    bool initHandler();
+    void killHandler();
 
     QIODevice *device;
     QMimeType mimeType;
@@ -17,10 +22,10 @@ public:
     int frameCount;
     ImageIndex::Sides sides;
     int sliceCount;
+
+    ImageIOHandler *handler;
 };
 
-class ImageIOHandler;
-class ImageIOHandlerPlugin;
 class ImageIOHandlerDatabase
 {
 public:

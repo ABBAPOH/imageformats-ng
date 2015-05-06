@@ -28,8 +28,8 @@ public:
     bool hasError() const;
     QString errorString() const;
 
-//    bool read();
-//    bool write();
+    bool read();
+    bool write();
 
     int mipmapCount() const;
     void setMipmapCount(int count);
