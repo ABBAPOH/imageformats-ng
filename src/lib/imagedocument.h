@@ -3,6 +3,7 @@
 
 #include "imageindex.h"
 
+#include <QtCore/QMimeType>
 #include <QtCore/QObject>
 #include <QtGui/QImage>
 
@@ -20,8 +21,9 @@ public:
     QIODevice *device() const;
     void setDevice(QIODevice *device);
 
-    QByteArray format() const;
-    void setFormat(const QByteArray &format);
+    QMimeType mimeType() const;
+    void setMimeType(const QMimeType &mimeType);
+    void setMimeType(const QString &name);
 
     bool hasError() const;
     QString errorString() const;

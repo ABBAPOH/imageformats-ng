@@ -1,6 +1,8 @@
 #include "imagedocument.h"
 #include "imagedocument_p.h"
 
+#include <QMimeDatabase>
+
 void ImageDocumentPrivate::init()
 {
     device = Q_NULLPTR;
@@ -35,18 +37,24 @@ void ImageDocument::setDevice(QIODevice *device)
     d->device = device;
 }
 
-QByteArray ImageDocument::format() const
+QMimeType ImageDocument::mimeType() const
 {
     Q_D(const ImageDocument);
-    return d->format;
+    return d->mimeType;
 }
 
-void ImageDocument::setFormat(const QByteArray &format)
+void ImageDocument::setMimeType(const QMimeType &mimeType)
 {
     Q_D(ImageDocument);
-    if (d->format == format)
+    if (d->mimeType == mimeType)
         return;
-    d->format = format;
+    d->mimeType = mimeType;
+}
+
+void ImageDocument::setMimeType(const QString &name)
+{
+    auto type = QMimeDatabase().mimeTypeForName(name);
+    setMimeType(type);
 }
 
 bool ImageDocument::hasError() const

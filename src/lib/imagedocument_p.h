@@ -9,7 +9,7 @@ public:
     void init();
 
     QIODevice *device;
-    QByteArray format;
+    QMimeType mimeType;
     QString errorString;
     int mipmapCount;
     int frameCount;
