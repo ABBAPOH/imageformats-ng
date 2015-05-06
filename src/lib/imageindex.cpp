@@ -94,3 +94,31 @@ bool operator ==(const ImageIndex &lhs, const ImageIndex &rhs)
             && lhs.slice() == rhs.slice()
             && lhs.layer() == rhs.layer();
 }
+
+bool operator <(const ImageIndex &lhs, const ImageIndex &rhs)
+{
+    if (lhs.mipmap() != rhs.mipmap())
+        return lhs.mipmap() < rhs.mipmap();
+    else if (lhs.frame() != rhs.frame())
+        return lhs.frame() < rhs.frame();
+    else if (lhs.side() != rhs.side())
+        return lhs.side() < rhs.side();
+    else if (lhs.slice() != rhs.slice())
+        return lhs.slice() < rhs.slice();
+    else
+        return lhs.layer() < rhs.layer();
+}
+
+bool operator >(const ImageIndex &lhs, const ImageIndex &rhs)
+{
+    if (lhs.mipmap() != rhs.mipmap())
+        return lhs.mipmap() > rhs.mipmap();
+    else if (lhs.frame() != rhs.frame())
+        return lhs.frame() > rhs.frame();
+    else if (lhs.side() != rhs.side())
+        return lhs.side() > rhs.side();
+    else if (lhs.slice() != rhs.slice())
+        return lhs.slice() > rhs.slice();
+    else
+        return lhs.layer() > rhs.layer();
+}

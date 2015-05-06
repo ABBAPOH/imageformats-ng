@@ -51,4 +51,7 @@ inline bool operator !=(const ImageIndex &lhs, const ImageIndex &rhs)
     return !(lhs == rhs);
 }
 
+bool operator <(const ImageIndex &lhs, const ImageIndex &rhs);
+bool operator >(const ImageIndex &lhs, const ImageIndex &rhs);
+
 #endif // IMAGEINDEX_H
