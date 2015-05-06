@@ -16,7 +16,7 @@ void TestImageDocument::defaultValues()
     QCOMPARE(doc.mipmapCount(), 1);
     QCOMPARE(doc.frameCount(), 1);
     QCOMPARE(doc.sides(), ImageIndex::NoSides);
-    QCOMPARE(doc.sliceCount(), 1);
+//    QCOMPARE(doc.sliceCount(), 1);
 }
 
 void TestImageDocument::setters()
@@ -32,8 +32,8 @@ void TestImageDocument::setters()
     doc.setSides(ImageIndex::Sides(ImageIndex::PositiveX | ImageIndex::NegaviveX));
     QCOMPARE(doc.sides(), ImageIndex::Sides(ImageIndex::PositiveX | ImageIndex::NegaviveX));
 
-    doc.setSliceCount(2);
-    QCOMPARE(doc.sliceCount(), 2);
+//    doc.setSliceCount(2);
+//    QCOMPARE(doc.sliceCount(), 2);
 }
 
 QTEST_APPLESS_MAIN(TestImageDocument)

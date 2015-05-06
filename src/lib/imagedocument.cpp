@@ -35,7 +35,7 @@ void ImageDocumentPrivate::init()
     mipmapCount = 1;
     frameCount = 1;
     sides = ImageIndex::NoSides;
-    sliceCount = 1;
+//    sliceCount = 1;
 
     handler = 0;
 }
@@ -207,16 +207,16 @@ void ImageDocument::setSides(ImageIndex::Sides sides)
     d->sides = sides;
 }
 
-int ImageDocument::sliceCount() const
-{
-    Q_D(const ImageDocument);
-    return d->sliceCount;
-}
+//int ImageDocument::sliceCount() const
+//{
+//    Q_D(const ImageDocument);
+//    return d->sliceCount;
+//}
 
-void ImageDocument::setSliceCount(int count)
-{
-    Q_D(ImageDocument);
-    if (d->sliceCount == count)
-        return;
-    d->sliceCount = count;
-}
+//void ImageDocument::setSliceCount(int count)
+//{
+//    Q_D(ImageDocument);
+//    if (d->sliceCount == count)
+//        return;
+//    d->sliceCount = count;
+//}

@@ -40,8 +40,10 @@ public:
     ImageIndex::Sides sides() const;
     void setSides(ImageIndex::Sides sides);
 
-    int sliceCount() const;
-    void setSliceCount(int count);
+    // TODO: slice count depends on the current mipmap level, it seems we don't
+    // need separate count for slices
+//    int sliceCount() const;
+//    void setSliceCount(int count);
 
 //    int layerCount() const;
 //    void setLayerCount(int count);

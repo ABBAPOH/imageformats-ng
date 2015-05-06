@@ -21,7 +21,7 @@ public:
     int mipmapCount;
     int frameCount;
     ImageIndex::Sides sides;
-    int sliceCount;
+//    int sliceCount;
 
     ImageIOHandler *handler;
 };
