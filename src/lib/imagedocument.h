@@ -49,6 +49,7 @@ public:
 //    void setLayerCount(int count);
 
     QImage image(const ImageIndex &index = ImageIndex()) const;
+    void setImage(const QImage &image, const ImageIndex &index = ImageIndex());
 
 //    ImageMeta meta() const;
 

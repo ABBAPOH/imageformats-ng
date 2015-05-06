@@ -2,12 +2,14 @@
 #include "imagedocument_p.h"
 
 #include "imageiohandler.h"
+#include "defaulthandler.h"
 
 #include <QtCore/QMimeDatabase>
 
 ImageIOHandlerDatabase::ImageIOHandlerDatabase()
 {
-//    map.insert("image/png", new PngHandler());
+    map.insert("image/png", new DefaultHandlerPlugin());
+    map.insert("image/jpeg", new DefaultHandlerPlugin());
 }
 
 ImageIOHandlerDatabase::~ImageIOHandlerDatabase()
@@ -205,6 +207,16 @@ void ImageDocument::setSides(ImageIndex::Sides sides)
     if (d->sides == sides)
         return;
     d->sides = sides;
+}
+
+QImage ImageDocument::image(const ImageIndex &index) const
+{
+    return QImage();
+}
+
+void ImageDocument::setImage(const QImage &image, const ImageIndex &index)
+{
+
 }
 
 //int ImageDocument::sliceCount() const
