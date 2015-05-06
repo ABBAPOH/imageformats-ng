@@ -29,17 +29,17 @@ public:
 //    bool read();
 //    bool write();
 
-//    int mipmapCount() const;
-//    void setMipmapCount(int count);
+    int mipmapCount() const;
+    void setMipmapCount(int count);
 
-//    int frameCount() const;
-//    void setFrameCount(int count);
+    int frameCount() const;
+    void setFrameCount(int count);
 
-//    ImageIndex::Sides sides() const;
-//    void setSides(ImageIndex::Sides sides);
+    ImageIndex::Sides sides() const;
+    void setSides(ImageIndex::Sides sides);
 
-//    int sliceCount() const;
-//    void setSliceCount(int count);
+    int sliceCount() const;
+    void setSliceCount(int count);
 
 //    int layerCount() const;
 //    void setLayerCount(int count);

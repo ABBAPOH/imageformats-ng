@@ -11,6 +11,10 @@ public:
     QIODevice *device;
     QByteArray format;
     QString errorString;
+    int mipmapCount;
+    int frameCount;
+    ImageIndex::Sides sides;
+    int sliceCount;
 };
 
 #endif // IMAGEDOCUMENT_P
