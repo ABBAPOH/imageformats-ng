@@ -2,6 +2,8 @@ import qbs.base 1.0
 
 DynamicLibrary {
     Depends { name: "cpp" }
+    Depends { name: "Qt.core" }
+    Depends { name: "Qt.gui" }
 
     destinationDirectory: project.install_library_path
 
