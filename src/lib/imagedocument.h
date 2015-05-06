@@ -1,6 +1,8 @@
 #ifndef IMAGEDOCUMENT_H
 #define IMAGEDOCUMENT_H
 
+#include "imageindex.h"
+
 #include <QtCore/QObject>
 #include <QtGui/QImage>
 
@@ -42,7 +44,7 @@ public:
 //    int layerCount() const;
 //    void setLayerCount(int count);
 
-//    QImage image(const ImageIndex &index = ImageIndex()) const;
+    QImage image(const ImageIndex &index = ImageIndex()) const;
 
 //    ImageMeta meta() const;
 
