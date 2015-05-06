@@ -1,7 +1,33 @@
 #include "imagedocument.h"
 #include "imagedocument_p.h"
 
-#include <QMimeDatabase>
+#include "imageiohandler.h"
+
+#include <QtCore/QMimeDatabase>
+
+ImageIOHandlerDatabase::ImageIOHandlerDatabase()
+{
+//    map.insert("image/png", new PngHandler());
+}
+
+ImageIOHandlerDatabase::~ImageIOHandlerDatabase()
+{
+    qDeleteAll(map);
+}
+
+ImageIOHandler *ImageIOHandlerDatabase::create(const QMimeType &mimeType)
+{
+    auto plugin = map.value(mimeType.name());
+    if (!plugin)
+        return 0;
+    return plugin->create();
+}
+
+Q_GLOBAL_STATIC(ImageIOHandlerDatabase, static_instance)
+ImageIOHandlerDatabase *ImageIOHandlerDatabase::instance()
+{
+    return static_instance();
+}
 
 void ImageDocumentPrivate::init()
 {
