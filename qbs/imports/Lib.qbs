@@ -6,6 +6,7 @@ DynamicLibrary {
     Depends { name: "Qt.gui" }
 
     destinationDirectory: project.install_library_path
+    bundle.isBundle: false
 
     cpp.cFlags: project.cFlags
     cpp.cxxFlags: project.cxxFlags
@@ -16,6 +17,7 @@ DynamicLibrary {
 
     Properties {
         condition: qbs.targetOS.contains("osx")
+        cpp.installNamePrefix: "@executable_path/../Frameworks/"
         cpp.minimumOsxVersion: "10.7"
     }
 
