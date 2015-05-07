@@ -22,9 +22,9 @@ Application {
         cpp.rpaths: "$ORIGIN/../lib/" + project.app_target
     }
 
-    Group {
-        fileTagsFilter: product.type
-        qbs.install: true
-        qbs.installDir: project.install_app_path
-    }
+//    Group {
+//        fileTagsFilter: product.type
+//        qbs.install: true
+//        qbs.installDir: project.install_app_path
+//    }
 }
