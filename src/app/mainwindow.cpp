@@ -3,7 +3,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
-#include <QtCore/QMimeDataBase>
+#include <QtCore/QMimeDatabase>
 #include <QtWidgets/QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :

@@ -3,6 +3,7 @@
 
 #include "imagedocument.h"
 
+#include <QtCore/QHash>
 #include <QtCore/QMap>
 
 class ImageIOHandler;
