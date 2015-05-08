@@ -15,6 +15,9 @@ static QByteArray mimeTypeToFormat(const QMimeType &mimeType)
     if (name == "image/gif")
         return "gif";
 
+    if (name == "image/x-dds")
+        return "dds";
+
     return QByteArray();
 }
 
@@ -54,6 +57,7 @@ bool DefaultHandler::read()
             ImageIndex index;
             index.setMipmap(i);
             QImage image;
+            reader.jumpToImage(i);
             const bool ok = reader.read(&image);
             if (!ok)
                 return false;

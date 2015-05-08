@@ -11,6 +11,7 @@ ImageIOHandlerDatabase::ImageIOHandlerDatabase()
     map.insert("image/png", new DefaultHandlerPlugin());
     map.insert("image/jpeg", new DefaultHandlerPlugin());
     map.insert("image/gif", new DefaultHandlerPlugin());
+    map.insert("image/x-dds", new DefaultHandlerPlugin());
 }
 
 ImageIOHandlerDatabase::~ImageIOHandlerDatabase()
