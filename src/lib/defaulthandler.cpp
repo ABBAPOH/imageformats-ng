@@ -12,6 +12,9 @@ static QByteArray mimeTypeToFormat(const QMimeType &mimeType)
     if (name == "image/png")
         return "png";
 
+    if (name == "image/gif")
+        return "gif";
+
     return QByteArray();
 }
 
@@ -29,12 +32,43 @@ bool DefaultHandler::open(ImageDocument::OpenMode mode)
 bool DefaultHandler::read()
 {
     QImageReader reader(device(), mimeTypeToFormat(mimeType()));
-    QImage image;
-    const bool ok = reader.read(&image);
-    if (!ok)
-        return false;
 
-    document()->setImage(image);
+    int count = reader.imageCount();
+    if (reader.supportsOption(QImageIOHandler::Animation)) {
+        document()->setFrameCount(count);
+
+        for (int i = 0; i < count; i++) {
+            ImageIndex index;
+            index.setFrame(i);
+            QImage image;
+            const bool ok = reader.read(&image);
+            if (!ok)
+                return false;
+
+            document()->setImage(image, index);
+        }
+    } else if (count > 0) {
+        document()->setMipmapCount(count);
+
+        for (int i = 0; i < count; i++) {
+            ImageIndex index;
+            index.setMipmap(i);
+            QImage image;
+            const bool ok = reader.read(&image);
+            if (!ok)
+                return false;
+
+            document()->setImage(image, index);
+        }
+    } else {
+        QImage image;
+        const bool ok = reader.read(&image);
+        if (!ok)
+            return false;
+
+        document()->setImage(image);
+    }
+
     return true;
 }
 
