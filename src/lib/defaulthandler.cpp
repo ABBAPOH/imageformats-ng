@@ -20,6 +20,13 @@ DefaultHandler::DefaultHandler()
 
 }
 
+bool DefaultHandler::open(ImageDocument *document, ImageDocument::OpenMode mode)
+{
+    Q_UNUSED(document);
+    Q_UNUSED(mode);
+    return true;
+}
+
 bool DefaultHandler::read(ImageDocument *document)
 {
     QImageReader reader(device(), mimeTypeToFormat(mimeType()));

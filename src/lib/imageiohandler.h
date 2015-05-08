@@ -15,6 +15,7 @@ public:
     QMimeType mimeType() const;
     void setMimeType(const QMimeType &mimeType);
 
+    virtual bool open(ImageDocument *document, ImageDocument::OpenMode mode) = 0;
     virtual bool read(ImageDocument *document) = 0;
     virtual bool write(const ImageDocument *document) = 0;
 

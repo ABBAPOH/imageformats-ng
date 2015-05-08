@@ -8,6 +8,14 @@ GifHandler::GifHandler()
 
 }
 
+bool GifHandler::open(ImageDocument *document, ImageDocument::OpenMode mode)
+{
+    if (mode & ImageDocument::Write)
+        return false;
+
+    return true;
+}
+
 bool GifHandler::read(ImageDocument *document)
 {
     QImageReader reader(device(), "gif");

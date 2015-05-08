@@ -8,6 +8,7 @@ class DefaultHandler : public ImageIOHandler
 public:
     DefaultHandler();
 
+    bool open(ImageDocument *document, ImageDocument::OpenMode mode);
     bool read(ImageDocument *document);
     bool write(const ImageDocument *document);
 };

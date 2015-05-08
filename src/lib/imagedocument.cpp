@@ -139,6 +139,21 @@ QString ImageDocument::errorString() const
     return d->errorString;
 }
 
+bool ImageDocument::open(OpenMode mode)
+{
+    Q_D(ImageDocument);
+
+    if (!d->initHandler())
+        return false;
+
+    if (!d->handler->open(this, mode)) {
+        d->errorString = tr("Can't open image");
+        return false;
+    }
+
+    return true;
+}
+
 bool ImageDocument::read()
 {
     Q_D(ImageDocument);

@@ -8,6 +8,7 @@ class GifHandler : public ImageIOHandler
 public:
     GifHandler();
 
+    bool open(ImageDocument *document, ImageDocument::OpenMode mode);
     bool read(ImageDocument *document);
     bool write(const ImageDocument *document);
 };

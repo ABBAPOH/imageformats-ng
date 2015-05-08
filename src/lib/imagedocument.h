@@ -15,6 +15,9 @@ class ImageDocument : public QObject
     Q_DISABLE_COPY(ImageDocument)
 
 public:
+    enum OpenModeFlag { Read = 0x1, Write = 0x2, ReadWrite = Read | Write };
+    Q_DECLARE_FLAGS(OpenMode, OpenModeFlag)
+
     explicit ImageDocument(QObject *parent = 0);
     ~ImageDocument();
 
@@ -27,6 +30,8 @@ public:
 
     bool hasError() const;
     QString errorString() const;
+
+    bool open(OpenMode mode);
 
     bool read();
     bool write();
