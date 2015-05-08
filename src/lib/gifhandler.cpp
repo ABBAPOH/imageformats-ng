@@ -8,7 +8,7 @@ GifHandler::GifHandler()
 
 }
 
-bool GifHandler::open(ImageDocument *document, ImageDocument::OpenMode mode)
+bool GifHandler::open(ImageDocument::OpenMode mode)
 {
     if (mode & ImageDocument::Write)
         return false;
@@ -16,11 +16,11 @@ bool GifHandler::open(ImageDocument *document, ImageDocument::OpenMode mode)
     return true;
 }
 
-bool GifHandler::read(ImageDocument *document)
+bool GifHandler::read()
 {
     QImageReader reader(device(), "gif");
     int count = reader.imageCount();
-    document->setFrameCount(count);
+    document()->setFrameCount(count);
 
     for (int i = 0; i < count; i++) {
         ImageIndex index;
@@ -30,12 +30,12 @@ bool GifHandler::read(ImageDocument *document)
         if (!ok)
             return false;
 
-        document->setImage(image, index);
+        document()->setImage(image, index);
     }
     return true;
 }
 
-bool GifHandler::write(const ImageDocument * /*document*/)
+bool GifHandler::write()
 {
     return false;
 }

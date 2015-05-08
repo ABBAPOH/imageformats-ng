@@ -8,9 +8,9 @@ class GifHandler : public ImageIOHandler
 public:
     GifHandler();
 
-    bool open(ImageDocument *document, ImageDocument::OpenMode mode);
-    bool read(ImageDocument *document);
-    bool write(const ImageDocument *document);
+    bool open(ImageDocument::OpenMode mode) Q_DECL_OVERRIDE;
+    bool read() Q_DECL_OVERRIDE;
+    bool write() Q_DECL_OVERRIDE;
 };
 
 class GifHandlerPlugin : public ImageIOHandlerPlugin

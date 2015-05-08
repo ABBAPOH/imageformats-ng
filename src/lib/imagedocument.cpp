@@ -46,6 +46,8 @@ void ImageDocumentPrivate::init()
 
 bool ImageDocumentPrivate::initHandler()
 {
+    Q_Q(ImageDocument);
+
     if (handler)
         return true;
 
@@ -66,6 +68,7 @@ bool ImageDocumentPrivate::initHandler()
         return false;
     }
 
+    handler->setDocument(q);
     handler->setDevice(device);
     handler->setMimeType(mimeType);
 
@@ -80,7 +83,7 @@ void ImageDocumentPrivate::killHandler()
 
 ImageDocument::ImageDocument(QObject *parent) :
     QObject(parent),
-    d_ptr(new ImageDocumentPrivate)
+    d_ptr(new ImageDocumentPrivate(this))
 {
     Q_D(ImageDocument);
     d->init();
@@ -146,7 +149,7 @@ bool ImageDocument::open(OpenMode mode)
     if (!d->initHandler())
         return false;
 
-    if (!d->handler->open(this, mode)) {
+    if (!d->handler->open(mode)) {
         d->errorString = tr("Can't open image");
         return false;
     }
@@ -161,7 +164,7 @@ bool ImageDocument::read()
     if (!d->initHandler())
         return false;
 
-    if (!d->handler->read(this)) {
+    if (!d->handler->read()) {
         d->errorString = tr("Can't read image");
         return false;
     }
@@ -176,7 +179,7 @@ bool ImageDocument::write()
     if (!d->initHandler())
         return false;
 
-    if (!d->handler->write(this)) {
+    if (!d->handler->write()) {
         d->errorString = tr("Can't read image");
         return false;
     }

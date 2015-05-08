@@ -9,17 +9,21 @@ public:
     ImageIOHandler();
     virtual ~ImageIOHandler();
 
+    ImageDocument *document() const;
+    void setDocument(ImageDocument *document);
+
     QIODevice *device() const;
     void setDevice(QIODevice *device);
 
     QMimeType mimeType() const;
     void setMimeType(const QMimeType &mimeType);
 
-    virtual bool open(ImageDocument *document, ImageDocument::OpenMode mode) = 0;
-    virtual bool read(ImageDocument *document) = 0;
-    virtual bool write(const ImageDocument *document) = 0;
+    virtual bool open(ImageDocument::OpenMode mode) = 0;
+    virtual bool read() = 0;
+    virtual bool write() = 0;
 
 private:
+    ImageDocument *_document;
     QIODevice *_device;
     QMimeType _mimeType;
 };

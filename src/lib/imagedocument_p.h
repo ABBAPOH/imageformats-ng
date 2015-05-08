@@ -11,7 +11,13 @@ class ImageIOHandlerPlugin;
 
 class ImageDocumentPrivate
 {
+    Q_DECLARE_PUBLIC(ImageDocument)
+
+    ImageDocument *q_ptr;
+
 public:
+    explicit ImageDocumentPrivate(ImageDocument *qq) : q_ptr(qq) {}
+
     void init();
     bool initHandler();
     void killHandler();

@@ -20,14 +20,13 @@ DefaultHandler::DefaultHandler()
 
 }
 
-bool DefaultHandler::open(ImageDocument *document, ImageDocument::OpenMode mode)
+bool DefaultHandler::open(ImageDocument::OpenMode mode)
 {
-    Q_UNUSED(document);
     Q_UNUSED(mode);
     return true;
 }
 
-bool DefaultHandler::read(ImageDocument *document)
+bool DefaultHandler::read()
 {
     QImageReader reader(device(), mimeTypeToFormat(mimeType()));
     QImage image;
@@ -35,14 +34,14 @@ bool DefaultHandler::read(ImageDocument *document)
     if (!ok)
         return false;
 
-    document->setImage(image);
+    document()->setImage(image);
     return true;
 }
 
-bool DefaultHandler::write(const ImageDocument *document)
+bool DefaultHandler::write()
 {
     QImageWriter writer(device(), mimeTypeToFormat(mimeType()));
-    const bool ok = writer.write(document->image());
+    const bool ok = writer.write(document()->image());
     if (!ok)
         return false;
 
