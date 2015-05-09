@@ -26,6 +26,7 @@ public:
     QIODevice *device;
     QString fileName;
     QScopedPointer<QFile> file;
+    ImageDocument::OpenMode openMode;
     QMimeType mimeType;
     QString errorString;
     int mipmapCount;

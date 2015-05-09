@@ -40,6 +40,7 @@ void ImageDocumentPrivate::init()
     frameCount = 1;
     sides = ImageIndex::NoSides;
 //    sliceCount = 1;
+    openMode = ImageDocument::NotOpen;
 
     handler = 0;
 }
@@ -166,6 +167,9 @@ bool ImageDocument::open(OpenMode mode)
 {
     Q_D(ImageDocument);
 
+    if (d->openMode == mode)
+        return true; // already open
+
     if (!d->initHandler())
         return false;
 
@@ -185,7 +189,15 @@ bool ImageDocument::open(OpenMode mode)
         return false;
     }
 
+    d->openMode = mode;
+
     return true;
+}
+
+ImageDocument::OpenMode ImageDocument::openMode() const
+{
+    Q_D(const ImageDocument);
+    return d->openMode;
 }
 
 bool ImageDocument::read()
