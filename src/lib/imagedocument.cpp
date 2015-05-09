@@ -220,8 +220,10 @@ bool ImageDocument::read()
 {
     Q_D(ImageDocument);
 
-    if (!d->initHandler())
+    if (!isOpen()) {
+        d->errorString = tr("Document is not opened");
         return false;
+    }
 
     if (!d->handler->read()) {
         d->errorString = tr("Can't read image");
@@ -235,8 +237,10 @@ bool ImageDocument::write()
 {
     Q_D(ImageDocument);
 
-    if (!d->initHandler())
+    if (!isOpen()) {
+        d->errorString = tr("Document is not opened");
         return false;
+    }
 
     if (!d->handler->write()) {
         d->errorString = tr("Can't read image");
