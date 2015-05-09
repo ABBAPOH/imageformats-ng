@@ -172,9 +172,6 @@ bool ImageDocument::open(OpenMode mode)
 
     close();
 
-    if (!d->initHandler())
-        return false;
-
     QIODevice::OpenMode deviceMode;
     if (mode & Read)
         deviceMode |= QIODevice::ReadOnly;
@@ -185,6 +182,9 @@ bool ImageDocument::open(OpenMode mode)
         if (!d->device->open(deviceMode))
             return false;
     }
+
+    if (!d->initHandler())
+        return false;
 
     if (!d->handler->open(mode)) {
         d->errorString = tr("Can't open image");
