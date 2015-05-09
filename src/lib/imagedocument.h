@@ -18,6 +18,16 @@ public:
     enum OpenModeFlag { NotOpen = 0x0, Read = 0x1, Write = 0x2, ReadWrite = Read | Write };
     Q_DECLARE_FLAGS(OpenMode, OpenModeFlag)
 
+    enum CapabilityFlag {
+        NoCapabilities = 0x0,
+        SupportMipmaps = 0x1,
+        SupportFrames = 0x2,
+        SupportSides = 0x4,
+        SupportSlices = 0x8,
+        SupportLayers = 0x10
+    };
+    Q_DECLARE_FLAGS(Capabilities, CapabilityFlag)
+
     explicit ImageDocument(QObject *parent = 0);
     ~ImageDocument();
 
@@ -38,6 +48,8 @@ public:
     void close();
     OpenMode openMode() const;
     bool isOpen() const;
+
+    Capabilities capabilities() const;
 
     bool read();
     bool write();

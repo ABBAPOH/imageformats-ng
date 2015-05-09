@@ -216,6 +216,16 @@ bool ImageDocument::isOpen() const
     return openMode() != NotOpen;
 }
 
+ImageDocument::Capabilities ImageDocument::capabilities() const
+{
+    Q_D(const ImageDocument);
+
+    if (!isOpen())
+        return NoCapabilities;
+
+    return d->handler->capabilities();
+}
+
 bool ImageDocument::read()
 {
     Q_D(ImageDocument);

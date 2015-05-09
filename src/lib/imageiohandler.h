@@ -22,6 +22,8 @@ public:
     virtual bool read() = 0;
     virtual bool write() = 0;
 
+    virtual ImageDocument::Capabilities capabilities() const;
+
 private:
     ImageDocument *_document;
     QIODevice *_device;
