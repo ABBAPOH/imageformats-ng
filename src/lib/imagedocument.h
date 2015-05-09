@@ -37,6 +37,7 @@ public:
     bool open(OpenMode mode);
     void close();
     OpenMode openMode() const;
+    bool isOpen() const;
 
     bool read();
     bool write();

@@ -211,6 +211,11 @@ ImageDocument::OpenMode ImageDocument::openMode() const
     return d->openMode;
 }
 
+bool ImageDocument::isOpen() const
+{
+    return openMode() != NotOpen;
+}
+
 bool ImageDocument::read()
 {
     Q_D(ImageDocument);
