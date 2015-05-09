@@ -3,6 +3,7 @@
 
 #include "imagedocument.h"
 
+#include <QtCore/QFile>
 #include <QtCore/QHash>
 #include <QtCore/QMap>
 
@@ -23,6 +24,8 @@ public:
     void killHandler();
 
     QIODevice *device;
+    QString fileName;
+    QScopedPointer<QFile> file;
     QMimeType mimeType;
     QString errorString;
     int mipmapCount;

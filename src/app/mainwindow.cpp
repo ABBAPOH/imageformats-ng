@@ -3,7 +3,6 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
-#include <QtCore/QMimeDatabase>
 #include <QtWidgets/QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -33,8 +32,7 @@ void MainWindow::open()
     QFile file(path);
     file.open(QIODevice::ReadOnly);
 
-    _document->setDevice(&file);
-    _document->setMimeType(QMimeDatabase().mimeTypeForFile(path));
+    _document->setFileName(path);
     if (!_document->read())
         qWarning() << "Can't read" << _document->errorString();
     buildModel();

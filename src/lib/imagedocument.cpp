@@ -103,8 +103,28 @@ QIODevice *ImageDocument::device() const
 void ImageDocument::setDevice(QIODevice *device)
 {
     Q_D(ImageDocument);
+    d->file.reset();
     d->device = device;
     d->killHandler();
+}
+
+QString ImageDocument::fileName() const
+{
+    Q_D(const ImageDocument);
+    return d->fileName;
+}
+
+void ImageDocument::setFileName(const QString &fileName)
+{
+    Q_D(ImageDocument);
+    if (d->fileName == fileName)
+        return;
+
+    d->file.reset(new QFile(fileName));
+    d->device = d->file.data();
+    d->killHandler();
+
+    setMimeType(QMimeDatabase().mimeTypeForFile(fileName));
 }
 
 QMimeType ImageDocument::mimeType() const
@@ -148,6 +168,17 @@ bool ImageDocument::open(OpenMode mode)
 
     if (!d->initHandler())
         return false;
+
+    QIODevice::OpenMode deviceMode;
+    if (mode & Read)
+        deviceMode |= QIODevice::ReadOnly;
+    if (mode & Write)
+        deviceMode |= QIODevice::WriteOnly;
+    if ((d->device->openMode() & deviceMode) != deviceMode) {
+        d->device->close();
+        if (!d->device->open(deviceMode))
+            return false;
+    }
 
     if (!d->handler->open(mode)) {
         d->errorString = tr("Can't open image");
