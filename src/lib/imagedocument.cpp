@@ -170,6 +170,8 @@ bool ImageDocument::open(OpenMode mode)
     if (d->openMode == mode)
         return true; // already open
 
+    close();
+
     if (!d->initHandler())
         return false;
 
@@ -192,6 +194,15 @@ bool ImageDocument::open(OpenMode mode)
     d->openMode = mode;
 
     return true;
+}
+
+void ImageDocument::close()
+{
+    Q_D(ImageDocument);
+    if (d->openMode == NotOpen)
+        return;
+    d->openMode = NotOpen;
+    d->killHandler();
 }
 
 ImageDocument::OpenMode ImageDocument::openMode() const

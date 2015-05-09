@@ -35,6 +35,7 @@ public:
     QString errorString() const;
 
     bool open(OpenMode mode);
+    void close();
     OpenMode openMode() const;
 
     bool read();
