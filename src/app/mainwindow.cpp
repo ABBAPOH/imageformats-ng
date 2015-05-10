@@ -29,10 +29,10 @@ MainWindow::~MainWindow()
 void MainWindow::open()
 {
     QString path = QFileDialog::getOpenFileName(this, tr("open"));
-    QFile file(path);
-    file.open(QIODevice::ReadOnly);
 
     _document->setFileName(path);
+    _document->open(ImageDocument::ReadWrite);
+
     if (!_document->read())
         qWarning() << "Can't read" << _document->errorString();
     buildModel();
