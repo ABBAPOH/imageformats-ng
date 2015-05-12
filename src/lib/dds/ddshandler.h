@@ -40,8 +40,8 @@
 **
 ****************************************************************************/
 
-#ifndef QDDSHANDLER_H
-#define QDDSHANDLER_H
+#ifndef DDSHANDLER_H
+#define DDSHANDLER_H
 
 #include <imageiohandler.h>
 #include "ddsheader.h"
@@ -91,4 +91,4 @@ public:
     DDSHandler *create() { return new DDSHandler(); }
 };
 
-#endif // QDDSHANDLER_H
+#endif // DDSHANDLER_H

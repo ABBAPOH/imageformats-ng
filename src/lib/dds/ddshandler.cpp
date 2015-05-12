@@ -40,7 +40,7 @@
 **
 ****************************************************************************/
 
-#include "qddshandler.h"
+#include "ddshandler.h"
 
 #include <QtCore/qdebug.h>
 #include <QtCore/qmath.h>

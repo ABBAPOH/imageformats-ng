@@ -3,7 +3,7 @@
 
 #include "defaulthandler.h"
 #include "imageiohandler.h"
-#include "dds/qddshandler.h"
+#include "dds/ddshandler.h"
 
 #include <QtCore/QMimeDatabase>
 
