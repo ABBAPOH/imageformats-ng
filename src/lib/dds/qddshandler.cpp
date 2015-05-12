@@ -1319,18 +1319,35 @@ static qint64 mipmapOffset(const DDSHeader &dds, const int format, const int lev
     return result;
 }
 
-static QImage readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt)
+static QImage readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, ImageDocument *document, ImageIndex index)
 {
     QImage::Format format = hasAlpha(dds) ? QImage::Format_ARGB32 : QImage::Format_RGB32;
     QImage image(4 * dds.width, 3 * dds.height, format);
 
     image.fill(0);
 
+    static ImageIndex::Side sides[] = {
+        ImageIndex::PositiveX,
+        ImageIndex::NegaviveX,
+        ImageIndex::PositiveY,
+        ImageIndex::NegaviveY,
+        ImageIndex::PositiveZ,
+        ImageIndex::NegaviveZ
+    };
+
+    ImageIndex::Sides docSides;
+
     for (int i = 0; i < 6; i++) {
         if (!(dds.caps2 & faceFlags[i]))
             continue; // Skip face.
 
         const QImage face = readLayer(s, dds, fmt, dds.width, dds.height);
+
+        docSides |= sides[i];
+
+        ImageIndex idx = index;
+        idx.setSide(sides[i]);
+        document->setImage(face, idx);
 
         // Compute face offsets.
         int offset_x = faceOffsets[i].x * dds.width;
@@ -1343,6 +1360,8 @@ static QImage readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt)
             memcpy(dst, src, sizeof(QRgb) * dds.width);
         }
     }
+
+    document->setSides(docSides);
 
     return image;
 }
@@ -1420,7 +1439,7 @@ bool DDSHandler::read()
         s.setByteOrder(QDataStream::LittleEndian);
 
         QImage image = isCubeMap(m_header) ?
-                    readCubeMap(s, m_header, m_format) :
+                    readCubeMap(s, m_header, m_format, document(), index) :
                     readTexture(s, m_header, m_format, i);
 
         bool ok = s.status() == QDataStream::Ok && !image.isNull();
