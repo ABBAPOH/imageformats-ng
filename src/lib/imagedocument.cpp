@@ -11,7 +11,9 @@
 ImageIOHandlerDatabase::ImageIOHandlerDatabase()
 {
     map.insert("image/png", new DefaultHandlerPlugin());
+#ifdef Q_OS_LINUX
     map.insert("image/jpeg", new JpegHandlerPlugin());
+#endif
     map.insert("image/gif", new DefaultHandlerPlugin());
     map.insert("image/x-dds", new DdsHandlerPlugin());
 }
