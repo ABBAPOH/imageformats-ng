@@ -5,6 +5,7 @@
 
 #include <QtCore/QMimeType>
 #include <QtCore/QObject>
+#include <QtCore/QVariant>
 #include <QtGui/QImage>
 
 class ImageDocumentPrivate;
@@ -27,6 +28,12 @@ public:
         SupportLayers = 0x10
     };
     Q_DECLARE_FLAGS(Capabilities, CapabilityFlag)
+
+    enum Option {
+        Size,
+        Quality,
+        Name
+    };
 
     explicit ImageDocument(QObject *parent = 0);
     ~ImageDocument();
@@ -71,8 +78,16 @@ public:
 //    int layerCount() const;
 //    void setLayerCount(int count);
 
+    QVariant documentOption(Option option) const;
+    void setDocumentOption(Option option, const QVariant &value);
+    bool supportsDocumentOption(Option option);
+
     QImage image(const ImageIndex &index = ImageIndex()) const;
     void setImage(const QImage &image, const ImageIndex &index = ImageIndex());
+
+    QVariant imageOption(Option option, const ImageIndex &index = ImageIndex()) const;
+    void setImageOption(Option option, const QVariant &value, const ImageIndex &index = ImageIndex());
+    bool supportsImageOption(Option option, const ImageIndex &index = ImageIndex());
 
 //    ImageMeta meta() const;
 

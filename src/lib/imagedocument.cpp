@@ -304,6 +304,58 @@ void ImageDocument::setSides(ImageIndex::Sides sides)
     d->sides = sides;
 }
 
+QVariant ImageDocument::documentOption(ImageDocument::Option option) const
+{
+    Q_D(const ImageDocument);
+    return d->options.value(option);
+}
+
+void ImageDocument::setDocumentOption(ImageDocument::Option option, const QVariant &value)
+{
+    Q_D(ImageDocument);
+
+    if (!supportsDocumentOption(option))
+        return;
+
+    d->options.insert(option, value);
+}
+
+bool ImageDocument::supportsDocumentOption(ImageDocument::Option option)
+{
+    Q_D(const ImageDocument);
+
+    if (!isOpen())
+        return false;
+
+    return d->handler->supportsDocumentOption(option);
+}
+
+QVariant ImageDocument::imageOption(ImageDocument::Option option, const ImageIndex &index) const
+{
+    Q_D(const ImageDocument);
+    return d->imageOptions.value(index).value(option);
+}
+
+void ImageDocument::setImageOption(ImageDocument::Option option, const QVariant &value, const ImageIndex &index)
+{
+    Q_D(ImageDocument);
+
+    if (!supportsImageOption(option))
+        return;
+
+    d->imageOptions[index].insert(option, value);
+}
+
+bool ImageDocument::supportsImageOption(ImageDocument::Option option, const ImageIndex &index)
+{
+    Q_D(const ImageDocument);
+
+    if (!isOpen())
+        return false;
+
+    return d->handler->supportsImageOption(option, index);
+}
+
 QImage ImageDocument::image(const ImageIndex &index) const
 {
     Q_D(const ImageDocument);

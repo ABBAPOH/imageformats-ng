@@ -22,6 +22,9 @@ public:
     virtual bool read() = 0;
     virtual bool write() = 0;
 
+    virtual bool supportsDocumentOption(ImageDocument::Option option);
+    virtual bool supportsImageOption(ImageDocument::Option option, const ImageIndex index);
+
     virtual ImageDocument::Capabilities capabilities() const;
 
 private:

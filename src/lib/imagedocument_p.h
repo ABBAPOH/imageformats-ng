@@ -17,6 +17,8 @@ class ImageDocumentPrivate
     ImageDocument *q_ptr;
 
 public:
+    typedef QMap<ImageDocument::Option, QVariant> OptionMap;
+
     explicit ImageDocumentPrivate(ImageDocument *qq) : q_ptr(qq) {}
 
     void init();
@@ -33,8 +35,10 @@ public:
     int frameCount;
     ImageIndex::Sides sides;
 //    int sliceCount;
+    OptionMap options;
 
     QMap<ImageIndex, QImage> images;
+    QMap<ImageIndex, OptionMap> imageOptions;
 
     ImageIOHandler *handler;
 };

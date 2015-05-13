@@ -40,6 +40,19 @@ void ImageIOHandler::setMimeType(const QMimeType &mimeType)
     _mimeType = mimeType;
 }
 
+bool ImageIOHandler::supportsDocumentOption(ImageDocument::Option option)
+{
+    Q_UNUSED(option);
+    return false;
+}
+
+bool ImageIOHandler::supportsImageOption(ImageDocument::Option option, const ImageIndex index)
+{
+    Q_UNUSED(option);
+    Q_UNUSED(index);
+    return false;
+}
+
 ImageDocument::Capabilities ImageIOHandler::capabilities() const
 {
     return ImageDocument::NoCapabilities;
