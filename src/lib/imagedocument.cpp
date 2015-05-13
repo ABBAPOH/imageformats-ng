@@ -4,13 +4,14 @@
 #include "defaulthandler.h"
 #include "imageiohandler.h"
 #include "dds/ddshandler.h"
+#include "jpeg/jpeghandler_p.h"
 
 #include <QtCore/QMimeDatabase>
 
 ImageIOHandlerDatabase::ImageIOHandlerDatabase()
 {
     map.insert("image/png", new DefaultHandlerPlugin());
-    map.insert("image/jpeg", new DefaultHandlerPlugin());
+    map.insert("image/jpeg", new JpegHandlerPlugin());
     map.insert("image/gif", new DefaultHandlerPlugin());
     map.insert("image/x-dds", new DdsHandlerPlugin());
 }
