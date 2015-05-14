@@ -22,8 +22,8 @@ public:
     virtual bool read() = 0;
     virtual bool write() = 0;
 
-    virtual bool supportsDocumentOption(ImageDocument::Option option);
-    virtual bool supportsImageOption(ImageDocument::Option option, const QByteArray subType);
+    virtual bool supportsDocumentOption(ImageElement::Option option);
+    virtual bool supportsElementOption(ImageElement::Option option, const QByteArray subType);
 
     virtual ImageDocument::Capabilities capabilities() const;
     virtual QVector<QByteArray> subTypes() const;

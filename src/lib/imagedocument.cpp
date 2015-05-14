@@ -332,39 +332,7 @@ void ImageDocument::setSubType(const QByteArray &subType)
     d->subType = subType;
 }
 
-QByteArray ImageDocument::subType(const ImageIndex &index) const
-{
-    Q_D(const ImageDocument);
-    return d->subTypes.value(index);
-}
-
-void ImageDocument::setSubType(const QByteArray &subType, const ImageIndex &index)
-{
-    Q_D(ImageDocument);
-
-    if (!subTypes().contains(subType))
-        return;
-
-    d->subTypes.insert(index, subType);
-}
-
-QVariant ImageDocument::documentOption(ImageDocument::Option option) const
-{
-    Q_D(const ImageDocument);
-    return d->options.value(option);
-}
-
-void ImageDocument::setDocumentOption(ImageDocument::Option option, const QVariant &value)
-{
-    Q_D(ImageDocument);
-
-    if (!supportsDocumentOption(option))
-        return;
-
-    d->options.insert(option, value);
-}
-
-bool ImageDocument::supportsDocumentOption(ImageDocument::Option option)
+bool ImageDocument::supportsOption(ImageElement::Option option)
 {
     Q_D(const ImageDocument);
 
@@ -374,42 +342,54 @@ bool ImageDocument::supportsDocumentOption(ImageDocument::Option option)
     return d->handler->supportsDocumentOption(option);
 }
 
-QVariant ImageDocument::imageOption(ImageDocument::Option option, const ImageIndex &index) const
-{
-    Q_D(const ImageDocument);
-    return d->imageOptions.value(index).value(option);
-}
-
-void ImageDocument::setImageOption(ImageDocument::Option option, const QVariant &value, const ImageIndex &index)
-{
-    Q_D(ImageDocument);
-
-    if (!supportsImageOption(option))
-        return;
-
-    d->imageOptions[index].insert(option, value);
-}
-
-bool ImageDocument::supportsImageOption(ImageDocument::Option option, const QByteArray subType)
+bool ImageDocument::supportsElementOption(ImageElement::Option option, const QByteArray subType)
 {
     Q_D(const ImageDocument);
 
     if (!isOpen())
         return false;
 
-    return d->handler->supportsImageOption(option, subType);
+    return d->handler->supportsElementOption(option, subType);
+}
+
+QVariant ImageDocument::option(ImageElement::Option option) const
+{
+    Q_D(const ImageDocument);
+    return d->options.value(option);
+}
+
+void ImageDocument::setOption(ImageElement::Option option, const QVariant &value)
+{
+    Q_D(ImageDocument);
+
+    if (!supportsOption(option))
+        return;
+
+    d->options.insert(option, value);
+}
+
+ImageElement ImageDocument::element(const ImageIndex &index)
+{
+    Q_D(const ImageDocument);
+    return d->elements.value(index);
+}
+
+void ImageDocument::setElement(const ImageElement &element, const ImageIndex &index)
+{
+    Q_D(ImageDocument);
+    d->elements.insert(index, element);
 }
 
 QImage ImageDocument::image(const ImageIndex &index) const
 {
     Q_D(const ImageDocument);
-    return d->images.value(index);
+    return d->elements.value(index).image();
 }
 
 void ImageDocument::setImage(const QImage &image, const ImageIndex &index)
 {
     Q_D(ImageDocument);
-    d->images.insert(index, image);
+    d->elements[index].setImage(image);
 }
 
 //int ImageDocument::sliceCount() const
