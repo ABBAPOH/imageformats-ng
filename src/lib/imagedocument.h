@@ -28,7 +28,7 @@ public:
         SupportSlices = 0x8,
         SupportLayers = 0x10,
         SupportSubTypes = 0x20, // exclusive options - either we have same subtype for
-        SupportImageSubTypes = 0x40, // subimages (dds, blp) or different (icns)
+        SupportElementSubTypes = 0x40, // subimages (dds, blp) or different (icns)
     };
     Q_DECLARE_FLAGS(Capabilities, CapabilityFlag)
 
