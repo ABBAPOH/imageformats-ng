@@ -29,6 +29,7 @@ public:
         SupportLayers = 0x10,
         SupportSubTypes = 0x20, // exclusive options - either we have same subtype for
         SupportElementSubTypes = 0x40, // subimages (dds, blp) or different (icns)
+        SupportExif = 0x80
     };
     Q_DECLARE_FLAGS(Capabilities, CapabilityFlag)
 
@@ -86,6 +87,9 @@ public:
 
     QVariant option(ImageElement::Option option) const;
     void setOption(ImageElement::Option option, const QVariant &value);
+
+    QVariant exifOption(ImageElement::ExifOption option) const;
+    void setExifOption(ImageElement::ExifOption option, const QVariant &value);
 
     ImageElement element(const ImageIndex &index = ImageIndex());
     void setElement(const ImageElement &element, const ImageIndex &index = ImageIndex());

@@ -368,6 +368,18 @@ void ImageDocument::setOption(ImageElement::Option option, const QVariant &value
     d->options.insert(option, value);
 }
 
+QVariant ImageDocument::exifOption(ImageElement::ExifOption option) const
+{
+    Q_D(const ImageDocument);
+    return d->exifOptions.value(option);
+}
+
+void ImageDocument::setExifOption(ImageElement::ExifOption option, const QVariant &value)
+{
+    Q_D(ImageDocument);
+    d->exifOptions.insert(option, value);
+}
+
 ImageElement ImageDocument::element(const ImageIndex &index)
 {
     Q_D(const ImageDocument);

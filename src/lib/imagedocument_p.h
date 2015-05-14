@@ -18,6 +18,7 @@ class ImageDocumentPrivate
 
 public:
     typedef QMap<ImageElement::Option, QVariant> OptionMap;
+    typedef QMap<ImageElement::ExifOption, QVariant> ExifOptionMap;
 
     explicit ImageDocumentPrivate(ImageDocument *qq) : q_ptr(qq) {}
 
@@ -36,6 +37,7 @@ public:
     ImageIndex::Sides sides;
 //    int sliceCount;
     OptionMap options;
+    ExifOptionMap exifOptions;
     QByteArray subType;
 
     QMap<ImageIndex, ImageElement> elements;

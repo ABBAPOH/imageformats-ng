@@ -16,6 +16,11 @@ public:
         Name
     };
 
+    enum ExifOption {
+        DocumentName = 0x10d,
+        ImageDescription = 0x010e
+    };
+
     ImageElement();
     ImageElement(const ImageElement &other);
     ImageElement &operator=(const ImageElement &other);
@@ -30,7 +35,8 @@ public:
     QVariant option(ImageElement::Option option) const;
     void setOption(ImageElement::Option option, const QVariant &value);
 
-    // TODO: add EXIF info
+    QVariant exifOption(ImageElement::ExifOption option) const;
+    void setExifOption(ImageElement::ExifOption option, const QVariant &value);
 
 private:
     QSharedDataPointer<ImageElementData> d;

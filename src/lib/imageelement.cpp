@@ -6,10 +6,12 @@ class ImageElementData : public QSharedData
 {
 public:
     typedef QMap<ImageElement::Option, QVariant> OptionMap;
+    typedef QMap<ImageElement::ExifOption, QVariant> ExifOptionMap;
 
     QImage image;
     QByteArray subType;
     OptionMap options;
+    ExifOptionMap exifOptions;
 };
 
 ImageElement::ImageElement() :
@@ -63,3 +65,12 @@ void ImageElement::setOption(ImageElement::Option option, const QVariant &value)
     d->options.insert(option, value);
 }
 
+QVariant ImageElement::exifOption(ImageElement::ExifOption option) const
+{
+    return d->exifOptions.value(option);
+}
+
+void ImageElement::setExifOption(ImageElement::ExifOption option, const QVariant &value)
+{
+    d->exifOptions.insert(option, value);
+}
