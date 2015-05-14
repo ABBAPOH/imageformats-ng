@@ -46,15 +46,20 @@ bool ImageIOHandler::supportsDocumentOption(ImageDocument::Option option)
     return false;
 }
 
-bool ImageIOHandler::supportsImageOption(ImageDocument::Option option, const ImageIndex index)
+bool ImageIOHandler::supportsImageOption(ImageDocument::Option option, const QByteArray subType)
 {
     Q_UNUSED(option);
-    Q_UNUSED(index);
+    Q_UNUSED(subType);
     return false;
 }
 
 ImageDocument::Capabilities ImageIOHandler::capabilities() const
 {
     return ImageDocument::NoCapabilities;
+}
+
+QVector<QByteArray> ImageIOHandler::subTypes() const
+{
+    return QVector<QByteArray>();
 }
 

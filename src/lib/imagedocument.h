@@ -25,7 +25,9 @@ public:
         SupportFrames = 0x2,
         SupportSides = 0x4,
         SupportSlices = 0x8,
-        SupportLayers = 0x10
+        SupportLayers = 0x10,
+        SupportSubTypes = 0x20, // exclusive options - either we have same subtype for
+        SupportImageSubTypes = 0x40, // subimages (dds, blp) or different (icns)
     };
     Q_DECLARE_FLAGS(Capabilities, CapabilityFlag)
 
@@ -78,6 +80,15 @@ public:
 //    int layerCount() const;
 //    void setLayerCount(int count);
 
+    // TODO: use class ImageType {QByteArray id; QString name; QString description;};
+    // instead of bytearrays
+    QVector<QByteArray> subTypes() const;
+    QByteArray subType() const;
+    void setSubType(const QByteArray &subType);
+
+    QByteArray subType(const ImageIndex &index) const;
+    void setSubType(const QByteArray &subType, const ImageIndex &index);
+
     QVariant documentOption(Option option) const;
     void setDocumentOption(Option option, const QVariant &value);
     bool supportsDocumentOption(Option option);
@@ -87,7 +98,7 @@ public:
 
     QVariant imageOption(Option option, const ImageIndex &index = ImageIndex()) const;
     void setImageOption(Option option, const QVariant &value, const ImageIndex &index = ImageIndex());
-    bool supportsImageOption(Option option, const ImageIndex &index = ImageIndex());
+    bool supportsImageOption(Option option, const QByteArray subType = QByteArray());
 
 //    ImageMeta meta() const;
 

@@ -23,9 +23,10 @@ public:
     virtual bool write() = 0;
 
     virtual bool supportsDocumentOption(ImageDocument::Option option);
-    virtual bool supportsImageOption(ImageDocument::Option option, const ImageIndex index);
+    virtual bool supportsImageOption(ImageDocument::Option option, const QByteArray subType);
 
     virtual ImageDocument::Capabilities capabilities() const;
+    virtual QVector<QByteArray> subTypes() const;
 
 private:
     ImageDocument *_document;

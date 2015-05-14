@@ -306,6 +306,48 @@ void ImageDocument::setSides(ImageIndex::Sides sides)
     d->sides = sides;
 }
 
+QVector<QByteArray> ImageDocument::subTypes() const
+{
+    Q_D(const ImageDocument);
+
+    if (!isOpen())
+        return QVector<QByteArray>();
+
+    return d->handler->subTypes();
+}
+
+QByteArray ImageDocument::subType() const
+{
+    Q_D(const ImageDocument);
+    return d->subType;
+}
+
+void ImageDocument::setSubType(const QByteArray &subType)
+{
+    Q_D(ImageDocument);
+
+    if (!subTypes().contains(subType))
+        return;
+
+    d->subType = subType;
+}
+
+QByteArray ImageDocument::subType(const ImageIndex &index) const
+{
+    Q_D(const ImageDocument);
+    return d->subTypes.value(index);
+}
+
+void ImageDocument::setSubType(const QByteArray &subType, const ImageIndex &index)
+{
+    Q_D(ImageDocument);
+
+    if (!subTypes().contains(subType))
+        return;
+
+    d->subTypes.insert(index, subType);
+}
+
 QVariant ImageDocument::documentOption(ImageDocument::Option option) const
 {
     Q_D(const ImageDocument);
@@ -348,14 +390,14 @@ void ImageDocument::setImageOption(ImageDocument::Option option, const QVariant 
     d->imageOptions[index].insert(option, value);
 }
 
-bool ImageDocument::supportsImageOption(ImageDocument::Option option, const ImageIndex &index)
+bool ImageDocument::supportsImageOption(ImageDocument::Option option, const QByteArray subType)
 {
     Q_D(const ImageDocument);
 
     if (!isOpen())
         return false;
 
-    return d->handler->supportsImageOption(option, index);
+    return d->handler->supportsImageOption(option, subType);
 }
 
 QImage ImageDocument::image(const ImageIndex &index) const

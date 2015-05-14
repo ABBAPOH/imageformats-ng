@@ -36,9 +36,11 @@ public:
     ImageIndex::Sides sides;
 //    int sliceCount;
     OptionMap options;
+    QByteArray subType;
 
     QMap<ImageIndex, QImage> images;
     QMap<ImageIndex, OptionMap> imageOptions;
+    QMap<ImageIndex, QByteArray> subTypes;
 
     ImageIOHandler *handler;
 };
