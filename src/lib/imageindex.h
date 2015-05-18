@@ -19,9 +19,6 @@ public:
     int frame() const;
     void setFrame(int frame);
 
-    int slice() const;
-    void setSlice(int slice);
-
     int layer() const;
     void setLayer(int layer);
 

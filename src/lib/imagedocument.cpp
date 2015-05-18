@@ -43,7 +43,7 @@ void ImageDocumentPrivate::init()
     mipmapCount = 1;
     frameCount = 1;
     sides = ImageResource::NoSides;
-//    sliceCount = 1;
+    depth = 0;
     openMode = ImageDocument::NotOpen;
 
     handler = 0;
@@ -306,6 +306,18 @@ void ImageDocument::setSides(ImageResource::Sides sides)
     d->sides = sides;
 }
 
+int ImageDocument::depth() const
+{
+    Q_D(const ImageDocument);
+    return d->depth;
+}
+
+void ImageDocument::setDepth(int depth)
+{
+    Q_D(ImageDocument);
+    d->depth = depth;
+}
+
 QVector<QByteArray> ImageDocument::subTypes() const
 {
     Q_D(const ImageDocument);
@@ -403,17 +415,3 @@ void ImageDocument::setImage(const QImage &image, const ImageIndex &index)
     Q_D(ImageDocument);
     d->elements[index].setImage(image);
 }
-
-//int ImageDocument::sliceCount() const
-//{
-//    Q_D(const ImageDocument);
-//    return d->sliceCount;
-//}
-
-//void ImageDocument::setSliceCount(int count)
-//{
-//    Q_D(ImageDocument);
-//    if (d->sliceCount == count)
-//        return;
-//    d->sliceCount = count;
-//}

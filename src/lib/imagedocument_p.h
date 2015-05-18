@@ -35,7 +35,7 @@ public:
     int mipmapCount;
     int frameCount;
     ImageResource::Sides sides;
-//    int sliceCount;
+    int depth;
     OptionMap options;
     ExifOptionMap exifOptions;
     QByteArray subType;
