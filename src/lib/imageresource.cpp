@@ -8,15 +8,21 @@ public:
     typedef QMap<ImageResource::Option, QVariant> OptionMap;
     typedef QMap<ImageResource::ExifOption, QVariant> ExifOptionMap;
 
-    QImage image;
+    ImageResource::Type type;
+    QVector<QImage> images;
     QByteArray subType;
     OptionMap options;
     ExifOptionMap exifOptions;
 };
 
-ImageResource::ImageResource() :
+ImageResource::ImageResource(Type type) :
     d(new ImageResourceData)
 {
+    d->type = type;
+    switch (type) {
+    case Image: d->images.resize(1); break;
+    case Cubemap: d->images.resize(6); break;
+    }
 }
 
 ImageResource::ImageResource(const ImageResource &other) :
@@ -37,12 +43,35 @@ ImageResource::~ImageResource()
 
 QImage ImageResource::image() const
 {
-    return d->image;
+    return d->images.at(0);
 }
 
 void ImageResource::setImage(const QImage &image)
 {
-    d->image = image;
+    d->images[0] = image;
+}
+
+static int sideToIndex(ImageResource::Side side)
+{
+    switch (side) {
+    case ImageResource::PositiveX: return 0;
+    case ImageResource::NegaviveX: return 1;
+    case ImageResource::PositiveY: return 2;
+    case ImageResource::NegaviveY: return 3;
+    case ImageResource::PositiveZ: return 4;
+    case ImageResource::NegaviveZ: return 5;
+    }
+    return -1;
+}
+
+QImage ImageResource::image(ImageResource::Side side)
+{
+    return d->images.at(sideToIndex(side));
+}
+
+void ImageResource::setImage(ImageResource::Side side, const QImage &image)
+{
+    d->images[sideToIndex(side)] = image;
 }
 
 QByteArray ImageResource::subType() const

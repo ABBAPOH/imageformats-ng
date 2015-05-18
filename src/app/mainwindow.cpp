@@ -66,19 +66,18 @@ void MainWindow::buildModel(QStandardItem *parent, ImageIndex index, int level)
         }
         break;
     case 2:
-        if (_document->sides() != ImageIndex::NoSides) {
+        if (_document->sides() != ImageResource::NoSides) {
+            auto resource = _document->resource(index);
             for (int i = 0; i < 6; i++) {
-                ImageIndex::Side side = ImageIndex::Side(ImageIndex::PositiveX << i);
+                ImageResource::Side side = ImageResource::Side(ImageResource::PositiveX << i);
                 if (_document->sides() & side) {
-                    index.setSide(side);
-                    QStandardItem *item = new QStandardItem(tr("Side %1").arg(side));
-                    item->setData(_document->image(index));
+                    QStandardItem *item = new QStandardItem(tr("Side %1").arg(i));
+                    item->setData(resource.image(side));
                     buildModel(item, index, level);
                     parent->appendRow(item);
                 }
             }
         } else {
-            index.setSide(ImageIndex::AllSides);
             QStandardItem *item = new QStandardItem(tr("No sides"));
             item->setData(_document->image(index));
             buildModel(item, index, level);

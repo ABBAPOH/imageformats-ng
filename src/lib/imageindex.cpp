@@ -5,7 +5,6 @@ class ImageIndexData : public QSharedData
 public:
     int mipmap;
     int frame;
-    ImageIndex::Side side;
     int slice;
     int layer;
 };
@@ -15,7 +14,6 @@ ImageIndex::ImageIndex() :
 {
     d->mipmap = 0;
     d->frame = 0;
-    d->side = ImageIndex::AllSides;
     d->slice = 0;
     d->layer = -1;
 }
@@ -56,16 +54,6 @@ void ImageIndex::setFrame(int frame)
     d->frame = frame;
 }
 
-ImageIndex::Side ImageIndex::side() const
-{
-    return d->side;
-}
-
-void ImageIndex::setSide(ImageIndex::Side side)
-{
-    d->side = side;
-}
-
 int ImageIndex::slice() const
 {
     return d->slice;
@@ -90,7 +78,6 @@ bool operator ==(const ImageIndex &lhs, const ImageIndex &rhs)
 {
     return lhs.mipmap() == rhs.mipmap()
             && lhs.frame() == rhs.frame()
-            && lhs.side() == rhs.side()
             && lhs.slice() == rhs.slice()
             && lhs.layer() == rhs.layer();
 }
@@ -101,8 +88,6 @@ bool operator <(const ImageIndex &lhs, const ImageIndex &rhs)
         return lhs.mipmap() < rhs.mipmap();
     else if (lhs.frame() != rhs.frame())
         return lhs.frame() < rhs.frame();
-    else if (lhs.side() != rhs.side())
-        return lhs.side() < rhs.side();
     else if (lhs.slice() != rhs.slice())
         return lhs.slice() < rhs.slice();
     else
@@ -115,8 +100,6 @@ bool operator >(const ImageIndex &lhs, const ImageIndex &rhs)
         return lhs.mipmap() > rhs.mipmap();
     else if (lhs.frame() != rhs.frame())
         return lhs.frame() > rhs.frame();
-    else if (lhs.side() != rhs.side())
-        return lhs.side() > rhs.side();
     else if (lhs.slice() != rhs.slice())
         return lhs.slice() > rhs.slice();
     else

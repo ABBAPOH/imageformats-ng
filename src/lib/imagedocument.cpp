@@ -42,7 +42,7 @@ void ImageDocumentPrivate::init()
     device = Q_NULLPTR;
     mipmapCount = 1;
     frameCount = 1;
-    sides = ImageIndex::NoSides;
+    sides = ImageResource::NoSides;
 //    sliceCount = 1;
     openMode = ImageDocument::NotOpen;
 
@@ -292,13 +292,13 @@ void ImageDocument::setFrameCount(int count)
     d->frameCount = count;
 }
 
-ImageIndex::Sides ImageDocument::sides() const
+ImageResource::Sides ImageDocument::sides() const
 {
     Q_D(const ImageDocument);
     return d->sides;
 }
 
-void ImageDocument::setSides(ImageIndex::Sides sides)
+void ImageDocument::setSides(ImageResource::Sides sides)
 {
     Q_D(ImageDocument);
     if (d->sides == sides)

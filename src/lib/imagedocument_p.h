@@ -34,7 +34,7 @@ public:
     QString errorString;
     int mipmapCount;
     int frameCount;
-    ImageIndex::Sides sides;
+    ImageResource::Sides sides;
 //    int sliceCount;
     OptionMap options;
     ExifOptionMap exifOptions;

@@ -93,8 +93,8 @@ public:
     int frameCount() const;
     void setFrameCount(int count);
 
-    ImageIndex::Sides sides() const;
-    void setSides(ImageIndex::Sides sides);
+    ImageResource::Sides sides() const;
+    void setSides(ImageResource::Sides sides);
 
     // TODO: slice count depends on the current mipmap level, it seems we don't
     // need separate count for slices
