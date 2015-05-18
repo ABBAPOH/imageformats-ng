@@ -19,9 +19,6 @@ public:
     int frame() const;
     void setFrame(int frame);
 
-    int layer() const;
-    void setLayer(int layer);
-
 private:
     QSharedDataPointer<ImageIndexData> d;
 };

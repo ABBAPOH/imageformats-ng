@@ -6,7 +6,6 @@ public:
     int mipmap;
     int frame;
     int slice;
-    int layer;
 };
 
 ImageIndex::ImageIndex() :
@@ -15,7 +14,6 @@ ImageIndex::ImageIndex() :
     d->mipmap = 0;
     d->frame = 0;
     d->slice = 0;
-    d->layer = -1;
 }
 
 ImageIndex::ImageIndex(const ImageIndex &other) :
@@ -54,39 +52,24 @@ void ImageIndex::setFrame(int frame)
     d->frame = frame;
 }
 
-int ImageIndex::layer() const
-{
-    return d->layer;
-}
-
-void ImageIndex::setLayer(int layer)
-{
-    d->layer = layer;
-}
-
 bool operator ==(const ImageIndex &lhs, const ImageIndex &rhs)
 {
     return lhs.mipmap() == rhs.mipmap()
-            && lhs.frame() == rhs.frame()
-            && lhs.layer() == rhs.layer();
+            && lhs.frame() == rhs.frame();
 }
 
 bool operator <(const ImageIndex &lhs, const ImageIndex &rhs)
 {
     if (lhs.mipmap() != rhs.mipmap())
         return lhs.mipmap() < rhs.mipmap();
-    else if (lhs.frame() != rhs.frame())
-        return lhs.frame() < rhs.frame();
     else
-        return lhs.layer() < rhs.layer();
+        return lhs.frame() < rhs.frame();
 }
 
 bool operator >(const ImageIndex &lhs, const ImageIndex &rhs)
 {
     if (lhs.mipmap() != rhs.mipmap())
         return lhs.mipmap() > rhs.mipmap();
-    else if (lhs.frame() != rhs.frame())
-        return lhs.frame() > rhs.frame();
     else
-        return lhs.layer() > rhs.layer();
+        return lhs.frame() > rhs.frame();
 }
