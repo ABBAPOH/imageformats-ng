@@ -96,9 +96,6 @@ public:
     ImageResource::Sides sides() const;
     void setSides(ImageResource::Sides sides);
 
-    int depth() const;
-    void setDepth(int depth);
-
 //    int layerCount() const;
 //    void setLayerCount(int count);
 

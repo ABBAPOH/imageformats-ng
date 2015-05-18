@@ -43,7 +43,6 @@ void ImageDocumentPrivate::init()
     mipmapCount = 1;
     frameCount = 1;
     sides = ImageResource::NoSides;
-    depth = 0;
     openMode = ImageDocument::NotOpen;
 
     handler = 0;
@@ -304,18 +303,6 @@ void ImageDocument::setSides(ImageResource::Sides sides)
     if (d->sides == sides)
         return;
     d->sides = sides;
-}
-
-int ImageDocument::depth() const
-{
-    Q_D(const ImageDocument);
-    return d->depth;
-}
-
-void ImageDocument::setDepth(int depth)
-{
-    Q_D(ImageDocument);
-    d->depth = depth;
 }
 
 QVector<QByteArray> ImageDocument::subTypes() const
