@@ -44,48 +44,30 @@ void MainWindow::buildModel()
     buildModel(_model->invisibleRootItem());
 }
 
-void MainWindow::buildModel(QStandardItem *parent, ImageIndex index, int level)
+void MainWindow::buildModel(QStandardItem *parent)
 {
-    switch (level++) {
-    case 0:
-        for (int i = 0; i < _document->mipmapCount(); i++) {
-            index.setMipmap(i);
-            QStandardItem *item = new QStandardItem(tr("Mipmap %1").arg(i));
-            item->setData(_document->image(index));
-            buildModel(item, index, level);
-            parent->appendRow(item);
-        }
-        break;
-    case 1:
-        for (int i = 0; i < _document->frameCount(); i++) {
-            index.setFrame(i);
-            QStandardItem *item = new QStandardItem(tr("Frame %1").arg(i));
-            item->setData(_document->image(index));
-            buildModel(item, index, level);
-            parent->appendRow(item);
-        }
-        break;
-    case 2:
-        if (_document->sides() != ImageResource::NoSides) {
-            auto resource = _document->resource(index);
-            for (int i = 0; i < 6; i++) {
-                ImageResource::Side side = ImageResource::Side(ImageResource::PositiveX << i);
-                if (_document->sides() & side) {
-                    QStandardItem *item = new QStandardItem(tr("Side %1").arg(i));
-                    item->setData(resource.image(side));
-                    buildModel(item, index, level);
-                    parent->appendRow(item);
+    for (int i = 0; i < _document->mipmapCount(); i++) {
+        QStandardItem *mipmap = new QStandardItem(tr("Mipmap %1").arg(i));
+        for (int j = 0; j < _document->frameCount(); j++) {
+            QStandardItem *frame = new QStandardItem(tr("Frame %1").arg(j));
+
+            auto resource = _document->resource(i, j);
+            if (resource.type() == ImageResource::Cubemap) {
+                for (int k = 0; k < 6; k++) {
+                    ImageResource::Side side = ImageResource::Side(ImageResource::PositiveX << k);
+                    if (_document->sides() & side) {
+                        QStandardItem *item = new QStandardItem(tr("Side %1").arg(k));
+                        item->setData(resource.image(side));
+                        frame->appendRow(item);
+                    }
                 }
+            } else {
+                frame->setData(resource.image());
             }
-        } else {
-            QStandardItem *item = new QStandardItem(tr("No sides"));
-            item->setData(_document->image(index));
-            buildModel(item, index, level);
-            parent->appendRow(item);
+            mipmap->appendRow(frame);
         }
-        break;
-    default:
-        break;
+
+        parent->appendRow(mipmap);
     }
 }
 

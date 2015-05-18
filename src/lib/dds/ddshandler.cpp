@@ -1321,7 +1321,7 @@ static qint64 mipmapOffset(const DDSHeader &dds, const int format, const int lev
     return result;
 }
 
-static ImageResource readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, ImageDocument *document, ImageIndex index)
+static ImageResource readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, ImageDocument *document)
 {
 //    QImage::Format format = hasAlpha(dds) ? QImage::Format_ARGB32 : QImage::Format_RGB32;
 //    QImage image(4 * dds.width, 3 * dds.height, format);
@@ -1432,8 +1432,6 @@ bool DDSHandler::open(ImageDocument::OpenMode mode)
 bool DDSHandler::read()
 {
     for (quint32 i = 0; i < qMax<quint32>(1, m_header.mipMapCount); i++) {
-        ImageIndex index;
-        index.setMipmap(i);
         qint64 pos = headerSize + mipmapOffset(m_header, m_format, i);
         if (!device()->seek(pos))
             return false;
@@ -1441,20 +1439,20 @@ bool DDSHandler::read()
         s.setByteOrder(QDataStream::LittleEndian);
 
         auto resource = isCubeMap(m_header) ?
-                    readCubeMap(s, m_header, m_format, document(), index) :
+                    readCubeMap(s, m_header, m_format, document()) :
                     readTexture(s, m_header, m_format, i);
 
         bool ok = s.status() == QDataStream::Ok;
         if (!ok)
             return false;
-        document()->setResource(resource, index);
+        document()->setResource(resource, 0, i);
     }
     return true;
 }
 
 bool DDSHandler::write()
 {
-    auto outImage = document()->image();
+    auto outImage = document()->resource().image();
 
     if (m_format != FormatA8R8G8B8) {
         qWarning() << "Format" << formatName(m_format) << "is not supported";

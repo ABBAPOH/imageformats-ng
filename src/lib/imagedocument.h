@@ -1,7 +1,6 @@
 #ifndef IMAGEDOCUMENT_H
 #define IMAGEDOCUMENT_H
 
-#include "imageindex.h"
 #include "imageresource.h"
 
 #include <QtCore/QMimeType>
@@ -114,11 +113,8 @@ public:
     QVariant exifOption(ImageResource::ExifOption option) const;
     void setExifOption(ImageResource::ExifOption option, const QVariant &value);
 
-    ImageResource resource(const ImageIndex &index = ImageIndex());
-    void setResource(const ImageResource &resource, const ImageIndex &index = ImageIndex());
-
-    QImage image(const ImageIndex &index = ImageIndex()) const;
-    void setImage(const QImage &image, const ImageIndex &index = ImageIndex());
+    ImageResource resource(int frame = 0, int mipmap = 0);
+    void setResource(const ImageResource &resource, int frame = 0, int mipmap = 0);
 
 //    ImageMeta meta() const;
 

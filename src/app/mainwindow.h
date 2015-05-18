@@ -22,7 +22,7 @@ public:
 
 private:
     void buildModel();
-    void buildModel(QStandardItem *parent, ImageIndex index = ImageIndex(), int level = 0);
+    void buildModel(QStandardItem *parent);
 
 private slots:
     void onClicked(const QModelIndex &index);

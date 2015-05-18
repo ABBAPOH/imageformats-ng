@@ -41,28 +41,24 @@ bool DefaultHandler::read()
         document()->setFrameCount(count);
 
         for (int i = 0; i < count; i++) {
-            ImageIndex index;
-            index.setFrame(i);
             QImage image;
             const bool ok = reader.read(&image);
             if (!ok)
                 return false;
 
-            document()->setImage(image, index);
+            document()->setResource(image, i);
         }
     } else if (count > 0) {
         document()->setMipmapCount(count);
 
         for (int i = 0; i < count; i++) {
-            ImageIndex index;
-            index.setMipmap(i);
             QImage image;
             reader.jumpToImage(i);
             const bool ok = reader.read(&image);
             if (!ok)
                 return false;
 
-            document()->setImage(image, index);
+            document()->setResource(image, 0, i);
         }
     } else {
         QImage image;
@@ -70,7 +66,7 @@ bool DefaultHandler::read()
         if (!ok)
             return false;
 
-        document()->setImage(image);
+        document()->setResource(image);
     }
 
     return true;
@@ -79,7 +75,7 @@ bool DefaultHandler::read()
 bool DefaultHandler::write()
 {
     QImageWriter writer(device(), mimeTypeToFormat(mimeType()));
-    const bool ok = writer.write(document()->image());
+    const bool ok = writer.write(document()->resource().image());
     if (!ok)
         return false;
 

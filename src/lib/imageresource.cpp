@@ -25,6 +25,13 @@ ImageResource::ImageResource(Type type) :
     }
 }
 
+ImageResource::ImageResource(const QImage &image) :
+    d(new ImageResourceData)
+{
+    d->type = Image;
+    d->images.append(image);
+}
+
 ImageResource::ImageResource(const ImageResource &other) :
     d(other.d)
 {
@@ -39,6 +46,11 @@ ImageResource &ImageResource::operator=(const ImageResource &other)
 
 ImageResource::~ImageResource()
 {
+}
+
+ImageResource::Type ImageResource::type() const
+{
+    return d->type;
 }
 
 QImage ImageResource::image() const

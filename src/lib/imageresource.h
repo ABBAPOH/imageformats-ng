@@ -36,9 +36,12 @@ public:
     };
 
     explicit ImageResource(Type type = Image);
+    ImageResource(const QImage &image);
     ImageResource(const ImageResource &other);
     ImageResource &operator=(const ImageResource &other);
     ~ImageResource();
+
+    Type type() const;
 
     QImage image() const;
     void setImage(const QImage &image);

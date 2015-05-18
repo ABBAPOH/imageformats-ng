@@ -379,26 +379,14 @@ void ImageDocument::setExifOption(ImageResource::ExifOption option, const QVaria
     d->exifOptions.insert(option, value);
 }
 
-ImageResource ImageDocument::resource(const ImageIndex &index)
+ImageResource ImageDocument::resource(int frame, int mipmap)
 {
     Q_D(const ImageDocument);
-    return d->elements.value(index);
+    return d->elements.value(qMakePair(frame, mipmap));
 }
 
-void ImageDocument::setResource(const ImageResource &element, const ImageIndex &index)
+void ImageDocument::setResource(const ImageResource &resource, int frame, int mipmap)
 {
     Q_D(ImageDocument);
-    d->elements.insert(index, element);
-}
-
-QImage ImageDocument::image(const ImageIndex &index) const
-{
-    Q_D(const ImageDocument);
-    return d->elements.value(index).image();
-}
-
-void ImageDocument::setImage(const QImage &image, const ImageIndex &index)
-{
-    Q_D(ImageDocument);
-    d->elements[index].setImage(image);
+    d->elements.insert(qMakePair(frame, mipmap), resource);
 }

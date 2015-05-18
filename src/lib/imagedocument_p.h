@@ -10,6 +10,8 @@
 class ImageIOHandler;
 class ImageIOHandlerPlugin;
 
+typedef QPair<int, int> ImageIndex;
+
 class ImageDocumentPrivate
 {
     Q_DECLARE_PUBLIC(ImageDocument)
