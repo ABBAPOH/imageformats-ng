@@ -40,13 +40,13 @@ void ImageIOHandler::setMimeType(const QMimeType &mimeType)
     _mimeType = mimeType;
 }
 
-bool ImageIOHandler::supportsDocumentOption(ImageElement::Option option)
+bool ImageIOHandler::supportsDocumentOption(ImageResource::Option option)
 {
     Q_UNUSED(option);
     return false;
 }
 
-bool ImageIOHandler::supportsElementOption(ImageElement::Option option, const QByteArray subType)
+bool ImageIOHandler::supportsElementOption(ImageResource::Option option, const QByteArray subType)
 {
     Q_UNUSED(option);
     Q_UNUSED(subType);

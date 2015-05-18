@@ -2,7 +2,7 @@
 #define IMAGEDOCUMENT_H
 
 #include "imageindex.h"
-#include "imageelement.h"
+#include "imageresource.h"
 
 #include <QtCore/QMimeType>
 #include <QtCore/QObject>
@@ -110,17 +110,17 @@ public:
     QByteArray subType() const;
     void setSubType(const QByteArray &subType);
 
-    bool supportsOption(ImageElement::Option option);
-    bool supportsElementOption(ImageElement::Option option, const QByteArray subType = QByteArray());
+    bool supportsOption(ImageResource::Option option);
+    bool supportsElementOption(ImageResource::Option option, const QByteArray subType = QByteArray());
 
-    QVariant option(ImageElement::Option option) const;
-    void setOption(ImageElement::Option option, const QVariant &value);
+    QVariant option(ImageResource::Option option) const;
+    void setOption(ImageResource::Option option, const QVariant &value);
 
-    QVariant exifOption(ImageElement::ExifOption option) const;
-    void setExifOption(ImageElement::ExifOption option, const QVariant &value);
+    QVariant exifOption(ImageResource::ExifOption option) const;
+    void setExifOption(ImageResource::ExifOption option, const QVariant &value);
 
-    ImageElement element(const ImageIndex &index = ImageIndex());
-    void setElement(const ImageElement &element, const ImageIndex &index = ImageIndex());
+    ImageResource resource(const ImageIndex &index = ImageIndex());
+    void setResource(const ImageResource &resource, const ImageIndex &index = ImageIndex());
 
     QImage image(const ImageIndex &index = ImageIndex()) const;
     void setImage(const QImage &image, const ImageIndex &index = ImageIndex());

@@ -332,7 +332,7 @@ void ImageDocument::setSubType(const QByteArray &subType)
     d->subType = subType;
 }
 
-bool ImageDocument::supportsOption(ImageElement::Option option)
+bool ImageDocument::supportsOption(ImageResource::Option option)
 {
     Q_D(const ImageDocument);
 
@@ -342,7 +342,7 @@ bool ImageDocument::supportsOption(ImageElement::Option option)
     return d->handler->supportsDocumentOption(option);
 }
 
-bool ImageDocument::supportsElementOption(ImageElement::Option option, const QByteArray subType)
+bool ImageDocument::supportsElementOption(ImageResource::Option option, const QByteArray subType)
 {
     Q_D(const ImageDocument);
 
@@ -352,13 +352,13 @@ bool ImageDocument::supportsElementOption(ImageElement::Option option, const QBy
     return d->handler->supportsElementOption(option, subType);
 }
 
-QVariant ImageDocument::option(ImageElement::Option option) const
+QVariant ImageDocument::option(ImageResource::Option option) const
 {
     Q_D(const ImageDocument);
     return d->options.value(option);
 }
 
-void ImageDocument::setOption(ImageElement::Option option, const QVariant &value)
+void ImageDocument::setOption(ImageResource::Option option, const QVariant &value)
 {
     Q_D(ImageDocument);
 
@@ -368,25 +368,25 @@ void ImageDocument::setOption(ImageElement::Option option, const QVariant &value
     d->options.insert(option, value);
 }
 
-QVariant ImageDocument::exifOption(ImageElement::ExifOption option) const
+QVariant ImageDocument::exifOption(ImageResource::ExifOption option) const
 {
     Q_D(const ImageDocument);
     return d->exifOptions.value(option);
 }
 
-void ImageDocument::setExifOption(ImageElement::ExifOption option, const QVariant &value)
+void ImageDocument::setExifOption(ImageResource::ExifOption option, const QVariant &value)
 {
     Q_D(ImageDocument);
     d->exifOptions.insert(option, value);
 }
 
-ImageElement ImageDocument::element(const ImageIndex &index)
+ImageResource ImageDocument::resource(const ImageIndex &index)
 {
     Q_D(const ImageDocument);
     return d->elements.value(index);
 }
 
-void ImageDocument::setElement(const ImageElement &element, const ImageIndex &index)
+void ImageDocument::setResource(const ImageResource &element, const ImageIndex &index)
 {
     Q_D(ImageDocument);
     d->elements.insert(index, element);

@@ -17,8 +17,8 @@ class ImageDocumentPrivate
     ImageDocument *q_ptr;
 
 public:
-    typedef QMap<ImageElement::Option, QVariant> OptionMap;
-    typedef QMap<ImageElement::ExifOption, QVariant> ExifOptionMap;
+    typedef QMap<ImageResource::Option, QVariant> OptionMap;
+    typedef QMap<ImageResource::ExifOption, QVariant> ExifOptionMap;
 
     explicit ImageDocumentPrivate(ImageDocument *qq) : q_ptr(qq) {}
 
@@ -40,7 +40,7 @@ public:
     ExifOptionMap exifOptions;
     QByteArray subType;
 
-    QMap<ImageIndex, ImageElement> elements;
+    QMap<ImageIndex, ImageResource> elements;
 
     ImageIOHandler *handler;
 };
