@@ -79,8 +79,6 @@ public:
     ImageResource resource(int frame = 0, int mipmap = 0);
     void setResource(const ImageResource &resource, int frame = 0, int mipmap = 0);
 
-//    ImageMeta meta() const;
-
 protected:
     ImageDocumentPrivate *d_ptr;
 };
