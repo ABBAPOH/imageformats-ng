@@ -46,7 +46,7 @@ bool ImageIOHandler::supportsDocumentOption(ImageResource::Option option)
     return false;
 }
 
-bool ImageIOHandler::supportsElementOption(ImageResource::Option option, const QByteArray subType)
+bool ImageIOHandler::supportsResourceOption(ImageResource::Option option, const QByteArray subType)
 {
     Q_UNUSED(option);
     Q_UNUSED(subType);

@@ -341,14 +341,14 @@ bool ImageDocument::supportsOption(ImageResource::Option option)
     return d->handler->supportsDocumentOption(option);
 }
 
-bool ImageDocument::supportsElementOption(ImageResource::Option option, const QByteArray subType)
+bool ImageDocument::supportsResourceOption(ImageResource::Option option, const QByteArray subType)
 {
     Q_D(const ImageDocument);
 
     if (!isOpen())
         return false;
 
-    return d->handler->supportsElementOption(option, subType);
+    return d->handler->supportsResourceOption(option, subType);
 }
 
 QVariant ImageDocument::option(ImageResource::Option option) const

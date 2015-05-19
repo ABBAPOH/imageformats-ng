@@ -77,7 +77,7 @@ public:
     void setSubType(const QByteArray &subType);
 
     bool supportsOption(ImageResource::Option option);
-    bool supportsElementOption(ImageResource::Option option, const QByteArray subType = QByteArray());
+    bool supportsResourceOption(ImageResource::Option option, const QByteArray subType = QByteArray());
 
     QVariant option(ImageResource::Option option) const;
     void setOption(ImageResource::Option option, const QVariant &value);
