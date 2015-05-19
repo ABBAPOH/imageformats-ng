@@ -25,7 +25,7 @@ public:
         SupportFrames = 0x2,
         SupportSides = 0x4,
         SupportSlices = 0x8,
-        SupportLayers = 0x10,
+        // reserved for layers
         SupportSubTypes = 0x20, // exclusive options - either we have same subtype for
         SupportElementSubTypes = 0x40, // subimages (dds, blp) or different (icns)
         SupportExif = 0x80
@@ -66,9 +66,6 @@ public:
 
     ImageResource::Sides sides() const;
     void setSides(ImageResource::Sides sides);
-
-//    int layerCount() const;
-//    void setLayerCount(int count);
 
     // TODO: use class ImageType {QByteArray id; QString name; QString description;};
     // instead of bytearrays
