@@ -11,8 +11,8 @@ class ImageMeta
 {
 public:
     ImageMeta();
-    ImageMeta(const ImageMeta &);
-    ImageMeta &operator=(const ImageMeta &);
+    ImageMeta(const ImageMeta &other);
+    ImageMeta &operator=(const ImageMeta &other);
     ~ImageMeta();
 
     enum Option {

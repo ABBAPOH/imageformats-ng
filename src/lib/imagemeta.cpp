@@ -11,26 +11,25 @@ public:
     ExifOptionMap exifOptions;
 };
 
-ImageMeta::ImageMeta() : d(new ImageMetaData)
+ImageMeta::ImageMeta() :
+    d(new ImageMetaData)
 {
-
 }
 
-ImageMeta::ImageMeta(const ImageMeta &rhs) : d(rhs.d)
+ImageMeta::ImageMeta(const ImageMeta &other) :
+    d(other.d)
 {
-
 }
 
-ImageMeta &ImageMeta::operator=(const ImageMeta &rhs)
+ImageMeta &ImageMeta::operator=(const ImageMeta &other)
 {
-    if (this != &rhs)
-        d.operator=(rhs.d);
+    if (this != &other)
+        d.operator=(other.d);
     return *this;
 }
 
 ImageMeta::~ImageMeta()
 {
-
 }
 
 QByteArray ImageMeta::subType() const
