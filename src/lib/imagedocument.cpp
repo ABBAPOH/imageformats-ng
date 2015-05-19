@@ -315,23 +315,7 @@ QVector<QByteArray> ImageDocument::subTypes() const
     return d->handler->subTypes();
 }
 
-QByteArray ImageDocument::subType() const
-{
-    Q_D(const ImageDocument);
-    return d->subType;
-}
-
-void ImageDocument::setSubType(const QByteArray &subType)
-{
-    Q_D(ImageDocument);
-
-    if (!subTypes().contains(subType))
-        return;
-
-    d->subType = subType;
-}
-
-bool ImageDocument::supportsOption(ImageResource::Option option)
+bool ImageDocument::supportsOption(ImageMeta::Option option)
 {
     Q_D(const ImageDocument);
 
@@ -341,7 +325,7 @@ bool ImageDocument::supportsOption(ImageResource::Option option)
     return d->handler->supportsDocumentOption(option);
 }
 
-bool ImageDocument::supportsResourceOption(ImageResource::Option option, const QByteArray subType)
+bool ImageDocument::supportsResourceOption(ImageMeta::Option option, const QByteArray subType)
 {
     Q_D(const ImageDocument);
 
@@ -351,32 +335,16 @@ bool ImageDocument::supportsResourceOption(ImageResource::Option option, const Q
     return d->handler->supportsResourceOption(option, subType);
 }
 
-QVariant ImageDocument::option(ImageResource::Option option) const
+ImageMeta ImageDocument::meta() const
 {
     Q_D(const ImageDocument);
-    return d->options.value(option);
+    return d->meta;
 }
 
-void ImageDocument::setOption(ImageResource::Option option, const QVariant &value)
+void ImageDocument::setMeta(const ImageMeta &meta)
 {
     Q_D(ImageDocument);
-
-    if (!supportsOption(option))
-        return;
-
-    d->options.insert(option, value);
-}
-
-QVariant ImageDocument::exifOption(ImageResource::ExifOption option) const
-{
-    Q_D(const ImageDocument);
-    return d->exifOptions.value(option);
-}
-
-void ImageDocument::setExifOption(ImageResource::ExifOption option, const QVariant &value)
-{
-    Q_D(ImageDocument);
-    d->exifOptions.insert(option, value);
+    d->meta = meta;
 }
 
 ImageResource ImageDocument::resource(int frame, int mipmap)

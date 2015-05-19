@@ -5,14 +5,9 @@
 class ImageResourceData : public QSharedData
 {
 public:
-    typedef QMap<ImageResource::Option, QVariant> OptionMap;
-    typedef QMap<ImageResource::ExifOption, QVariant> ExifOptionMap;
-
     ImageResource::Type type;
     QVector<QImage> images;
-    QByteArray subType;
-    OptionMap options;
-    ExifOptionMap exifOptions;
+    ImageMeta meta;
 };
 
 ImageResource::ImageResource(Type type) :
@@ -115,32 +110,12 @@ void ImageResource::setImage(int slice, const QImage &image)
     d->images[slice] = image;
 }
 
-QByteArray ImageResource::subType() const
+ImageMeta ImageResource::meta() const
 {
-    return d->subType;
+    return d->meta;
 }
 
-void ImageResource::setSubType(const QByteArray &subType)
+void ImageResource::setMeta(const ImageMeta &meta)
 {
-    d->subType = subType;
-}
-
-QVariant ImageResource::option(ImageResource::Option option) const
-{
-    return d->options.value(option);
-}
-
-void ImageResource::setOption(ImageResource::Option option, const QVariant &value)
-{
-    d->options.insert(option, value);
-}
-
-QVariant ImageResource::exifOption(ImageResource::ExifOption option) const
-{
-    return d->exifOptions.value(option);
-}
-
-void ImageResource::setExifOption(ImageResource::ExifOption option, const QVariant &value)
-{
-    d->exifOptions.insert(option, value);
+    d->meta = meta;
 }

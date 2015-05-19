@@ -73,17 +73,11 @@ public:
     // TODO: use class ImageType {QByteArray id; QString name; QString description;};
     // instead of bytearrays
     QVector<QByteArray> subTypes() const;
-    QByteArray subType() const;
-    void setSubType(const QByteArray &subType);
+    bool supportsOption(ImageMeta::Option option);
+    bool supportsResourceOption(ImageMeta::Option option, const QByteArray subType = QByteArray());
 
-    bool supportsOption(ImageResource::Option option);
-    bool supportsResourceOption(ImageResource::Option option, const QByteArray subType = QByteArray());
-
-    QVariant option(ImageResource::Option option) const;
-    void setOption(ImageResource::Option option, const QVariant &value);
-
-    QVariant exifOption(ImageResource::ExifOption option) const;
-    void setExifOption(ImageResource::ExifOption option, const QVariant &value);
+    ImageMeta meta() const;
+    void setMeta(const ImageMeta &meta);
 
     ImageResource resource(int frame = 0, int mipmap = 0);
     void setResource(const ImageResource &resource, int frame = 0, int mipmap = 0);

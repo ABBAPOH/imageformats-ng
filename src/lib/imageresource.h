@@ -1,8 +1,9 @@
 #ifndef IMAGERESOURCE_H
 #define IMAGERESOURCE_H
 
+#include "imagemeta.h"
+
 #include <QtCore/QSharedDataPointer>
-#include <QtCore/QVariant>
 #include <QtGui/QImage>
 
 class ImageResourceData;
@@ -24,17 +25,6 @@ public:
     };
     Q_DECLARE_FLAGS(Sides, Side)
 
-    enum Option {
-        Size,
-        Quality,
-        Name
-    };
-
-    enum ExifOption {
-        DocumentName = 0x10d,
-        ImageDescription = 0x010e
-    };
-
     explicit ImageResource(Type type = Image);
     ImageResource(const QImage &image);
     ImageResource(const ImageResource &other);
@@ -55,14 +45,8 @@ public:
     QImage image(int slice); // TODO: remove to QImage slice(int index)
     void setImage(int slice, const QImage &image);
 
-    QByteArray subType() const;
-    void setSubType(const QByteArray &subType);
-
-    QVariant option(ImageResource::Option option) const;
-    void setOption(ImageResource::Option option, const QVariant &value);
-
-    QVariant exifOption(ImageResource::ExifOption option) const;
-    void setExifOption(ImageResource::ExifOption option, const QVariant &value);
+    ImageMeta meta() const;
+    void setMeta(const ImageMeta &meta);
 
 private:
     QSharedDataPointer<ImageResourceData> d;

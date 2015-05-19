@@ -19,8 +19,8 @@ class ImageDocumentPrivate
     ImageDocument *q_ptr;
 
 public:
-    typedef QMap<ImageResource::Option, QVariant> OptionMap;
-    typedef QMap<ImageResource::ExifOption, QVariant> ExifOptionMap;
+    typedef QMap<ImageMeta::Option, QVariant> OptionMap;
+    typedef QMap<ImageMeta::ExifOption, QVariant> ExifOptionMap;
 
     explicit ImageDocumentPrivate(ImageDocument *qq) : q_ptr(qq) {}
 
@@ -37,9 +37,7 @@ public:
     int mipmapCount;
     int frameCount;
     ImageResource::Sides sides;
-    OptionMap options;
-    ExifOptionMap exifOptions;
-    QByteArray subType;
+    ImageMeta meta;
 
     QMap<ImageIndex, ImageResource> elements;
 
