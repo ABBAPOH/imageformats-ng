@@ -86,6 +86,35 @@ void ImageResource::setImage(ImageResource::Side side, const QImage &image)
     d->images[sideToIndex(side)] = image;
 }
 
+int ImageResource::depth() const
+{
+    if (d->type != ImageResource::VolumeTexture)
+        return 1;
+
+    return d->images.size();
+}
+
+void ImageResource::setDepth(int depth)
+{
+    if (depth < 1)
+        return;
+    d->images.resize(depth);
+}
+
+QImage ImageResource::image(int slice)
+{
+    if (slice < 0 || slice >= d->images.size())
+        return QImage();
+    return d->images.at(slice);
+}
+
+void ImageResource::setImage(int slice, const QImage &image)
+{
+    if (slice < 0 || slice >= d->images.size())
+        return;
+    d->images[slice] = image;
+}
+
 QByteArray ImageResource::subType() const
 {
     return d->subType;

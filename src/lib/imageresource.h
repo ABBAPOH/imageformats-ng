@@ -10,7 +10,7 @@ class ImageResourceData;
 class ImageResource
 {
 public:
-    enum Type { Image, Cubemap/*, VolumeTexture*/ };
+    enum Type { Image, Cubemap, VolumeTexture };
 
     enum Side {
         NoSides = 0x0,
@@ -46,8 +46,14 @@ public:
     QImage image() const;
     void setImage(const QImage &image);
 
-    QImage image(Side side);
+    QImage image(Side side); // TODO: rename to QImage side(Side side)?
     void setImage(Side side, const QImage &image);
+
+    int depth() const;
+    void setDepth(int depth);
+
+    QImage image(int slice); // TODO: remove to QImage slice(int index)
+    void setImage(int slice, const QImage &image);
 
     QByteArray subType() const;
     void setSubType(const QByteArray &subType);
