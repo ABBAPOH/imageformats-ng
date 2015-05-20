@@ -108,6 +108,15 @@ ImageDocument::ImageDocument(QObject *parent) :
     d->init();
 }
 
+ImageDocument::ImageDocument(const QString &fileName, QObject *parent) :
+    QObject(parent),
+    d_ptr(new ImageDocumentPrivate(this))
+{
+    Q_D(ImageDocument);
+    d->init();
+    setFileName(fileName);
+}
+
 ImageDocument::~ImageDocument()
 {
     delete d_ptr;

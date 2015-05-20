@@ -31,6 +31,7 @@ public:
     Q_DECLARE_FLAGS(Capabilities, CapabilityFlag)
 
     explicit ImageDocument(QObject *parent = 0);
+    explicit ImageDocument(const QString &fileName, QObject *parent = 0);
     ~ImageDocument();
 
     QIODevice *device() const;
