@@ -30,6 +30,8 @@ public:
     bool ensureDeviceOpened(QIODevice::OpenMode mode);
     void killHandler();
 
+    static QString errorString(ImageError::ErrorCode code);
+
     QIODevice *device;
     QString fileName;
     QScopedPointer<QFile> file;

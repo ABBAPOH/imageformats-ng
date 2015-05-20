@@ -17,10 +17,10 @@ public:
     };
 
     inline ImageError();
-    explicit inline ImageError(ErrorCode errorCode, const QString &errorString);
+    explicit inline ImageError(ErrorCode errorCode, const QString &errorString = QString());
 
     inline ErrorCode errorCode() const;
-    inline QString errorString() const;
+    QString errorString() const;
 
 private:
     ErrorCode _error;
@@ -41,11 +41,6 @@ inline ImageError::ImageError(ImageError::ErrorCode error, const QString &errorS
 inline ImageError::ErrorCode ImageError::errorCode() const
 {
     return _error;
-}
-
-inline QString ImageError::errorString() const
-{
-    return _errorString;
 }
 
 #endif // IMAGEERROR_H

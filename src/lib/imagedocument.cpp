@@ -52,14 +52,14 @@ bool ImageDocumentPrivate::initHandler()
     Q_Q(ImageDocument);
 
     if (!mimeType.isValid()) {
-        error = ImageError(ImageError::MimeTypeError, ImageDocument::tr("Mime type is invalid"));
+        error = ImageError(ImageError::MimeTypeError);
         return false;
     }
 
     auto db = ImageIOHandlerDatabase::instance();
     handler = db->create(mimeType);
     if (!handler) {
-        error = ImageError(ImageError::UnsupportedFormatError, ImageDocument::tr("Unsupported format"));
+        error = ImageError(ImageError::UnsupportedFormatError);
         return false;
     }
 
@@ -80,14 +80,14 @@ bool ImageDocumentPrivate::ensureHandlerInitialised() const
 bool ImageDocumentPrivate::ensureDeviceOpened(QIODevice::OpenMode mode)
 {
     if (!device) {
-        error = ImageError(ImageError::DeviceError, ImageDocument::tr("Device error"));
+        error = ImageError(ImageError::DeviceError);
         return false;
     }
 
     if ((device->openMode() & mode) != mode) {
         device->close();
         if (!device->open(mode)) {
-            error = ImageError(ImageError::DeviceError, ImageDocument::tr("Device error"));
+            error = ImageError(ImageError::DeviceError);
             return false;
         }
     }
@@ -98,6 +98,19 @@ void ImageDocumentPrivate::killHandler()
 {
     delete handler;
     handler = 0;
+}
+
+QString ImageDocumentPrivate::errorString(ImageError::ErrorCode code)
+{
+    switch (code) {
+    case ImageError::NoError: return ImageDocument::tr("No error");
+    case ImageError::MimeTypeError: return ImageDocument::tr("Invalid mimetype");
+    case ImageError::FileNotFoundError: return ImageDocument::tr("File not found");
+    case ImageError::DeviceError: return ImageDocument::tr("Device error");
+    case ImageError::UnsupportedFormatError: return ImageDocument::tr("Unsupported format");
+    case ImageError::HandlerError: return ImageDocument::tr("Handler error");
+    }
+    return QString();
 }
 
 ImageDocument::ImageDocument(QObject *parent) :
@@ -240,7 +253,7 @@ bool ImageDocument::read()
         return false;
 
     if (!d->handler->read()) {
-        d->error = ImageError(ImageError::HandlerError, ImageDocument::tr("Handler error"));
+        d->error = ImageError(ImageError::HandlerError);
         return false;
     }
 
@@ -258,7 +271,7 @@ bool ImageDocument::write()
         return false;
 
     if (!d->handler->write()) {
-        d->error = ImageError(ImageError::HandlerError, ImageDocument::tr("Handler error"));
+        d->error = ImageError(ImageError::HandlerError);
         return false;
     }
 
