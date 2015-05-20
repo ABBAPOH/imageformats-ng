@@ -48,6 +48,11 @@ public:
     ImageError error() const;
 
     Capabilities capabilities() const;
+    // TODO: use class ImageType {QByteArray id; QString name; QString description;};
+    // instead of bytearrays
+    QVector<QByteArray> subTypes() const;
+    bool supportsOption(ImageMeta::Option option);
+    bool supportsResourceOption(ImageMeta::Option option, const QByteArray subType = QByteArray());
 
     bool read();
     bool write();
@@ -60,12 +65,6 @@ public:
 
     ImageResource::Sides sides() const;
     void setSides(ImageResource::Sides sides);
-
-    // TODO: use class ImageType {QByteArray id; QString name; QString description;};
-    // instead of bytearrays
-    QVector<QByteArray> subTypes() const;
-    bool supportsOption(ImageMeta::Option option);
-    bool supportsResourceOption(ImageMeta::Option option, const QByteArray subType = QByteArray());
 
     ImageMeta meta() const;
     void setMeta(const ImageMeta &meta);

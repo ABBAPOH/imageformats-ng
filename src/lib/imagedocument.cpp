@@ -199,6 +199,36 @@ ImageDocument::Capabilities ImageDocument::capabilities() const
     return d->handler->capabilities();
 }
 
+QVector<QByteArray> ImageDocument::subTypes() const
+{
+    Q_D(const ImageDocument);
+
+    if (!d->ensureHandlerInitialised())
+        return QVector<QByteArray>();
+
+    return d->handler->subTypes();
+}
+
+bool ImageDocument::supportsOption(ImageMeta::Option option)
+{
+    Q_D(const ImageDocument);
+
+    if (!d->ensureHandlerInitialised())
+        return false;
+
+    return d->handler->supportsDocumentOption(option);
+}
+
+bool ImageDocument::supportsResourceOption(ImageMeta::Option option, const QByteArray subType)
+{
+    Q_D(const ImageDocument);
+
+    if (!d->ensureHandlerInitialised())
+        return false;
+
+    return d->handler->supportsResourceOption(option, subType);
+}
+
 bool ImageDocument::read()
 {
     Q_D(ImageDocument);
@@ -275,36 +305,6 @@ void ImageDocument::setSides(ImageResource::Sides sides)
     if (d->sides == sides)
         return;
     d->sides = sides;
-}
-
-QVector<QByteArray> ImageDocument::subTypes() const
-{
-    Q_D(const ImageDocument);
-
-    if (!d->ensureHandlerInitialised())
-        return QVector<QByteArray>();
-
-    return d->handler->subTypes();
-}
-
-bool ImageDocument::supportsOption(ImageMeta::Option option)
-{
-    Q_D(const ImageDocument);
-
-    if (!d->ensureHandlerInitialised())
-        return false;
-
-    return d->handler->supportsDocumentOption(option);
-}
-
-bool ImageDocument::supportsResourceOption(ImageMeta::Option option, const QByteArray subType)
-{
-    Q_D(const ImageDocument);
-
-    if (!d->ensureHandlerInitialised())
-        return false;
-
-    return d->handler->supportsResourceOption(option, subType);
 }
 
 ImageMeta ImageDocument::meta() const
