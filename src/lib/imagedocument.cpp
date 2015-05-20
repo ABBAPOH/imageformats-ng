@@ -151,10 +151,9 @@ void ImageDocument::setFileName(const QString &fileName)
         return;
 
     d->file.reset(new QFile(fileName));
-    d->device = d->file.data();
     d->killHandler();
-
-    setMimeType(QMimeDatabase().mimeTypeForFile(fileName));
+    d->device = d->file.data();
+    d->mimeType = QMimeDatabase().mimeTypeForFile(fileName);
 }
 
 QMimeType ImageDocument::mimeType() const
@@ -168,8 +167,8 @@ void ImageDocument::setMimeType(const QMimeType &mimeType)
     Q_D(ImageDocument);
     if (d->mimeType == mimeType)
         return;
-    d->mimeType = mimeType;
     d->killHandler();
+    d->mimeType = mimeType;
 }
 
 void ImageDocument::setMimeType(const QString &name)
