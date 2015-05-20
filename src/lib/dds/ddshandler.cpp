@@ -1401,17 +1401,13 @@ QByteArray DDSHandler::name() const
     return QByteArrayLiteral("dds");
 }
 
-bool DDSHandler::open(ImageDocument::OpenMode mode)
+bool DDSHandler::open()
 {
     if (device()->isSequential())
         return false;
 
-    if (mode & ImageDocument::Read) {
-        if (!ensureScanned())
-            return false;
-
-        document()->setMipmapCount(qMax<quint32>(1, m_header.mipMapCount));
-    }
+    if (!ensureScanned())
+        return false;
 
     return true;
 }
@@ -1431,6 +1427,9 @@ bool DDSHandler::open(ImageDocument::OpenMode mode)
 
 bool DDSHandler::read()
 {
+    if (!open())
+        return false;
+    document()->setMipmapCount(qMax<quint32>(1, m_header.mipMapCount));
     for (quint32 i = 0; i < qMax<quint32>(1, m_header.mipMapCount); i++) {
         qint64 pos = headerSize + mipmapOffset(m_header, m_format, i);
         if (!device()->seek(pos))

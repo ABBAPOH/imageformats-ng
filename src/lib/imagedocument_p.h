@@ -26,12 +26,13 @@ public:
 
     void init();
     bool initHandler();
+    bool ensureHandlerInitialised() const;
+    bool ensureDeviceOpened(QIODevice::OpenMode mode);
     void killHandler();
 
     QIODevice *device;
     QString fileName;
     QScopedPointer<QFile> file;
-    ImageDocument::OpenMode openMode;
     QMimeType mimeType;
     ImageError error;
     int mipmapCount;

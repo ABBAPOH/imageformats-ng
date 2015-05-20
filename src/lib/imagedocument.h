@@ -17,9 +17,6 @@ class ImageDocument : public QObject
     Q_DISABLE_COPY(ImageDocument)
 
 public:
-    enum OpenModeFlag { NotOpen = 0x0, Read = 0x1, Write = 0x2, ReadWrite = Read | Write };
-    Q_DECLARE_FLAGS(OpenMode, OpenModeFlag)
-
     enum CapabilityFlag {
         NoCapabilities = 0x0,
         SupportMipmaps = 0x1,
@@ -48,10 +45,6 @@ public:
 
     bool hasError() const;
     ImageError error() const;
-
-    bool open(OpenMode mode);
-    OpenMode openMode() const;
-    bool isOpen() const;
 
     Capabilities capabilities() const;
 

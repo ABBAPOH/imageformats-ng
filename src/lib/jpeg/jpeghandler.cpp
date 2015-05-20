@@ -1001,7 +1001,7 @@ JpegHandler::~JpegHandler()
     delete d;
 }
 
-bool JpegHandler::open(ImageDocument::OpenMode mode)
+bool JpegHandler::open()
 {
     if(d->state == JpegHandlerPrivate::Ready && !canRead(device()))
         return false;
@@ -1032,6 +1032,7 @@ bool JpegHandler::canRead(QIODevice *device)
 
 bool JpegHandler::read()
 {
+    open();
     QImage image;
     bool ok = d->read(&image);
     if (!ok)

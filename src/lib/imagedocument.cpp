@@ -43,7 +43,6 @@ void ImageDocumentPrivate::init()
     mipmapCount = 1;
     frameCount = 1;
     sides = ImageResource::NoSides;
-    openMode = ImageDocument::NotOpen;
 
     handler = 0;
 }
@@ -51,14 +50,6 @@ void ImageDocumentPrivate::init()
 bool ImageDocumentPrivate::initHandler()
 {
     Q_Q(ImageDocument);
-
-    if (handler)
-        return true;
-
-    if (!device) {
-        error = ImageError(ImageError::DeviceError, ImageDocument::tr("No device set"));
-        return false;
-    }
 
     if (!mimeType.isValid()) {
         error = ImageError(ImageError::MimeTypeError, ImageDocument::tr("Mime type is invalid"));
@@ -76,6 +67,30 @@ bool ImageDocumentPrivate::initHandler()
     handler->setDevice(device);
     handler->setMimeType(mimeType);
 
+    return true;
+}
+
+bool ImageDocumentPrivate::ensureHandlerInitialised() const
+{
+    if (handler)
+        return true;
+    return const_cast<ImageDocumentPrivate *>(this)->initHandler();
+}
+
+bool ImageDocumentPrivate::ensureDeviceOpened(QIODevice::OpenMode mode)
+{
+    if (!device) {
+        error = ImageError(ImageError::DeviceError, ImageDocument::tr("Device error"));
+        return false;
+    }
+
+    if ((device->openMode() & mode) != mode) {
+        device->close();
+        if (!device->open(mode)) {
+            error = ImageError(ImageError::DeviceError, ImageDocument::tr("Device error"));
+            return false;
+        }
+    }
     return true;
 }
 
@@ -164,56 +179,11 @@ ImageError ImageDocument::error() const
     return d->error;
 }
 
-bool ImageDocument::open(OpenMode mode)
-{
-    Q_D(ImageDocument);
-
-    if (d->openMode == mode)
-        return true; // already open
-
-    d->openMode = NotOpen;
-    d->killHandler();
-
-    QIODevice::OpenMode deviceMode;
-    if (mode & Read)
-        deviceMode |= QIODevice::ReadOnly;
-    if (mode & Write)
-        deviceMode |= QIODevice::WriteOnly;
-    if ((d->device->openMode() & deviceMode) != deviceMode) {
-        d->device->close();
-        if (!d->device->open(deviceMode))
-            return false;
-    }
-
-    if (!d->initHandler())
-        return false;
-
-    if (!d->handler->open(mode)) {
-        d->error = ImageError(ImageError::DeviceError, ImageDocument::tr("Device error"));
-        return false;
-    }
-
-    d->openMode = mode;
-
-    return true;
-}
-
-ImageDocument::OpenMode ImageDocument::openMode() const
-{
-    Q_D(const ImageDocument);
-    return d->openMode;
-}
-
-bool ImageDocument::isOpen() const
-{
-    return openMode() != NotOpen;
-}
-
 ImageDocument::Capabilities ImageDocument::capabilities() const
 {
     Q_D(const ImageDocument);
 
-    if (!isOpen())
+    if (!d->ensureHandlerInitialised())
         return NoCapabilities;
 
     return d->handler->capabilities();
@@ -223,10 +193,11 @@ bool ImageDocument::read()
 {
     Q_D(ImageDocument);
 
-    if (!isOpen()) {
-        d->error = ImageError(ImageError::DeviceError, ImageDocument::tr("Device error"));
+    if (!d->ensureHandlerInitialised())
         return false;
-    }
+
+    if (!d->ensureDeviceOpened(QIODevice::ReadOnly))
+        return false;
 
     if (!d->handler->read()) {
         d->error = ImageError(ImageError::HandlerError, ImageDocument::tr("Handler error"));
@@ -240,10 +211,11 @@ bool ImageDocument::write()
 {
     Q_D(ImageDocument);
 
-    if (!isOpen()) {
-        d->error = ImageError(ImageError::DeviceError, ImageDocument::tr("Device error"));
+    if (!d->ensureHandlerInitialised())
         return false;
-    }
+
+    if (!d->ensureDeviceOpened(QIODevice::WriteOnly))
+        return false;
 
     if (!d->handler->write()) {
         d->error = ImageError(ImageError::HandlerError, ImageDocument::tr("Handler error"));
@@ -299,7 +271,7 @@ QVector<QByteArray> ImageDocument::subTypes() const
 {
     Q_D(const ImageDocument);
 
-    if (!isOpen())
+    if (!d->ensureHandlerInitialised())
         return QVector<QByteArray>();
 
     return d->handler->subTypes();
@@ -309,7 +281,7 @@ bool ImageDocument::supportsOption(ImageMeta::Option option)
 {
     Q_D(const ImageDocument);
 
-    if (!isOpen())
+    if (!d->ensureHandlerInitialised())
         return false;
 
     return d->handler->supportsDocumentOption(option);
@@ -319,7 +291,7 @@ bool ImageDocument::supportsResourceOption(ImageMeta::Option option, const QByte
 {
     Q_D(const ImageDocument);
 
-    if (!isOpen())
+    if (!d->ensureHandlerInitialised())
         return false;
 
     return d->handler->supportsResourceOption(option, subType);

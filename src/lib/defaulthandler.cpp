@@ -26,12 +26,6 @@ DefaultHandler::DefaultHandler()
 
 }
 
-bool DefaultHandler::open(ImageDocument::OpenMode mode)
-{
-    Q_UNUSED(mode);
-    return true;
-}
-
 bool DefaultHandler::read()
 {
     QImageReader reader(device(), mimeTypeToFormat(mimeType()));

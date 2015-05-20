@@ -8,7 +8,6 @@ class DefaultHandler : public ImageIOHandler
 public:
     DefaultHandler();
 
-    bool open(ImageDocument::OpenMode mode) Q_DECL_OVERRIDE;
     bool read() Q_DECL_OVERRIDE;
     bool write() Q_DECL_OVERRIDE;
 };

@@ -54,7 +54,7 @@ public:
     QByteArray name() const;
 
 //    bool canRead() const;
-    bool open(ImageDocument::OpenMode mode);
+    bool open();
     bool read();
     bool write();
 
