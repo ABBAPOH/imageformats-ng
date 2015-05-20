@@ -131,9 +131,11 @@ QIODevice *ImageDocument::device() const
 void ImageDocument::setDevice(QIODevice *device)
 {
     Q_D(ImageDocument);
+    if (d->device == device)
+        return;
     d->file.reset();
-    d->device = device;
     d->killHandler();
+    d->device = device;
 }
 
 QString ImageDocument::fileName() const
