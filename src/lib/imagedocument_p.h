@@ -33,7 +33,7 @@ public:
     QScopedPointer<QFile> file;
     ImageDocument::OpenMode openMode;
     QMimeType mimeType;
-    QString errorString;
+    ImageError error;
     int mipmapCount;
     int frameCount;
     ImageResource::Sides sides;

@@ -56,19 +56,19 @@ bool ImageDocumentPrivate::initHandler()
         return true;
 
     if (!device) {
-        errorString = ImageDocument::tr("No device set");
+        error = ImageError(ImageError::DeviceError, ImageDocument::tr("No device set"));
         return false;
     }
 
     if (!mimeType.isValid()) {
-        errorString = ImageDocument::tr("Mime type is invalid");
+        error = ImageError(ImageError::MimeTypeError, ImageDocument::tr("Mime type is invalid"));
         return false;
     }
 
     auto db = ImageIOHandlerDatabase::instance();
     handler = db->create(mimeType);
     if (!handler) {
-        errorString = ImageDocument::tr("No handler for mimetype %1").arg(mimeType.name());
+        error = ImageError(ImageError::UnsupportedFormatError, ImageDocument::tr("Unsupported format"));
         return false;
     }
 
@@ -155,15 +155,13 @@ void ImageDocument::setMimeType(const QString &name)
 bool ImageDocument::hasError() const
 {
     Q_D(const ImageDocument);
-    return !d->errorString.isEmpty();
+    return d->error.errorCode() != ImageError::NoError;
 }
 
-QString ImageDocument::errorString() const
+ImageError ImageDocument::error() const
 {
     Q_D(const ImageDocument);
-    if (d->errorString.isEmpty())
-        return tr("No error");
-    return d->errorString;
+    return d->error;
 }
 
 bool ImageDocument::open(OpenMode mode)
@@ -191,7 +189,7 @@ bool ImageDocument::open(OpenMode mode)
         return false;
 
     if (!d->handler->open(mode)) {
-        d->errorString = tr("Can't open image");
+        d->error = ImageError(ImageError::DeviceError, ImageDocument::tr("Device error"));
         return false;
     }
 
@@ -226,12 +224,12 @@ bool ImageDocument::read()
     Q_D(ImageDocument);
 
     if (!isOpen()) {
-        d->errorString = tr("Document is not opened");
+        d->error = ImageError(ImageError::DeviceError, ImageDocument::tr("Device error"));
         return false;
     }
 
     if (!d->handler->read()) {
-        d->errorString = tr("Can't read image");
+        d->error = ImageError(ImageError::HandlerError, ImageDocument::tr("Handler error"));
         return false;
     }
 
@@ -243,12 +241,12 @@ bool ImageDocument::write()
     Q_D(ImageDocument);
 
     if (!isOpen()) {
-        d->errorString = tr("Document is not opened");
+        d->error = ImageError(ImageError::DeviceError, ImageDocument::tr("Device error"));
         return false;
     }
 
     if (!d->handler->write()) {
-        d->errorString = tr("Can't read image");
+        d->error = ImageError(ImageError::HandlerError, ImageDocument::tr("Handler error"));
         return false;
     }
 

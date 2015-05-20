@@ -14,7 +14,12 @@ Lib {
     Group {
         name: "jpeg"
         condition: qbs.targetOS.contains("linux")
-        files: [ "*.cpp", "*.h" ]
+        files: [
+            "*.cpp",
+            "*.h",
+            "../imageerror.cpp",
+            "../imageerror.h",
+        ]
         prefix: "jpeg/"
     }
 }

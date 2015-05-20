@@ -1,6 +1,7 @@
 #ifndef IMAGEDOCUMENT_H
 #define IMAGEDOCUMENT_H
 
+#include "imageerror.h"
 #include "imageresource.h"
 
 #include <QtCore/QMimeType>
@@ -46,7 +47,7 @@ public:
     void setMimeType(const QString &name);
 
     bool hasError() const;
-    QString errorString() const;
+    ImageError error() const;
 
     bool open(OpenMode mode);
     OpenMode openMode() const;

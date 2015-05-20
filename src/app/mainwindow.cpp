@@ -34,7 +34,7 @@ void MainWindow::open()
     _document->open(ImageDocument::ReadWrite);
 
     if (!_document->read())
-        qWarning() << "Can't read" << _document->errorString();
+        qWarning() << "Can't read" << _document->error().errorString();
     buildModel();
 }
 
