@@ -61,3 +61,10 @@ void ImageMeta::setExifOption(ImageMeta::ExifOption option, const QVariant &valu
 {
     d->exifOptions.insert(option, value);
 }
+
+void ImageMeta::clear()
+{
+    d->subType.clear();
+    d->options.clear();
+    d->exifOptions.clear();
+}

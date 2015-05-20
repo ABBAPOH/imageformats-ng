@@ -41,6 +41,8 @@ public:
     QVariant exifOption(ImageMeta::ExifOption option) const;
     void setExifOption(ImageMeta::ExifOption option, const QVariant &value);
 
+    void clear();
+
 private:
     QSharedDataPointer<ImageMetaData> d;
 };
