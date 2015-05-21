@@ -47,7 +47,7 @@ void MainWindow::buildModel(QStandardItem *parent)
 {
     for (int i = 0; i < _document->mipmapCount(); i++) {
         QStandardItem *mipmap = new QStandardItem(tr("Mipmap %1").arg(i));
-        for (int j = 0; j < _document->frameCount(); j++) {
+        for (int j = 0; j < _document->pageCount(); j++) {
             QStandardItem *frame = new QStandardItem(tr("Frame %1").arg(j));
 
             auto resource = _document->resource(i, j);

@@ -10,8 +10,6 @@
 class ImageIOHandler;
 class ImageIOHandlerPlugin;
 
-typedef QPair<int, int> ImageIndex;
-
 class ImageDocumentPrivate
 {
     Q_DECLARE_PUBLIC(ImageDocument)
@@ -42,7 +40,7 @@ public:
     ImageResource::Sides sides;
     ImageMeta meta;
 
-    QMap<ImageIndex, ImageResource> elements;
+    QVector<ImagePage> pages;
 
     ImageIOHandler *handler;
 };

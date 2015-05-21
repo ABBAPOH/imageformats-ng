@@ -14,7 +14,7 @@ void TestImageDocument::defaultValues()
 {
     ImageDocument doc;
     QCOMPARE(doc.mipmapCount(), 1);
-    QCOMPARE(doc.frameCount(), 1);
+    QCOMPARE(doc.pageCount(), 1);
     QCOMPARE(doc.sides(), ImageResource::NoSides);
 //    QCOMPARE(doc.sliceCount(), 1);
 }
@@ -26,8 +26,8 @@ void TestImageDocument::setters()
     doc.setMipmapCount(2);
     QCOMPARE(doc.mipmapCount(), 2);
 
-    doc.setFrameCount(2);
-    QCOMPARE(doc.frameCount(), 2);
+    doc.setPageCount(2);
+    QCOMPARE(doc.pageCount(), 2);
 
     doc.setSides(ImageResource::Sides(ImageResource::PositiveX | ImageResource::NegaviveX));
     QCOMPARE(doc.sides(), ImageResource::Sides(ImageResource::PositiveX | ImageResource::NegaviveX));

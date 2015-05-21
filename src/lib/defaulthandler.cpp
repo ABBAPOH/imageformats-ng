@@ -32,7 +32,7 @@ bool DefaultHandler::read()
 
     int count = reader.imageCount();
     if (reader.supportsOption(QImageIOHandler::Animation)) {
-        document()->setFrameCount(count);
+        document()->setPageCount(count);
 
         for (int i = 0; i < count; i++) {
             QImage image;

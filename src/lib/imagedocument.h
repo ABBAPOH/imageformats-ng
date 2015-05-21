@@ -2,6 +2,7 @@
 #define IMAGEDOCUMENT_H
 
 #include "imageerror.h"
+#include "imagepage.h"
 #include "imageresource.h"
 
 #include <QtCore/QMimeType>
@@ -20,7 +21,7 @@ public:
     enum CapabilityFlag {
         NoCapabilities = 0x0,
         SupportMipmaps = 0x1,
-        SupportFrames = 0x2,
+        SupportPages = 0x2,
         SupportSides = 0x4,
         SupportSlices = 0x8,
         // reserved for layers
@@ -60,8 +61,8 @@ public:
     int mipmapCount() const;
     void setMipmapCount(int count);
 
-    int frameCount() const;
-    void setFrameCount(int count);
+    int pageCount() const;
+    void setPageCount(int count);
 
     ImageResource::Sides sides() const;
     void setSides(ImageResource::Sides sides);
@@ -69,8 +70,11 @@ public:
     ImageMeta meta() const;
     void setMeta(const ImageMeta &meta);
 
-    ImageResource resource(int frame = 0, int mipmap = 0);
-    void setResource(const ImageResource &resource, int frame = 0, int mipmap = 0);
+    ImagePage page(int index = 0);
+    void setPage(const ImagePage &page, int index = 0);
+
+    ImageResource resource(int page = 0, int mipmap = 0);
+    void setResource(const ImageResource &resource, int page = 0, int mipmap = 0);
 
 protected:
     ImageDocumentPrivate *d_ptr;
