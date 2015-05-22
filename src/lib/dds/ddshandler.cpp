@@ -1636,3 +1636,8 @@ bool DDSHandler::verifyHeader(const DDSHeader &dds) const
 
     return true;
 }
+
+ImageIOHandlerPlugin::Capabilities DdsHandlerPlugin::capabilities() const
+{
+    return Capabilities(CanRead | CanWrite);
+}

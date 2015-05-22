@@ -78,3 +78,7 @@ bool DefaultHandler::write()
     return true;
 }
 
+ImageIOHandlerPlugin::Capabilities DefaultHandlerPlugin::capabilities() const
+{
+    return Capabilities(CanRead | CanWrite);
+}

@@ -16,6 +16,7 @@ class DefaultHandlerPlugin : public ImageIOHandlerPlugin
 {
 public:
     DefaultHandler *create() { return new DefaultHandler(); }
+    Capabilities capabilities() const Q_DECL_OVERRIDE;
 };
 
 #endif // DEFAULTHANDLER_H

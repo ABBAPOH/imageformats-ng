@@ -89,6 +89,7 @@ class DdsHandlerPlugin : public ImageIOHandlerPlugin
 {
 public:
     DDSHandler *create() { return new DDSHandler(); }
+    Capabilities capabilities() const Q_DECL_OVERRIDE;
 };
 
 #endif // DDSHANDLER_H
