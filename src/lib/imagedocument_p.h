@@ -36,7 +36,6 @@ public:
     QMimeType mimeType;
     ImageError error;
     int mipmapCount;
-    ImageResource::Sides sides;
     ImageMeta meta;
 
     QVector<ImageResource> resources;

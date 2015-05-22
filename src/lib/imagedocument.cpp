@@ -42,7 +42,6 @@ void ImageDocumentPrivate::init()
     device = Q_NULLPTR;
     mipmapCount = 1;
     resources.resize(1);
-    sides = ImageResource::NoSides;
 
     handler = 0;
 }
@@ -270,20 +269,6 @@ void ImageDocument::setResourceCount(int count)
     if (d->resources.size() == count)
         return;
     d->resources.resize(count);
-}
-
-ImageResource::Sides ImageDocument::sides() const
-{
-    Q_D(const ImageDocument);
-    return d->sides;
-}
-
-void ImageDocument::setSides(ImageResource::Sides sides)
-{
-    Q_D(ImageDocument);
-    if (d->sides == sides)
-        return;
-    d->sides = sides;
 }
 
 ImageMeta ImageDocument::meta() const

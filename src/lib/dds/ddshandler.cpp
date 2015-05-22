@@ -1336,15 +1336,11 @@ static bool readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, Ima
         ImageResource::NegaviveZ
     };
 
-    ImageResource::Sides docSides;
-
     for (int i = 0; i < 6; i++) {
         if (!(dds.caps2 & faceFlags[i]))
             continue; // Skip face.
 
         const QImage face = readLayer(s, dds, fmt, dds.width, dds.height);
-
-        docSides |= sides[i];
 
         resource.setSide(sides[i], face);
 
@@ -1359,8 +1355,6 @@ static bool readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, Ima
 //            memcpy(dst, src, sizeof(QRgb) * dds.width);
 //        }
     }
-
-    document->setSides(docSides);
 
     return true;
 }

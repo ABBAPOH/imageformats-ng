@@ -38,6 +38,7 @@ public:
     void setImage(const QImage &image);
     void setImage(int mipmap, const QImage &image);
 
+    Sides sides() const;
     QImage side(Side side, int mipmap = 0);
     void setSide(Side side, const QImage &image);
     void setSide(Side side, int mipmap, const QImage &image);

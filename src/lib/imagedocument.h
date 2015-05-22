@@ -46,9 +46,6 @@ public:
     int resourceCount() const;
     void setResourceCount(int count);
 
-    ImageResource::Sides sides() const;
-    void setSides(ImageResource::Sides sides);
-
     ImageMeta meta() const;
     void setMeta(const ImageMeta &meta);
 

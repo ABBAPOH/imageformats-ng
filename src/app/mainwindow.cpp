@@ -55,7 +55,7 @@ void MainWindow::buildModel(QStandardItem *parent)
             if (resource.type() == ImageResource::Cubemap) {
                 for (int k = 0; k < 6; k++) {
                     ImageResource::Side side = ImageResource::Side(ImageResource::PositiveX << k);
-                    if (_document->sides() & side) {
+                    if (resource.sides() & side) {
                         QStandardItem *item = new QStandardItem(tr("Side %1").arg(k));
                         item->setData(resource.side(side));
                         mipmap->appendRow(item);

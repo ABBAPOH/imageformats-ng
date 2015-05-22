@@ -14,7 +14,6 @@ void TestImageDocument::defaultValues()
 {
     ImageDocument doc;
     QCOMPARE(doc.resourceCount(), 1);
-    QCOMPARE(doc.sides(), ImageResource::NoSides);
 //    QCOMPARE(doc.sliceCount(), 1);
 }
 
@@ -24,9 +23,6 @@ void TestImageDocument::setters()
 
     doc.setResourceCount(2);
     QCOMPARE(doc.resourceCount(), 2);
-
-    doc.setSides(ImageResource::Sides(ImageResource::PositiveX | ImageResource::NegaviveX));
-    QCOMPARE(doc.sides(), ImageResource::Sides(ImageResource::PositiveX | ImageResource::NegaviveX));
 
 //    doc.setSliceCount(2);
 //    QCOMPARE(doc.sliceCount(), 2);

@@ -10,6 +10,7 @@ public:
 
     ImageResource::Type type;
     int mipmapCount;
+    ImageResource::Sides sides;
     int depth;
 //    QVector<QImage> images;
     QMap<ImageIndex, QImage> images;
@@ -20,6 +21,7 @@ ImageResource::ImageResource(Type type) :
 {
     d->type = type;
     d->mipmapCount = 1;
+    d->sides = NoSides;
     d->depth = 1;
 }
 
@@ -28,6 +30,7 @@ ImageResource::ImageResource(const QImage &image) :
 {
     d->type = Image;
     d->mipmapCount = 1;
+    d->sides = NoSides;
     d->depth = 1;
     d->images.insert(ImageIndex(0, 0), image);
 }
@@ -84,6 +87,11 @@ void ImageResource::setImage(int mipmap, const QImage &image)
     d->images.insert(ImageIndex(0, mipmap), image);
 }
 
+ImageResource::Sides ImageResource::sides() const
+{
+    return d->sides;
+}
+
 static int sideToIndex(ImageResource::Side side)
 {
     switch (side) {
@@ -106,11 +114,19 @@ QImage ImageResource::side(ImageResource::Side side, int mipmap)
 
 void ImageResource::setSide(ImageResource::Side side, const QImage &image)
 {
+    if (side == NoSides || side == AllSides)
+        return;
+    if (!image.isNull())
+        d->sides |= side;
+    else
+        d->sides &= ~side;
     d->images.insert(ImageIndex(sideToIndex(side), 0), image);
 }
 
 void ImageResource::setSide(ImageResource::Side side, int mipmap, const QImage &image)
 {
+    if (side == NoSides || side == AllSides)
+        return;
     if (mipmap >= d->mipmapCount)
         return;
     d->images.insert(ImageIndex(sideToIndex(side), mipmap), image);
