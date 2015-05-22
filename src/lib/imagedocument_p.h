@@ -36,7 +36,6 @@ public:
     QMimeType mimeType;
     ImageError error;
     int mipmapCount;
-    int frameCount;
     ImageResource::Sides sides;
     ImageMeta meta;
 

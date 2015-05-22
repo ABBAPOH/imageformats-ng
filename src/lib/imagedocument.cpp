@@ -41,7 +41,6 @@ void ImageDocumentPrivate::init()
 {
     device = Q_NULLPTR;
     mipmapCount = 1;
-    frameCount = 1;
     resources.resize(1);
     sides = ImageResource::NoSides;
 
