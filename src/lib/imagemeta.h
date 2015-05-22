@@ -18,7 +18,8 @@ public:
     enum Option {
         Size,
         Quality,
-        Name
+        Name,
+        NextFrameDelay
     };
 
     enum ExifOption {
