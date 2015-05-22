@@ -13,7 +13,6 @@ private slots:
 void TestImageDocument::defaultValues()
 {
     ImageDocument doc;
-    QCOMPARE(doc.mipmapCount(), 1);
     QCOMPARE(doc.resourceCount(), 1);
     QCOMPARE(doc.sides(), ImageResource::NoSides);
 //    QCOMPARE(doc.sliceCount(), 1);
@@ -22,9 +21,6 @@ void TestImageDocument::defaultValues()
 void TestImageDocument::setters()
 {
     ImageDocument doc;
-
-    doc.setMipmapCount(2);
-    QCOMPARE(doc.mipmapCount(), 2);
 
     doc.setResourceCount(2);
     QCOMPARE(doc.resourceCount(), 2);

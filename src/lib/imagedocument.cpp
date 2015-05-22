@@ -258,20 +258,6 @@ bool ImageDocument::write()
     return true;
 }
 
-int ImageDocument::mipmapCount() const
-{
-    Q_D(const ImageDocument);
-    return d->mipmapCount;
-}
-
-void ImageDocument::setMipmapCount(int count)
-{
-    Q_D(ImageDocument);
-    if (d->mipmapCount == count)
-        return;
-    d->mipmapCount = count;
-}
-
 int ImageDocument::resourceCount() const
 {
     Q_D(const ImageDocument);

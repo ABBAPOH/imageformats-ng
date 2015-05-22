@@ -43,9 +43,6 @@ public:
     bool read();
     bool write();
 
-    int mipmapCount() const;
-    void setMipmapCount(int count);
-
     int resourceCount() const;
     void setResourceCount(int count);
 
