@@ -56,7 +56,7 @@ void MainWindow::buildModel(QStandardItem *parent)
                     ImageResource::Side side = ImageResource::Side(ImageResource::PositiveX << k);
                     if (_document->sides() & side) {
                         QStandardItem *item = new QStandardItem(tr("Side %1").arg(k));
-                        item->setData(resource.image(side));
+                        item->setData(resource.side(side));
                         frame->appendRow(item);
                     }
                 }

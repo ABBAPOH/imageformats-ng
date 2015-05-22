@@ -36,14 +36,14 @@ public:
     QImage image() const;
     void setImage(const QImage &image);
 
-    QImage image(Side side); // TODO: rename to QImage side(Side side)?
-    void setImage(Side side, const QImage &image);
+    QImage side(Side side);
+    void setSide(Side side, const QImage &image);
 
     int depth() const;
     void setDepth(int depth);
 
-    QImage image(int slice); // TODO: remove to QImage slice(int index)
-    void setImage(int slice, const QImage &image);
+    QImage slice(int index);
+    void setSlice(int index, const QImage &image);
 
     ImageMeta meta() const;
     void setMeta(const ImageMeta &meta);

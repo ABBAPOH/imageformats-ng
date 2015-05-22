@@ -71,12 +71,12 @@ static int sideToIndex(ImageResource::Side side)
     return -1;
 }
 
-QImage ImageResource::image(ImageResource::Side side)
+QImage ImageResource::side(ImageResource::Side side)
 {
     return d->images.at(sideToIndex(side));
 }
 
-void ImageResource::setImage(ImageResource::Side side, const QImage &image)
+void ImageResource::setSide(ImageResource::Side side, const QImage &image)
 {
     d->images[sideToIndex(side)] = image;
 }
@@ -96,18 +96,18 @@ void ImageResource::setDepth(int depth)
     d->images.resize(depth);
 }
 
-QImage ImageResource::image(int slice)
+QImage ImageResource::slice(int index)
 {
-    if (slice < 0 || slice >= d->images.size())
+    if (index < 0 || index >= d->images.size())
         return QImage();
-    return d->images.at(slice);
+    return d->images.at(index);
 }
 
-void ImageResource::setImage(int slice, const QImage &image)
+void ImageResource::setSlice(int index, const QImage &image)
 {
-    if (slice < 0 || slice >= d->images.size())
+    if (index < 0 || index >= d->images.size())
         return;
-    d->images[slice] = image;
+    d->images[index] = image;
 }
 
 ImageMeta ImageResource::meta() const
