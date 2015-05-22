@@ -39,7 +39,6 @@ public:
     // instead of bytearrays
     QVector<QByteArray> subTypes() const;
     bool supportsOption(ImageMeta::Option option);
-    bool supportsResourceOption(ImageMeta::Option option, const QByteArray subType = QByteArray());
 
     bool read();
     bool write();

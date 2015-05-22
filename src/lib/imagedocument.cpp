@@ -223,16 +223,6 @@ bool ImageDocument::supportsOption(ImageMeta::Option option)
     return d->handler->supportsDocumentOption(option);
 }
 
-bool ImageDocument::supportsResourceOption(ImageMeta::Option option, const QByteArray subType)
-{
-    Q_D(const ImageDocument);
-
-    if (!d->ensureHandlerInitialised())
-        return false;
-
-    return d->handler->supportsResourceOption(option, subType);
-}
-
 bool ImageDocument::read()
 {
     Q_D(ImageDocument);
