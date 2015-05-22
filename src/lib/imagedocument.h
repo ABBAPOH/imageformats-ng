@@ -2,7 +2,6 @@
 #define IMAGEDOCUMENT_H
 
 #include "imageerror.h"
-#include "imagepage.h"
 #include "imageresource.h"
 
 #include <QtCore/QMimeType>
@@ -61,8 +60,8 @@ public:
     int mipmapCount() const;
     void setMipmapCount(int count);
 
-    int pageCount() const;
-    void setPageCount(int count);
+    int resourceCount() const;
+    void setResourceCount(int count);
 
     ImageResource::Sides sides() const;
     void setSides(ImageResource::Sides sides);
@@ -70,11 +69,8 @@ public:
     ImageMeta meta() const;
     void setMeta(const ImageMeta &meta);
 
-    ImagePage page(int index = 0);
-    void setPage(const ImagePage &page, int index = 0);
-
-    ImageResource resource(int page = 0, int mipmap = 0);
-    void setResource(const ImageResource &resource, int page = 0, int mipmap = 0);
+    ImageResource resource(int index = 0);
+    void setResource(const ImageResource &resource, int index = 0);
 
 protected:
     ImageDocumentPrivate *d_ptr;

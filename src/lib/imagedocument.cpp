@@ -42,6 +42,7 @@ void ImageDocumentPrivate::init()
     device = Q_NULLPTR;
     mipmapCount = 1;
     frameCount = 1;
+    resources.resize(1);
     sides = ImageResource::NoSides;
 
     handler = 0;
@@ -292,18 +293,18 @@ void ImageDocument::setMipmapCount(int count)
     d->mipmapCount = count;
 }
 
-int ImageDocument::pageCount() const
+int ImageDocument::resourceCount() const
 {
     Q_D(const ImageDocument);
-    return d->pages.size();
+    return d->resources.size();
 }
 
-void ImageDocument::setPageCount(int count)
+void ImageDocument::setResourceCount(int count)
 {
     Q_D(ImageDocument);
-    if (d->pages.size() == count)
+    if (d->resources.size() == count)
         return;
-    d->pages.resize(count);
+    d->resources.resize(count);
 }
 
 ImageResource::Sides ImageDocument::sides() const
@@ -332,30 +333,18 @@ void ImageDocument::setMeta(const ImageMeta &meta)
     d->meta = meta;
 }
 
-ImagePage ImageDocument::page(int index)
+ImageResource ImageDocument::resource(int index)
 {
     Q_D(const ImageDocument);
-    if (index < 0 || index >= d->pages.count())
-        return ImagePage();
-    return d->pages.at(index);
+    if (index < 0 || index >= d->resources.count())
+        return ImageResource();
+    return d->resources.at(index);
 }
 
-void ImageDocument::setPage(const ImagePage &page, int index)
+void ImageDocument::setResource(const ImageResource &resource, int index)
 {
     Q_D(ImageDocument);
-    if (index < 0 || index >= d->pages.count())
+    if (index < 0 || index >= d->resources.count())
         return;
-    d->pages[index] = page;
-}
-
-ImageResource ImageDocument::resource(int page, int mipmap)
-{
-    return this->page(page).mipmap(mipmap);
-}
-
-void ImageDocument::setResource(const ImageResource &resource, int page, int mipmap)
-{
-    ImagePage p = this->page(page);
-    p.setMipmap(mipmap, resource);
-    setPage(p, page);
+    d->resources[index] = resource;
 }

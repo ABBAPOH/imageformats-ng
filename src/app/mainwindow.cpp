@@ -45,28 +45,29 @@ void MainWindow::buildModel()
 
 void MainWindow::buildModel(QStandardItem *parent)
 {
-    for (int i = 0; i < _document->mipmapCount(); i++) {
-        QStandardItem *mipmap = new QStandardItem(tr("Mipmap %1").arg(i));
-        for (int j = 0; j < _document->pageCount(); j++) {
-            QStandardItem *frame = new QStandardItem(tr("Frame %1").arg(j));
+    for (int j = 0; j < _document->resourceCount(); j++) {
+        QStandardItem *resItem = new QStandardItem(tr("Resource %1").arg(j));
 
-            auto resource = _document->resource(i, j);
+        auto resource = _document->resource(j);
+        for (int i = 0; i < resource.mipmapCount(); i++) {
+            QStandardItem *mipmap = new QStandardItem(tr("Mipmap %1").arg(i));
+
             if (resource.type() == ImageResource::Cubemap) {
                 for (int k = 0; k < 6; k++) {
                     ImageResource::Side side = ImageResource::Side(ImageResource::PositiveX << k);
                     if (_document->sides() & side) {
                         QStandardItem *item = new QStandardItem(tr("Side %1").arg(k));
                         item->setData(resource.side(side));
-                        frame->appendRow(item);
+                        mipmap->appendRow(item);
                     }
                 }
             } else {
-                frame->setData(resource.image());
+                mipmap->setData(resource.image());
             }
-            mipmap->appendRow(frame);
+            resItem->appendRow(mipmap);
         }
 
-        parent->appendRow(mipmap);
+        parent->appendRow(resItem);
     }
 }
 

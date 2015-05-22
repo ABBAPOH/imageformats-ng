@@ -33,17 +33,23 @@ public:
 
     Type type() const;
 
-    QImage image() const;
-    void setImage(const QImage &image);
+    int mipmapCount() const;
+    void setMipmapCount(int count);
 
-    QImage side(Side side);
+    QImage image(int mipmap = 0) const;
+    void setImage(const QImage &image);
+    void setImage(int mipmap, const QImage &image);
+
+    QImage side(Side side, int mipmap = 0);
     void setSide(Side side, const QImage &image);
+    void setSide(Side side, int mipmap, const QImage &image);
 
     int depth() const;
     void setDepth(int depth);
 
-    QImage slice(int index);
+    QImage slice(int index, int mipmap = 0);
     void setSlice(int index, const QImage &image);
+    void setSlice(int index, int mipmap, const QImage &image);
 
     ImageMeta meta() const;
     void setMeta(const ImageMeta &meta);

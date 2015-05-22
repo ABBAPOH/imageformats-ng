@@ -40,7 +40,7 @@ public:
     ImageResource::Sides sides;
     ImageMeta meta;
 
-    QVector<ImagePage> pages;
+    QVector<ImageResource> resources;
 
     ImageIOHandler *handler;
 };

@@ -32,7 +32,7 @@ bool DefaultHandler::read()
 
     int count = reader.imageCount();
     if (reader.supportsOption(QImageIOHandler::Animation)) {
-        document()->setPageCount(count);
+        document()->setResourceCount(count);
 
         for (int i = 0; i < count; i++) {
             QImage image;
@@ -43,7 +43,8 @@ bool DefaultHandler::read()
             document()->setResource(image, i);
         }
     } else if (count > 0) {
-        document()->setMipmapCount(count);
+        ImageResource resource;
+        resource.setMipmapCount(count);
 
         for (int i = 0; i < count; i++) {
             QImage image;
@@ -52,8 +53,9 @@ bool DefaultHandler::read()
             if (!ok)
                 return false;
 
-            document()->setResource(image, 0, i);
+            resource.setImage(i, image);
         }
+        document()->setResource(resource, 0);
     } else {
         QImage image;
         const bool ok = reader.read(&image);

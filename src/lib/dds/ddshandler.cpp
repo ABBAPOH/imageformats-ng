@@ -1208,13 +1208,12 @@ static QImage readLayer(QDataStream &s, const DDSHeader &dds, const int format, 
     return QImage();
 }
 
-static inline ImageResource readTexture(QDataStream &s, const DDSHeader &dds, const int format, const int mipmapLevel)
+static inline bool readTexture(QDataStream &s, const DDSHeader &dds, const int format, const int mipmapLevel, ImageResource &resource)
 {
     quint32 width = dds.width / (1 << mipmapLevel);
     quint32 height = dds.height / (1 << mipmapLevel);
-    ImageResource result;
-    result.setImage(readLayer(s, dds, format, width, height));
-    return result;
+    resource.setImage(readLayer(s, dds, format, width, height));
+    return true;
 }
 
 static qint64 mipmapSize(const DDSHeader &dds, const int format, const int level)
@@ -1321,7 +1320,7 @@ static qint64 mipmapOffset(const DDSHeader &dds, const int format, const int lev
     return result;
 }
 
-static ImageResource readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, ImageDocument *document)
+static bool readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, ImageDocument *document, ImageResource &resource)
 {
 //    QImage::Format format = hasAlpha(dds) ? QImage::Format_ARGB32 : QImage::Format_RGB32;
 //    QImage image(4 * dds.width, 3 * dds.height, format);
@@ -1338,8 +1337,6 @@ static ImageResource readCubeMap(QDataStream &s, const DDSHeader &dds, const int
     };
 
     ImageResource::Sides docSides;
-
-    ImageResource resource(ImageResource::Cubemap);
 
     for (int i = 0; i < 6; i++) {
         if (!(dds.caps2 & faceFlags[i]))
@@ -1365,7 +1362,7 @@ static ImageResource readCubeMap(QDataStream &s, const DDSHeader &dds, const int
 
     document->setSides(docSides);
 
-    return resource;
+    return true;
 }
 
 static QByteArray formatName(int format)
@@ -1429,7 +1426,8 @@ bool DDSHandler::read()
 {
     if (!open())
         return false;
-    document()->setMipmapCount(qMax<quint32>(1, m_header.mipMapCount));
+    ImageResource resource(isCubeMap(m_header) ? ImageResource::Cubemap : ImageResource::Image);
+    resource.setMipmapCount(qMax<quint32>(1, m_header.mipMapCount));
     for (quint32 i = 0; i < qMax<quint32>(1, m_header.mipMapCount); i++) {
         qint64 pos = headerSize + mipmapOffset(m_header, m_format, i);
         if (!device()->seek(pos))
@@ -1437,15 +1435,16 @@ bool DDSHandler::read()
         QDataStream s(device());
         s.setByteOrder(QDataStream::LittleEndian);
 
-        auto resource = isCubeMap(m_header) ?
-                    readCubeMap(s, m_header, m_format, document()) :
-                    readTexture(s, m_header, m_format, i);
+        if (isCubeMap(m_header))
+            readCubeMap(s, m_header, m_format, document(), resource);
+        else
+            readTexture(s, m_header, m_format, i, resource);
 
         bool ok = s.status() == QDataStream::Ok;
         if (!ok)
             return false;
-        document()->setResource(resource, 0, i);
     }
+    document()->setResource(resource);
     return true;
 }
 
