@@ -24,7 +24,6 @@ public:
     virtual bool supportsDocumentOption(ImageMeta::Option option);
     virtual bool supportsResourceOption(ImageMeta::Option option, const QByteArray subType);
 
-    virtual ImageDocument::Capabilities capabilities() const;
     virtual QVector<QByteArray> subTypes() const;
 
 private:

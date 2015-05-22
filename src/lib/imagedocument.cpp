@@ -203,16 +203,6 @@ ImageError ImageDocument::error() const
     return d->error;
 }
 
-ImageDocument::Capabilities ImageDocument::capabilities() const
-{
-    Q_D(const ImageDocument);
-
-    if (!d->ensureHandlerInitialised())
-        return NoCapabilities;
-
-    return d->handler->capabilities();
-}
-
 QVector<QByteArray> ImageDocument::subTypes() const
 {
     Q_D(const ImageDocument);
