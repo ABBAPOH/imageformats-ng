@@ -2,6 +2,7 @@
 #define IMAGEDOCUMENT_H
 
 #include "imageerror.h"
+#include "imagemeta.h"
 #include "imageresource.h"
 
 #include <QtCore/QMimeType>

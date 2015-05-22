@@ -1,8 +1,6 @@
 #ifndef IMAGERESOURCE_H
 #define IMAGERESOURCE_H
 
-#include "imagemeta.h"
-
 #include <QtCore/QSharedDataPointer>
 #include <QtGui/QImage>
 
@@ -50,9 +48,6 @@ public:
     QImage slice(int index, int mipmap = 0);
     void setSlice(int index, const QImage &image);
     void setSlice(int index, int mipmap, const QImage &image);
-
-    ImageMeta meta() const;
-    void setMeta(const ImageMeta &meta);
 
 private:
     QSharedDataPointer<ImageResourceData> d;

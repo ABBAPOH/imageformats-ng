@@ -13,7 +13,6 @@ public:
     int depth;
 //    QVector<QImage> images;
     QMap<ImageIndex, QImage> images;
-    ImageMeta meta;
 };
 
 ImageResource::ImageResource(Type type) :
@@ -153,14 +152,4 @@ void ImageResource::setSlice(int index, int mipmap, const QImage &image)
     if (mipmap >= d->mipmapCount)
         return;
     d->images.insert(ImageIndex(index, mipmap), image);
-}
-
-ImageMeta ImageResource::meta() const
-{
-    return d->meta;
-}
-
-void ImageResource::setMeta(const ImageMeta &meta)
-{
-    d->meta = meta;
 }
