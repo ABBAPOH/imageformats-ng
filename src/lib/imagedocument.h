@@ -28,7 +28,7 @@ public:
     QString fileName() const;
     void setFileName(const QString &fileName);
 
-    QMimeType mimeType() const;
+    QString mimeType() const;
     void setMimeType(const QMimeType &mimeType);
     void setMimeType(const QString &name);
 

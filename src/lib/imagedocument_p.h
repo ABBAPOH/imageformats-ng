@@ -34,7 +34,7 @@ public:
     QIODevice *device;
     QString fileName;
     QScopedPointer<QFile> file;
-    QMimeType mimeType;
+    QString mimeType;
     ImageError error;
     ImageMeta meta;
 
@@ -49,7 +49,7 @@ public:
     ImageIOHandlerDatabase();
     ~ImageIOHandlerDatabase();
 
-    ImageIOHandler *create(const QMimeType &mimeType);
+    ImageIOHandler *create(const QString &mimeType);
     QStringList availableMimeTypes(ImageIOHandlerPlugin::Capabilities caps) const;
 
     static ImageIOHandlerDatabase *instance();

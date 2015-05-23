@@ -3,9 +3,8 @@
 #include <QImageReader>
 #include <QImageWriter>
 
-static QByteArray mimeTypeToFormat(const QMimeType &mimeType)
+static QByteArray mimeTypeToFormat(const QString &name)
 {
-    auto name = mimeType.name();
     if (name == "image/jpeg")
         return "jpg";
 

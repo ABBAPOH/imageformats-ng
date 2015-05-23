@@ -30,12 +30,12 @@ void ImageIOHandler::setDevice(QIODevice *device)
     _device = device;
 }
 
-QMimeType ImageIOHandler::mimeType() const
+QString ImageIOHandler::mimeType() const
 {
     return _mimeType;
 }
 
-void ImageIOHandler::setMimeType(const QMimeType &mimeType)
+void ImageIOHandler::setMimeType(const QString &mimeType)
 {
     _mimeType = mimeType;
 }

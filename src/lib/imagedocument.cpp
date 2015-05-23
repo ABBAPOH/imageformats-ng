@@ -22,9 +22,9 @@ ImageIOHandlerDatabase::~ImageIOHandlerDatabase()
     qDeleteAll(map);
 }
 
-ImageIOHandler *ImageIOHandlerDatabase::create(const QMimeType &mimeType)
+ImageIOHandler *ImageIOHandlerDatabase::create(const QString &mimeType)
 {
-    auto plugin = map.value(mimeType.name());
+    auto plugin = map.value(mimeType);
     if (!plugin)
         return 0;
     return plugin->create();
@@ -58,7 +58,7 @@ bool ImageDocumentPrivate::initHandler()
 {
     Q_Q(ImageDocument);
 
-    if (!mimeType.isValid()) {
+    if (!mimeType.isEmpty()) {
         error = ImageError(ImageError::MimeTypeError);
         return false;
     }
@@ -173,10 +173,10 @@ void ImageDocument::setFileName(const QString &fileName)
     d->file.reset(new QFile(fileName));
     d->killHandler();
     d->device = d->file.data();
-    d->mimeType = QMimeDatabase().mimeTypeForFile(fileName);
+    d->mimeType = QMimeDatabase().mimeTypeForFile(fileName).name();
 }
 
-QMimeType ImageDocument::mimeType() const
+QString ImageDocument::mimeType() const
 {
     Q_D(const ImageDocument);
     return d->mimeType;
@@ -185,10 +185,10 @@ QMimeType ImageDocument::mimeType() const
 void ImageDocument::setMimeType(const QMimeType &mimeType)
 {
     Q_D(ImageDocument);
-    if (d->mimeType == mimeType)
+    if (d->mimeType == mimeType.name())
         return;
     d->killHandler();
-    d->mimeType = mimeType;
+    d->mimeType = mimeType.name();
 }
 
 void ImageDocument::setMimeType(const QString &name)
