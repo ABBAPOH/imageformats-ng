@@ -39,17 +39,17 @@ public:
     void setMipmappedImage(const MipmappedImage &image);
 
     Sides sides() const;
-    QImage side(Side side);
-    void setSide(Side side, const QImage &image);
+    QImage image(Side side);
+    void setImage(Side side, const QImage &image);
 
-    MipmappedImage mipmappedImage(Side side) const;
+    MipmappedImage mipmappedImage(Side image) const;
     void setMipmappedImage(Side side, const MipmappedImage &image);
 
     int depth() const;
     void setDepth(int depth);
 
-    QImage slice(int index);
-    void setSlice(int index, const QImage &image);
+    QImage image(int slice);
+    void setImage(int slice, const QImage &image);
 
     MipmappedImage mipmappedImage(int slice) const;
     void setMipmappedImage(int slice, const MipmappedImage &image);

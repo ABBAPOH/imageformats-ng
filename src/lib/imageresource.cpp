@@ -90,12 +90,12 @@ static int sideToIndex(ImageResource::Side side)
     return -1;
 }
 
-QImage ImageResource::side(ImageResource::Side side)
+QImage ImageResource::image(ImageResource::Side side)
 {
     return mipmappedImage(side).image();
 }
 
-void ImageResource::setSide(ImageResource::Side side, const QImage &image)
+void ImageResource::setImage(ImageResource::Side side, const QImage &image)
 {
     setMipmappedImage(side, image);
 }
@@ -135,14 +135,14 @@ void ImageResource::setDepth(int depth)
     d->images2.resize(depth);
 }
 
-QImage ImageResource::slice(int index)
+QImage ImageResource::image(int slice)
 {
-    return mipmappedImage(index).image();
+    return mipmappedImage(slice).image();
 }
 
-void ImageResource::setSlice(int index, const QImage &image)
+void ImageResource::setImage(int slice, const QImage &image)
 {
-    setMipmappedImage(index, image);
+    setMipmappedImage(slice, image);
 }
 
 MipmappedImage ImageResource::mipmappedImage(int slice) const

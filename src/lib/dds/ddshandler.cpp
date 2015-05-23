@@ -1342,7 +1342,7 @@ static bool readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, Ima
 
         const QImage face = readLayer(s, dds, fmt, dds.width, dds.height);
 
-        resource.setSide(sides[i], face);
+        resource.setImage(sides[i], face);
 
         // Compute face offsets.
         int offset_x = faceOffsets[i].x * dds.width;
