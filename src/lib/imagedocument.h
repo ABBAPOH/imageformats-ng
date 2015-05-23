@@ -57,6 +57,8 @@ public:
     static QStringList availableOutputMimeTypes();
     QStringList suitableOutputMimeTypes() const;
 
+    static QSet<WriteOptions::Option> supportedWriteOptions(QString &mimeType);
+
 protected:
     ImageDocumentPrivate *d_ptr;
 };

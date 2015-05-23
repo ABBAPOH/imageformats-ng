@@ -3,6 +3,8 @@
 
 #include "imagedocument.h"
 
+#include <QtCore/QSet>
+
 class ImageIOHandler
 {
 public:
@@ -46,6 +48,9 @@ public:
 
     virtual ImageIOHandler *create() = 0;
     virtual Capabilities capabilities() const = 0;
+
+    virtual QSet<ReadOptions::Option> readOptions() const { return QSet<ReadOptions::Option>(); }
+    virtual QSet<WriteOptions::Option> writeOptions() const { return QSet<WriteOptions::Option>(); }
 };
 
 #endif // IMAGEIOHANDLER_H

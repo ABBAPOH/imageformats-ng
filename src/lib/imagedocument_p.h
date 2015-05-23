@@ -54,6 +54,7 @@ public:
 
     ImageIOHandler *create(const QString &mimeType);
     QStringList availableMimeTypes(ImageIOHandlerPlugin::Capabilities caps) const;
+    ImageIOHandlerPlugin *plugin(const QString &mimeType) const;
 
     static ImageIOHandlerDatabase *instance();
 

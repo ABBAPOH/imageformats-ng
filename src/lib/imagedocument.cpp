@@ -40,6 +40,11 @@ QStringList ImageIOHandlerDatabase::availableMimeTypes(ImageIOHandlerPlugin::Cap
     return result;
 }
 
+ImageIOHandlerPlugin *ImageIOHandlerDatabase::plugin(const QString &mimeType) const
+{
+    return map.value(mimeType);
+}
+
 Q_GLOBAL_STATIC(ImageIOHandlerDatabase, static_instance)
 ImageIOHandlerDatabase *ImageIOHandlerDatabase::instance()
 {
@@ -329,4 +334,12 @@ QStringList ImageDocument::suitableOutputMimeTypes() const
 {
     Q_D(const ImageDocument);
     return ImageIOHandlerDatabase::instance()->availableMimeTypes(d->caps);
+}
+
+QSet<WriteOptions::Option> ImageDocument::supportedWriteOptions(QString &mimeType)
+{
+    auto plugin = ImageIOHandlerDatabase::instance()->plugin(mimeType);
+    if (!plugin)
+        return QSet<WriteOptions::Option>();
+    return plugin->writeOptions();
 }
