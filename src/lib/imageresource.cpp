@@ -2,37 +2,33 @@
 
 #include <QtCore/QMap>
 
-typedef QPair<int, int> ImageIndex;
-
 class ImageResourceData : public QSharedData
 {
 public:
 
     ImageResource::Type type;
-    int mipmapCount;
     ImageResource::Sides sides;
-    int depth;
-//    QVector<QImage> images;
-    QMap<ImageIndex, QImage> images;
+    QVector<MipmappedImage> images2;
 };
 
 ImageResource::ImageResource(Type type) :
     d(new ImageResourceData)
 {
     d->type = type;
-    d->mipmapCount = 1;
     d->sides = NoSides;
-    d->depth = 1;
+    switch (type) {
+    case Image: d->images2.resize(1); break;
+    case Cubemap: d->images2.resize(6); break;
+    case VolumeTexture: d->images2.resize(1); break;
+    }
 }
 
 ImageResource::ImageResource(const QImage &image) :
     d(new ImageResourceData)
 {
     d->type = Image;
-    d->mipmapCount = 1;
     d->sides = NoSides;
-    d->depth = 1;
-    d->images.insert(ImageIndex(0, 0), image);
+    d->images2.append(image);
 }
 
 ImageResource::ImageResource(const ImageResource &other) :
@@ -56,35 +52,24 @@ ImageResource::Type ImageResource::type() const
     return d->type;
 }
 
-int ImageResource::mipmapCount() const
+QImage ImageResource::image() const
 {
-    return d->mipmapCount;
-}
-
-void ImageResource::setMipmapCount(int count)
-{
-    if (count < 1)
-        count = 1;
-    d->mipmapCount = count;
-}
-
-QImage ImageResource::image(int mipmap) const
-{
-    if (mipmap >= d->mipmapCount)
-        return QImage();
-    return d->images.value(ImageIndex(0, mipmap));
+    return mipmappedImage().image();
 }
 
 void ImageResource::setImage(const QImage &image)
 {
-    d->images.insert(ImageIndex(0, 0), image);
+    setMipmappedImage(image);
 }
 
-void ImageResource::setImage(int mipmap, const QImage &image)
+MipmappedImage ImageResource::mipmappedImage() const
 {
-    if (mipmap >= d->mipmapCount)
-        return;
-    d->images.insert(ImageIndex(0, mipmap), image);
+    return d->images2.at(0);
+}
+
+void ImageResource::setMipmappedImage(const MipmappedImage &image)
+{
+    d->images2[0] = image;
 }
 
 ImageResource::Sides ImageResource::sides() const
@@ -105,31 +90,34 @@ static int sideToIndex(ImageResource::Side side)
     return -1;
 }
 
-QImage ImageResource::side(ImageResource::Side side, int mipmap)
+QImage ImageResource::side(ImageResource::Side side)
 {
-    if (mipmap >= d->mipmapCount)
-        return QImage();
-    return d->images.value(ImageIndex(sideToIndex(side), mipmap));
+    return mipmappedImage(side).image();
 }
 
 void ImageResource::setSide(ImageResource::Side side, const QImage &image)
 {
-    if (side == NoSides || side == AllSides)
-        return;
-    if (!image.isNull())
-        d->sides |= side;
-    else
-        d->sides &= ~side;
-    d->images.insert(ImageIndex(sideToIndex(side), 0), image);
+    setMipmappedImage(side, image);
 }
 
-void ImageResource::setSide(ImageResource::Side side, int mipmap, const QImage &image)
+MipmappedImage ImageResource::mipmappedImage(ImageResource::Side side) const
+{
+    if (side == NoSides || side == AllSides)
+        return MipmappedImage();
+    return d->images2.at(sideToIndex(side));
+}
+
+void ImageResource::setMipmappedImage(ImageResource::Side side, const MipmappedImage &image)
 {
     if (side == NoSides || side == AllSides)
         return;
-    if (mipmap >= d->mipmapCount)
-        return;
-    d->images.insert(ImageIndex(sideToIndex(side), mipmap), image);
+
+    if (!image.isEmpty())
+        d->sides |= side;
+    else
+        d->sides &= ~side;
+
+    d->images2[sideToIndex(side)] = image;
 }
 
 int ImageResource::depth() const
@@ -137,35 +125,37 @@ int ImageResource::depth() const
     if (d->type != ImageResource::VolumeTexture)
         return 1;
 
-    return d->depth;
+    return d->images2.size();
 }
 
 void ImageResource::setDepth(int depth)
 {
-    d->depth = depth;
+    if (d->type != ImageResource::VolumeTexture)
+        return;
+    d->images2.resize(depth);
 }
 
-QImage ImageResource::slice(int index, int mipmap)
+QImage ImageResource::slice(int index)
 {
-    if (index < 0 || index >= d->depth)
-        return QImage();
-    if (mipmap >= d->mipmapCount)
-        return QImage();
-    return d->images.value(ImageIndex(index, mipmap));
+    return mipmappedImage(index).image();
 }
 
 void ImageResource::setSlice(int index, const QImage &image)
 {
-    if (index < 0 || index >= d->depth)
-        return;
-    d->images.insert(ImageIndex(index, 0), image);
+    setMipmappedImage(index, image);
 }
 
-void ImageResource::setSlice(int index, int mipmap, const QImage &image)
+MipmappedImage ImageResource::mipmappedImage(int slice) const
 {
-    if (index < 0 || index >= depth())
+    if (slice < 0 || slice >= depth())
+        return MipmappedImage();
+
+    return d->images2[slice];
+}
+
+void ImageResource::setMipmappedImage(int slice, const MipmappedImage &image)
+{
+    if (slice < 0 || slice >= depth())
         return;
-    if (mipmap >= d->mipmapCount)
-        return;
-    d->images.insert(ImageIndex(index, mipmap), image);
+    d->images2[slice] = image;
 }

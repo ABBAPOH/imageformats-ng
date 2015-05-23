@@ -44,7 +44,8 @@ bool DefaultHandler::read()
         }
     } else if (count > 0) {
         ImageResource resource;
-        resource.setMipmapCount(count);
+
+        QVector<QImage> mipmaps;
 
         for (int i = 0; i < count; i++) {
             QImage image;
@@ -53,8 +54,9 @@ bool DefaultHandler::read()
             if (!ok)
                 return false;
 
-            resource.setImage(i, image);
+            mipmaps.append(image);
         }
+        resource.setMipmappedImage(mipmaps);
         document()->setResource(resource, 0);
     } else {
         QImage image;

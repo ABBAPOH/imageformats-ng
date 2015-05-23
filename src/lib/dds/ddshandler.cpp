@@ -1421,7 +1421,6 @@ bool DDSHandler::read()
     if (!open())
         return false;
     ImageResource resource(isCubeMap(m_header) ? ImageResource::Cubemap : ImageResource::Image);
-    resource.setMipmapCount(qMax<quint32>(1, m_header.mipMapCount));
     for (quint32 i = 0; i < qMax<quint32>(1, m_header.mipMapCount); i++) {
         qint64 pos = headerSize + mipmapOffset(m_header, m_format, i);
         if (!device()->seek(pos))

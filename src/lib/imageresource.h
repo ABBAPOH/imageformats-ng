@@ -1,6 +1,7 @@
 #ifndef IMAGERESOURCE_H
 #define IMAGERESOURCE_H
 
+#include "mipmappedimage.h"
 #include <QtCore/QSharedDataPointer>
 #include <QtGui/QImage>
 
@@ -31,24 +32,27 @@ public:
 
     Type type() const;
 
-    int mipmapCount() const;
-    void setMipmapCount(int count);
-
-    QImage image(int mipmap = 0) const;
+    QImage image() const;
     void setImage(const QImage &image);
-    void setImage(int mipmap, const QImage &image);
+
+    MipmappedImage mipmappedImage() const;
+    void setMipmappedImage(const MipmappedImage &image);
 
     Sides sides() const;
-    QImage side(Side side, int mipmap = 0);
+    QImage side(Side side);
     void setSide(Side side, const QImage &image);
-    void setSide(Side side, int mipmap, const QImage &image);
+
+    MipmappedImage mipmappedImage(Side side) const;
+    void setMipmappedImage(Side side, const MipmappedImage &image);
 
     int depth() const;
     void setDepth(int depth);
 
-    QImage slice(int index, int mipmap = 0);
+    QImage slice(int index);
     void setSlice(int index, const QImage &image);
-    void setSlice(int index, int mipmap, const QImage &image);
+
+    MipmappedImage mipmappedImage(int slice) const;
+    void setMipmappedImage(int slice, const MipmappedImage &image);
 
 private:
     QSharedDataPointer<ImageResourceData> d;
