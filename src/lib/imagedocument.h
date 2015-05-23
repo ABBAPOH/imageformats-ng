@@ -40,7 +40,6 @@ public:
     // TODO: use class ImageType {QByteArray id; QString name; QString description;};
     // instead of bytearrays
     QVector<QByteArray> subTypes() const;
-    bool supportsOption(ImageMeta::Option option);
 
     bool read(const ReadOptions & options = ReadOptions());
     bool write(const WriteOptions &options = WriteOptions());

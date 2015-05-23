@@ -40,12 +40,6 @@ void ImageIOHandler::setMimeType(const QString &mimeType)
     _mimeType = mimeType;
 }
 
-bool ImageIOHandler::supportsDocumentOption(ImageMeta::Option option)
-{
-    Q_UNUSED(option);
-    return false;
-}
-
 QVector<QByteArray> ImageIOHandler::subTypes() const
 {
     return QVector<QByteArray>();

@@ -234,16 +234,6 @@ QVector<QByteArray> ImageDocument::subTypes() const
     return d->handler->subTypes();
 }
 
-bool ImageDocument::supportsOption(ImageMeta::Option option)
-{
-    Q_D(const ImageDocument);
-
-    if (!d->ensureHandlerInitialised())
-        return false;
-
-    return d->handler->supportsDocumentOption(option);
-}
-
 bool ImageDocument::read(const ReadOptions &options)
 {
     Q_D(ImageDocument);

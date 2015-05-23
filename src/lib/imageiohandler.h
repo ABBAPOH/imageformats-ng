@@ -21,8 +21,6 @@ public:
     virtual bool read() = 0;
     virtual bool write() = 0;
 
-    virtual bool supportsDocumentOption(ImageMeta::Option option);
-
     virtual QVector<QByteArray> subTypes() const;
 
 private:
