@@ -46,13 +46,6 @@ bool ImageIOHandler::supportsDocumentOption(ImageMeta::Option option)
     return false;
 }
 
-bool ImageIOHandler::supportsResourceOption(ImageMeta::Option option, const QByteArray subType)
-{
-    Q_UNUSED(option);
-    Q_UNUSED(subType);
-    return false;
-}
-
 QVector<QByteArray> ImageIOHandler::subTypes() const
 {
     return QVector<QByteArray>();

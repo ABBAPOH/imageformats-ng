@@ -22,7 +22,6 @@ public:
     virtual bool write() = 0;
 
     virtual bool supportsDocumentOption(ImageMeta::Option option);
-    virtual bool supportsResourceOption(ImageMeta::Option option, const QByteArray subType);
 
     virtual QVector<QByteArray> subTypes() const;
 
