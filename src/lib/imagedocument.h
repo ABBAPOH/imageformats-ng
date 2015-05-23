@@ -52,6 +52,9 @@ public:
     ImageResource resource(int index = 0);
     void setResource(const ImageResource &resource, int index = 0);
 
+    static QStringList availableInputMimeTypes();
+    static QStringList availableOutputMimeTypes();
+
 protected:
     ImageDocumentPrivate *d_ptr;
 };

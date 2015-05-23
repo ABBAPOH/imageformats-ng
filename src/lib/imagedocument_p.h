@@ -2,6 +2,7 @@
 #define IMAGEDOCUMENT_P
 
 #include "imagedocument.h"
+#include "imageiohandler.h"
 
 #include <QtCore/QFile>
 #include <QtCore/QHash>
@@ -50,6 +51,7 @@ public:
     ~ImageIOHandlerDatabase();
 
     ImageIOHandler *create(const QMimeType &mimeType);
+    QStringList availableMimeTypes(ImageIOHandlerPlugin::Capabilities caps) const;
 
     static ImageIOHandlerDatabase *instance();
 

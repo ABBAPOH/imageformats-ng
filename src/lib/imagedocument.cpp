@@ -2,7 +2,6 @@
 #include "imagedocument_p.h"
 
 #include "defaulthandler.h"
-#include "imageiohandler.h"
 #include "dds/ddshandler.h"
 #include "jpeg/jpeghandler_p.h"
 
@@ -29,6 +28,16 @@ ImageIOHandler *ImageIOHandlerDatabase::create(const QMimeType &mimeType)
     if (!plugin)
         return 0;
     return plugin->create();
+}
+
+QStringList ImageIOHandlerDatabase::availableMimeTypes(ImageIOHandlerPlugin::Capabilities caps) const
+{
+    QStringList result;
+    for (auto it = map.begin(), end = map.end(); it != end; it++) {
+        if (it.value()->capabilities() & caps)
+            result.append(it.key());
+    }
+    return result;
 }
 
 Q_GLOBAL_STATIC(ImageIOHandlerDatabase, static_instance)
@@ -297,4 +306,14 @@ void ImageDocument::setResource(const ImageResource &resource, int index)
     if (index < 0 || index >= d->resources.count())
         return;
     d->resources[index] = resource;
+}
+
+QStringList ImageDocument::availableInputMimeTypes()
+{
+    return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanRead);
+}
+
+QStringList ImageDocument::availableOutputMimeTypes()
+{
+    return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanWrite);
 }
