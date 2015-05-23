@@ -49,7 +49,6 @@ ImageIOHandlerDatabase *ImageIOHandlerDatabase::instance()
 void ImageDocumentPrivate::init()
 {
     device = Q_NULLPTR;
-    mipmapCount = 1;
     resources.resize(1);
 
     handler = 0;

@@ -36,7 +36,6 @@ public:
     QScopedPointer<QFile> file;
     QMimeType mimeType;
     ImageError error;
-    int mipmapCount;
     ImageMeta meta;
 
     QVector<ImageResource> resources;
