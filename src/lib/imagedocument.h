@@ -56,6 +56,7 @@ public:
 
     static QStringList availableInputMimeTypes();
     static QStringList availableOutputMimeTypes();
+    QStringList suitableOutputMimeTypes() const;
 
 protected:
     ImageDocumentPrivate *d_ptr;

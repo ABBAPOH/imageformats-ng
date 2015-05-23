@@ -107,6 +107,21 @@ void ImageDocumentPrivate::killHandler()
     handler = 0;
 }
 
+void ImageDocumentPrivate::updateCaps()
+{
+    caps = 0;
+    if (resources.size() > 1)
+        caps |= ImageIOHandlerPlugin::SupportsMultipleResources;
+    foreach (const ImageResource &resource, resources) {
+        if (resource.type() == ImageResource::Cubemap)
+            caps |= ImageIOHandlerPlugin::SupportsCubemaps;
+        if (resource.type() == ImageResource::VolumeTexture)
+            caps |= ImageIOHandlerPlugin::SupportsVolumeTextures;
+        if (resource.mipmappedImage().mipmapCount() > 1)
+            caps |= ImageIOHandlerPlugin::SupportsMipmaps;
+    }
+}
+
 QString ImageDocumentPrivate::errorString(ImageError::ErrorCode code)
 {
     switch (code) {
@@ -295,6 +310,7 @@ void ImageDocument::setResource(const ImageResource &resource, int index)
     if (index < 0 || index >= d->resources.count())
         return;
     d->resources[index] = resource;
+    d->updateCaps();
 }
 
 ImageMeta ImageDocument::meta() const
@@ -317,4 +333,10 @@ QStringList ImageDocument::availableInputMimeTypes()
 QStringList ImageDocument::availableOutputMimeTypes()
 {
     return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanWrite);
+}
+
+QStringList ImageDocument::suitableOutputMimeTypes() const
+{
+    Q_D(const ImageDocument);
+    return ImageIOHandlerDatabase::instance()->availableMimeTypes(d->caps);
 }

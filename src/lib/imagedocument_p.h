@@ -28,6 +28,7 @@ public:
     bool ensureHandlerInitialised() const;
     bool ensureDeviceOpened(QIODevice::OpenMode mode);
     void killHandler();
+    void updateCaps();
 
     static QString errorString(ImageError::ErrorCode code);
 
@@ -39,6 +40,8 @@ public:
     ImageMeta meta;
 
     QVector<ImageResource> resources;
+
+    ImageIOHandlerPlugin::Capabilities caps;
 
     ImageIOHandler *handler;
 };
