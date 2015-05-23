@@ -4,6 +4,8 @@
 #include "imageerror.h"
 #include "imagemeta.h"
 #include "imageresource.h"
+#include "readoptions.h"
+#include "writeoptions.h"
 
 #include <QtCore/QMimeType>
 #include <QtCore/QObject>
@@ -40,8 +42,8 @@ public:
     QVector<QByteArray> subTypes() const;
     bool supportsOption(ImageMeta::Option option);
 
-    bool read();
-    bool write();
+    bool read(const ReadOptions & options = ReadOptions());
+    bool write(const WriteOptions &options = WriteOptions());
 
     int resourceCount() const;
     void setResourceCount(int count);

@@ -229,9 +229,10 @@ bool ImageDocument::supportsOption(ImageMeta::Option option)
     return d->handler->supportsDocumentOption(option);
 }
 
-bool ImageDocument::read()
+bool ImageDocument::read(const ReadOptions &options)
 {
     Q_D(ImageDocument);
+    Q_UNUSED(options);
 
     if (!d->ensureHandlerInitialised())
         return false;
@@ -247,9 +248,10 @@ bool ImageDocument::read()
     return true;
 }
 
-bool ImageDocument::write()
+bool ImageDocument::write(const WriteOptions &options)
 {
     Q_D(ImageDocument);
+    Q_UNUSED(options);
 
     if (!d->ensureHandlerInitialised())
         return false;
