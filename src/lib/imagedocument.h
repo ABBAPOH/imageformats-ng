@@ -46,11 +46,11 @@ public:
     int resourceCount() const;
     void setResourceCount(int count);
 
-    ImageMeta meta() const;
-    void setMeta(const ImageMeta &meta);
-
     ImageResource resource(int index = 0);
     void setResource(const ImageResource &resource, int index = 0);
+
+    ImageMeta meta() const;
+    void setMeta(const ImageMeta &meta);
 
     static QStringList availableInputMimeTypes();
     static QStringList availableOutputMimeTypes();

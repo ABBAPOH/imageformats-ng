@@ -279,18 +279,6 @@ void ImageDocument::setResourceCount(int count)
     d->resources.resize(count);
 }
 
-ImageMeta ImageDocument::meta() const
-{
-    Q_D(const ImageDocument);
-    return d->meta;
-}
-
-void ImageDocument::setMeta(const ImageMeta &meta)
-{
-    Q_D(ImageDocument);
-    d->meta = meta;
-}
-
 ImageResource ImageDocument::resource(int index)
 {
     Q_D(const ImageDocument);
@@ -305,6 +293,18 @@ void ImageDocument::setResource(const ImageResource &resource, int index)
     if (index < 0 || index >= d->resources.count())
         return;
     d->resources[index] = resource;
+}
+
+ImageMeta ImageDocument::meta() const
+{
+    Q_D(const ImageDocument);
+    return d->meta;
+}
+
+void ImageDocument::setMeta(const ImageMeta &meta)
+{
+    Q_D(ImageDocument);
+    d->meta = meta;
 }
 
 QStringList ImageDocument::availableInputMimeTypes()
