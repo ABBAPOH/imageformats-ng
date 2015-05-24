@@ -39,20 +39,20 @@ public:
     void setMipmappedImage(const MipmappedImage &image);
 
     Sides sides() const;
-    QImage image(Side side);
-    void setImage(Side side, const QImage &image);
+    QImage side(Side side);
+    void setSide(Side side, const QImage &image);
 
-    MipmappedImage mipmappedImage(Side image) const;
-    void setMipmappedImage(Side side, const MipmappedImage &image);
+    MipmappedImage mipmappedSide(Side image) const;
+    void setMipmappedSide(Side side, const MipmappedImage &image);
 
     int depth() const;
     void setDepth(int depth);
 
-    QImage image(int slice);
-    void setImage(int slice, const QImage &image);
+    QImage slice(int slice);
+    void setSlice(int index, const QImage &image);
 
-    MipmappedImage mipmappedImage(int slice) const;
-    void setMipmappedImage(int slice, const MipmappedImage &image);
+    MipmappedImage mipmappedSlice(int index) const;
+    void setMipmappedSlice(int index, const MipmappedImage &image);
 
 private:
     QSharedDataPointer<ImageResourceData> d;

@@ -90,24 +90,24 @@ static int sideToIndex(ImageResource::Side side)
     return -1;
 }
 
-QImage ImageResource::image(ImageResource::Side side)
+QImage ImageResource::side(ImageResource::Side side)
 {
-    return mipmappedImage(side).image();
+    return mipmappedSlice(side).image();
 }
 
-void ImageResource::setImage(ImageResource::Side side, const QImage &image)
+void ImageResource::setSide(ImageResource::Side side, const QImage &image)
 {
-    setMipmappedImage(side, image);
+    setMipmappedSlice(side, image);
 }
 
-MipmappedImage ImageResource::mipmappedImage(ImageResource::Side side) const
+MipmappedImage ImageResource::mipmappedSide(ImageResource::Side side) const
 {
     if (side == NoSides || side == AllSides)
         return MipmappedImage();
     return d->images2.at(sideToIndex(side));
 }
 
-void ImageResource::setMipmappedImage(ImageResource::Side side, const MipmappedImage &image)
+void ImageResource::setMipmappedSide(ImageResource::Side side, const MipmappedImage &image)
 {
     if (side == NoSides || side == AllSides)
         return;
@@ -135,27 +135,27 @@ void ImageResource::setDepth(int depth)
     d->images2.resize(depth);
 }
 
-QImage ImageResource::image(int slice)
+QImage ImageResource::slice(int index)
 {
-    return mipmappedImage(slice).image();
+    return mipmappedSlice(index).image();
 }
 
-void ImageResource::setImage(int slice, const QImage &image)
+void ImageResource::setSlice(int index, const QImage &image)
 {
-    setMipmappedImage(slice, image);
+    setMipmappedSlice(index, image);
 }
 
-MipmappedImage ImageResource::mipmappedImage(int slice) const
+MipmappedImage ImageResource::mipmappedSlice(int index) const
 {
-    if (slice < 0 || slice >= depth())
+    if (index < 0 || index >= depth())
         return MipmappedImage();
 
-    return d->images2[slice];
+    return d->images2[index];
 }
 
-void ImageResource::setMipmappedImage(int slice, const MipmappedImage &image)
+void ImageResource::setMipmappedSlice(int index, const MipmappedImage &image)
 {
-    if (slice < 0 || slice >= depth())
+    if (index < 0 || index >= depth())
         return;
-    d->images2[slice] = image;
+    d->images2[index] = image;
 }

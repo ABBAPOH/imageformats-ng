@@ -67,7 +67,7 @@ void MainWindow::buildModel(QStandardItem *parent, const ImageResource &resource
             ImageResource::Side side = ImageResource::Side(ImageResource::PositiveX << k);
             if (resource.sides() & side) {
                 QStandardItem *item = new QStandardItem(tr("Side %1").arg(k));
-                buildModel(item, resource.mipmappedImage(side));
+                buildModel(item, resource.mipmappedSlice(side));
                 parent->appendRow(item);
             }
         }
