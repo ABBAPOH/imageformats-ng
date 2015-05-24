@@ -23,8 +23,6 @@ public:
     virtual bool read() = 0;
     virtual bool write() = 0;
 
-    virtual QVector<QByteArray> subTypes() const;
-
 private:
     ImageDocument *_document;
     QIODevice *_device;
@@ -51,6 +49,7 @@ public:
 
     virtual QSet<ReadOptions::Option> readOptions() const { return QSet<ReadOptions::Option>(); }
     virtual QSet<WriteOptions::Option> writeOptions() const { return QSet<WriteOptions::Option>(); }
+    virtual QVector<QByteArray> subTypes() const { return QVector<QByteArray>(); }
 };
 
 #endif // IMAGEIOHANDLER_H

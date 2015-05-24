@@ -39,7 +39,6 @@ public:
 
     // TODO: use class ImageType {QByteArray id; QString name; QString description;};
     // instead of bytearrays
-    QVector<QByteArray> subTypes() const;
 
     bool read(const ReadOptions & options = ReadOptions());
     bool write(const WriteOptions &options = WriteOptions());
@@ -57,6 +56,7 @@ public:
     static QStringList availableOutputMimeTypes();
     QStringList suitableOutputMimeTypes() const;
 
+    static QVector<QByteArray> subTypes(QString &mimeType);
     static QSet<WriteOptions::Option> supportedWriteOptions(QString &mimeType);
 
 protected:

@@ -21,9 +21,8 @@ public:
     typedef QMap<ImageMeta::Option, QVariant> OptionMap;
     typedef QMap<ImageMeta::ExifOption, QVariant> ExifOptionMap;
 
-    explicit ImageDocumentPrivate(ImageDocument *qq) : q_ptr(qq) {}
+    explicit ImageDocumentPrivate(ImageDocument *qq);
 
-    void init();
     bool initHandler();
     bool ensureHandlerInitialised() const;
     bool ensureDeviceOpened(QIODevice::OpenMode mode);

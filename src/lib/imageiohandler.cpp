@@ -39,9 +39,3 @@ void ImageIOHandler::setMimeType(const QString &mimeType)
 {
     _mimeType = mimeType;
 }
-
-QVector<QByteArray> ImageIOHandler::subTypes() const
-{
-    return QVector<QByteArray>();
-}
-

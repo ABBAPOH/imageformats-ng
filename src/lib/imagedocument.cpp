@@ -51,7 +51,8 @@ ImageIOHandlerDatabase *ImageIOHandlerDatabase::instance()
     return static_instance();
 }
 
-void ImageDocumentPrivate::init()
+ImageDocumentPrivate::ImageDocumentPrivate(ImageDocument *qq) :
+    q_ptr(qq)
 {
     device = Q_NULLPTR;
     resources.resize(1);
@@ -144,16 +145,12 @@ ImageDocument::ImageDocument(QObject *parent) :
     QObject(parent),
     d_ptr(new ImageDocumentPrivate(this))
 {
-    Q_D(ImageDocument);
-    d->init();
 }
 
 ImageDocument::ImageDocument(const QString &fileName, QObject *parent) :
     QObject(parent),
     d_ptr(new ImageDocumentPrivate(this))
 {
-    Q_D(ImageDocument);
-    d->init();
     setFileName(fileName);
 }
 
@@ -227,16 +224,6 @@ ImageError ImageDocument::error() const
 {
     Q_D(const ImageDocument);
     return d->error;
-}
-
-QVector<QByteArray> ImageDocument::subTypes() const
-{
-    Q_D(const ImageDocument);
-
-    if (!d->ensureHandlerInitialised())
-        return QVector<QByteArray>();
-
-    return d->handler->subTypes();
 }
 
 bool ImageDocument::read(const ReadOptions &options)
@@ -334,6 +321,14 @@ QStringList ImageDocument::suitableOutputMimeTypes() const
 {
     Q_D(const ImageDocument);
     return ImageIOHandlerDatabase::instance()->availableMimeTypes(d->caps);
+}
+
+QVector<QByteArray> ImageDocument::subTypes(QString &mimeType)
+{
+    auto plugin = ImageIOHandlerDatabase::instance()->plugin(mimeType);
+    if (!plugin)
+        return QVector<QByteArray>();
+    return plugin->subTypes();
 }
 
 QSet<WriteOptions::Option> ImageDocument::supportedWriteOptions(QString &mimeType)
