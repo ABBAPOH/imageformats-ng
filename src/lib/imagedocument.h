@@ -45,7 +45,7 @@ public:
 
     int resourceCount() const;
 
-    ImageResource resource(int index = 0);
+    ImageResource resource(int index = 0) const;
     void addResource(const ImageResource &resource);
     void removeResource(int index);
     void setResource(const ImageResource &resource, int index = 0);

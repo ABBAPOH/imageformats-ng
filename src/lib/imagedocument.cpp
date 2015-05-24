@@ -268,7 +268,7 @@ int ImageDocument::resourceCount() const
     return d->resources.size();
 }
 
-ImageResource ImageDocument::resource(int index)
+ImageResource ImageDocument::resource(int index) const
 {
     Q_D(const ImageDocument);
     if (index < 0 || index >= d->resources.count())
