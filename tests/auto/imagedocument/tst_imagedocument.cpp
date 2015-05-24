@@ -13,16 +13,13 @@ private slots:
 void TestImageDocument::defaultValues()
 {
     ImageDocument doc;
-    QCOMPARE(doc.resourceCount(), 1);
+    QCOMPARE(doc.resourceCount(), 0);
 //    QCOMPARE(doc.sliceCount(), 1);
 }
 
 void TestImageDocument::setters()
 {
     ImageDocument doc;
-
-    doc.setResourceCount(2);
-    QCOMPARE(doc.resourceCount(), 2);
 
 //    doc.setSliceCount(2);
 //    QCOMPARE(doc.sliceCount(), 2);

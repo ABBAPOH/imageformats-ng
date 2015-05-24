@@ -44,9 +44,10 @@ public:
     bool write(const WriteOptions &options = WriteOptions());
 
     int resourceCount() const;
-    void setResourceCount(int count);
 
     ImageResource resource(int index = 0);
+    void addResource(const ImageResource &resource);
+    void removeResource(int index);
     void setResource(const ImageResource &resource, int index = 0);
 
     ImageMeta meta() const;

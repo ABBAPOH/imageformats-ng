@@ -1437,7 +1437,7 @@ bool DDSHandler::read()
         if (!ok)
             return false;
     }
-    document()->setResource(resource);
+    document()->addResource(resource);
     return true;
 }
 

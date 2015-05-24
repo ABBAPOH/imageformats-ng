@@ -55,8 +55,6 @@ ImageDocumentPrivate::ImageDocumentPrivate(ImageDocument *qq) :
     q_ptr(qq)
 {
     device = Q_NULLPTR;
-    resources.resize(1);
-
     handler = 0;
 }
 
@@ -270,20 +268,28 @@ int ImageDocument::resourceCount() const
     return d->resources.size();
 }
 
-void ImageDocument::setResourceCount(int count)
-{
-    Q_D(ImageDocument);
-    if (d->resources.size() == count)
-        return;
-    d->resources.resize(count);
-}
-
 ImageResource ImageDocument::resource(int index)
 {
     Q_D(const ImageDocument);
     if (index < 0 || index >= d->resources.count())
         return ImageResource();
     return d->resources.at(index);
+}
+
+void ImageDocument::addResource(const ImageResource &resource)
+{
+    Q_D(ImageDocument);
+    d->resources.append(resource);
+    d->updateCaps();
+}
+
+void ImageDocument::removeResource(int index)
+{
+    Q_D(ImageDocument);
+    if (index < 0 || index >= d->resources.count())
+        return;
+    d->resources.remove(index);
+    d->updateCaps();
 }
 
 void ImageDocument::setResource(const ImageResource &resource, int index)

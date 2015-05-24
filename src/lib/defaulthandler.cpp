@@ -31,15 +31,13 @@ bool DefaultHandler::read()
 
     int count = reader.imageCount();
     if (reader.supportsOption(QImageIOHandler::Animation)) {
-        document()->setResourceCount(count);
-
         for (int i = 0; i < count; i++) {
             QImage image;
             const bool ok = reader.read(&image);
             if (!ok)
                 return false;
 
-            document()->setResource(image, i);
+            document()->addResource(image);
         }
     } else if (count > 0) {
         ImageResource resource;
@@ -56,14 +54,14 @@ bool DefaultHandler::read()
             mipmaps.append(image);
         }
         resource.setMipmappedImage(mipmaps);
-        document()->setResource(resource, 0);
+        document()->addResource(resource);
     } else {
         QImage image;
         const bool ok = reader.read(&image);
         if (!ok)
             return false;
 
-        document()->setResource(image);
+        document()->addResource(image);
     }
 
     return true;
