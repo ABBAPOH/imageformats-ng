@@ -46,12 +46,15 @@ public:
     void setMipmappedSide(Side side, const MipmappedImage &image);
 
     int depth() const;
-    void setDepth(int depth);
 
     QImage slice(int slice);
+    void addSlice(const QImage &image);
+    void removeSlice(int index);
     void setSlice(int index, const QImage &image);
 
     MipmappedImage mipmappedSlice(int index) const;
+    void addMipmappedSlice(const MipmappedImage &image);
+    void removeMipmappedSlice(int index);
     void setMipmappedSlice(int index, const MipmappedImage &image);
 
 private:

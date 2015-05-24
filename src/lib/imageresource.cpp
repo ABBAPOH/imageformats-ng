@@ -128,16 +128,19 @@ int ImageResource::depth() const
     return d->images2.size();
 }
 
-void ImageResource::setDepth(int depth)
-{
-    if (d->type != ImageResource::VolumeTexture)
-        return;
-    d->images2.resize(depth);
-}
-
 QImage ImageResource::slice(int index)
 {
     return mipmappedSlice(index).image();
+}
+
+void ImageResource::addSlice(const QImage &image)
+{
+    addMipmappedSlice(image);
+}
+
+void ImageResource::removeSlice(int index)
+{
+    removeMipmappedSlice(index);
 }
 
 void ImageResource::setSlice(int index, const QImage &image)
@@ -151,6 +154,22 @@ MipmappedImage ImageResource::mipmappedSlice(int index) const
         return MipmappedImage();
 
     return d->images2[index];
+}
+
+void ImageResource::addMipmappedSlice(const MipmappedImage &image)
+{
+    if (type() != VolumeTexture)
+        return;
+    d->images2.append(image);
+}
+
+void ImageResource::removeMipmappedSlice(int index)
+{
+    if (type() != VolumeTexture)
+        return;
+    if (index < 0 || index >= depth())
+        return;
+    d->images2.remove(index);
 }
 
 void ImageResource::setMipmappedSlice(int index, const MipmappedImage &image)
