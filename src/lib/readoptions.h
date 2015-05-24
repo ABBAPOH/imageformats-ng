@@ -10,8 +10,6 @@ class ReadOptions
 public:
     enum Option {
         ClipRect,
-        ScaledSize,
-        ScaledClipRect
     };
 
     ReadOptions();
