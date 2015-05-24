@@ -68,7 +68,7 @@ QImage MipmappedImage::image() const
 
 QImage MipmappedImage::image(int index) const
 {
-    if (index < 0 || index > d->images.size())
+    if (index < 0 || index >= d->images.size())
         return QImage();
     return d->images.at(index);
 }
