@@ -64,10 +64,11 @@ void MainWindow::buildModel(QStandardItem *parent, const ImageResource &resource
         buildModel(parent, resource.mipmappedImage());
     } else if (resource.type() == ImageResource::Cubemap) {
         for (int k = 0; k < 6; k++) {
-            ImageResource::Side side = ImageResource::Side(ImageResource::PositiveX << k);
-            if (resource.sides() & side) {
+            CubeTexture::Side side = CubeTexture::Side(CubeTexture::PositiveX << k);
+            auto texture = resource.cubeTexture();
+            if (texture.sides() & side) {
                 QStandardItem *item = new QStandardItem(tr("Side %1").arg(k));
-                buildModel(item, resource.mipmappedSlice(side));
+                buildModel(item, texture.mipmappedSide(side));
                 parent->appendRow(item);
             }
         }

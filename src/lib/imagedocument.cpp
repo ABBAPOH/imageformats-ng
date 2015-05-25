@@ -119,7 +119,7 @@ void ImageDocumentPrivate::updateCaps()
     foreach (const ImageResource &resource, resources) {
         if (resource.type() == ImageResource::Cubemap)
             caps |= ImageIOHandlerPlugin::SupportsCubemaps;
-        if (resource.type() == ImageResource::VolumeTexture)
+        if (resource.type() == ImageResource::Volumemap)
             caps |= ImageIOHandlerPlugin::SupportsVolumeTextures;
         if (resource.mipmappedImage().mipmapCount() > 1)
             caps |= ImageIOHandlerPlugin::SupportsMipmaps;
