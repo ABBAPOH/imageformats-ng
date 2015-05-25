@@ -76,6 +76,7 @@ class JpegHandlerPlugin : public ImageIOHandlerPlugin
 {
 public:
     JpegHandler *create() { return new JpegHandler(); }
+    Capabilities capabilities() const Q_DECL_OVERRIDE { return Capabilities(CanRead | CanWrite); }
 };
 
 #endif // JPEGHANDLER_P_H
