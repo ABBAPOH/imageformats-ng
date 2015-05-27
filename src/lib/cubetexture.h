@@ -21,11 +21,23 @@ public:
     };
     Q_DECLARE_FLAGS(Sides, Side)
 
+    int size() const;
+    QImage::Format format() const;
+
     Sides sides() const;
     QImage side(Side side);
     void setSide(Side side, const QImage &image);
 
+    enum Projection {
+        HorizonalCross
+    };
+
+    QImage toProjection(Projection projection) const;
+//    static CubeTexture fromProjection(const QImage &image, Projection projection);
+
 private:
+    int _size;
+    QImage::Format _format;
     CubeTexture::Sides _sides;
     QVector<QImage> _images;
 };
