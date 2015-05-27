@@ -2,7 +2,6 @@
 #define IMAGERESOURCE_H
 
 #include "cubetexture.h"
-#include "mipmappedimage.h"
 #include "volumetexture.h"
 
 #include <QtCore/QSharedDataPointer>

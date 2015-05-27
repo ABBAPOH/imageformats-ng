@@ -1,7 +1,6 @@
 #ifndef CUBETEXTURE_H
 #define CUBETEXTURE_H
 
-#include "mipmappedimage.h"
 #include <QtGui/QImage>
 
 class CubeTexture
