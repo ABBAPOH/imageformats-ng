@@ -28,6 +28,8 @@ public:
     QImage side(Side side);
     void setSide(Side side, const QImage &image);
 
+    CubeTexture scaled(int size);
+
     enum Projection {
         HorizonalCross
     };

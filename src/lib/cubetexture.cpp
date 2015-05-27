@@ -65,6 +65,19 @@ void CubeTexture::setSide(CubeTexture::Side side, const QImage &image)
     _images[sideToIndex(side)] = scaled;
 }
 
+CubeTexture CubeTexture::scaled(int size)
+{
+    CubeTexture result;
+
+    Side side = PositiveX;
+    for (int i = 0; i < 6; i++, side = Side(side << 1)) {
+        if (!(_sides & side))
+            continue; // Skip face.
+        result.setSide(side, _images[i].scaled(size, size));
+    }
+    return result;
+}
+
 QImage CubeTexture::toProjection(CubeTexture::Projection projection) const
 {
     if (_sides == NoSides)
