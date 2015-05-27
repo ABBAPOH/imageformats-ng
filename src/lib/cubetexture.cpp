@@ -25,31 +25,20 @@ CubeTexture::Sides CubeTexture::sides() const
 
 QImage CubeTexture::side(CubeTexture::Side side)
 {
-    return mipmappedSide(side).image();
+    if (side == NoSides || side == AllSides)
+        return QImage();
+    return _images.at(sideToIndex(side));
 }
 
 void CubeTexture::setSide(CubeTexture::Side side, const QImage &image)
 {
-    setMipmappedSide(side, image);
-}
-
-MipmappedImage CubeTexture::mipmappedSide(CubeTexture::Side side) const
-{
-    if (side == NoSides || side == AllSides)
-        return MipmappedImage();
-    return _images.at(sideToIndex(side));
-}
-
-void CubeTexture::setMipmappedSide(CubeTexture::Side side, const MipmappedImage &image)
-{
     if (side == NoSides || side == AllSides)
         return;
 
-    if (!image.isEmpty())
+    if (!image.isNull())
         _sides |= side;
     else
         _sides &= ~side;
 
     _images[sideToIndex(side)] = image;
 }
-

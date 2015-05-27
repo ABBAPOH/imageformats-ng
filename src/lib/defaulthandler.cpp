@@ -53,7 +53,7 @@ bool DefaultHandler::read()
 
             mipmaps.append(image);
         }
-        resource.setMipmappedImage(mipmaps);
+        resource.setImages(mipmaps);
         document()->addResource(resource);
     } else {
         QImage image;

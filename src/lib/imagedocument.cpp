@@ -62,7 +62,7 @@ bool ImageDocumentPrivate::initHandler()
 {
     Q_Q(ImageDocument);
 
-    if (!mimeType.isEmpty()) {
+    if (mimeType.isEmpty()) {
         error = ImageError(ImageError::MimeTypeError);
         return false;
     }
@@ -121,7 +121,7 @@ void ImageDocumentPrivate::updateCaps()
             caps |= ImageIOHandlerPlugin::SupportsCubemaps;
         if (resource.type() == ImageResource::Volumemap)
             caps |= ImageIOHandlerPlugin::SupportsVolumeTextures;
-        if (resource.mipmappedImage().mipmapCount() > 1)
+        if (resource.mipmapCount() > 1)
             caps |= ImageIOHandlerPlugin::SupportsMipmaps;
     }
 }

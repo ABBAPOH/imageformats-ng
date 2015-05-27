@@ -7,27 +7,25 @@ class ImageResourceData : public QSharedData
 public:
 
     ImageResource::Type type;
-    QVector<MipmappedImage> images2;
-    CubeTexture cubeTexture;
-    VolumeTexture volumeTexture;
+    QVector<QImage> images;
+    QVector<CubeTexture> cubeTextures;
+    QVector<VolumeTexture> volumeTextures;
+    int mipmapCount;
 };
 
 ImageResource::ImageResource(Type type) :
     d(new ImageResourceData)
 {
     d->type = type;
-    switch (type) {
-    case Image: d->images2.resize(1); break;
-    case Cubemap: d->images2.resize(6); break;
-    case Volumemap: d->images2.resize(1); break;
-    }
+    d->mipmapCount = 0;
 }
 
 ImageResource::ImageResource(const QImage &image) :
     d(new ImageResourceData)
 {
     d->type = Image;
-    d->images2.append(image);
+    d->images.append(image);
+    d->mipmapCount = 1;
 }
 
 ImageResource::ImageResource(const ImageResource &other) :
@@ -51,44 +49,73 @@ ImageResource::Type ImageResource::type() const
     return d->type;
 }
 
-QImage ImageResource::image() const
+int ImageResource::mipmapCount() const
 {
-    return mipmappedImage().image();
+    return d->mipmapCount;
+}
+
+QImage ImageResource::image(int mipmap) const
+{
+    if (mipmap >= d->mipmapCount)
+        return QImage();
+    return d->images.at(mipmap);
 }
 
 void ImageResource::setImage(const QImage &image)
 {
-    setMipmappedImage(image);
+    d->type = Image;
+    d->mipmapCount = 1;
+    d->images.clear();
+    d->images.append(image);
 }
 
-MipmappedImage ImageResource::mipmappedImage() const
+void ImageResource::setImages(const QVector<QImage> &mipmaps)
 {
-    return d->images2.at(0);
+    d->type = Image;
+    d->mipmapCount = mipmaps.size();
+    d->images = mipmaps;
 }
 
-void ImageResource::setMipmappedImage(const MipmappedImage &image)
+CubeTexture ImageResource::cubeTexture(int mipmap) const
 {
-    d->images2[0] = image;
-}
-
-CubeTexture ImageResource::cubeTexture() const
-{
-    return d->cubeTexture;
+    if (mipmap >= d->mipmapCount)
+        return CubeTexture();
+    return d->cubeTextures.at(mipmap);
 }
 
 void ImageResource::setCubeTexture(const CubeTexture &texture)
 {
     d->type = Cubemap;
-    d->cubeTexture = texture;
+    d->mipmapCount = 1;
+    d->cubeTextures.clear();
+    d->cubeTextures.append(texture);
 }
 
-VolumeTexture ImageResource::volumeTexture() const
+void ImageResource::setCubeTextures(const QVector<CubeTexture> &mipmaps)
 {
-    return d->volumeTexture;
+    d->type = Cubemap;
+    d->mipmapCount = mipmaps.size();
+    d->cubeTextures = mipmaps;
+}
+
+VolumeTexture ImageResource::volumeTexture(int mipmap) const
+{
+    if (mipmap >= d->mipmapCount)
+        return VolumeTexture();
+    return d->volumeTextures.at(mipmap);
 }
 
 void ImageResource::setVolumeTexture(const VolumeTexture &texture)
 {
     d->type = Volumemap;
-    d->volumeTexture = texture;
+    d->mipmapCount = 1;
+    d->volumeTextures.clear();
+    d->volumeTextures.append(texture);
+}
+
+void ImageResource::setVolumeTextures(const QVector<VolumeTexture> &mipmaps)
+{
+    d->type = Volumemap;
+    d->mipmapCount = mipmaps.size();
+    d->volumeTextures = mipmaps;
 }

@@ -25,12 +25,9 @@ public:
     QImage side(Side side);
     void setSide(Side side, const QImage &image);
 
-    MipmappedImage mipmappedSide(Side side) const;
-    void setMipmappedSide(Side side, const MipmappedImage &image);
-
 private:
     CubeTexture::Sides _sides;
-    QVector<MipmappedImage> _images;
+    QVector<QImage> _images;
 };
 
 #endif // CUBETEXTURE_H

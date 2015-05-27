@@ -58,31 +58,31 @@ void MainWindow::buildModel(QStandardItem *parent)
     }
 }
 
-void MainWindow::buildModel(QStandardItem *parent, const ImageResource &resource)
+void MainWindow::buildModel(QStandardItem *parent, const ImageResource &resource, int mipmap)
 {
     if (resource.type() == ImageResource::Image) {
-        buildModel(parent, resource.mipmappedImage());
+        parent->setData(resource.image(mipmap));
     } else if (resource.type() == ImageResource::Cubemap) {
         for (int k = 0; k < 6; k++) {
             CubeTexture::Side side = CubeTexture::Side(CubeTexture::PositiveX << k);
             auto texture = resource.cubeTexture();
             if (texture.sides() & side) {
                 QStandardItem *item = new QStandardItem(tr("Side %1").arg(k));
-                buildModel(item, texture.mipmappedSide(side));
+                item->setData(texture.side(side));
                 parent->appendRow(item);
             }
         }
     }
 }
 
-void MainWindow::buildModel(QStandardItem *parent, const MipmappedImage &image)
+void MainWindow::buildModel(QStandardItem *parent, const ImageResource &resource)
 {
-    if (image.mipmapCount() == 1) {
-        parent->setData(image.image());
+    if (resource.mipmapCount() == 1) {
+        buildModel(parent, resource, 0);
     } else {
-        for (int i = 0; i < image.mipmapCount(); i++) {
+        for (int i = 0; i < resource.mipmapCount(); i++) {
             QStandardItem *mipmap = new QStandardItem(tr("Mipmap %1").arg(i));
-            mipmap->setData(image.image(i));
+            buildModel(parent, resource, i);
             parent->appendRow(mipmap);
         }
     }
