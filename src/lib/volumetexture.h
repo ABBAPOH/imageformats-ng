@@ -20,6 +20,8 @@ public:
     uchar *scanLine(int y, int z);
     const uchar *scanLine(int y, int z) const;
 
+    void fill(uint value);
+
     QImage slice(int slice);
     void addSlice(const QImage &image);
     void removeSlice(int index);

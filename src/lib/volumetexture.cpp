@@ -52,6 +52,13 @@ const uchar *VolumeTexture::scanLine(int y, int z) const
     return _images[z].scanLine(y);
 }
 
+void VolumeTexture::fill(uint value)
+{
+    foreach (QImage &image, _images) {
+        image.fill(value);
+    }
+}
+
 QImage VolumeTexture::slice(int index)
 {
     if (index < 0 || index >= depth())
