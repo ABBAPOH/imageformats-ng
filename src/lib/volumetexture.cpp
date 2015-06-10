@@ -54,7 +54,7 @@ const uchar *VolumeTexture::scanLine(int y, int z) const
 
 void VolumeTexture::fill(uint value)
 {
-    foreach (QImage &image, _images) {
+    for (QImage &image: _images) {
         image.fill(value);
     }
 }
