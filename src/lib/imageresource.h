@@ -22,19 +22,14 @@ public:
 
     Type type() const;
 
-    int mipmapCount() const;
-
-    QImage image(int mipmap = 0) const;
+    QImage image() const;
     void setImage(const QImage &image);
-    void setImages(const QVector<QImage> &mipmaps);
 
-    CubeTexture cubeTexture(int mipmap = 0) const;
+    CubeTexture cubeTexture() const;
     void setCubeTexture(const CubeTexture &texture);
-    void setCubeTextures(const QVector<CubeTexture> &mipmaps);
 
-    VolumeTexture volumeTexture(int mipmap = 0) const;
+    VolumeTexture volumeTexture() const;
     void setVolumeTexture(const VolumeTexture &texture);
-    void setVolumeTextures(const QVector<VolumeTexture> &mipmaps);
 
 private:
     QSharedDataPointer<ImageResourceData> d;

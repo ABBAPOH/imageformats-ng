@@ -1420,8 +1420,6 @@ bool DDSHandler::read()
 {
     if (!open())
         return false;
-    ImageResource resource(isCubeMap(m_header) ? ImageResource::Cubemap : ImageResource::Image);
-    CubeTexture cubeTexture;
     for (quint32 i = 0; i < qMax<quint32>(1, m_header.mipMapCount); i++) {
         qint64 pos = headerSize + mipmapOffset(m_header, m_format, i);
         if (!device()->seek(pos))
@@ -1429,7 +1427,9 @@ bool DDSHandler::read()
         QDataStream s(device());
         s.setByteOrder(QDataStream::LittleEndian);
 
+        ImageResource resource(isCubeMap(m_header) ? ImageResource::Cubemap : ImageResource::Image);
         if (isCubeMap(m_header)) {
+            CubeTexture cubeTexture;
             readCubeMap(s, m_header, m_format, document(), cubeTexture);
             resource.setCubeTexture(cubeTexture);
         } else {
@@ -1439,8 +1439,11 @@ bool DDSHandler::read()
         bool ok = s.status() == QDataStream::Ok;
         if (!ok)
             return false;
+
+        ImageMipmap mipmap;
+        mipmap.addResource(resource);
+        document()->addMipmap(mipmap);
     }
-    document()->addResource(resource);
     return true;
 }
 

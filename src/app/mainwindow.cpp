@@ -45,23 +45,38 @@ void MainWindow::buildModel()
 
 void MainWindow::buildModel(QStandardItem *parent)
 {
-    if (_document->resourceCount() == 1) {
-        auto resource = _document->resource();
+    if (_document->mipmapCount() == 1) {
+        buildModel(parent, _document->mipmap());
+    } else {
+        for (int i = 0; i < _document->mipmapCount(); ++i) {
+            ImageMipmap mipmap = _document->mipmap(i);
+            QStandardItem *mipmapItem = new QStandardItem(tr("Mipmap %1").arg(i));
+            buildModel(mipmapItem, mipmap);
+            parent->appendRow(mipmapItem);
+        }
+    }
+}
+
+void MainWindow::buildModel(QStandardItem *parent, const ImageMipmap &mipmap)
+{
+    if (mipmap.resourceCount() == 1) {
+        auto resource = mipmap.resource();
         buildModel(parent, resource);
     } else {
-        for (int j = 0; j < _document->resourceCount(); j++) {
-            QStandardItem *item = new QStandardItem(tr("Resource %1").arg(j));
-            auto resource = _document->resource(j);
+        for (int i = 0; i < mipmap.resourceCount(); i++) {
+            QStandardItem *item = new QStandardItem(tr("Resource %1").arg(i));
+            auto resource = mipmap.resource(i);
             buildModel(item, resource);
             parent->appendRow(item);
         }
     }
 }
 
-void MainWindow::buildModel(QStandardItem *parent, const ImageResource &resource, int mipmap)
+void MainWindow::buildModel(QStandardItem *parent, const ImageResource &resource)
 {
     if (resource.type() == ImageResource::Image) {
-        parent->setData(resource.image(mipmap));
+        qDebug() << "build" << parent->text() << resource.image().isNull();
+        parent->setData(resource.image());
     } else if (resource.type() == ImageResource::Cubemap) {
         for (int k = 0; k < 6; k++) {
             CubeTexture::Side side = CubeTexture::Side(CubeTexture::PositiveX << k);
@@ -71,19 +86,6 @@ void MainWindow::buildModel(QStandardItem *parent, const ImageResource &resource
                 item->setData(texture.side(side));
                 parent->appendRow(item);
             }
-        }
-    }
-}
-
-void MainWindow::buildModel(QStandardItem *parent, const ImageResource &resource)
-{
-    if (resource.mipmapCount() == 1) {
-        buildModel(parent, resource, 0);
-    } else {
-        for (int i = 0; i < resource.mipmapCount(); i++) {
-            QStandardItem *mipmap = new QStandardItem(tr("Mipmap %1").arg(i));
-            buildModel(parent, resource, i);
-            parent->appendRow(mipmap);
         }
     }
 }

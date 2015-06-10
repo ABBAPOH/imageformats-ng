@@ -38,7 +38,7 @@ public:
     ImageError error;
     ImageMeta meta;
 
-    QVector<ImageResource> resources;
+    QVector<ImageMipmap> mipmaps;
 
     ImageIOHandlerPlugin::Capabilities caps;
 

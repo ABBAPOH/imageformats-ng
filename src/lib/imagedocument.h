@@ -3,6 +3,7 @@
 
 #include "imageerror.h"
 #include "imagemeta.h"
+#include "imagemipmap.h"
 #include "imageresource.h"
 #include "readoptions.h"
 #include "writeoptions.h"
@@ -49,6 +50,12 @@ public:
     void addResource(const ImageResource &resource);
     void removeResource(int index);
     void setResource(const ImageResource &resource, int index = 0);
+
+    int mipmapCount() const;
+    ImageMipmap mipmap(int index = 0) const;
+    void addMipmap(const ImageMipmap &mipmap);
+    void removeMipmap(int index = 0);
+    void setMipmap(const ImageMipmap &mipmap, int index = 0);
 
     ImageMeta meta() const;
     void setMeta(const ImageMeta &meta);
