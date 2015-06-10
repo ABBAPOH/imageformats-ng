@@ -31,21 +31,16 @@ int CubeTexture::size() const
     return _size;
 }
 
-CubeTexture::Sides CubeTexture::sides() const
-{
-    return _sides;
-}
-
 QImage CubeTexture::side(CubeTexture::Side side)
 {
-    if (side == NoSides || side == AllSides)
+    if (side <= 0 || side > 6)
         return QImage();
-    return _images.at(sideToIndex(side));
+    return _images.at(int(side));
 }
 
 void CubeTexture::setSide(CubeTexture::Side side, const QImage &image)
 {
-    if (side == NoSides || side == AllSides)
+    if (side <= 0 || side > 6)
         return;
 
     if (_size == 0)
@@ -57,11 +52,6 @@ void CubeTexture::setSide(CubeTexture::Side side, const QImage &image)
     auto scaled = image.scaled(_size, _size);
     scaled = image.convertToFormat(_format);
 
-    if (!scaled.isNull())
-        _sides |= side;
-    else
-        _sides &= ~side;
-
     _images[sideToIndex(side)] = scaled;
 }
 
@@ -69,32 +59,23 @@ CubeTexture CubeTexture::scaled(int size)
 {
     CubeTexture result;
 
-    Side side = PositiveX;
-    for (int i = 0; i < 6; i++, side = Side(side << 1)) {
-        if (!(_sides & side))
-            continue; // Skip face.
-        result.setSide(side, _images[i].scaled(size, size));
+    for (int i = PositiveX; i <= NegativeZ; i++) {
+        result.setSide(Side(i), _images[i].scaled(size, size));
     }
     return result;
 }
 
 QImage CubeTexture::toProjection(CubeTexture::Projection projection) const
 {
-    if (_sides == NoSides)
-        return QImage();
-
     if (projection == HorizonalCross) {
         QImage image(4 * _size, 3 * _size, _format);
 
         image.fill(0);
 
-        Side side = PositiveX;
-
-        for (int i = 0; i < 6; i++, side = Side(side << 1)) {
-            if (!(_sides & side))
-                continue; // Skip face.
-
+        for (int i = PositiveX; i <= NegativeZ; i++) {
             auto face = _images[i];
+            if (face.isNull())
+                continue; // Skip face.
 
             // Compute face offsets.
             int offset_x = faceOffsets[i].x * _size;

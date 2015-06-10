@@ -75,17 +75,13 @@ void MainWindow::buildModel(QStandardItem *parent, const ImageMipmap &mipmap)
 void MainWindow::buildModel(QStandardItem *parent, const ImageResource &resource)
 {
     if (resource.type() == ImageResource::Image) {
-        qDebug() << "build" << parent->text() << resource.image().isNull();
         parent->setData(resource.image());
     } else if (resource.type() == ImageResource::Cubemap) {
         for (int k = 0; k < 6; k++) {
-            CubeTexture::Side side = CubeTexture::Side(CubeTexture::PositiveX << k);
             auto texture = resource.cubeTexture();
-            if (texture.sides() & side) {
-                QStandardItem *item = new QStandardItem(tr("Side %1").arg(k));
-                item->setData(texture.side(side));
-                parent->appendRow(item);
-            }
+            QStandardItem *item = new QStandardItem(tr("Side %1").arg(k));
+            item->setData(texture.side(CubeTexture::Side(k)));
+            parent->appendRow(item);
         }
     }
 }

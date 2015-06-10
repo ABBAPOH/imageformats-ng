@@ -9,21 +9,17 @@ public:
     CubeTexture();
 
     enum Side {
-        NoSides = 0x0,
         PositiveX = 0x1,
         NegativeX = 0x2,
-        PositiveY = 0x4,
-        NegativeY = 0x8,
-        PositiveZ = 0x10,
-        NegativeZ = 0x20,
-        AllSides = 0x3F
+        PositiveY = 0x3,
+        NegativeY = 0x4,
+        PositiveZ = 0x5,
+        NegativeZ = 0x6,
     };
-    Q_DECLARE_FLAGS(Sides, Side)
 
     int size() const;
     QImage::Format format() const;
 
-    Sides sides() const;
     QImage side(Side side);
     void setSide(Side side, const QImage &image);
 
@@ -39,7 +35,6 @@ public:
 private:
     int _size {0};
     QImage::Format _format {QImage::Format_Invalid};
-    CubeTexture::Sides _sides {NoSides};
     QVector<QImage> _images;
 };
 
