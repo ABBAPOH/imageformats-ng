@@ -37,9 +37,9 @@ public:
 //    static CubeTexture fromProjection(const QImage &image, Projection projection);
 
 private:
-    int _size;
-    QImage::Format _format;
-    CubeTexture::Sides _sides;
+    int _size {0};
+    QImage::Format _format {QImage::Format_Invalid};
+    CubeTexture::Sides _sides {NoSides};
     QVector<QImage> _images;
 };
 
