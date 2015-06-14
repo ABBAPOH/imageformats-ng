@@ -78,9 +78,8 @@ void MainWindow::buildModel(QStandardItem *parent, const ImageResource &resource
         parent->setData(resource.image());
     } else if (resource.type() == ImageResource::Cubemap) {
         for (int k = 0; k < 6; k++) {
-            auto texture = resource.cubeTexture();
             QStandardItem *item = new QStandardItem(tr("Side %1").arg(k));
-            item->setData(texture.side(CubeTexture::Side(k)));
+            item->setData(resource.side(ImageResource::Side(k)));
             parent->appendRow(item);
         }
     }

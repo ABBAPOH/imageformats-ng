@@ -1,9 +1,6 @@
 #ifndef IMAGERESOURCE_H
 #define IMAGERESOURCE_H
 
-#include "cubetexture.h"
-#include "volumetexture.h"
-
 #include <QtCore/QSharedDataPointer>
 #include <QtGui/QImage>
 
@@ -12,7 +9,16 @@ class ImageResourceData;
 class ImageResource
 {
 public:
-    enum Type { Image, Cubemap, Volumemap };
+    enum Type { Image, Cubemap, VolumeTexture };
+
+    enum Side {
+        PositiveX = 0x0,
+        NegativeX = 0x1,
+        PositiveY = 0x2,
+        NegativeY = 0x3,
+        PositiveZ = 0x4,
+        NegativeZ = 0x5,
+    };
 
     explicit ImageResource(Type type = Image);
     ImageResource(const QImage &image);
@@ -25,11 +31,15 @@ public:
     QImage image() const;
     void setImage(const QImage &image);
 
-    CubeTexture cubeTexture() const;
-    void setCubeTexture(const CubeTexture &texture);
+    QImage side(Side side) const;
+    void setSide(Side side, const QImage &image);
 
-    VolumeTexture volumeTexture() const;
-    void setVolumeTexture(const VolumeTexture &texture);
+    int depth() const;
+
+    QImage slice(int slice);
+    void addSlice(const QImage &image);
+    void removeSlice(int index);
+    void setSlice(int index, const QImage &image);
 
 private:
     QSharedDataPointer<ImageResourceData> d;
