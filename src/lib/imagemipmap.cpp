@@ -1,5 +1,31 @@
 #include "imagemipmap.h"
 
+int ImageMipmap::width() const
+{
+    if (_resources.isEmpty())
+        return 0;
+    return _resources.at(0).width();
+}
+
+int ImageMipmap::height() const
+{
+    if (_resources.isEmpty())
+        return 0;
+    return _resources.at(0).height();
+}
+
+int ImageMipmap::depth() const
+{
+    if (_resources.isEmpty())
+        return 0;
+    return _resources.at(0).depth();
+}
+
+QSize ImageMipmap::size() const
+{
+    return QSize(width(), height());
+}
+
 int ImageMipmap::resourceCount() const
 {
     return _resources.count();

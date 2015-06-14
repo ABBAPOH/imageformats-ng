@@ -6,6 +6,12 @@
 class ImageMipmap
 {
 public:
+    int width() const;
+    int height() const;
+    int depth() const;
+
+    QSize size() const;
+
     int resourceCount() const;
     ImageResource resource(int index = 0) const;
     void addResource(const ImageResource &resoure);
