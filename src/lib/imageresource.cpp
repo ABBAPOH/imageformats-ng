@@ -60,6 +60,8 @@ void ImageResource::setImage(const QImage &image)
 
 QImage ImageResource::side(ImageResource::Side side) const
 {
+    if (d->type != Cubemap)
+        return QImage();
     if (side < PositiveX || side > NegativeZ)
         return QImage();
     return d->images.at(int(side));
@@ -67,6 +69,8 @@ QImage ImageResource::side(ImageResource::Side side) const
 
 void ImageResource::setSide(ImageResource::Side side, const QImage &image)
 {
+    if (d->type != Cubemap)
+        return;
     if (side < PositiveX || side > NegativeZ)
         return;
     d->images[int(side)] = image;
@@ -82,6 +86,8 @@ int ImageResource::depth() const
 
 QImage ImageResource::slice(int index)
 {
+    if (type() != VolumeTexture)
+        return QImage();
     if (index < 0 || index >= depth())
         return QImage();
 
@@ -90,14 +96,14 @@ QImage ImageResource::slice(int index)
 
 void ImageResource::addSlice(const QImage &image)
 {
-    if (type() != VolumeTexture)
+    if (d->type != VolumeTexture)
         return;
     d->images.append(image);
 }
 
 void ImageResource::removeSlice(int index)
 {
-    if (type() != VolumeTexture)
+    if (d->type != VolumeTexture)
         return;
     if (index < 0 || index >= depth())
         return;
@@ -106,6 +112,8 @@ void ImageResource::removeSlice(int index)
 
 void ImageResource::setSlice(int index, const QImage &image)
 {
+    if (d->type != VolumeTexture)
+        return;
     if (index < 0 || index >= depth())
         return;
     d->images[index] = image;
