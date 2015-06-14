@@ -53,6 +53,8 @@ public:
 
     int mipmapCount() const;
     ImageMipmap mipmap(int index = 0) const;
+    ImageMipmap mipmapForSize(int width, int height, int depth = 1) const;
+    ImageMipmap mipmapForSize(const QSize &size, int depth = 1) const;
     void addMipmap(const ImageMipmap &mipmap);
     void removeMipmap(int index = 0);
     void setMipmap(const ImageMipmap &mipmap, int index = 0);

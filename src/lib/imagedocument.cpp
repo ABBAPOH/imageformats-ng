@@ -309,6 +309,21 @@ ImageMipmap ImageDocument::mipmap(int index) const
     return d->mipmaps.at(index);
 }
 
+ImageMipmap ImageDocument::mipmapForSize(int width, int height, int depth) const
+{
+    Q_D(const ImageDocument);
+    for (const auto mipmap : d->mipmaps) {
+        if (mipmap.width() == width && mipmap.height() == height && mipmap.depth() == depth)
+            return mipmap;
+    }
+    return ImageMipmap();
+}
+
+ImageMipmap ImageDocument::mipmapForSize(const QSize &size, int depth) const
+{
+    return mipmapForSize(size.width(), size.height(), depth);
+}
+
 void ImageDocument::addMipmap(const ImageMipmap &mipmap)
 {
     Q_D(ImageDocument);
