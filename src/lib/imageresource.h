@@ -28,13 +28,17 @@ public:
 
     Type type() const;
 
+    int width() const;
+    int height() const;
+    int depth() const;
+
+    QSize size() const;
+
     QImage image() const;
     void setImage(const QImage &image);
 
     QImage side(Side side) const;
     void setSide(Side side, const QImage &image);
-
-    int depth() const;
 
     QImage slice(int slice);
     void addSlice(const QImage &image);

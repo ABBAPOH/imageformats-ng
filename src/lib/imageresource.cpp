@@ -48,6 +48,29 @@ ImageResource::Type ImageResource::type() const
     return d->type;
 }
 
+int ImageResource::width() const
+{
+    return image().width();
+}
+
+int ImageResource::height() const
+{
+    return image().height();
+}
+
+int ImageResource::depth() const
+{
+    if (d->type != ImageResource::VolumeTexture)
+        return 1;
+
+    return d->images.size();
+}
+
+QSize ImageResource::size() const
+{
+    return QSize(width(), height());
+}
+
 QImage ImageResource::image() const
 {
     return d->images.at(0);
@@ -74,14 +97,6 @@ void ImageResource::setSide(ImageResource::Side side, const QImage &image)
     if (side < PositiveX || side > NegativeZ)
         return;
     d->images[int(side)] = image;
-}
-
-int ImageResource::depth() const
-{
-    if (d->type != ImageResource::VolumeTexture)
-        return 1;
-
-    return d->images.size();
 }
 
 QImage ImageResource::slice(int index)
