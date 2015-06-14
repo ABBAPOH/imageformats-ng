@@ -38,9 +38,6 @@ public:
     bool hasError() const;
     ImageError error() const;
 
-    // TODO: use class ImageType {QByteArray id; QString name; QString description;};
-    // instead of bytearrays
-
     bool read(const ReadOptions & options = ReadOptions());
     bool write(const WriteOptions &options = WriteOptions());
 
