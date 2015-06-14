@@ -44,6 +44,8 @@ public:
     bool read(const ReadOptions & options = ReadOptions());
     bool write(const WriteOptions &options = WriteOptions());
 
+    void clear();
+
     int resourceCount() const;
 
     ImageResource resource(int index = 0) const;

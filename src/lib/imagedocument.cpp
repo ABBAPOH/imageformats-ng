@@ -229,6 +229,8 @@ bool ImageDocument::read(const ReadOptions &options)
     Q_D(ImageDocument);
     Q_UNUSED(options);
 
+    clear();
+
     if (!d->ensureHandlerInitialised())
         return false;
 
@@ -260,6 +262,12 @@ bool ImageDocument::write(const WriteOptions &options)
     }
 
     return true;
+}
+
+void ImageDocument::clear()
+{
+    Q_D(ImageDocument);
+    d->mipmaps.clear();
 }
 
 int ImageDocument::resourceCount() const
