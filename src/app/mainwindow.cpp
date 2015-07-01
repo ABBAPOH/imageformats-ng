@@ -46,43 +46,37 @@ void MainWindow::buildModel()
 void MainWindow::buildModel(QStandardItem *parent)
 {
     if (_document->mipmapCount() == 1) {
-        buildModel(parent, _document->mipmap());
+        buildModel(parent, 0);
     } else {
         for (int i = 0; i < _document->mipmapCount(); ++i) {
-            ImageMipmap mipmap = _document->mipmap(i);
             QStandardItem *mipmapItem = new QStandardItem(tr("Mipmap %1").arg(i));
-            buildModel(mipmapItem, mipmap);
+            buildModel(mipmapItem, i);
             parent->appendRow(mipmapItem);
         }
     }
 }
 
-void MainWindow::buildModel(QStandardItem *parent, const ImageMipmap &mipmap)
+void MainWindow::buildModel(QStandardItem *parent, int level)
 {
-    if (mipmap.resourceCount() == 1) {
-        auto resource = mipmap.resource();
-        buildModel(parent, resource);
+    if (_document->imageCount() == 1) {
+        buildModel(parent, 0, level);
     } else {
-        for (int i = 0; i < mipmap.resourceCount(); i++) {
-            QStandardItem *item = new QStandardItem(tr("Resource %1").arg(i));
-            auto resource = mipmap.resource(i);
-            buildModel(item, resource);
+        for (int i = 0; i < _document->imageCount(); i++) {
+            QStandardItem *item = new QStandardItem(tr("Image %1").arg(i));
+            buildModel(item, i, level);
             parent->appendRow(item);
         }
     }
 }
 
-void MainWindow::buildModel(QStandardItem *parent, const ImageResource &resource)
+void MainWindow::buildModel(QStandardItem *parent, int index, int level)
 {
-    if (resource.type() == ImageResource::Image) {
-        parent->setData(resource.image());
-    } else if (resource.type() == ImageResource::Cubemap) {
-        for (int k = 0; k < 6; k++) {
-            QStandardItem *item = new QStandardItem(tr("Side %1").arg(k));
-            item->setData(resource.side(ImageResource::Side(k)));
-            parent->appendRow(item);
-        }
+    QStandardItem *item = parent;
+    if (item == _model->invisibleRootItem()) {
+        item = new QStandardItem(tr("Image"));
+        parent->appendRow(item);
     }
+    item->setData(_document->image(index, level));
 }
 
 void MainWindow::onClicked(const QModelIndex &index)

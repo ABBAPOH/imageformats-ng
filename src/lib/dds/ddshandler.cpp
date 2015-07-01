@@ -1208,11 +1208,11 @@ static QImage readLayer(QDataStream &s, const DDSHeader &dds, const int format, 
     return QImage();
 }
 
-static inline bool readTexture(QDataStream &s, const DDSHeader &dds, const int format, const int mipmapLevel, ImageResource &resource)
+static inline bool readTexture(QDataStream &s, const DDSHeader &dds, const int format, ImageDocument *document, const int mipmapLevel)
 {
     quint32 width = dds.width / (1 << mipmapLevel);
     quint32 height = dds.height / (1 << mipmapLevel);
-    resource.setImage(readLayer(s, dds, format, width, height));
+    document->setImage(readLayer(s, dds, format, width, height), 0, mipmapLevel);
     return true;
 }
 
@@ -1320,21 +1320,12 @@ static qint64 mipmapOffset(const DDSHeader &dds, const int format, const int lev
     return result;
 }
 
-static bool readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, ImageDocument *document, ImageResource &resource)
+static bool readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, ImageDocument *document, int level)
 {
 //    QImage::Format format = hasAlpha(dds) ? QImage::Format_ARGB32 : QImage::Format_RGB32;
 //    QImage image(4 * dds.width, 3 * dds.height, format);
 
 //    image.fill(0);
-
-    static ImageResource::Side sides[] = {
-        ImageResource::PositiveX,
-        ImageResource::NegativeX,
-        ImageResource::PositiveY,
-        ImageResource::NegativeY,
-        ImageResource::PositiveZ,
-        ImageResource::NegativeZ
-    };
 
     for (int i = 0; i < 6; i++) {
         if (!(dds.caps2 & faceFlags[i]))
@@ -1342,11 +1333,11 @@ static bool readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, Ima
 
         const QImage face = readLayer(s, dds, fmt, dds.width, dds.height);
 
-        resource.setSide(sides[i], face);
-
         // Compute face offsets.
-        int offset_x = faceOffsets[i].x * dds.width;
-        int offset_y = faceOffsets[i].y * dds.height;
+//        int offset_x = faceOffsets[i].x * dds.width;
+//        int offset_y = faceOffsets[i].y * dds.height;
+
+        document->setImage(face, i, level);
 
         // Copy face on the image.
 //        for (quint32 y = 0; y < dds.height; y++) {
@@ -1420,6 +1411,15 @@ bool DDSHandler::read()
 {
     if (!open())
         return false;
+
+    document()->setMipmapCount(qMax<quint32>(1, m_header.mipMapCount));
+    if (isCubeMap(m_header)) {
+        document()->setType(ImageDocument::Cubemap);
+        document()->setImageCount(6);
+    } else {
+        document()->setType(ImageDocument::Image);
+    }
+
     for (quint32 i = 0; i < qMax<quint32>(1, m_header.mipMapCount); i++) {
         qint64 pos = headerSize + mipmapOffset(m_header, m_format, i);
         if (!device()->seek(pos))
@@ -1427,27 +1427,22 @@ bool DDSHandler::read()
         QDataStream s(device());
         s.setByteOrder(QDataStream::LittleEndian);
 
-        ImageResource resource(isCubeMap(m_header) ? ImageResource::Cubemap : ImageResource::Image);
         if (isCubeMap(m_header)) {
-            readCubeMap(s, m_header, m_format, document(), resource);
+            readCubeMap(s, m_header, m_format, document(), i);
         } else {
-            readTexture(s, m_header, m_format, i, resource);
+            readTexture(s, m_header, m_format, document(), i);
         }
 
         bool ok = s.status() == QDataStream::Ok;
         if (!ok)
             return false;
-
-        ImageMipmap mipmap;
-        mipmap.addResource(resource);
-        document()->addMipmap(mipmap);
     }
     return true;
 }
 
 bool DDSHandler::write()
 {
-    auto outImage = document()->resource().image();
+    auto outImage = document()->image();
 
     if (m_format != FormatA8R8G8B8) {
         qWarning() << "Format" << formatName(m_format) << "is not supported";
