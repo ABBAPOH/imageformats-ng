@@ -20,6 +20,7 @@ class ImageDocumentPrivate
 public:
     typedef QMap<ImageMeta::Option, QVariant> OptionMap;
     typedef QMap<ImageMeta::ExifOption, QVariant> ExifOptionMap;
+    typedef QPair<int, int> ImageIndex;
 
     explicit ImageDocumentPrivate(ImageDocument *qq);
 
@@ -38,7 +39,10 @@ public:
     ImageError error;
     ImageMeta meta;
 
-    QVector<ImageMipmap> mipmaps;
+    ImageDocument::Type type;
+    int imageCount;
+    int mipmapCount;
+    QHash<ImageIndex, QImage> images;
 
     ImageIOHandlerPlugin::Capabilities caps;
 

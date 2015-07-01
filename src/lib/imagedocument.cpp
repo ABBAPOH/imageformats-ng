@@ -56,6 +56,9 @@ ImageDocumentPrivate::ImageDocumentPrivate(ImageDocument *qq) :
 {
     device = Q_NULLPTR;
     handler = 0;
+    type = ImageDocument::Image;
+    imageCount = 1;
+    mipmapCount = 1;
 }
 
 bool ImageDocumentPrivate::initHandler()
@@ -267,92 +270,65 @@ bool ImageDocument::write(const WriteOptions &options)
 void ImageDocument::clear()
 {
     Q_D(ImageDocument);
-    d->mipmaps.clear();
+    d->images.clear();
+    d->imageCount = 1;
+    d->mipmapCount = 1;
 }
 
-int ImageDocument::resourceCount() const
+ImageDocument::Type ImageDocument::type() const
 {
-    return mipmap().resourceCount();
+    Q_D(const ImageDocument);
+    return d->type;
 }
 
-ImageResource ImageDocument::resource(int index) const
-{
-    return mipmap().resource(index);
-}
-
-void ImageDocument::addResource(const ImageResource &resource)
+void ImageDocument::setType(ImageDocument::Type t)
 {
     Q_D(ImageDocument);
-    // TODO: add scaled resource to smaller mipmaps ?
-    mipmap().addResource(resource);
-    d->updateCaps();
+    d->type = t;
 }
 
-void ImageDocument::removeResource(int index)
+int ImageDocument::imageCount() const
 {
-    Q_D(ImageDocument);
-    // TODO: remove scaled resource to smaller mipmaps ?
-    mipmap().removeResource(index);
-    d->updateCaps();
+    Q_D(const ImageDocument);
+    return d->imageCount;
 }
 
-void ImageDocument::setResource(const ImageResource &resource, int index)
+void ImageDocument::setImageCount(int count)
 {
     Q_D(ImageDocument);
-    mipmap().setResource(resource, index);
-    d->updateCaps();
+    if (count < 1)
+        return;
+    d->imageCount = count;
 }
 
 int ImageDocument::mipmapCount() const
 {
     Q_D(const ImageDocument);
-    return d->mipmaps.count();
+    return d->mipmapCount;
 }
 
-ImageMipmap ImageDocument::mipmap(int index) const
+void ImageDocument::setMipmapCount(int count)
+{
+    Q_D(ImageDocument);
+    if (count < 1)
+        return;
+    d->mipmapCount = count;
+}
+
+QImage ImageDocument::image(int index, int level)
 {
     Q_D(const ImageDocument);
-    if (index < 0 || index >= d->mipmaps.count())
-        return ImageMipmap();
-    return d->mipmaps.at(index);
+    if (index < 0 || index > imageCount())
+        return QImage();
+    if (level < 0 || level > mipmapCount())
+        return QImage();
+    return d->images.value(ImageDocumentPrivate::ImageIndex(index, level));
 }
 
-ImageMipmap ImageDocument::mipmapForSize(int width, int height, int depth) const
-{
-    Q_D(const ImageDocument);
-    for (const auto mipmap : d->mipmaps) {
-        if (mipmap.width() == width && mipmap.height() == height && mipmap.depth() == depth)
-            return mipmap;
-    }
-    return ImageMipmap();
-}
-
-ImageMipmap ImageDocument::mipmapForSize(const QSize &size, int depth) const
-{
-    return mipmapForSize(size.width(), size.height(), depth);
-}
-
-void ImageDocument::addMipmap(const ImageMipmap &mipmap)
+void ImageDocument::setImage(const QImage &image, int index, int level)
 {
     Q_D(ImageDocument);
-    d->mipmaps.append(mipmap);
-    d->updateCaps();
-}
-
-void ImageDocument::removeMipmap(int index)
-{
-    Q_D(ImageDocument);
-    if (index < 0 || index >= d->mipmaps.count())
-        return;
-    d->mipmaps.removeAt(index);
-}
-
-void ImageDocument::setMipmap(const ImageMipmap &mipmap, int index)
-{
-    Q_D(ImageDocument);
-    if (index < 0 || index >= d->mipmaps.count())
-        return;
-    d->mipmaps[index] = mipmap;
+    d->images.insert(ImageDocumentPrivate::ImageIndex(index, level), image);
 }
 
 ImageMeta ImageDocument::meta() const

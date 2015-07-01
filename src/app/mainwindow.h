@@ -23,8 +23,8 @@ public:
 private:
     void buildModel();
     void buildModel(QStandardItem *parent);
-    void buildModel(QStandardItem *parent, const ImageMipmap & mipmap);
-    void buildModel(QStandardItem *parent, const ImageResource &resource);
+    void buildModel(QStandardItem *parent, int level);
+    void buildModel(QStandardItem *parent, int index, int level);
 
 private slots:
     void onClicked(const QModelIndex &index);

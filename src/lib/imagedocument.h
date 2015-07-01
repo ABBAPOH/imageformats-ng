@@ -21,6 +21,14 @@ class ImageDocument : public QObject
     Q_DISABLE_COPY(ImageDocument)
 
 public:
+    enum Type {
+        Image,
+        Animation,
+        ImageArray,
+        Cubemap,
+        VolumeTexture
+    };
+
     explicit ImageDocument(QObject *parent = 0);
     explicit ImageDocument(const QString &fileName, QObject *parent = 0);
     ~ImageDocument();
@@ -43,20 +51,17 @@ public:
 
     void clear();
 
-    int resourceCount() const;
+    Type type() const;
+    void setType(Type t);
 
-    ImageResource resource(int index = 0) const;
-    void addResource(const ImageResource &resource);
-    void removeResource(int index);
-    void setResource(const ImageResource &resource, int index = 0);
+    int imageCount() const;
+    void setImageCount(int count);
 
     int mipmapCount() const;
-    ImageMipmap mipmap(int index = 0) const;
-    ImageMipmap mipmapForSize(int width, int height, int depth = 1) const;
-    ImageMipmap mipmapForSize(const QSize &size, int depth = 1) const;
-    void addMipmap(const ImageMipmap &mipmap);
-    void removeMipmap(int index = 0);
-    void setMipmap(const ImageMipmap &mipmap, int index = 0);
+    void setMipmapCount(int count);
+
+    QImage image(int index = 0, int level = 0);
+    void setImage(const QImage &image, int index = 0, int level = 0);
 
     ImageMeta meta() const;
     void setMeta(const ImageMeta &meta);

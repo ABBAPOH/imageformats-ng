@@ -1037,7 +1037,7 @@ bool JpegHandler::read()
     bool ok = d->read(&image);
     if (!ok)
         return false;
-    document()->setResource(image);
+    document()->setImage(image);
     return true;
 }
 
