@@ -8,6 +8,7 @@ class WriteOptions
 {
 public:
     enum Option {
+        MimeType,
         CompressionRatio,
         Gamma,
         Quality,
@@ -17,6 +18,9 @@ public:
     WriteOptions();
 
     bool isEmpty() const { return _options.isEmpty(); }
+
+    QString mimeType() const { return _options.value(MimeType).toString(); }
+    void setMimeType(const QString &mimeType) { _options.insert(MimeType, mimeType); }
 
     QByteArray subType() const { return _options.value(SubType).toByteArray(); }
     void setSubType(const QByteArray &type) { _options.insert(SubType, type); }

@@ -30,21 +30,8 @@ public:
     explicit ImageDocument(QObject *parent = 0);
     ~ImageDocument();
 
-    QIODevice *device() const;
-    void setDevice(QIODevice *device);
-
-    QString fileName() const;
-    void setFileName(const QString &fileName);
-
-    QString mimeType() const;
-    void setMimeType(const QMimeType &mimeType);
-    void setMimeType(const QString &name);
-
     bool hasError() const;
     ImageError error() const;
-
-    bool read(const ReadOptions & options = ReadOptions());
-    bool write(const WriteOptions &options = WriteOptions());
 
     void clear();
 
@@ -62,6 +49,12 @@ public:
 
     ImageMeta meta() const;
     void setMeta(const ImageMeta &meta);
+
+    bool read(QIODevice *device, const ReadOptions &options = ReadOptions());
+    bool read(const QString &fileName, const ReadOptions &options = ReadOptions());
+
+    bool write(QIODevice *device, const WriteOptions &options = WriteOptions());
+    bool write(const QString &fileName, const WriteOptions &options = WriteOptions());
 
     static QStringList availableInputMimeTypes();
     static QStringList availableOutputMimeTypes();

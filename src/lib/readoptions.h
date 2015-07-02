@@ -9,12 +9,17 @@ class ReadOptions
 {
 public:
     enum Option {
+        MimeType,
         ClipRect,
     };
 
     ReadOptions();
+    ReadOptions(const QString &mimeType);
 
     bool isEmpty() const { return _options.isEmpty(); }
+
+    QString mimeType() const { return _options.value(MimeType).toString(); }
+    void setMimeType(const QString &mimeType) { _options.insert(MimeType, mimeType); }
 
     QRect clipRect() const { return _options.value(ClipRect).toRect(); }
     void setRect(const QRect &rect) { _options.insert(ClipRect, rect); }

@@ -24,18 +24,10 @@ public:
 
     explicit ImageDocumentPrivate(ImageDocument *qq);
 
-    bool initHandler();
-    bool ensureHandlerInitialised() const;
-    bool ensureDeviceOpened(QIODevice::OpenMode mode);
-    void killHandler();
     void updateCaps();
 
     static QString errorString(ImageError::ErrorCode code);
 
-    QIODevice *device;
-    QString fileName;
-    QScopedPointer<QFile> file;
-    QString mimeType;
     ImageError error;
     ImageMeta meta;
 
