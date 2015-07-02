@@ -148,13 +148,6 @@ ImageDocument::ImageDocument(QObject *parent) :
 {
 }
 
-ImageDocument::ImageDocument(const QString &fileName, QObject *parent) :
-    QObject(parent),
-    d_ptr(new ImageDocumentPrivate(this))
-{
-    setFileName(fileName);
-}
-
 ImageDocument::~ImageDocument()
 {
     delete d_ptr;
