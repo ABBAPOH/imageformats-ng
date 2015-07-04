@@ -57,6 +57,7 @@ ImageDocumentPrivate::ImageDocumentPrivate(ImageDocument *qq) :
     type = ImageDocument::Image;
     imageCount = 1;
     mipmapCount = 1;
+    imageDelay = 0;
 }
 
 void ImageDocumentPrivate::updateCaps()
@@ -172,6 +173,18 @@ void ImageDocument::setImage(const QImage &image, int index, int level)
 {
     Q_D(ImageDocument);
     d->images.insert(ImageDocumentPrivate::ImageIndex(index, level), image);
+}
+
+int ImageDocument::imageDelay()
+{
+    Q_D(const ImageDocument);
+    return d->imageDelay;
+}
+
+void ImageDocument::setImageDelay(int delay)
+{
+    Q_D(ImageDocument);
+    d->imageDelay = delay;
 }
 
 ImageExifMeta ImageDocument::exifMeta() const

@@ -33,6 +33,7 @@ public:
     int imageCount;
     int mipmapCount;
     QMap<ImageIndex, QImage> images;
+    int imageDelay;
 
     ImageIOHandlerPlugin::Capabilities caps;
 
