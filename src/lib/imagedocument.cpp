@@ -174,16 +174,16 @@ void ImageDocument::setImage(const QImage &image, int index, int level)
     d->images.insert(ImageDocumentPrivate::ImageIndex(index, level), image);
 }
 
-ImageMeta ImageDocument::meta() const
+ImageExifMeta ImageDocument::exifMeta() const
 {
     Q_D(const ImageDocument);
-    return d->meta;
+    return d->exif;
 }
 
-void ImageDocument::setMeta(const ImageMeta &meta)
+void ImageDocument::setExifMeta(const ImageExifMeta &exif)
 {
     Q_D(ImageDocument);
-    d->meta = meta;
+    d->exif = exif;
 }
 
 bool ImageDocument::read(QIODevice *device, const ReadOptions &options)

@@ -2,7 +2,7 @@
 #define IMAGEDOCUMENT_H
 
 #include "imageerror.h"
-#include "imagemeta.h"
+#include "imageexifmeta.h"
 #include "readoptions.h"
 #include "writeoptions.h"
 
@@ -47,8 +47,8 @@ public:
     QImage image(int index = 0, int level = 0);
     void setImage(const QImage &image, int index = 0, int level = 0);
 
-    ImageMeta meta() const;
-    void setMeta(const ImageMeta &meta);
+    ImageExifMeta exifMeta() const;
+    void setExifMeta(const ImageExifMeta &exif);
 
     bool read(QIODevice *device, const ReadOptions &options = ReadOptions());
     bool read(const QString &fileName, const ReadOptions &options = ReadOptions());

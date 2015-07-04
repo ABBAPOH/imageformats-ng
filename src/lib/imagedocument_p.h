@@ -18,8 +18,6 @@ class ImageDocumentPrivate
     ImageDocument *q_ptr;
 
 public:
-    typedef QMap<ImageMeta::Option, QVariant> OptionMap;
-    typedef QMap<ImageMeta::ExifOption, QVariant> ExifOptionMap;
     typedef QPair<int, int> ImageIndex;
 
     explicit ImageDocumentPrivate(ImageDocument *qq);
@@ -29,7 +27,7 @@ public:
     static QString errorString(ImageError::ErrorCode code);
 
     ImageError error;
-    ImageMeta meta;
+    ImageExifMeta exif;
 
     ImageDocument::Type type;
     int imageCount;
