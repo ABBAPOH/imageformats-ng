@@ -58,6 +58,7 @@ ImageDocumentPrivate::ImageDocumentPrivate(ImageDocument *qq) :
     imageCount = 1;
     mipmapCount = 1;
     imageDelay = 0;
+    loopCount = -1;
 }
 
 void ImageDocumentPrivate::updateCaps()
@@ -185,6 +186,18 @@ void ImageDocument::setImageDelay(int delay)
 {
     Q_D(ImageDocument);
     d->imageDelay = delay;
+}
+
+int ImageDocument::loopCount() const
+{
+    Q_D(const ImageDocument);
+    return d->loopCount;
+}
+
+void ImageDocument::setLoopCount(int count)
+{
+    Q_D(ImageDocument);
+    d->loopCount = count;
 }
 
 ImageExifMeta ImageDocument::exifMeta() const

@@ -50,6 +50,9 @@ public:
     int imageDelay(); // TODO: should we support separate delays for each frame?
     void setImageDelay(int delay); // TODO: this could be only called by handler. Move to DocData?
 
+    int loopCount() const;
+    void setLoopCount(int count);
+
     ImageExifMeta exifMeta() const;
     void setExifMeta(const ImageExifMeta &exif);
 
