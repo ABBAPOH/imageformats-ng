@@ -62,8 +62,6 @@ public:
     bool write(QIODevice *device, const WriteOptions &options = WriteOptions());
     bool write(const QString &fileName, const WriteOptions &options = WriteOptions());
 
-    static QSet<WriteOptions::Option> supportedWriteOptions(QString &mimeType);
-
 protected:
     ImageDocumentPrivate *d_ptr;
 };

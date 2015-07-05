@@ -23,6 +23,8 @@ public:
     QString mimeType() const { return _options.value(MimeType).toString(); }
     void setMimeType(const QString &mimeType) { _options.insert(MimeType, mimeType); }
 
+    bool supportsOption(Option option) const;
+
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &color);
 

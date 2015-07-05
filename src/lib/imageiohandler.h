@@ -47,8 +47,8 @@ public:
     virtual ImageIOHandler *create() = 0;
     virtual Capabilities capabilities() const = 0;
 
-    virtual QSet<ReadOptions::Option> readOptions() const { return QSet<ReadOptions::Option>(); }
-    virtual QSet<WriteOptions::Option> writeOptions() const { return QSet<WriteOptions::Option>(); }
+    virtual bool supportsOption(ReadOptions::Option option) const { Q_UNUSED(option); return false; }
+    virtual bool supportsOption(WriteOptions::Option option) const { Q_UNUSED(option); return false; }
     virtual QVector<QByteArray> subTypes() const { return QVector<QByteArray>(); }
 };
 

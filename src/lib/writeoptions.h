@@ -22,6 +22,8 @@ public:
     QString mimeType() const;
     void setMimeType(const QString &mimeType);
 
+    bool supportsOption(Option option) const;
+
     QByteArray subType() const;
     void setSubType(const QByteArray &type);
 

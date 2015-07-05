@@ -315,11 +315,3 @@ bool ImageDocument::write(const QString &fileName, const WriteOptions &options)
 
     return write(&file, opt);
 }
-
-QSet<WriteOptions::Option> ImageDocument::supportedWriteOptions(QString &mimeType)
-{
-    auto plugin = ImageIOHandlerDatabase::instance()->plugin(mimeType);
-    if (!plugin)
-        return QSet<WriteOptions::Option>();
-    return plugin->writeOptions();
-}
