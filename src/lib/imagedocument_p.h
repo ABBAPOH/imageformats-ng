@@ -37,8 +37,6 @@ public:
     ImageExifMeta exif;
 
     ImageIOHandlerPlugin::Capabilities caps;
-
-    ImageIOHandler *handler;
 };
 
 class ImageIOHandlerDatabase
