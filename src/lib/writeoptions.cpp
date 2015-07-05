@@ -30,3 +30,23 @@ void WriteOptions::setSubType(const QByteArray &type)
     _options.insert(SubType, type);
 }
 
+int WriteOptions::gamma() const
+{
+    return _options.value(Gamma).toInt();
+}
+
+void WriteOptions::setGamma(int gamma)
+{
+    _options.insert(Gamma, gamma);
+}
+
+int WriteOptions::quality() const
+{
+    return _options.value(Quality).toInt();
+}
+
+void WriteOptions::setQuality(int quality)
+{
+    _options.insert(Quality, quality);
+}
+

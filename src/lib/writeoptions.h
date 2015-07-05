@@ -25,8 +25,11 @@ public:
     QByteArray subType() const;
     void setSubType(const QByteArray &type);
 
-//    int gamma() const;
-//    void setGamma(int gamma);
+    int gamma() const;
+    void setGamma(int gamma);
+
+    int quality() const;
+    void setQuality(int quality);
 
 private:
     QHash<Option, QVariant> _options;
