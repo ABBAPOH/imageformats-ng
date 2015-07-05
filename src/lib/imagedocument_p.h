@@ -27,7 +27,6 @@ public:
     static QString errorString(ImageError::ErrorCode code);
 
     ImageError error;
-    ImageExifMeta exif;
 
     ImageDocument::Type type;
     int imageCount;
@@ -35,6 +34,7 @@ public:
     QMap<ImageIndex, QImage> images;
     int imageDelay;
     int loopCount;
+    ImageExifMeta exif;
 
     ImageIOHandlerPlugin::Capabilities caps;
 
