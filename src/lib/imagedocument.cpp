@@ -61,21 +61,6 @@ ImageDocumentPrivate::ImageDocumentPrivate(ImageDocument *qq) :
     loopCount = -1;
 }
 
-void ImageDocumentPrivate::updateCaps()
-{
-    caps = 0;
-//    if (resources.size() > 1)
-//        caps |= ImageIOHandlerPlugin::SupportsMultipleResources;
-//    foreach (const ImageResource &resource, resources) {
-//        if (resource.type() == ImageResource::Cubemap)
-//            caps |= ImageIOHandlerPlugin::SupportsCubemaps;
-//        if (resource.type() == ImageResource::Volumemap)
-//            caps |= ImageIOHandlerPlugin::SupportsVolumeTextures;
-//        if (resource.mipmapCount() > 1)
-//            caps |= ImageIOHandlerPlugin::SupportsMipmaps;
-//    }
-}
-
 QString ImageDocumentPrivate::errorString(ImageError::ErrorCode code)
 {
     switch (code) {
@@ -339,12 +324,6 @@ QStringList ImageDocument::availableInputMimeTypes()
 QStringList ImageDocument::availableOutputMimeTypes()
 {
     return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanWrite);
-}
-
-QStringList ImageDocument::suitableOutputMimeTypes() const
-{
-    Q_D(const ImageDocument);
-    return ImageIOHandlerDatabase::instance()->availableMimeTypes(d->caps);
 }
 
 QVector<QByteArray> ImageDocument::subTypes(QString &mimeType)

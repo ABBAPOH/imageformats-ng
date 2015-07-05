@@ -22,8 +22,6 @@ public:
 
     explicit ImageDocumentPrivate(ImageDocument *qq);
 
-    void updateCaps();
-
     static QString errorString(ImageError::ErrorCode code);
 
     ImageError error;
@@ -35,8 +33,6 @@ public:
     int imageDelay;
     int loopCount;
     ImageExifMeta exif;
-
-    ImageIOHandlerPlugin::Capabilities caps;
 };
 
 class ImageIOHandlerDatabase

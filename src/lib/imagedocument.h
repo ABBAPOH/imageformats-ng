@@ -64,7 +64,6 @@ public:
 
     static QStringList availableInputMimeTypes();
     static QStringList availableOutputMimeTypes();
-    QStringList suitableOutputMimeTypes() const;
 
     static QVector<QByteArray> subTypes(QString &mimeType);
     static QSet<WriteOptions::Option> supportedWriteOptions(QString &mimeType);
