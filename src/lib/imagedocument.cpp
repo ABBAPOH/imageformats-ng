@@ -316,24 +316,6 @@ bool ImageDocument::write(const QString &fileName, const WriteOptions &options)
     return write(&file, opt);
 }
 
-QStringList ImageDocument::availableInputMimeTypes()
-{
-    return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanRead);
-}
-
-QStringList ImageDocument::availableOutputMimeTypes()
-{
-    return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanWrite);
-}
-
-QVector<QByteArray> ImageDocument::subTypes(QString &mimeType)
-{
-    auto plugin = ImageIOHandlerDatabase::instance()->plugin(mimeType);
-    if (!plugin)
-        return QVector<QByteArray>();
-    return plugin->subTypes();
-}
-
 QSet<WriteOptions::Option> ImageDocument::supportedWriteOptions(QString &mimeType)
 {
     auto plugin = ImageIOHandlerDatabase::instance()->plugin(mimeType);

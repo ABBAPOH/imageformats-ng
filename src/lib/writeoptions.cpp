@@ -1,4 +1,5 @@
 #include "writeoptions.h"
+#include "imagedocument_p.h"
 
 WriteOptions::WriteOptions()
 {
@@ -30,6 +31,17 @@ void WriteOptions::setSubType(const QByteArray &type)
     _options.insert(SubType, type);
 }
 
+QVector<QByteArray> WriteOptions::supportedSubTypes() const
+{
+    if (mimeType().isEmpty())
+        return QVector<QByteArray>();
+
+    auto plugin = ImageIOHandlerDatabase::instance()->plugin(mimeType());
+    if (!plugin)
+        return QVector<QByteArray>();
+    return plugin->subTypes();
+}
+
 int WriteOptions::gamma() const
 {
     return _options.value(Gamma).toInt();
@@ -50,3 +62,7 @@ void WriteOptions::setQuality(int quality)
     _options.insert(Quality, quality);
 }
 
+QStringList WriteOptions::supportedMimeTypes()
+{
+    return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanWrite);
+}

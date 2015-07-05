@@ -25,11 +25,15 @@ public:
     QByteArray subType() const;
     void setSubType(const QByteArray &type);
 
+    QVector<QByteArray> supportedSubTypes() const;
+
     int gamma() const;
     void setGamma(int gamma);
 
     int quality() const;
     void setQuality(int quality);
+
+    static QStringList supportedMimeTypes();
 
 private:
     QHash<Option, QVariant> _options;

@@ -62,10 +62,6 @@ public:
     bool write(QIODevice *device, const WriteOptions &options = WriteOptions());
     bool write(const QString &fileName, const WriteOptions &options = WriteOptions());
 
-    static QStringList availableInputMimeTypes();
-    static QStringList availableOutputMimeTypes();
-
-    static QVector<QByteArray> subTypes(QString &mimeType);
     static QSet<WriteOptions::Option> supportedWriteOptions(QString &mimeType);
 
 protected:

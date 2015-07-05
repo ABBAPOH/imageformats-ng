@@ -1,4 +1,5 @@
 #include "readoptions.h"
+#include "imagedocument_p.h"
 
 ReadOptions::ReadOptions()
 {
@@ -18,5 +19,10 @@ QColor ReadOptions::backgroundColor() const
 void ReadOptions::setBackgroundColor(const QColor &color)
 {
     _options.insert(BackgroundColor, color);
+}
+
+QStringList ReadOptions::supportedMimeTypes()
+{
+    return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanRead);
 }
 
