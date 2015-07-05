@@ -10,7 +10,6 @@ class ReadOptions
 public:
     enum Option {
         MimeType,
-        ClipRect,
     };
 
     ReadOptions();
@@ -20,9 +19,6 @@ public:
 
     QString mimeType() const { return _options.value(MimeType).toString(); }
     void setMimeType(const QString &mimeType) { _options.insert(MimeType, mimeType); }
-
-    QRect clipRect() const { return _options.value(ClipRect).toRect(); }
-    void setRect(const QRect &rect) { _options.insert(ClipRect, rect); }
 
 private:
     QHash<Option, QVariant> _options;
