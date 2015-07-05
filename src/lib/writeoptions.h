@@ -17,13 +17,13 @@ public:
 
     WriteOptions();
 
-    bool isEmpty() const { return _options.isEmpty(); }
+    bool isEmpty() const;
 
-    QString mimeType() const { return _options.value(MimeType).toString(); }
-    void setMimeType(const QString &mimeType) { _options.insert(MimeType, mimeType); }
+    QString mimeType() const;
+    void setMimeType(const QString &mimeType);
 
-    QByteArray subType() const { return _options.value(SubType).toByteArray(); }
-    void setSubType(const QByteArray &type) { _options.insert(SubType, type); }
+    QByteArray subType() const;
+    void setSubType(const QByteArray &type);
 
 //    int gamma() const;
 //    void setGamma(int gamma);
