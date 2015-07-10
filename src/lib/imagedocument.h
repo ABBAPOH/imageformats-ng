@@ -22,17 +22,24 @@ public:
     explicit ImageDocument(QObject *parent = 0);
     ~ImageDocument();
 
-    ImageContents contents() const;
-    void setContents(const ImageContents &contents);
+    QIODevice *device() const;
+    void setDevice(QIODevice *device);
+
+    QString fileName() const;
+    void setFileName(const QString &fileName);
+
+    QString mimeType() const;
+    void setMimeType(const QMimeType &mimeType);
+    void setMimeType(const QString &name);
 
     bool hasError() const;
     ImageError error() const;
 
-    bool read(QIODevice *device, const ReadOptions &options = ReadOptions());
-    bool read(const QString &fileName, const ReadOptions &options = ReadOptions());
+    bool read(const ReadOptions & options = ReadOptions());
+    bool write(const WriteOptions &options = WriteOptions());
 
-    bool write(QIODevice *device, const WriteOptions &options = WriteOptions());
-    bool write(const QString &fileName, const WriteOptions &options = WriteOptions());
+    ImageContents contents() const;
+    void setContents(const ImageContents &contents);
 
 protected:
     ImageDocumentPrivate *d_ptr;

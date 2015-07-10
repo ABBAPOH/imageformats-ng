@@ -30,7 +30,9 @@ void MainWindow::open()
 {
     QString path = QFileDialog::getOpenFileName(this, tr("open"));
 
-    if (!_document->read(path))
+    _document->setFileName(path);
+
+    if (!_document->read())
         qWarning() << "Can't read" << _document->error().errorString();
     buildModel();
 }

@@ -54,6 +54,61 @@ ImageIOHandlerDatabase *ImageIOHandlerDatabase::instance()
 ImageDocumentPrivate::ImageDocumentPrivate(ImageDocument *qq) :
     q_ptr(qq)
 {
+    device = Q_NULLPTR;
+    handler = 0;
+}
+
+bool ImageDocumentPrivate::initHandler()
+{
+    Q_Q(ImageDocument);
+
+    if (mimeType.isEmpty()) {
+        error = ImageError(ImageError::MimeTypeError);
+        return false;
+    }
+
+    auto db = ImageIOHandlerDatabase::instance();
+    handler = db->create(mimeType);
+    if (!handler) {
+        error = ImageError(ImageError::UnsupportedFormatError);
+        return false;
+    }
+
+    handler->setDocument(q);
+    handler->setDevice(device);
+    handler->setMimeType(mimeType);
+
+    return true;
+}
+
+bool ImageDocumentPrivate::ensureHandlerInitialised() const
+{
+    if (handler)
+        return true;
+    return const_cast<ImageDocumentPrivate *>(this)->initHandler();
+}
+
+bool ImageDocumentPrivate::ensureDeviceOpened(QIODevice::OpenMode mode)
+{
+    if (!device) {
+        error = ImageError(ImageError::DeviceError);
+        return false;
+    }
+
+    if ((device->openMode() & mode) != mode) {
+        device->close();
+        if (!device->open(mode)) {
+            error = ImageError(ImageError::DeviceError);
+            return false;
+        }
+    }
+    return true;
+}
+
+void ImageDocumentPrivate::killHandler()
+{
+    delete handler;
+    handler = 0;
 }
 
 QString ImageDocumentPrivate::errorString(ImageError::ErrorCode code)
@@ -80,16 +135,59 @@ ImageDocument::~ImageDocument()
     delete d_ptr;
 }
 
-ImageContents ImageDocument::contents() const
+QIODevice *ImageDocument::device() const
 {
     Q_D(const ImageDocument);
-    return d->contents;
+    return d->device;
 }
 
-void ImageDocument::setContents(const ImageContents &contents)
+void ImageDocument::setDevice(QIODevice *device)
 {
     Q_D(ImageDocument);
-    d->contents = contents;
+    if (d->device == device)
+        return;
+    d->file.reset();
+    d->killHandler();
+    d->device = device;
+}
+
+QString ImageDocument::fileName() const
+{
+    Q_D(const ImageDocument);
+    return d->fileName;
+}
+
+void ImageDocument::setFileName(const QString &fileName)
+{
+    Q_D(ImageDocument);
+    if (d->fileName == fileName)
+        return;
+
+    d->file.reset(new QFile(fileName));
+    d->killHandler();
+    d->device = d->file.data();
+    d->mimeType = QMimeDatabase().mimeTypeForFile(fileName).name();
+}
+
+QString ImageDocument::mimeType() const
+{
+    Q_D(const ImageDocument);
+    return d->mimeType;
+}
+
+void ImageDocument::setMimeType(const QMimeType &mimeType)
+{
+    Q_D(ImageDocument);
+    if (d->mimeType == mimeType.name())
+        return;
+    d->killHandler();
+    d->mimeType = mimeType.name();
+}
+
+void ImageDocument::setMimeType(const QString &name)
+{
+    auto type = QMimeDatabase().mimeTypeForName(name);
+    setMimeType(type);
 }
 
 bool ImageDocument::hasError() const
@@ -104,119 +202,53 @@ ImageError ImageDocument::error() const
     return d->error;
 }
 
-bool ImageDocument::read(QIODevice *device, const ReadOptions &options)
+bool ImageDocument::read(const ReadOptions &options)
 {
     Q_D(ImageDocument);
-    if (!device) {
-        d->error = ImageError(ImageError::DeviceError);
+    Q_UNUSED(options);
+
+    setContents(ImageContents());
+    if (!d->ensureHandlerInitialised())
+        return false;
+
+    if (!d->ensureDeviceOpened(QIODevice::ReadOnly))
+        return false;
+
+    if (!d->handler->read()) {
+        d->error = ImageError(ImageError::HandlerError);
         return false;
     }
 
-    QString mimeType = options.mimeType();
-    if (mimeType.isEmpty())
-        mimeType = QMimeDatabase().mimeTypeForData(device).name();
-
-    if (mimeType.isEmpty()) {
-        d->error = ImageError(ImageError::MimeTypeError);
-        return false;
-    }
-
-    auto db = ImageIOHandlerDatabase::instance();
-    QScopedPointer<ImageIOHandler> handler(db->create(mimeType));
-    if (!handler) {
-        d->error = ImageError(ImageError::UnsupportedFormatError);
-        return false;
-    }
-
-    handler->setDocument(this);
-    handler->setDevice(device);
-    handler->setMimeType(mimeType);
-
-    return handler->read();
+    return true;
 }
 
-bool ImageDocument::read(const QString &fileName, const ReadOptions &options)
+bool ImageDocument::write(const WriteOptions &options)
 {
     Q_D(ImageDocument);
+    Q_UNUSED(options);
 
-    if (fileName.isEmpty()) {
-        d->error = ImageError(ImageError::DeviceError); // empty file name
+    if (!d->ensureHandlerInitialised())
+        return false;
+
+    if (!d->ensureDeviceOpened(QIODevice::WriteOnly))
+        return false;
+
+    if (!d->handler->write()) {
+        d->error = ImageError(ImageError::HandlerError);
         return false;
     }
 
-    QFile file(fileName);
-    if (!file.exists()) {
-        d->error = ImageError(ImageError::DeviceError); // file doesn't exists
-        return false;
-    }
-
-    if (!file.open(QIODevice::ReadOnly)) {
-        d->error = ImageError(ImageError::DeviceError); // can't open device
-        return false;
-    }
-
-    ReadOptions opt = options;
-    if (opt.mimeType().isEmpty())
-        opt.setMimeType(QMimeDatabase().mimeTypeForFile(fileName).name());
-
-    return read(&file, opt);
+    return true;
 }
 
-bool ImageDocument::write(QIODevice *device, const WriteOptions &options)
+ImageContents ImageDocument::contents() const
 {
-    Q_D(ImageDocument);
-
-    if (!device) {
-        d->error = ImageError(ImageError::DeviceError);
-        return false;
-    }
-
-    QString mimeType = options.mimeType();
-    if (mimeType.isEmpty())
-        mimeType = "image/png";
-
-    if (mimeType.isEmpty()) {
-        d->error = ImageError(ImageError::MimeTypeError);
-        return false;
-    }
-
-    auto db = ImageIOHandlerDatabase::instance();
-    QScopedPointer<ImageIOHandler> handler(db->create(mimeType));
-    if (!handler) {
-        d->error = ImageError(ImageError::UnsupportedFormatError);
-        return false;
-    }
-
-    handler->setDocument(this);
-    handler->setDevice(device);
-    handler->setMimeType(mimeType);
-
-    return handler->write();
+    Q_D(const ImageDocument);
+    return d->contents;
 }
 
-bool ImageDocument::write(const QString &fileName, const WriteOptions &options)
+void ImageDocument::setContents(const ImageContents &contents)
 {
     Q_D(ImageDocument);
-
-    if (fileName.isEmpty()) {
-        d->error = ImageError(ImageError::DeviceError); // empty file name
-        return false;
-    }
-
-    QFile file(fileName);
-    if (!file.exists()) {
-        d->error = ImageError(ImageError::DeviceError); // file doesn't exists
-        return false;
-    }
-
-    if (!file.open(QIODevice::WriteOnly)) {
-        d->error = ImageError(ImageError::DeviceError); // can't open device
-        return false;
-    }
-
-    WriteOptions opt = options;
-    if (opt.mimeType().isEmpty())
-        opt.setMimeType(QMimeDatabase().mimeTypeForFile(fileName).name());
-
-    return write(&file, opt);
+    d->contents = contents;
 }

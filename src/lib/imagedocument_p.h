@@ -20,10 +20,21 @@ class ImageDocumentPrivate
 public:
     explicit ImageDocumentPrivate(ImageDocument *qq);
 
+    bool initHandler();
+    bool ensureHandlerInitialised() const;
+    bool ensureDeviceOpened(QIODevice::OpenMode mode);
+    void killHandler();
+
     static QString errorString(ImageError::ErrorCode code);
 
-    ImageContents contents;
+    QIODevice *device;
+    QString fileName;
+    QScopedPointer<QFile> file;
+    QString mimeType;
+    ImageIOHandler *handler;
     ImageError error;
+
+    ImageContents contents;
 };
 
 class ImageIOHandlerDatabase
