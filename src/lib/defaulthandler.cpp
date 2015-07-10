@@ -30,17 +30,19 @@ bool DefaultHandler::read()
     QImageReader reader(device(), mimeTypeToFormat(mimeType()));
 
     int count = reader.imageCount();
+    ImageContents contents;
     if (reader.supportsOption(QImageIOHandler::Animation)) {
-        document()->setImageCount(count);
+        contents.setImageCount(count);
         for (int i = 0; i < count; i++) {
             QImage image;
             const bool ok = reader.read(&image);
             if (!ok)
                 return false;
 
-            document()->setImage(image, i);
+            contents.setImage(image, i);
         }
     } else if (count > 0) {
+        contents.setMipmapCount(count);
         for (int i = 0; i < count; i++) {
             QImage image;
             reader.jumpToImage(i);
@@ -48,7 +50,7 @@ bool DefaultHandler::read()
             if (!ok)
                 return false;
 
-            document()->setImage(image, 0, i);
+            contents.setImage(image, 0, i);
         }
     } else {
         QImage image;
@@ -56,8 +58,10 @@ bool DefaultHandler::read()
         if (!ok)
             return false;
 
-        document()->setImage(image);
+        contents.setImage(image);
     }
+
+    document()->setContents(contents);
 
     return true;
 }
@@ -65,7 +69,7 @@ bool DefaultHandler::read()
 bool DefaultHandler::write()
 {
     QImageWriter writer(device(), mimeTypeToFormat(mimeType()));
-    const bool ok = writer.write(document()->image());
+    const bool ok = writer.write(document()->contents().image());
     if (!ok)
         return false;
 

@@ -1,8 +1,8 @@
 #ifndef IMAGEDOCUMENT_H
 #define IMAGEDOCUMENT_H
 
+#include "imagecontents.h"
 #include "imageerror.h"
-#include "imageexifmeta.h"
 #include "readoptions.h"
 #include "writeoptions.h"
 
@@ -19,42 +19,14 @@ class ImageDocument : public QObject
     Q_DISABLE_COPY(ImageDocument)
 
 public:
-    enum Type {
-        Image,
-        Animation,
-        ImageArray,
-        Cubemap,
-        VolumeTexture
-    };
-
     explicit ImageDocument(QObject *parent = 0);
     ~ImageDocument();
 
+    ImageContents contents() const;
+    void setContents(const ImageContents &contents);
+
     bool hasError() const;
     ImageError error() const;
-
-    void clear();
-
-    Type type() const;
-    void setType(Type t);
-
-    int imageCount() const;
-    void setImageCount(int count);
-
-    int mipmapCount() const;
-    void setMipmapCount(int count);
-
-    QImage image(int index = 0, int level = 0);
-    void setImage(const QImage &image, int index = 0, int level = 0);
-
-    int imageDelay(); // TODO: should we support separate delays for each frame?
-    void setImageDelay(int delay); // TODO: this could be only called by handler. Move to DocData?
-
-    int loopCount() const;
-    void setLoopCount(int count);
-
-    ImageExifMeta exifMeta() const;
-    void setExifMeta(const ImageExifMeta &exif);
 
     bool read(QIODevice *device, const ReadOptions &options = ReadOptions());
     bool read(const QString &fileName, const ReadOptions &options = ReadOptions());

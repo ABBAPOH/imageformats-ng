@@ -1037,13 +1037,15 @@ bool JpegHandler::read()
     bool ok = d->read(&image);
     if (!ok)
         return false;
-    document()->setImage(image);
+    ImageContents contents;
+    contents.setImage(image);
+    document()->setContents(contents);
     return true;
 }
 
 bool JpegHandler::write()
 {
-    return write_jpeg_image(document()->image(), device(), d->quality, d->description);
+    return write_jpeg_image(document()->contents().image(), device(), d->quality, d->description);
 }
 
 //bool JpegHandler::supportsOption(ImageOption option) const

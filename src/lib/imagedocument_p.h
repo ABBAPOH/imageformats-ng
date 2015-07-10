@@ -18,21 +18,12 @@ class ImageDocumentPrivate
     ImageDocument *q_ptr;
 
 public:
-    typedef QPair<int, int> ImageIndex;
-
     explicit ImageDocumentPrivate(ImageDocument *qq);
 
     static QString errorString(ImageError::ErrorCode code);
 
+    ImageContents contents;
     ImageError error;
-
-    ImageDocument::Type type;
-    int imageCount;
-    int mipmapCount;
-    QMap<ImageIndex, QImage> images;
-    int imageDelay;
-    int loopCount;
-    ImageExifMeta exif;
 };
 
 class ImageIOHandlerDatabase

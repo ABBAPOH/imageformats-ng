@@ -54,11 +54,6 @@ ImageIOHandlerDatabase *ImageIOHandlerDatabase::instance()
 ImageDocumentPrivate::ImageDocumentPrivate(ImageDocument *qq) :
     q_ptr(qq)
 {
-    type = ImageDocument::Image;
-    imageCount = 1;
-    mipmapCount = 1;
-    imageDelay = 0;
-    loopCount = -1;
 }
 
 QString ImageDocumentPrivate::errorString(ImageError::ErrorCode code)
@@ -85,6 +80,18 @@ ImageDocument::~ImageDocument()
     delete d_ptr;
 }
 
+ImageContents ImageDocument::contents() const
+{
+    Q_D(const ImageDocument);
+    return d->contents;
+}
+
+void ImageDocument::setContents(const ImageContents &contents)
+{
+    Q_D(ImageDocument);
+    d->contents = contents;
+}
+
 bool ImageDocument::hasError() const
 {
     Q_D(const ImageDocument);
@@ -95,106 +102,6 @@ ImageError ImageDocument::error() const
 {
     Q_D(const ImageDocument);
     return d->error;
-}
-
-void ImageDocument::clear()
-{
-    Q_D(ImageDocument);
-    d->images.clear();
-    d->imageCount = 1;
-    d->mipmapCount = 1;
-}
-
-ImageDocument::Type ImageDocument::type() const
-{
-    Q_D(const ImageDocument);
-    return d->type;
-}
-
-void ImageDocument::setType(ImageDocument::Type t)
-{
-    Q_D(ImageDocument);
-    d->type = t;
-}
-
-int ImageDocument::imageCount() const
-{
-    Q_D(const ImageDocument);
-    return d->imageCount;
-}
-
-void ImageDocument::setImageCount(int count)
-{
-    Q_D(ImageDocument);
-    if (count < 1)
-        return;
-    d->imageCount = count;
-}
-
-int ImageDocument::mipmapCount() const
-{
-    Q_D(const ImageDocument);
-    return d->mipmapCount;
-}
-
-void ImageDocument::setMipmapCount(int count)
-{
-    Q_D(ImageDocument);
-    if (count < 1)
-        return;
-    d->mipmapCount = count;
-}
-
-QImage ImageDocument::image(int index, int level)
-{
-    Q_D(const ImageDocument);
-    if (index < 0 || index >= imageCount())
-        return QImage();
-    if (level < 0 || level >= mipmapCount())
-        return QImage();
-    return d->images.value(ImageDocumentPrivate::ImageIndex(index, level));
-}
-
-void ImageDocument::setImage(const QImage &image, int index, int level)
-{
-    Q_D(ImageDocument);
-    d->images.insert(ImageDocumentPrivate::ImageIndex(index, level), image);
-}
-
-int ImageDocument::imageDelay()
-{
-    Q_D(const ImageDocument);
-    return d->imageDelay;
-}
-
-void ImageDocument::setImageDelay(int delay)
-{
-    Q_D(ImageDocument);
-    d->imageDelay = delay;
-}
-
-int ImageDocument::loopCount() const
-{
-    Q_D(const ImageDocument);
-    return d->loopCount;
-}
-
-void ImageDocument::setLoopCount(int count)
-{
-    Q_D(ImageDocument);
-    d->loopCount = count;
-}
-
-ImageExifMeta ImageDocument::exifMeta() const
-{
-    Q_D(const ImageDocument);
-    return d->exif;
-}
-
-void ImageDocument::setExifMeta(const ImageExifMeta &exif)
-{
-    Q_D(ImageDocument);
-    d->exif = exif;
 }
 
 bool ImageDocument::read(QIODevice *device, const ReadOptions &options)
@@ -224,8 +131,6 @@ bool ImageDocument::read(QIODevice *device, const ReadOptions &options)
     handler->setDocument(this);
     handler->setDevice(device);
     handler->setMimeType(mimeType);
-
-    clear();
 
     return handler->read();
 }

@@ -43,10 +43,10 @@ void MainWindow::buildModel()
 
 void MainWindow::buildModel(QStandardItem *parent)
 {
-    if (_document->mipmapCount() == 1) {
+    if (_document->contents().mipmapCount() == 1) {
         buildModel(parent, 0);
     } else {
-        for (int i = 0; i < _document->mipmapCount(); ++i) {
+        for (int i = 0; i < _document->contents().mipmapCount(); ++i) {
             QStandardItem *mipmapItem = new QStandardItem(tr("Mipmap %1").arg(i));
             buildModel(mipmapItem, i);
             parent->appendRow(mipmapItem);
@@ -56,10 +56,10 @@ void MainWindow::buildModel(QStandardItem *parent)
 
 void MainWindow::buildModel(QStandardItem *parent, int level)
 {
-    if (_document->imageCount() == 1) {
+    if (_document->contents().imageCount() == 1) {
         buildModel(parent, 0, level);
     } else {
-        for (int i = 0; i < _document->imageCount(); i++) {
+        for (int i = 0; i < _document->contents().imageCount(); i++) {
             QStandardItem *item = new QStandardItem(tr("Image %1").arg(i));
             buildModel(item, i, level);
             parent->appendRow(item);
@@ -74,7 +74,7 @@ void MainWindow::buildModel(QStandardItem *parent, int index, int level)
         item = new QStandardItem(tr("Image"));
         parent->appendRow(item);
     }
-    item->setData(_document->image(index, level));
+    item->setData(_document->contents().image(index, level));
 }
 
 void MainWindow::onClicked(const QModelIndex &index)
