@@ -17,8 +17,8 @@ public:
     QIODevice *device() const;
     void setDevice(QIODevice *device);
 
-    QString mimeType() const;
-    void setMimeType(const QString &mimeType);
+    QMimeType mimeType() const;
+    void setMimeType(const QMimeType &mimeType);
 
     virtual bool read() = 0;
     virtual bool write() = 0;
@@ -26,7 +26,7 @@ public:
 private:
     ImageDocument *_document;
     QIODevice *_device;
-    QString _mimeType;
+    QMimeType _mimeType;
 };
 
 class ImageIOHandlerPlugin : public QObject

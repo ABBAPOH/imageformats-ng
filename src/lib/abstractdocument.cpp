@@ -51,8 +51,8 @@ void AbstractDocument::setFileName(const QString &fileName)
     d->file.reset(new QFile(fileName));
 //    d->killHandler();
     d->device = d->file.data();
-    d->mimeType = QMimeDatabase().mimeTypeForFile(fileName).name();
-    d->fileNameChanged(d->mimeType);
+    d->mimeType = QMimeDatabase().mimeTypeForFile(fileName);
+    d->fileNameChanged(d->fileName);
     d->deviceChanged(d->device);
     d->mimeTypeChanged(d->mimeType);
     emit fileNameChanged(fileName);
@@ -60,7 +60,7 @@ void AbstractDocument::setFileName(const QString &fileName)
     emit mimeTypeChanged(d->mimeType);
 }
 
-QString AbstractDocument::mimeType() const
+QMimeType AbstractDocument::mimeType() const
 {
     Q_D(const AbstractDocument);
     return d->mimeType;
@@ -69,16 +69,15 @@ QString AbstractDocument::mimeType() const
 void AbstractDocument::setMimeType(const QMimeType &mimeType)
 {
     Q_D(AbstractDocument);
-    if (d->mimeType == mimeType.name())
+    if (d->mimeType == mimeType)
         return;
 //    d->killHandler();
-    d->mimeType = mimeType.name();
+    d->mimeType = mimeType;
     d->mimeTypeChanged(d->mimeType);
     emit mimeTypeChanged(d->mimeType);
 }
 
 void AbstractDocument::setMimeType(const QString &name)
 {
-    auto type = QMimeDatabase().mimeTypeForName(name);
-    setMimeType(type);
+    setMimeType(QMimeDatabase().mimeTypeForName(name));
 }

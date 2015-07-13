@@ -15,12 +15,12 @@ public:
 
     virtual void deviceChanged(QIODevice *device) { Q_UNUSED(device); }
     virtual void fileNameChanged(const QString &fileName) { Q_UNUSED(fileName); }
-    virtual void mimeTypeChanged(const QString &mimeType) { Q_UNUSED(mimeType); }
+    virtual void mimeTypeChanged(const QMimeType &mimeType) { Q_UNUSED(mimeType); }
 
     QIODevice *device;
     QString fileName;
     QScopedPointer<QFile> file;
-    QString mimeType;
+    QMimeType mimeType;
 
 protected:
     AbstractDocument *q_ptr;

@@ -21,7 +21,7 @@ public:
 
     void deviceChanged(QIODevice *device) { Q_UNUSED(device); killHandler(); }
     void fileNameChanged(const QString &fileName) { Q_UNUSED(fileName); killHandler(); }
-    void mimeTypeChanged(const QString &mimeType) { Q_UNUSED(mimeType); killHandler(); }
+    void mimeTypeChanged(const QMimeType &mimeType) { Q_UNUSED(mimeType); killHandler(); }
 
     bool initHandler();
     bool ensureHandlerInitialised() const;

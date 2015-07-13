@@ -60,13 +60,13 @@ bool ImageDocumentPrivate::initHandler()
 {
     Q_Q(ImageDocument);
 
-    if (mimeType.isEmpty()) {
+    if (mimeType.isValid()) {
         error = ImageError(ImageError::MimeTypeError);
         return false;
     }
 
     auto db = ImageIOHandlerDatabase::instance();
-    handler = db->create(mimeType);
+    handler = db->create(mimeType.name());
     if (!handler) {
         error = ImageError(ImageError::UnsupportedFormatError);
         return false;

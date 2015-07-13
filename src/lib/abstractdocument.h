@@ -13,7 +13,7 @@ class AbstractDocument : public QObject
     Q_DISABLE_COPY(AbstractDocument)
 
     Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged)
-    Q_PROPERTY(QString mimeType READ mimeType WRITE setMimeType NOTIFY mimeTypeChanged)
+    Q_PROPERTY(QMimeType mimeType READ mimeType WRITE setMimeType NOTIFY mimeTypeChanged)
 
 public:
     explicit AbstractDocument(QObject *parent = Q_NULLPTR);
@@ -25,14 +25,14 @@ public:
     QString fileName() const; // TODO: change to QUrl
     void setFileName(const QString &fileName);
 
-    QString mimeType() const;
+    QMimeType mimeType() const;
     void setMimeType(const QMimeType &mimeType);
     void setMimeType(const QString &name);
 
 signals:
     void deviceChanged();
     void fileNameChanged(const QString &fileName);
-    void mimeTypeChanged(const QString &mimeType);
+    void mimeTypeChanged(const QMimeType &mimeType);
 
 public slots:
 
