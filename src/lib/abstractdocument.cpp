@@ -3,6 +3,12 @@
 
 #include <QtCore/QMimeDatabase>
 
+AbstractDocumentPrivate::AbstractDocumentPrivate(AbstractDocument *qq) :
+    q_ptr(qq)
+{
+    modified = false;
+}
+
 AbstractDocument::AbstractDocument(QObject *parent) :
     QObject(parent),
     d_ptr(new AbstractDocumentPrivate(this))
@@ -76,4 +82,20 @@ void AbstractDocument::setMimeType(const QMimeType &mimeType)
 void AbstractDocument::setMimeType(const QString &name)
 {
     setMimeType(QMimeDatabase().mimeTypeForName(name));
+}
+
+bool AbstractDocument::modified() const
+{
+    Q_D(const AbstractDocument);
+    return d->modified;
+}
+
+void AbstractDocument::setModified(bool modified)
+{
+    Q_D(AbstractDocument);
+    if (d->modified == modified)
+        return;
+
+    d->modified = modified;
+    emit modificationChanged(modified);
 }

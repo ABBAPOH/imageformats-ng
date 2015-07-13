@@ -10,7 +10,7 @@ class AbstractDocumentPrivate
     Q_DISABLE_COPY(AbstractDocumentPrivate)
 
 public:
-    explicit AbstractDocumentPrivate(AbstractDocument *qq) : q_ptr(qq) {}
+    explicit AbstractDocumentPrivate(AbstractDocument *qq);
     virtual ~AbstractDocumentPrivate() {}
 
     virtual void changed() {}
@@ -19,6 +19,8 @@ public:
     QString fileName;
     QScopedPointer<QFile> file;
     QMimeType mimeType;
+
+    bool modified;
 
 protected:
     AbstractDocument *q_ptr;

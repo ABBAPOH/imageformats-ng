@@ -14,6 +14,7 @@ class AbstractDocument : public QObject
 
     Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged)
     Q_PROPERTY(QMimeType mimeType READ mimeType WRITE setMimeType NOTIFY mimeTypeChanged)
+    Q_PROPERTY(bool modified READ modified WRITE setModified NOTIFY modificationChanged)
 
 public:
     explicit AbstractDocument(QObject *parent = Q_NULLPTR);
@@ -29,12 +30,16 @@ public:
     void setMimeType(const QMimeType &mimeType);
     void setMimeType(const QString &name);
 
+    bool modified() const;
+
+public slots:
+    void setModified(bool modified);
+
 signals:
     void deviceChanged();
     void fileNameChanged(const QString &fileName);
     void mimeTypeChanged(const QMimeType &mimeType);
-
-public slots:
+    void modificationChanged(bool modified);
 
 protected:
     explicit AbstractDocument(AbstractDocumentPrivate &dd, QObject *parent = Q_NULLPTR);
