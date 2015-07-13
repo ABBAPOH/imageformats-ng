@@ -31,8 +31,8 @@ void AbstractDocument::setDevice(QIODevice *device)
     if (d->device == device)
         return;
     d->file.reset();
-//    d->killHandler();
     d->device = device;
+    d->changed();
     emit deviceChanged();
 }
 
@@ -49,12 +49,9 @@ void AbstractDocument::setFileName(const QString &fileName)
         return;
 
     d->file.reset(new QFile(fileName));
-//    d->killHandler();
     d->device = d->file.data();
     d->mimeType = QMimeDatabase().mimeTypeForFile(fileName);
-    d->fileNameChanged(d->fileName);
-    d->deviceChanged(d->device);
-    d->mimeTypeChanged(d->mimeType);
+    d->changed();
     emit fileNameChanged(fileName);
     emit deviceChanged();
     emit mimeTypeChanged(d->mimeType);
@@ -71,9 +68,8 @@ void AbstractDocument::setMimeType(const QMimeType &mimeType)
     Q_D(AbstractDocument);
     if (d->mimeType == mimeType)
         return;
-//    d->killHandler();
     d->mimeType = mimeType;
-    d->mimeTypeChanged(d->mimeType);
+    d->changed();
     emit mimeTypeChanged(d->mimeType);
 }
 

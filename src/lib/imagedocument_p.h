@@ -19,9 +19,7 @@ class ImageDocumentPrivate : public AbstractDocumentPrivate
 public:
     explicit ImageDocumentPrivate(ImageDocument *qq);
 
-    void deviceChanged(QIODevice *device) { Q_UNUSED(device); killHandler(); }
-    void fileNameChanged(const QString &fileName) { Q_UNUSED(fileName); killHandler(); }
-    void mimeTypeChanged(const QMimeType &mimeType) { Q_UNUSED(mimeType); killHandler(); }
+    void changed() Q_DECL_OVERRIDE { killHandler(); }
 
     bool initHandler();
     bool ensureHandlerInitialised() const;

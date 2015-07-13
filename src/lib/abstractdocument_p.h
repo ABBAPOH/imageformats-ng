@@ -13,9 +13,7 @@ public:
     explicit AbstractDocumentPrivate(AbstractDocument *qq) : q_ptr(qq) {}
     virtual ~AbstractDocumentPrivate() {}
 
-    virtual void deviceChanged(QIODevice *device) { Q_UNUSED(device); }
-    virtual void fileNameChanged(const QString &fileName) { Q_UNUSED(fileName); }
-    virtual void mimeTypeChanged(const QMimeType &mimeType) { Q_UNUSED(mimeType); }
+    virtual void changed() {}
 
     QIODevice *device;
     QString fileName;
