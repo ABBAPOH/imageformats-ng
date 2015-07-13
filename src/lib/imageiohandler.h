@@ -38,11 +38,7 @@ class ImageIOHandlerPlugin : public QObject
 public:
     enum Capability {
         CanRead = 0x1,
-        CanWrite = 0x2,
-        SupportsMultipleResources = 0x10,
-        SupportsMipmaps = 0x20,
-        SupportsCubemaps = 0x40,
-        SupportsVolumeTextures = 0x80
+        CanWrite = 0x2
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
