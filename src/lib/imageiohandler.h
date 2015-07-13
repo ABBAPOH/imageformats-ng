@@ -23,6 +23,7 @@ public:
     QByteArray subType() const;
     void setSubType(const QByteArray &subType);
 
+    virtual bool readHeader() { return true; }
     virtual bool read() = 0;
     virtual bool write() = 0;
 
