@@ -5,8 +5,6 @@
 #include "dds/ddshandler.h"
 #include "jpeg/jpeghandler_p.h"
 
-#include <QtCore/QMimeDatabase>
-
 ImageIOHandlerDatabase::ImageIOHandlerDatabase()
 {
     map.insert("image/png", new DefaultHandlerPlugin());
@@ -52,7 +50,7 @@ ImageIOHandlerDatabase *ImageIOHandlerDatabase::instance()
 }
 
 ImageDocumentPrivate::ImageDocumentPrivate(ImageDocument *qq) :
-    q_ptr(qq)
+    AbstractDocumentPrivate(qq)
 {
     device = Q_NULLPTR;
     handler = 0;
@@ -125,69 +123,12 @@ QString ImageDocumentPrivate::errorString(ImageError::ErrorCode code)
 }
 
 ImageDocument::ImageDocument(QObject *parent) :
-    QObject(parent),
-    d_ptr(new ImageDocumentPrivate(this))
+    AbstractDocument(*new ImageDocumentPrivate(this), parent)
 {
 }
 
 ImageDocument::~ImageDocument()
 {
-    delete d_ptr;
-}
-
-QIODevice *ImageDocument::device() const
-{
-    Q_D(const ImageDocument);
-    return d->device;
-}
-
-void ImageDocument::setDevice(QIODevice *device)
-{
-    Q_D(ImageDocument);
-    if (d->device == device)
-        return;
-    d->file.reset();
-    d->killHandler();
-    d->device = device;
-}
-
-QString ImageDocument::fileName() const
-{
-    Q_D(const ImageDocument);
-    return d->fileName;
-}
-
-void ImageDocument::setFileName(const QString &fileName)
-{
-    Q_D(ImageDocument);
-    if (d->fileName == fileName)
-        return;
-
-    d->file.reset(new QFile(fileName));
-    d->killHandler();
-    d->device = d->file.data();
-    d->mimeType = QMimeDatabase().mimeTypeForFile(fileName).name();
-}
-
-QString ImageDocument::mimeType() const
-{
-    Q_D(const ImageDocument);
-    return d->mimeType;
-}
-
-void ImageDocument::setMimeType(const QMimeType &mimeType)
-{
-    Q_D(ImageDocument);
-    if (d->mimeType == mimeType.name())
-        return;
-    d->killHandler();
-    d->mimeType = mimeType.name();
-}
-
-void ImageDocument::setMimeType(const QString &name)
-{
-    auto type = QMimeDatabase().mimeTypeForName(name);
-    setMimeType(type);
 }
 
 bool ImageDocument::hasError() const

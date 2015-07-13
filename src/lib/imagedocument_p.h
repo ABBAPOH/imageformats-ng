@@ -1,6 +1,7 @@
 #ifndef IMAGEDOCUMENT_P
 #define IMAGEDOCUMENT_P
 
+#include "abstractdocument_p.h"
 #include "imagedocument.h"
 #include "imageiohandler.h"
 
@@ -11,14 +12,16 @@
 class ImageIOHandler;
 class ImageIOHandlerPlugin;
 
-class ImageDocumentPrivate
+class ImageDocumentPrivate : public AbstractDocumentPrivate
 {
     Q_DECLARE_PUBLIC(ImageDocument)
 
-    ImageDocument *q_ptr;
-
 public:
     explicit ImageDocumentPrivate(ImageDocument *qq);
+
+    void deviceChanged(QIODevice *device) { Q_UNUSED(device); killHandler(); }
+    void fileNameChanged(const QString &fileName) { Q_UNUSED(fileName); killHandler(); }
+    void mimeTypeChanged(const QString &mimeType) { Q_UNUSED(mimeType); killHandler(); }
 
     bool initHandler();
     bool ensureHandlerInitialised() const;
@@ -27,10 +30,6 @@ public:
 
     static QString errorString(ImageError::ErrorCode code);
 
-    QIODevice *device;
-    QString fileName;
-    QScopedPointer<QFile> file;
-    QString mimeType;
     ImageIOHandler *handler;
     ImageError error;
 
