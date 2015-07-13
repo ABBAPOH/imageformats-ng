@@ -24,11 +24,11 @@ public:
     explicit ImageDocument(QObject *parent = 0);
     ~ImageDocument();
 
+    bool open() Q_DECL_OVERRIDE;
+    bool save() Q_DECL_OVERRIDE;
+
     bool hasError() const;
     ImageError error() const;
-
-    bool read(const ReadOptions & options = ReadOptions());
-    bool write(const WriteOptions &options = WriteOptions());
 
     QByteArray subType() const;
     void setSubType(QByteArray subType);

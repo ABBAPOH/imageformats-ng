@@ -32,6 +32,9 @@ public:
 
     bool modified() const;
 
+    virtual bool open() = 0;
+    virtual bool save() { return false; }
+
 public slots:
     void setModified(bool modified);
 

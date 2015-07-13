@@ -32,8 +32,8 @@ void MainWindow::open()
 
     _document->setFileName(path);
 
-    if (!_document->read())
-        qWarning() << "Can't read" << _document->error().errorString();
+    if (!_document->open())
+        qWarning() << "Can't open" << _document->error().errorString();
     buildModel();
 }
 

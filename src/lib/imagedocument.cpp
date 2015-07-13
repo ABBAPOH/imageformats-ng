@@ -131,22 +131,9 @@ ImageDocument::~ImageDocument()
 {
 }
 
-bool ImageDocument::hasError() const
-{
-    Q_D(const ImageDocument);
-    return d->error.errorCode() != ImageError::NoError;
-}
-
-ImageError ImageDocument::error() const
-{
-    Q_D(const ImageDocument);
-    return d->error;
-}
-
-bool ImageDocument::read(const ReadOptions &options)
+bool ImageDocument::open()
 {
     Q_D(ImageDocument);
-    Q_UNUSED(options);
 
     setContents(ImageContents());
     if (!d->ensureHandlerInitialised())
@@ -167,10 +154,9 @@ bool ImageDocument::read(const ReadOptions &options)
     return true;
 }
 
-bool ImageDocument::write(const WriteOptions &options)
+bool ImageDocument::save()
 {
     Q_D(ImageDocument);
-    Q_UNUSED(options);
 
     if (!d->ensureHandlerInitialised())
         return false;
@@ -186,6 +172,18 @@ bool ImageDocument::write(const WriteOptions &options)
     }
 
     return true;
+}
+
+bool ImageDocument::hasError() const
+{
+    Q_D(const ImageDocument);
+    return d->error.errorCode() != ImageError::NoError;
+}
+
+ImageError ImageDocument::error() const
+{
+    Q_D(const ImageDocument);
+    return d->error;
 }
 
 QByteArray ImageDocument::subType() const
