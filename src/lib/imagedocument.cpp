@@ -160,6 +160,10 @@ bool ImageDocument::read(const ReadOptions &options)
         return false;
     }
 
+    // TODO: move to readHeader
+    d->subType = d->handler->subType();
+    emit subTypeChanged(d->subType);
+
     return true;
 }
 
@@ -174,12 +178,30 @@ bool ImageDocument::write(const WriteOptions &options)
     if (!d->ensureDeviceOpened(QIODevice::WriteOnly))
         return false;
 
+    d->handler->setSubType(d->subType);
+
     if (!d->handler->write()) {
         d->error = ImageError(ImageError::HandlerError);
         return false;
     }
 
     return true;
+}
+
+QByteArray ImageDocument::subType() const
+{
+    Q_D(const ImageDocument);
+    return d->subType;
+}
+
+void ImageDocument::setSubType(QByteArray subType)
+{
+    Q_D(ImageDocument);
+    if (d->subType == subType)
+        return;
+
+    d->subType = subType;
+    emit subTypeChanged(subType);
 }
 
 ImageContents ImageDocument::contents() const

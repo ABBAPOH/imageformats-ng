@@ -20,6 +20,9 @@ public:
     QMimeType mimeType() const;
     void setMimeType(const QMimeType &mimeType);
 
+    QByteArray subType() const;
+    void setSubType(const QByteArray &subType);
+
     virtual bool read() = 0;
     virtual bool write() = 0;
 
@@ -27,6 +30,7 @@ private:
     ImageDocument *_document;
     QIODevice *_device;
     QMimeType _mimeType;
+    QByteArray _subType;
 };
 
 class ImageIOHandlerPlugin : public QObject

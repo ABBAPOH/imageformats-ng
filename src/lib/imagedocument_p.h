@@ -31,6 +31,8 @@ public:
     ImageIOHandler *handler;
     ImageError error;
 
+    QByteArray subType;
+
     ImageContents contents;
 };
 
