@@ -133,11 +133,6 @@ ImageDocument::~ImageDocument()
 
 bool ImageDocument::open()
 {
-    return open(ReadAll);
-}
-
-bool ImageDocument::open(OpenFlags flags)
-{
     Q_D(ImageDocument);
 
     setContents(ImageContents());
@@ -148,23 +143,14 @@ bool ImageDocument::open(OpenFlags flags)
     if (!d->ensureDeviceOpened(QIODevice::ReadOnly))
         return false;
 
-    if (flags & ReadHeader) {
-        if (!d->handler->readHeader()) {
-            d->error = ImageError(ImageError::HandlerError);
-            return false;
-        }
-
-        // TODO: move to readHeader
-        d->subType = d->handler->subType();
-        emit subTypeChanged(d->subType);
+    if (!d->handler->read()) {
+        d->error = ImageError(ImageError::HandlerError);
+        return false;
     }
 
-    if (flags & ReadData) {
-        if (!d->handler->read()) {
-            d->error = ImageError(ImageError::HandlerError);
-            return false;
-        }
-    }
+    // TODO: move to readHeader
+    d->subType = d->handler->subType();
+    emit subTypeChanged(d->subType);
 
     return true;
 }
