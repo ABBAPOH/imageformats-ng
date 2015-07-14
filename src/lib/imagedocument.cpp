@@ -62,17 +62,10 @@ bool ImageDocumentPrivate::initHandler()
 {
     Q_Q(ImageDocument);
 
-    if (mimeType.isValid()) {
-        error = ImageError(ImageError::MimeTypeError);
-        return false;
-    }
-
     auto db = ImageIOHandlerDatabase::instance();
     handler = db->create(mimeType.name());
-    if (!handler) {
-        error = ImageError(ImageError::UnsupportedFormatError);
+    if (!handler)
         return false;
-    }
 
     handler->setDocument(q);
     handler->setDevice(device);
@@ -88,40 +81,10 @@ bool ImageDocumentPrivate::ensureHandlerInitialised() const
     return const_cast<ImageDocumentPrivate *>(this)->initHandler();
 }
 
-bool ImageDocumentPrivate::ensureDeviceOpened(QIODevice::OpenMode mode)
-{
-    if (!device) {
-        error = ImageError(ImageError::DeviceError);
-        return false;
-    }
-
-    if ((device->openMode() & mode) != mode) {
-        device->close();
-        if (!device->open(mode)) {
-            error = ImageError(ImageError::DeviceError);
-            return false;
-        }
-    }
-    return true;
-}
-
 void ImageDocumentPrivate::killHandler()
 {
     delete handler;
     handler = 0;
-}
-
-QString ImageDocumentPrivate::errorString(ImageError::ErrorCode code)
-{
-    switch (code) {
-    case ImageError::NoError: return ImageDocument::tr("No error");
-    case ImageError::MimeTypeError: return ImageDocument::tr("Invalid mimetype");
-    case ImageError::FileNotFoundError: return ImageDocument::tr("File not found");
-    case ImageError::DeviceError: return ImageDocument::tr("Device error");
-    case ImageError::UnsupportedFormatError: return ImageDocument::tr("Unsupported format");
-    case ImageError::HandlerError: return ImageDocument::tr("Handler error");
-    }
-    return QString();
 }
 
 ImageDocument::ImageDocument(QObject *parent) :
@@ -133,7 +96,7 @@ ImageDocument::~ImageDocument()
 {
 }
 
-bool ImageDocument::open()
+bool ImageDocument::read()
 {
     Q_D(ImageDocument);
 
@@ -142,37 +105,26 @@ bool ImageDocument::open()
     if (!d->ensureHandlerInitialised())
         return false;
 
-    if (!d->ensureDeviceOpened(QIODevice::ReadOnly))
+    if (!d->handler->read())
         return false;
 
-    if (!d->handler->read()) {
-        d->error = ImageError(ImageError::HandlerError);
-        return false;
-    }
-
-    // TODO: move to readHeader
     d->subType = d->handler->subType();
     emit subTypeChanged(d->subType);
 
     return true;
 }
 
-bool ImageDocument::save()
+bool ImageDocument::write()
 {
     Q_D(ImageDocument);
 
     if (!d->ensureHandlerInitialised())
         return false;
 
-    if (!d->ensureDeviceOpened(QIODevice::WriteOnly))
-        return false;
-
     d->handler->setSubType(d->subType);
 
-    if (!d->handler->write()) {
-        d->error = ImageError(ImageError::HandlerError);
+    if (!d->handler->write())
         return false;
-    }
 
     return true;
 }
@@ -185,18 +137,6 @@ QVector<QMimeType> ImageDocument::supportedInputMimetypes() const
 QVector<QMimeType> ImageDocument::supportedOutputMimetypes() const
 {
     return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanWrite);
-}
-
-bool ImageDocument::hasError() const
-{
-    Q_D(const ImageDocument);
-    return d->error.errorCode() != ImageError::NoError;
-}
-
-ImageError ImageDocument::error() const
-{
-    Q_D(const ImageDocument);
-    return d->error;
 }
 
 QByteArray ImageDocument::subType() const

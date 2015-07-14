@@ -23,13 +23,9 @@ public:
 
     bool initHandler();
     bool ensureHandlerInitialised() const;
-    bool ensureDeviceOpened(QIODevice::OpenMode mode);
     void killHandler();
 
-    static QString errorString(ImageError::ErrorCode code);
-
     ImageIOHandler *handler;
-    ImageError error;
 
     QByteArray subType;
 

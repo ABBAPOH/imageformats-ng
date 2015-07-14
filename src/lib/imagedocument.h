@@ -3,7 +3,6 @@
 
 #include "abstractdocument.h"
 #include "imagecontents.h"
-#include "imageerror.h"
 #include "readoptions.h"
 #include "writeoptions.h"
 
@@ -24,20 +23,18 @@ public:
     explicit ImageDocument(QObject *parent = 0);
     ~ImageDocument();
 
-    bool open() Q_DECL_OVERRIDE;
-    bool save() Q_DECL_OVERRIDE;
-
     QVector<QMimeType> supportedInputMimetypes() const Q_DECL_OVERRIDE;
     QVector<QMimeType> supportedOutputMimetypes() const Q_DECL_OVERRIDE;
-
-    bool hasError() const;
-    ImageError error() const;
 
     QByteArray subType() const;
     void setSubType(QByteArray subType);
 
     ImageContents contents() const;
     void setContents(const ImageContents &contents);
+
+protected:
+    bool read() Q_DECL_OVERRIDE;
+    bool write() Q_DECL_OVERRIDE;
 
 signals:
     void subTypeChanged(QByteArray subType);

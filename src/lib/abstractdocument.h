@@ -18,6 +18,8 @@ class AbstractDocument : public QObject
     Q_PROPERTY(bool modified READ modified WRITE setModified NOTIFY modificationChanged)
 
 public:
+    class Result;
+
     explicit AbstractDocument(QObject *parent = Q_NULLPTR);
     ~AbstractDocument();
 
@@ -33,8 +35,8 @@ public:
 
     bool modified() const;
 
-    virtual bool open() = 0;
-    virtual bool save() { return false; }
+    Result open();
+    Result save();
 
     virtual QVector<QMimeType> supportedInputMimetypes() const = 0;
     virtual QVector<QMimeType> supportedOutputMimetypes() const { return QVector<QMimeType>(); }
@@ -51,8 +53,38 @@ signals:
 protected:
     explicit AbstractDocument(AbstractDocumentPrivate &dd, QObject *parent = Q_NULLPTR);
 
+    virtual bool read() = 0;
+    virtual bool write() { return false; }
+
 protected:
     QScopedPointer<AbstractDocumentPrivate> d_ptr;
 };
+
+class AbstractDocument::Result
+{
+public:
+    enum ErrorCode
+    {
+        NoError,
+        InvalidMimeTypeError,
+        FileNotFoundError,
+        DeviceError,
+        UnsupportedMimeTypeError,
+        IOError,
+    };
+
+    inline Result(ErrorCode errorCode = NoError) : _error(errorCode) {}
+    inline ErrorCode errorCode() const { return _error; }
+    QString errorString() const;
+
+    operator bool() const { return _error == NoError; }
+
+private:
+    ErrorCode _error;
+};
+
+
+
+
 
 #endif // ABSTRACTDOCUMENT_H

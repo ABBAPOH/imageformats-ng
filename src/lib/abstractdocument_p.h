@@ -13,7 +13,9 @@ public:
     explicit AbstractDocumentPrivate(AbstractDocument *qq);
     virtual ~AbstractDocumentPrivate() {}
 
+    static QString errorString(AbstractDocument::Result::ErrorCode code);
     virtual void changed() {}
+    bool ensureDeviceOpened(QIODevice::OpenMode mode);
 
     QIODevice *device;
     QString fileName;

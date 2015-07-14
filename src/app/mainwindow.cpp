@@ -32,8 +32,9 @@ void MainWindow::open()
 
     _document->setFileName(path);
 
-    if (!_document->open())
-        qWarning() << "Can't open" << _document->error().errorString();
+    auto ok = _document->open();
+    if (!ok)
+        qWarning() << "Can't open" << ok.errorString();
     buildModel();
 }
 
