@@ -4,5 +4,5 @@
 
 QString ImageError::errorString() const
 {
-    return _errorString.isEmpty() ? ImageDocumentPrivate::errorString(_error) : errorString();
+    return ImageDocumentPrivate::errorString(_error);
 }
