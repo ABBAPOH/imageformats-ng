@@ -32,8 +32,3 @@ void ReadOptions::setBackgroundColor(const QColor &color)
     _options.insert(BackgroundColor, color);
 }
 
-QStringList ReadOptions::supportedMimeTypes()
-{
-    return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanRead);
-}
-

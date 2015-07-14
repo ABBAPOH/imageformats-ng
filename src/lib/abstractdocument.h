@@ -4,6 +4,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QIODevice>
 #include <QtCore/QMimeType>
+#include <QtCore/QVector>
 
 class AbstractDocumentPrivate;
 class AbstractDocument : public QObject
@@ -34,6 +35,9 @@ public:
 
     virtual bool open() = 0;
     virtual bool save() { return false; }
+
+    virtual QVector<QMimeType> supportedInputMimetypes() const = 0;
+    virtual QVector<QMimeType> supportedOutputMimetypes() const { return QVector<QMimeType>(); }
 
 public slots:
     void setModified(bool modified);

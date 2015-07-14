@@ -28,8 +28,6 @@ public:
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &color);
 
-    static QStringList supportedMimeTypes();
-
 private:
     QHash<Option, QVariant> _options;
 };

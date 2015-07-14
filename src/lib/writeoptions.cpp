@@ -72,8 +72,3 @@ void WriteOptions::setQuality(int quality)
 {
     _options.insert(Quality, quality);
 }
-
-QStringList WriteOptions::supportedMimeTypes()
-{
-    return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanWrite);
-}

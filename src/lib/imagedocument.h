@@ -27,6 +27,9 @@ public:
     bool open() Q_DECL_OVERRIDE;
     bool save() Q_DECL_OVERRIDE;
 
+    QVector<QMimeType> supportedInputMimetypes() const Q_DECL_OVERRIDE;
+    QVector<QMimeType> supportedOutputMimetypes() const Q_DECL_OVERRIDE;
+
     bool hasError() const;
     ImageError error() const;
 

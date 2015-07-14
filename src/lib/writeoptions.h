@@ -35,8 +35,6 @@ public:
     int quality() const;
     void setQuality(int quality);
 
-    static QStringList supportedMimeTypes();
-
 private:
     QHash<Option, QVariant> _options;
 };

@@ -5,6 +5,8 @@
 #include "dds/ddshandler.h"
 #include "jpeg/jpeghandler_p.h"
 
+#include <QMimeDatabase>
+
 ImageIOHandlerDatabase::ImageIOHandlerDatabase()
 {
     map.insert("image/png", new DefaultHandlerPlugin());
@@ -28,12 +30,12 @@ ImageIOHandler *ImageIOHandlerDatabase::create(const QString &mimeType)
     return plugin->create();
 }
 
-QStringList ImageIOHandlerDatabase::availableMimeTypes(ImageIOHandlerPlugin::Capabilities caps) const
+QVector<QMimeType> ImageIOHandlerDatabase::availableMimeTypes(ImageIOHandlerPlugin::Capabilities caps) const
 {
-    QStringList result;
+    QVector<QMimeType> result;
     for (auto it = map.begin(), end = map.end(); it != end; it++) {
         if (it.value()->capabilities() & caps)
-            result.append(it.key());
+            result.append(QMimeDatabase().mimeTypeForName(it.key()));
     }
     return result;
 }
@@ -173,6 +175,16 @@ bool ImageDocument::save()
     }
 
     return true;
+}
+
+QVector<QMimeType> ImageDocument::supportedInputMimetypes() const
+{
+    return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanRead);
+}
+
+QVector<QMimeType> ImageDocument::supportedOutputMimetypes() const
+{
+    return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanWrite);
 }
 
 bool ImageDocument::hasError() const
