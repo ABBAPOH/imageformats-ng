@@ -26,12 +26,11 @@ DefaultHandler::DefaultHandler()
 
 }
 
-bool DefaultHandler::read()
+bool DefaultHandler::read(ImageContents &contents)
 {
     QImageReader reader(device(), mimeTypeToFormat(mimeType()));
 
     int count = reader.imageCount();
-    ImageContents contents;
     if (reader.supportsOption(QImageIOHandler::Animation)) {
         contents.setImageCount(count);
         for (int i = 0; i < count; i++) {
@@ -62,15 +61,13 @@ bool DefaultHandler::read()
         contents.setImage(image);
     }
 
-    document()->setContents(contents);
-
     return true;
 }
 
-bool DefaultHandler::write()
+bool DefaultHandler::write(const ImageContents &contents)
 {
     QImageWriter writer(device(), mimeTypeToFormat(mimeType()));
-    const bool ok = writer.write(document()->contents().image());
+    const bool ok = writer.write(contents.image());
     if (!ok)
         return false;
 

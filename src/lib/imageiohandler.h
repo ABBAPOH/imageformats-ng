@@ -11,9 +11,6 @@ public:
     ImageIOHandler();
     virtual ~ImageIOHandler();
 
-    ImageDocument *document() const;
-    void setDocument(ImageDocument *document);
-
     QIODevice *device() const;
     void setDevice(QIODevice *device);
 
@@ -23,11 +20,11 @@ public:
     QByteArray subType() const;
     void setSubType(const QByteArray &subType);
 
-    virtual bool read() = 0;
-    virtual bool write() = 0;
+    // TODO: use Optional?
+    virtual bool read(ImageContents &contents) = 0;
+    virtual bool write(const ImageContents &contents) = 0;
 
 private:
-    ImageDocument *_document;
     QIODevice *_device;
     QMimeType _mimeType;
     QByteArray _subType;

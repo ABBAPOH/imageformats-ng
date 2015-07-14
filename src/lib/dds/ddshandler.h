@@ -55,8 +55,8 @@ public:
 
 //    bool canRead() const;
     bool open();
-    bool read();
-    bool write();
+    bool read(ImageContents &contents);
+    bool write(const ImageContents &contents);
 
 //    QVariant option(QImageIOHandler::ImageOption option) const;
 //    void setOption(ImageOption option, const QVariant &value);

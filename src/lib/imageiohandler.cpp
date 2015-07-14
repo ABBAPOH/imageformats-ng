@@ -1,23 +1,12 @@
 #include "imageiohandler.h"
 
 ImageIOHandler::ImageIOHandler() :
-    _document(0),
     _device(0)
 {
 }
 
 ImageIOHandler::~ImageIOHandler()
 {
-}
-
-ImageDocument *ImageIOHandler::document() const
-{
-    return _document;
-}
-
-void ImageIOHandler::setDocument(ImageDocument *document)
-{
-    _document = document;
 }
 
 QIODevice *ImageIOHandler::device() const

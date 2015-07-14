@@ -87,7 +87,7 @@ void ImageContents::setMipmapCount(int count)
     d->mipmapCount = count;
 }
 
-QImage ImageContents::image(int index, int level)
+QImage ImageContents::image(int index, int level) const
 {
     if (index < 0 || index >= imageCount())
         return QImage();

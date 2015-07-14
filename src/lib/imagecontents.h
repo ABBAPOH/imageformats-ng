@@ -33,7 +33,7 @@ public:
     int mipmapCount() const;
     void setMipmapCount(int count);
 
-    QImage image(int index = 0, int level = 0);
+    QImage image(int index = 0, int level = 0) const;
     void setImage(const QImage &image, int index = 0, int level = 0);
 
     int imageDelay(); // TODO: should we support separate delays for each frame?

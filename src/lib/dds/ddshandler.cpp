@@ -1407,12 +1407,11 @@ bool DDSHandler::open()
 //    return false;
 //}
 
-bool DDSHandler::read()
+bool DDSHandler::read(ImageContents &contents)
 {
     if (!open())
         return false;
 
-    ImageContents contents;
     contents.setMipmapCount(qMax<quint32>(1, m_header.mipMapCount));
     if (isCubeMap(m_header)) {
         contents.setType(ImageContents::Cubemap);
@@ -1438,13 +1437,12 @@ bool DDSHandler::read()
         if (!ok)
             return false;
     }
-    document()->setContents(contents);
     return true;
 }
 
-bool DDSHandler::write()
+bool DDSHandler::write(const ImageContents &contents)
 {
-    auto outImage = document()->contents().image();
+    auto outImage = contents.image();
 
     if (m_format != FormatA8R8G8B8) {
         qWarning() << "Format" << formatName(m_format) << "is not supported";

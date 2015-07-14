@@ -60,14 +60,11 @@ ImageDocumentPrivate::ImageDocumentPrivate(ImageDocument *qq) :
 
 bool ImageDocumentPrivate::initHandler()
 {
-    Q_Q(ImageDocument);
-
     auto db = ImageIOHandlerDatabase::instance();
     handler = db->create(mimeType.name());
     if (!handler)
         return false;
 
-    handler->setDocument(q);
     handler->setDevice(device);
     handler->setMimeType(mimeType);
 
@@ -105,10 +102,13 @@ bool ImageDocument::read()
     if (!d->ensureHandlerInitialised())
         return false;
 
-    if (!d->handler->read())
+    ImageContents contents;
+    if (!d->handler->read(contents))
         return false;
 
     d->subType = d->handler->subType();
+    setContents(contents);
+
     emit subTypeChanged(d->subType);
 
     return true;
@@ -123,7 +123,7 @@ bool ImageDocument::write()
 
     d->handler->setSubType(d->subType);
 
-    if (!d->handler->write())
+    if (!d->handler->write(contents()))
         return false;
 
     return true;
