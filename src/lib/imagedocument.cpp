@@ -159,6 +159,26 @@ QVector<QMimeType> ImageDocument::supportedOutputMimetypes() const
     return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanWrite);
 }
 
+bool ImageDocument::supportsOption(ReadOptions::Option option)
+{
+    if (!mimeType().isValid())
+        return false;
+    auto plugin = ImageIOHandlerDatabase::instance()->plugin(mimeType().name());
+    if (!plugin)
+        return false;
+    return plugin->supportsOption(option);
+}
+
+bool ImageDocument::supportsOption(WriteOptions::Option option)
+{
+    if (!mimeType().isValid())
+        return false;
+    auto plugin = ImageIOHandlerDatabase::instance()->plugin(mimeType().name());
+    if (!plugin)
+        return false;
+    return plugin->supportsOption(option);
+}
+
 QByteArray ImageDocument::subType() const
 {
     Q_D(const ImageDocument);
@@ -173,6 +193,17 @@ void ImageDocument::setSubType(QByteArray subType)
 
     d->subType = subType;
     emit subTypeChanged(subType);
+}
+
+QVector<QByteArray> ImageDocument::supportedSubTypes() const
+{
+    if (!mimeType().isValid())
+        return QVector<QByteArray>();
+
+    auto plugin = ImageIOHandlerDatabase::instance()->plugin(mimeType().name());
+    if (!plugin)
+        return QVector<QByteArray>();
+    return plugin->subTypes();
 }
 
 ImageContents ImageDocument::contents() const

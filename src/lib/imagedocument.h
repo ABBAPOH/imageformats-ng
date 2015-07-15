@@ -29,8 +29,12 @@ public:
     QVector<QMimeType> supportedInputMimetypes() const Q_DECL_OVERRIDE;
     QVector<QMimeType> supportedOutputMimetypes() const Q_DECL_OVERRIDE;
 
+    bool supportsOption(ReadOptions::Option option);
+    bool supportsOption(WriteOptions::Option option);
+
     QByteArray subType() const;
     void setSubType(QByteArray subType);
+    QVector<QByteArray> supportedSubTypes() const;
 
     ImageContents contents() const;
     void setContents(const ImageContents &contents);

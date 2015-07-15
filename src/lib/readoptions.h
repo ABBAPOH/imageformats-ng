@@ -10,20 +10,13 @@ class ReadOptions
 {
 public:
     enum Option {
-        MimeType,
         Quality,
         BackgroundColor
     };
 
     ReadOptions();
-    ReadOptions(const QString &mimeType);
 
     bool isEmpty() const { return _options.isEmpty(); }
-
-    QString mimeType() const { return _options.value(MimeType).toString(); }
-    void setMimeType(const QString &mimeType) { _options.insert(MimeType, mimeType); }
-
-    bool supportsOption(Option option) const;
 
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &color);
