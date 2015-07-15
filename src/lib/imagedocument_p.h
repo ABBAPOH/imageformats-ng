@@ -28,6 +28,8 @@ public:
     ImageIOHandler *handler;
 
     QByteArray subType;
+    ReadOptions readOptions;
+    WriteOptions writeOptions;
 
     ImageContents contents;
 };

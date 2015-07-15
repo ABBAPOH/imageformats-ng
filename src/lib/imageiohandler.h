@@ -21,8 +21,8 @@ public:
     void setSubType(const QByteArray &subType);
 
     // TODO: use Optional?
-    virtual bool read(ImageContents &contents) = 0;
-    virtual bool write(const ImageContents &contents) = 0;
+    virtual bool read(ImageContents &contents, const ReadOptions &options) = 0;
+    virtual bool write(const ImageContents &contents, const WriteOptions &options) = 0;
 
 private:
     QIODevice *_device;

@@ -1030,8 +1030,9 @@ bool JpegHandler::canRead(QIODevice *device)
     return uchar(buffer[0]) == 0xff && uchar(buffer[1]) == 0xd8;
 }
 
-bool JpegHandler::read(ImageContents &contents)
+bool JpegHandler::read(ImageContents &contents, const ReadOptions &options)
 {
+    Q_UNUSED(options);
     open();
     QImage image;
     bool ok = d->read(&image);
@@ -1041,8 +1042,9 @@ bool JpegHandler::read(ImageContents &contents)
     return true;
 }
 
-bool JpegHandler::write(const ImageContents &contents)
+bool JpegHandler::write(const ImageContents &contents, const WriteOptions &options)
 {
+    Q_UNUSED(options);
     return write_jpeg_image(contents.image(), device(), d->quality, d->description);
 }
 

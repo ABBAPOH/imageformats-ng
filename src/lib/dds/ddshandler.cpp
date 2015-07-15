@@ -1407,8 +1407,9 @@ bool DDSHandler::open()
 //    return false;
 //}
 
-bool DDSHandler::read(ImageContents &contents)
+bool DDSHandler::read(ImageContents &contents, const ReadOptions &options)
 {
+    Q_UNUSED(options);
     if (!open())
         return false;
 
@@ -1440,8 +1441,9 @@ bool DDSHandler::read(ImageContents &contents)
     return true;
 }
 
-bool DDSHandler::write(const ImageContents &contents)
+bool DDSHandler::write(const ImageContents &contents, const WriteOptions &options)
 {
+    Q_UNUSED(options);
     auto outImage = contents.image();
 
     if (m_format != FormatA8R8G8B8) {

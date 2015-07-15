@@ -26,8 +26,9 @@ DefaultHandler::DefaultHandler()
 
 }
 
-bool DefaultHandler::read(ImageContents &contents)
+bool DefaultHandler::read(ImageContents &contents, const ReadOptions &options)
 {
+    Q_UNUSED(options);
     QImageReader reader(device(), mimeTypeToFormat(mimeType()));
 
     int count = reader.imageCount();
@@ -64,8 +65,9 @@ bool DefaultHandler::read(ImageContents &contents)
     return true;
 }
 
-bool DefaultHandler::write(const ImageContents &contents)
+bool DefaultHandler::write(const ImageContents &contents, const WriteOptions &options)
 {
+    Q_UNUSED(options);
     QImageWriter writer(device(), mimeTypeToFormat(mimeType()));
     const bool ok = writer.write(contents.image());
     if (!ok)

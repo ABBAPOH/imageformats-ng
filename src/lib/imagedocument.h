@@ -23,6 +23,9 @@ public:
     explicit ImageDocument(QObject *parent = 0);
     ~ImageDocument();
 
+    Result open(const ReadOptions &options = ReadOptions());
+    Result save(const WriteOptions &options = WriteOptions());
+
     QVector<QMimeType> supportedInputMimetypes() const Q_DECL_OVERRIDE;
     QVector<QMimeType> supportedOutputMimetypes() const Q_DECL_OVERRIDE;
 

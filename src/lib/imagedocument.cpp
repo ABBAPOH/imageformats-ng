@@ -93,6 +93,26 @@ ImageDocument::~ImageDocument()
 {
 }
 
+AbstractDocument::Result ImageDocument::open(const ReadOptions &options)
+{
+    Q_D(ImageDocument);
+    d->readOptions = options;
+    // TODO: handle exceptions
+    const auto result = AbstractDocument::open();
+    d->readOptions = ReadOptions();
+    return result;
+}
+
+AbstractDocument::Result ImageDocument::save(const WriteOptions &options)
+{
+    Q_D(ImageDocument);
+    d->writeOptions = options;
+    // TODO: handle exceptions
+    const auto result = AbstractDocument::save();
+    d->writeOptions = WriteOptions();
+    return result;
+}
+
 bool ImageDocument::read()
 {
     Q_D(ImageDocument);
@@ -103,7 +123,7 @@ bool ImageDocument::read()
         return false;
 
     ImageContents contents;
-    if (!d->handler->read(contents))
+    if (!d->handler->read(contents, d->readOptions))
         return false;
 
     d->subType = d->handler->subType();
@@ -123,7 +143,7 @@ bool ImageDocument::write()
 
     d->handler->setSubType(d->subType);
 
-    if (!d->handler->write(contents()))
+    if (!d->handler->write(contents(), d->writeOptions))
         return false;
 
     return true;

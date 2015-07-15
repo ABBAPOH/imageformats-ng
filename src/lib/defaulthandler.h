@@ -8,8 +8,8 @@ class DefaultHandler : public ImageIOHandler
 public:
     DefaultHandler();
 
-    bool read(ImageContents &contents) Q_DECL_OVERRIDE;
-    bool write(const ImageContents &contents) Q_DECL_OVERRIDE;
+    bool read(ImageContents &contents, const ReadOptions &options) Q_DECL_OVERRIDE;
+    bool write(const ImageContents &contents, const WriteOptions &options) Q_DECL_OVERRIDE;
 };
 
 class DefaultHandlerPlugin : public ImageIOHandlerPlugin
