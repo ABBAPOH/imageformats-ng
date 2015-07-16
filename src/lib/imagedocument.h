@@ -21,6 +21,7 @@ class ImageDocument : public AbstractDocument
 
 public:
     explicit ImageDocument(QObject *parent = 0);
+    explicit ImageDocument(const QString &fileName, QObject *parent = 0);
     ~ImageDocument();
 
     Result open(const ReadOptions &options = ReadOptions());

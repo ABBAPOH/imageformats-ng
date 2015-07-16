@@ -119,6 +119,12 @@ ImageDocument::ImageDocument(QObject *parent) :
 {
 }
 
+ImageDocument::ImageDocument(const QString &fileName, QObject *parent) :
+    AbstractDocument(*new ImageDocumentPrivate(this), parent)
+{
+    setFileName(fileName);
+}
+
 ImageDocument::~ImageDocument()
 {
 }
