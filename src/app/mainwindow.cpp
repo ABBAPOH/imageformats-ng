@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _document = new ImageDocument(this);
 
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::open);
+    connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
 
     connect(ui->treeView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &MainWindow::onClicked);
