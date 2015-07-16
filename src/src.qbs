@@ -7,5 +7,8 @@ Project {
     SubProject {
         filePath: "lib/lib.qbs"
     }
+    SubProject {
+        filePath: "plugins/plugins.qbs"
+    }
 }
 

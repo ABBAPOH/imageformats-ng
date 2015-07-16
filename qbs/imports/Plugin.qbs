@@ -1,9 +1,12 @@
 import qbs.base 1.0
 
-Application {
+DynamicLibrary {
     Depends { name: "cpp" }
+    Depends { name: "Qt.core" }
+    Depends { name: "Qt.gui" }
 
-    destinationDirectory: project.install_app_path
+    destinationDirectory: project.install_plugin_path + "/imageformats2"
+    bundle.isBundle: false
 
     cpp.cFlags: project.cFlags
     cpp.cxxFlags: project.cxxFlags
@@ -14,17 +17,18 @@ Application {
 
     Properties {
         condition: qbs.targetOS.contains("osx")
+        cpp.installNamePrefix: "@executable_path/../Frameworks/"
         cpp.minimumOsxVersion: "10.7"
     }
 
     Properties {
         condition: qbs.targetOS.contains("unix") && !qbs.targetOS.contains("osx")
-        cpp.rpaths: "$ORIGIN/../lib/" + project.app_target
+        cpp.rpaths: "$ORIGIN"
     }
 
     Group {
         fileTagsFilter: product.type
         qbs.install: true
-        qbs.installDir: project.install_app_path
+        qbs.installDir: project.install_plugin_path + "/imageformats2"
     }
 }

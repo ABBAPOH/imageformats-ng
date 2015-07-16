@@ -32,6 +32,8 @@ private:
 
 class ImageIOHandlerPlugin : public QObject
 {
+    Q_OBJECT
+    Q_DISABLE_COPY(ImageIOHandlerPlugin)
 public:
     enum Capability {
         CanRead = 0x1,

@@ -74,6 +74,8 @@ private:
 
 class JpegHandlerPlugin : public ImageIOHandlerPlugin
 {
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.arch.ImageDocument.JpegHandlerPlugin" FILE "jpeg.json")
 public:
     JpegHandler *create() { return new JpegHandler(); }
     Capabilities capabilities() const Q_DECL_OVERRIDE { return Capabilities(CanRead | CanWrite); }

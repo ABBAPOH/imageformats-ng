@@ -3,16 +3,48 @@
 
 #include "defaulthandler.h"
 #include "dds/ddshandler.h"
-#include "jpeg/jpeghandler_p.h"
 
-#include <QMimeDatabase>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
+#include <QtCore/QDir>
+#include <QtCore/QJsonArray>
+#include <QtCore/QMimeDatabase>
+#include <QtCore/QPluginLoader>
 
 ImageIOHandlerDatabase::ImageIOHandlerDatabase()
 {
+    foreach (const QString &folder, qApp->libraryPaths()) {
+        QDir dir(folder);
+        if (!dir.cd("imageformats2"))
+            continue;
+        for (const QString &fileName : dir.entryList(QDir::Files)) {
+            QPluginLoader loader(dir.absoluteFilePath(fileName));
+            const auto metaData = loader.metaData().value("MetaData").toObject();
+            const auto mimeTypes = metaData.value("mimeTypes").toArray();
+            if (mimeTypes.isEmpty()) {
+                qWarning() << "File" << dir.absoluteFilePath(fileName)
+                           << "does not contain 'mimeTypes' key";
+                continue;
+            }
+            QObject *plugin = loader.instance();
+            if (!plugin) {
+                qWarning() << "File" << dir.absoluteFilePath(fileName) << "is not a Qt plugin";
+                continue;
+            }
+
+            auto handlerPlugin = qobject_cast<ImageIOHandlerPlugin *>(plugin);
+            if (!handlerPlugin) {
+                qWarning() << "File" << dir.absoluteFilePath(fileName)
+                           << "does not contain an imageformat plugin";
+                continue;
+            }
+            for (auto mimeType : mimeTypes) {
+                map.insert(mimeType.toString(), handlerPlugin);
+            }
+        }
+    }
+
     map.insert("image/png", new DefaultHandlerPlugin());
-#ifdef Q_OS_LINUX
-    map.insert("image/jpeg", new JpegHandlerPlugin());
-#endif
     map.insert("image/gif", new DefaultHandlerPlugin());
     map.insert("image/x-dds", new DdsHandlerPlugin());
 }
