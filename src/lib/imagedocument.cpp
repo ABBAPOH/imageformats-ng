@@ -2,7 +2,6 @@
 #include "imagedocument_p.h"
 
 #include "defaulthandler.h"
-#include "dds/ddshandler.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -46,7 +45,6 @@ ImageIOHandlerDatabase::ImageIOHandlerDatabase()
 
     map.insert("image/png", new DefaultHandlerPlugin());
     map.insert("image/gif", new DefaultHandlerPlugin());
-    map.insert("image/x-dds", new DdsHandlerPlugin());
 }
 
 ImageIOHandlerDatabase::~ImageIOHandlerDatabase()
