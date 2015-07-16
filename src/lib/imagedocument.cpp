@@ -20,10 +20,10 @@ ImageIOHandlerDatabase::ImageIOHandlerDatabase()
         for (const QString &fileName : dir.entryList(QDir::Files)) {
             QPluginLoader loader(dir.absoluteFilePath(fileName));
             const auto metaData = loader.metaData().value("MetaData").toObject();
-            const auto mimeTypes = metaData.value("mimeTypes").toArray();
+            const auto mimeTypes = metaData.value("MimeTypes").toArray();
             if (mimeTypes.isEmpty()) {
                 qWarning() << "File" << dir.absoluteFilePath(fileName)
-                           << "does not contain 'mimeTypes' key";
+                           << "does not contain 'MimeTypes' key";
                 continue;
             }
             QObject *plugin = loader.instance();
