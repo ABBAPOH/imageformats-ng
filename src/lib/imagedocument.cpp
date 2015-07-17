@@ -10,6 +10,17 @@
 #include <QtCore/QMimeDatabase>
 #include <QtCore/QPluginLoader>
 
+template<typename T>
+class Guard
+{
+public:
+    explicit Guard(T * t) : _t(t) { Q_ASSERT(_t); }
+    ~Guard() { *_t = T(); }
+
+private:
+    T *_t;
+};
+
 ImageIOHandlerDatabase::ImageIOHandlerDatabase()
 {
     foreach (const QString &folder, qApp->libraryPaths()) {
@@ -132,34 +143,31 @@ ImageDocument::~ImageDocument()
 AbstractDocument::Result ImageDocument::openHeader()
 {
     Q_D(ImageDocument);
+    Guard<ImageDocumentPrivate::OpenFlags> openFlagsGuard(&d->openFlags);
+
     d->openFlags = ImageDocumentPrivate::OpenFlags(ImageDocumentPrivate::OpenHeader);
-    // TODO: handle exceptions
-    const auto result = AbstractDocument::open();
-    d->openFlags = 0;
-    return result;
+    return AbstractDocument::open();
 }
 
 AbstractDocument::Result ImageDocument::open(const ReadOptions &options)
 {
     Q_D(ImageDocument);
+    Guard<ImageDocumentPrivate::OpenFlags> openFlagsGuard(&d->openFlags);
+    Guard<ReadOptions> readOptionsGuard(&d->readOptions);
+
     d->openFlags = ImageDocumentPrivate::OpenFlags(ImageDocumentPrivate::OpenHeader |
                                                    ImageDocumentPrivate::OpenData);
     d->readOptions = options;
-    // TODO: handle exceptions
-    const auto result = AbstractDocument::open();
-    d->openFlags = 0;
-    d->readOptions = ReadOptions();
-    return result;
+    return AbstractDocument::open();
 }
 
 AbstractDocument::Result ImageDocument::save(const WriteOptions &options)
 {
     Q_D(ImageDocument);
+    Guard<WriteOptions> writeOptionsGuard(&d->writeOptions);
+
     d->writeOptions = options;
-    // TODO: handle exceptions
-    const auto result = AbstractDocument::save();
-    d->writeOptions = WriteOptions();
-    return result;
+    return AbstractDocument::save();
 }
 
 bool ImageDocument::read()
