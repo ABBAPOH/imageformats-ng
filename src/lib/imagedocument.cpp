@@ -133,7 +133,10 @@ AbstractDocument::Result ImageDocument::openHeader()
 {
     Q_D(ImageDocument);
     d->openFlags = ImageDocumentPrivate::OpenFlags(ImageDocumentPrivate::OpenHeader);
-    return AbstractDocument::open();
+    // TODO: handle exceptions
+    const auto result = AbstractDocument::open();
+    d->openFlags = 0;
+    return result;
 }
 
 AbstractDocument::Result ImageDocument::open(const ReadOptions &options)
