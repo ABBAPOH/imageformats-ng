@@ -167,3 +167,8 @@ void ImageContents::clear()
 {
     d->clear();
 }
+
+void ImageContents::swap(ImageContents &other)
+{
+    d.swap(other.d);
+}

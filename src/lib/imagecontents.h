@@ -52,6 +52,7 @@ public:
     void setExifMeta(const ImageExifMeta &exif);
 
     void clear();
+    void swap(ImageContents &other);
 
 private:
     QSharedDataPointer<ImageContentsData> d;
