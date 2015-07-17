@@ -1001,6 +1001,11 @@ JpegHandler::~JpegHandler()
     delete d;
 }
 
+bool JpegHandler::canRead()
+{
+    return canRead(device());
+}
+
 bool JpegHandler::open()
 {
     if(d->state == JpegHandlerPrivate::Ready && !canRead(device()))

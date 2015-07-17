@@ -179,15 +179,21 @@ bool ImageDocument::read()
     if (!d->ensureHandlerInitialised())
         return false;
 
-    if (d->openFlags & ImageDocumentPrivate::OpenHeader
-            && d->handler->state == ImageIOHandler::NoState) {
-        ImageContents contents;
-        if (!d->handler->readHeader(contents)) {
+    if (d->handler->state == ImageIOHandler::NoState) {
+        if (!d->handler->canRead()) {
             d->handler->state = ImageIOHandler::ErrorState;
             return false;
         }
-        d->handler->state = ImageIOHandler::HeaderReadState;
-        setContents(contents);
+
+        if (d->openFlags & ImageDocumentPrivate::OpenHeader) {
+            ImageContents contents;
+            if (!d->handler->readHeader(contents)) {
+                d->handler->state = ImageIOHandler::ErrorState;
+                return false;
+            }
+            d->handler->state = ImageIOHandler::HeaderReadState;
+            setContents(contents);
+        }
     }
 
     if (d->openFlags & ImageDocumentPrivate::OpenData

@@ -53,6 +53,7 @@ public:
 
     QByteArray name() const;
 
+    bool canRead() Q_DECL_OVERRIDE;
     bool readHeader(ImageContents &contents);
     bool read(ImageContents &contents, const ReadOptions &options);
     bool write(const ImageContents &contents, const WriteOptions &options);

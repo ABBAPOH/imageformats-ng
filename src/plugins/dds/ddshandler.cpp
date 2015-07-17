@@ -1383,6 +1383,11 @@ QByteArray DDSHandler::name() const
     return QByteArrayLiteral("dds");
 }
 
+bool DDSHandler::canRead()
+{
+    return canRead(device());
+}
+
 bool DDSHandler::readHeader(ImageContents &contents)
 {
     if (!canRead(device()))

@@ -20,6 +20,7 @@ public:
     QByteArray subType() const;
     void setSubType(const QByteArray &subType);
 
+    virtual bool canRead() = 0;
     virtual bool readHeader(ImageContents &contents) { Q_UNUSED(contents); return true; }
     // TODO: use Optional?
     virtual bool read(ImageContents &contents, const ReadOptions &options) = 0;
