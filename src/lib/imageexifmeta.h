@@ -32,4 +32,14 @@ private:
     ValueMap _values;
 };
 
+inline bool operator==(const ImageExifMeta &lhs, const ImageExifMeta &rhs)
+{
+    return lhs.values() == rhs.values();
+}
+
+inline bool operator!=(const ImageExifMeta &lhs, const ImageExifMeta &rhs)
+{
+    return !(lhs == rhs);
+}
+
 #endif // IMAGEEXIFMETA_H

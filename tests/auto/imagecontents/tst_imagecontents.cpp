@@ -19,7 +19,7 @@ void TestImageContents::defaultValues()
     QCOMPARE(contents.imageCount(), 1);
     QCOMPARE(contents.mipmapCount(), 1);
     QCOMPARE(contents.loopCount(), -1);
-//    QCOMPARE(contents.exifMeta(), ImageExifMeta());
+    QCOMPARE(contents.exifMeta(), ImageExifMeta());
     QCOMPARE(contents.image(), QImage());
 }
 
