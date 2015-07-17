@@ -3,10 +3,4 @@ import qbs.base 1.0
 Lib {
     name: "Lib"
     files: [ "*.cpp", "*.h" ]
-
-    Group {
-        name: "dds"
-        files: [ "*.cpp", "*.h" ]
-        prefix: "dds/"
-    }
 }
