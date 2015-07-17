@@ -182,7 +182,7 @@ bool ImageDocument::read()
     if (d->openFlags & ImageDocumentPrivate::OpenHeader
             && d->handler->state == ImageIOHandler::NoState) {
         ImageContents contents;
-        if (d->handler->readHeader(contents)) {
+        if (!d->handler->readHeader(contents)) {
             d->handler->state = ImageIOHandler::ErrorState;
             return false;
         }
