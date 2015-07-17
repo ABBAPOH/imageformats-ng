@@ -57,7 +57,7 @@ public:
     ~JpegHandler();
 
     bool canRead() Q_DECL_OVERRIDE;
-    bool open();
+    bool readHeader(ImageContents &contents) Q_DECL_OVERRIDE;
     bool read(ImageContents &contents, const ReadOptions &options) Q_DECL_OVERRIDE;
     bool write(const ImageContents &contents, const WriteOptions &options) Q_DECL_OVERRIDE;
 

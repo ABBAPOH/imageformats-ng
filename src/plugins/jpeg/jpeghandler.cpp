@@ -1006,7 +1006,7 @@ bool JpegHandler::canRead()
     return canRead(device());
 }
 
-bool JpegHandler::open()
+bool JpegHandler::readHeader(ImageContents &contents)
 {
     if(d->state == JpegHandlerPrivate::Ready && !canRead(device()))
         return false;
@@ -1016,8 +1016,13 @@ bool JpegHandler::open()
 //        return true;
 //    }
 
-    if(d->state == JpegHandlerPrivate::Ready)
-        return d->readJpegHeader(device());
+    if (d->state == JpegHandlerPrivate::Ready) {
+        if (!d->readJpegHeader(device()))
+            return false;
+    }
+
+    contents.setSize(d->size);
+    contents.setImageFormat(d->format);
 
     return false;
 }
@@ -1038,7 +1043,6 @@ bool JpegHandler::canRead(QIODevice *device)
 bool JpegHandler::read(ImageContents &contents, const ReadOptions &options)
 {
     Q_UNUSED(options);
-    open();
     QImage image;
     bool ok = d->read(&image);
     if (!ok)
