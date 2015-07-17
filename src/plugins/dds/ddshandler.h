@@ -53,8 +53,7 @@ public:
 
     QByteArray name() const;
 
-//    bool canRead() const;
-    bool open();
+    bool readHeader(ImageContents &contents);
     bool read(ImageContents &contents, const ReadOptions &options);
     bool write(const ImageContents &contents, const WriteOptions &options);
 
@@ -62,13 +61,10 @@ public:
 //    void setOption(ImageOption option, const QVariant &value);
 //    bool supportsOption(QImageIOHandler::ImageOption option) const;
 
-    int imageCount() const;
-    bool jumpToImage(int imageNumber);
-
     static bool canRead(QIODevice *device);
 
 private:
-    bool ensureScanned() const;
+    bool doScan() const;
     bool verifyHeader(const DDSHeader &dds) const;
 
 private:

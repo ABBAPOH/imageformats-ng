@@ -187,6 +187,7 @@ bool ImageDocument::read()
             return false;
         }
         d->handler->state = ImageIOHandler::HeaderReadState;
+        setContents(contents);
     }
 
     if (d->openFlags & ImageDocumentPrivate::OpenData

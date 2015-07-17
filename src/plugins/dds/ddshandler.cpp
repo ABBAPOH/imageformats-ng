@@ -1383,37 +1383,18 @@ QByteArray DDSHandler::name() const
     return QByteArrayLiteral("dds");
 }
 
-bool DDSHandler::open()
+bool DDSHandler::readHeader(ImageContents &contents)
 {
-    if (device()->isSequential())
+    if (!canRead(device()))
         return false;
 
-    if (!ensureScanned())
+    if (!doScan())
         return false;
 
-    return true;
-}
-
-//bool DDSHandler::canRead() const
-//{
-//    if (m_scanState == ScanNotScanned && !canRead(device()))
-//        return false;
-
-//    if (m_scanState != ScanError) {
-//        setFormat(QByteArrayLiteral("dds"));
-//        return true;
-//    }
-
-//    return false;
-//}
-
-bool DDSHandler::read(ImageContents &contents, const ReadOptions &options)
-{
-    Q_UNUSED(options);
-    if (!open())
-        return false;
-
+    contents.setSize(QSize(m_header.width, m_header.height));
+    contents.setImageFormat(QImage::Format_ARGB32);
     contents.setMipmapCount(qMax<quint32>(1, m_header.mipMapCount));
+
     if (isCubeMap(m_header)) {
         contents.setType(ImageContents::Cubemap);
         contents.setImageCount(6);
@@ -1421,6 +1402,12 @@ bool DDSHandler::read(ImageContents &contents, const ReadOptions &options)
         contents.setType(ImageContents::Image);
     }
 
+    return true;
+}
+
+bool DDSHandler::read(ImageContents &contents, const ReadOptions &options)
+{
+    Q_UNUSED(options);
     for (quint32 i = 0; i < qMax<quint32>(1, m_header.mipMapCount); i++) {
         qint64 pos = headerSize + mipmapOffset(m_header, m_format, i);
         if (!device()->seek(pos))
@@ -1538,50 +1525,25 @@ bool DDSHandler::write(const ImageContents &contents, const WriteOptions &option
 //            || (option == QImageIOHandler::SupportedSubTypes);
 //}
 
-int DDSHandler::imageCount() const
-{
-    if (!ensureScanned())
-        return 0;
-
-    return qMax<quint32>(1, m_header.mipMapCount);
-}
-
-bool DDSHandler::jumpToImage(int imageNumber)
-{
-    if (imageNumber >= imageCount())
-        return false;
-
-    m_currentImage = imageNumber;
-    return true;
-}
-
 bool DDSHandler::canRead(QIODevice *device)
 {
     if (!device) {
-        qWarning() << "DDSHandler::canRead() called with no device";
+        qWarning() << "DDSHandler: canRead() called with no device";
         return false;
     }
 
-    if (device->isSequential())
+    if (device->isSequential()) {
+        qWarning() << "DDSHandler: Sequential devices are not supported";
         return false;
+    }
 
     return device->peek(4) == QByteArrayLiteral("DDS ");
 }
 
-bool DDSHandler::ensureScanned() const
+bool DDSHandler::doScan() const
 {
-    if (m_scanState != ScanNotScanned)
-        return m_scanState == ScanSuccess;
-
-    m_scanState = ScanError;
-
     DDSHandler *that = const_cast<DDSHandler *>(this);
     that->m_format = FormatUnknown;
-
-    if (device()->isSequential()) {
-        qWarning() << "Sequential devices are not supported";
-        return false;
-    }
 
     qint64 oldPos = device()->pos();
     device()->seek(0);
@@ -1602,7 +1564,6 @@ bool DDSHandler::ensureScanned() const
 
     that->m_format = getFormat(m_header);
 
-    m_scanState = ScanSuccess;
     return true;
 }
 
