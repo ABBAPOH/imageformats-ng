@@ -172,3 +172,16 @@ void ImageContents::swap(ImageContents &other)
 {
     d.swap(other.d);
 }
+
+bool operator==(const ImageContents &lhs, const ImageContents &rhs)
+{
+    return lhs.d == rhs.d ||
+            (lhs.d->type == rhs.d->type
+             && lhs.d->size == rhs.d->size
+             && lhs.d->imageFormat == rhs.d->imageFormat
+             && lhs.d->imageCount == rhs.d->imageCount
+             && lhs.d->mipmapCount == rhs.d->mipmapCount
+             && lhs.d->images == rhs.d->images
+             && lhs.d->loopCount == rhs.d->loopCount
+             && lhs.d->exif == rhs.d->exif);
+}

@@ -8,6 +8,7 @@ class TestImageContents : public QObject
 private slots:
     void defaultValues();
     void setters();
+    void equals();
 };
 
 void TestImageContents::defaultValues()
@@ -54,6 +55,25 @@ void TestImageContents::setters()
             QCOMPARE(doc.image(i, j), image);
         }
     }
+}
+
+void TestImageContents::equals()
+{
+    ImageContents c1;
+    ImageContents c2;
+
+    QVERIFY(c1 == c2);
+
+    c1.setSize(QSize(64, 64));
+    QVERIFY(c1 != c2);
+
+    c2.setSize(QSize(64, 64));
+    QVERIFY(c1 == c2);
+
+    c1.setImageCount(2);
+    c2.setImageCount(2);
+
+    QVERIFY(c1 == c2);
 }
 
 QTEST_APPLESS_MAIN(TestImageContents)

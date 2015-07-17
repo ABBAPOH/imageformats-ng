@@ -56,6 +56,15 @@ public:
 
 private:
     QSharedDataPointer<ImageContentsData> d;
+
+    friend bool operator==(const ImageContents &lhs, const ImageContents &rhs);
 };
+
+bool operator==(const ImageContents &lhs, const ImageContents &rhs);
+
+inline bool operator!=(const ImageContents &lhs, const ImageContents &rhs)
+{
+    return !(lhs == rhs);
+}
 
 #endif // IMAGECONTENTS_H
