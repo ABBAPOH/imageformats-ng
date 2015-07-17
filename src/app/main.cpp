@@ -6,9 +6,9 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX)
     app.addLibraryPath(app.applicationDirPath() + "/../lib/imageviewer/plugins/");
-#elif Q_OS_MAC
+#elif defined(Q_OS_MAC)
     app.addLibraryPath(app.applicationDirPath() + "/../PlugIns/");
 #endif
 
