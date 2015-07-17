@@ -14,17 +14,11 @@ DynamicLibrary {
     cpp.includePaths: project.includePaths
     cpp.libraryPaths: project.libraryPaths
     cpp.cxxLanguageVersion: "c++11"
-
-    Properties {
-        condition: qbs.targetOS.contains("osx")
-        cpp.installNamePrefix: "@executable_path/../Frameworks/"
-        cpp.minimumOsxVersion: "10.7"
-    }
-
-    Properties {
-        condition: qbs.targetOS.contains("unix") && !qbs.targetOS.contains("osx")
-        cpp.rpaths: "$ORIGIN"
-    }
+    cpp.minimumOsxVersion: "10.7"
+    cpp.installNamePrefix: "@rpath/Frameworks"
+    cpp.rpaths: qbs.targetOS.contains("osx")
+                ? [ "@loader_path/..", "@executable_path/.." ]
+                : [ "$ORIGIN" ]
 
     Group {
         fileTagsFilter: product.type
