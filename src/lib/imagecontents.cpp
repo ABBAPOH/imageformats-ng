@@ -6,6 +6,8 @@ public:
     typedef QPair<int, int> ImageIndex;
 
     ImageContents::Type type;
+    QSize size;
+    QImage::Format imageFormat;
     int imageCount;
     int mipmapCount;
     QMap<ImageIndex, QImage> images;
@@ -14,15 +16,25 @@ public:
     ImageExifMeta exif;
 
     ImageContentsData();
+    void clear();
 };
 
 ImageContentsData::ImageContentsData()
 {
+    clear();
+}
+
+void ImageContentsData::clear()
+{
     type = ImageContents::Image;
+    size = QSize();
+    imageFormat = QImage::Format_Invalid;
     imageCount = 1;
     mipmapCount = 1;
+    images.clear();
     imageDelay = 0;
     loopCount = -1;
+    exif.clear();
 }
 
 /*!
@@ -61,6 +73,26 @@ ImageContents::Type ImageContents::type() const
 void ImageContents::setType(ImageContents::Type t)
 {
     d->type = t;
+}
+
+QSize ImageContents::size() const
+{
+    return d->size;
+}
+
+void ImageContents::setSize(QSize size)
+{
+    d->size = size;
+}
+
+QImage::Format ImageContents::imageFormat() const
+{
+    return d->imageFormat;
+}
+
+void ImageContents::setImageFormat(QImage::Format format)
+{
+    d->imageFormat = format;
 }
 
 int ImageContents::imageCount() const
@@ -133,7 +165,5 @@ void ImageContents::setExifMeta(const ImageExifMeta &exif)
 
 void ImageContents::clear()
 {
-    d->images.clear();
-    d->imageCount = 1;
-    d->mipmapCount = 1;
+    d->clear();
 }

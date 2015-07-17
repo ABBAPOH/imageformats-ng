@@ -17,6 +17,9 @@ class ImageDocumentPrivate : public AbstractDocumentPrivate
     Q_DECLARE_PUBLIC(ImageDocument)
 
 public:
+    enum OpenFlag { OpenHeader = 0x1, OpenData = 0x2 };
+    Q_DECLARE_FLAGS(OpenFlags, OpenFlag)
+
     explicit ImageDocumentPrivate(ImageDocument *qq);
 
     void changed() Q_DECL_OVERRIDE { killHandler(); }
@@ -28,6 +31,7 @@ public:
     ImageIOHandler *handler;
 
     QByteArray subType;
+    OpenFlags openFlags;
     ReadOptions readOptions;
     WriteOptions writeOptions;
 

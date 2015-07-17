@@ -20,14 +20,20 @@ public:
     QByteArray subType() const;
     void setSubType(const QByteArray &subType);
 
+    virtual bool readHeader(ImageContents &contents) { Q_UNUSED(contents); return true; }
     // TODO: use Optional?
     virtual bool read(ImageContents &contents, const ReadOptions &options) = 0;
     virtual bool write(const ImageContents &contents, const WriteOptions &options) = 0;
 
 private:
+    enum State { NoState, HeaderReadState, DataReadState, ErrorState } state;
+
+private:
     QIODevice *_device;
     QMimeType _mimeType;
     QByteArray _subType;
+
+    friend class ImageDocument;
 };
 
 class ImageIOHandlerPlugin : public QObject

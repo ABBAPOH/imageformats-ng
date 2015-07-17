@@ -129,12 +129,22 @@ ImageDocument::~ImageDocument()
 {
 }
 
+AbstractDocument::Result ImageDocument::openHeader()
+{
+    Q_D(ImageDocument);
+    d->openFlags = ImageDocumentPrivate::OpenFlags(ImageDocumentPrivate::OpenHeader);
+    return AbstractDocument::open();
+}
+
 AbstractDocument::Result ImageDocument::open(const ReadOptions &options)
 {
     Q_D(ImageDocument);
+    d->openFlags = ImageDocumentPrivate::OpenFlags(ImageDocumentPrivate::OpenHeader |
+                                                   ImageDocumentPrivate::OpenData);
     d->readOptions = options;
     // TODO: handle exceptions
     const auto result = AbstractDocument::open();
+    d->openFlags = 0;
     d->readOptions = ReadOptions();
     return result;
 }
@@ -158,14 +168,31 @@ bool ImageDocument::read()
     if (!d->ensureHandlerInitialised())
         return false;
 
-    ImageContents contents;
-    if (!d->handler->read(contents, d->readOptions))
-        return false;
+    if (d->openFlags & ImageDocumentPrivate::OpenHeader
+            && d->handler->state == ImageIOHandler::NoState) {
+        ImageContents contents;
+        if (d->handler->readHeader(contents)) {
+            d->handler->state = ImageIOHandler::ErrorState;
+            return false;
+        }
+        d->handler->state = ImageIOHandler::HeaderReadState;
+    }
 
-    d->subType = d->handler->subType();
-    setContents(contents);
+    if (d->openFlags & ImageDocumentPrivate::OpenData
+            && d->handler->state == ImageIOHandler::HeaderReadState) {
+        ImageContents contents = d->contents;
+        if (!d->handler->read(contents, d->readOptions)) {
+            d->handler->state = ImageIOHandler::ErrorState;
+            return false;
+        }
 
-    emit subTypeChanged(d->subType);
+        d->handler->state = ImageIOHandler::DataReadState;
+
+        d->subType = d->handler->subType();
+        setContents(contents);
+
+        emit subTypeChanged(d->subType);
+    }
 
     return true;
 }

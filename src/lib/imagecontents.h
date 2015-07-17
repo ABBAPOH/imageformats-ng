@@ -27,6 +27,12 @@ public:
     Type type() const;
     void setType(Type t);
 
+    QSize size() const;
+    void setSize(QSize size);
+
+    QImage::Format imageFormat() const;
+    void setImageFormat(QImage::Format format);
+
     int imageCount() const;
     void setImageCount(int count);
 

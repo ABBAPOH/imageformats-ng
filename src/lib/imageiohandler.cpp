@@ -1,7 +1,8 @@
 #include "imageiohandler.h"
 
 ImageIOHandler::ImageIOHandler() :
-    _device(0)
+    _device(0),
+    state(NoState)
 {
 }
 

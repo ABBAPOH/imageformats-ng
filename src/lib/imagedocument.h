@@ -24,6 +24,7 @@ public:
     explicit ImageDocument(const QString &fileName, QObject *parent = 0);
     ~ImageDocument();
 
+    Result openHeader();
     Result open(const ReadOptions &options = ReadOptions());
     Result save(const WriteOptions &options = WriteOptions());
 
