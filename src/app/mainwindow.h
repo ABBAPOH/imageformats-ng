@@ -28,6 +28,7 @@ private:
 
 private slots:
     void onClicked(const QModelIndex &index);
+    void showInfo();
 
 private:
     Ui::MainWindow *ui;

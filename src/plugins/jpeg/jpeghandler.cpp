@@ -969,9 +969,6 @@ void JpegHandlerPrivate::applyExifOrientation(QImage *image)
 
 bool JpegHandlerPrivate::read(QImage *image)
 {
-    if(state == Ready)
-        readJpegHeader(q->device());
-
     if(state == ReadHeader)
     {
         bool success = read_jpeg_image(image, scaledSize, scaledClipRect, clipRect, quality, &info, &err);
@@ -1023,6 +1020,9 @@ bool JpegHandler::readHeader(ImageContents &contents)
 
     contents.setSize(d->size);
     contents.setImageFormat(d->format);
+    ImageExifMeta meta;
+    meta.setOrientation(ImageExifMeta::Orientation(d->exifOrientation));
+    contents.setExifMeta(meta);
 
     return true;
 }

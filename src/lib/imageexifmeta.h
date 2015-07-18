@@ -11,10 +11,23 @@ class ImageExifMeta
 {
 public:
     enum Tag {
-        DocumentName = 0x10d,
-        ImageDescription = 0x010e
+        TagDocumentName = 0x010d,
+        TagImageDescription = 0x010e,
+        TagOrientation = 0x0112
     };
     typedef QHash<Tag, QVariant> Values;
+
+    enum Orientation {
+        OrientationNone = 0, // TODO: use optional?
+        OrientationHorizontal = 1,
+        OrientationHMirro = 2,
+        OrientationRotate180 = 3,
+        OrientationVMirror180 = 4,
+        OrientationHMirrorRotate270 = 5,
+        OrientationRotate90 = 6,
+        OrientationHMirrorRotate90 = 7,
+        OrientationRotate270 = 8
+    };
 
     ImageExifMeta();
     ~ImageExifMeta();
@@ -22,8 +35,13 @@ public:
     Values values() const { return _values; }
     void setValues(const Values &values) { _values = values; }
 
+    bool hasValue(Tag tag) const { return _values.contains(tag); }
     QVariant value(Tag tag) const;
     void setValue(Tag tag, const QVariant &value);
+
+    bool hasOrientation() const { return _values.contains(TagOrientation); }
+    Orientation orientation() const { return Orientation(_values.value(TagOrientation).toInt()); }
+    void setOrientation(Orientation orientation) { _values.insert(TagOrientation, orientation); }
 
     void clear();
 

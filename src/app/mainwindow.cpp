@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _document = new ImageDocument(this);
 
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::open);
+    connect(ui->actionShowInfo, &QAction::triggered, this, &MainWindow::showInfo);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
 
     connect(ui->treeView->selectionModel(), &QItemSelectionModel::currentChanged,
@@ -88,4 +89,29 @@ void MainWindow::onClicked(const QModelIndex &index)
         return;
 
     ui->label->setPixmap(QPixmap::fromImage(item->data().value<QImage>()));
+}
+
+QString tagName(ImageExifMeta::Tag tag)
+{
+    switch (tag) {
+    case ImageExifMeta::TagOrientation: return MainWindow::tr("Orientation");
+    default:
+        break;
+    }
+    return QString();
+}
+
+void MainWindow::showInfo()
+{
+    QTreeView *view = new QTreeView();
+    QStandardItemModel *model = new QStandardItemModel(view);
+    auto values = _document->contents().exifMeta().values();
+    for (auto it = values.begin(), end = values.end(); it != end; ++it) {
+        QStandardItem *nameItem = new QStandardItem(tagName(it.key()));
+        QStandardItem *valueItem = new QStandardItem(it.value().toString());
+        model->invisibleRootItem()->appendRow(QList<QStandardItem *> () << nameItem << valueItem);
+    }
+    view->resize(300, 400);
+    view->setModel(model);
+    view->show();
 }
