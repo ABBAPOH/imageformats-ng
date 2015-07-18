@@ -1577,7 +1577,16 @@ bool DDSHandler::verifyHeader(const DDSHeader &dds) const
     return true;
 }
 
-ImageIOHandlerPlugin::Capabilities DdsHandlerPlugin::capabilities() const
+DDSHandler *DdsHandlerPlugin::create(QIODevice *device, const QMimeType &mimeType)
 {
+    Q_UNUSED(device);
+    Q_UNUSED(mimeType);
+    return new DDSHandler();
+}
+
+ImageIOHandlerPlugin::Capabilities DdsHandlerPlugin::capabilities(QIODevice *device, const QMimeType &mimeType) const
+{
+    Q_UNUSED(device);
+    Q_UNUSED(mimeType);
     return Capabilities(CanRead | CanWrite);
 }

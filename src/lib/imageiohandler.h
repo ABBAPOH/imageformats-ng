@@ -26,6 +26,10 @@ public:
     virtual bool read(ImageContents &contents, const ReadOptions &options) = 0;
     virtual bool write(const ImageContents &contents, const WriteOptions &options) = 0;
 
+    virtual bool supportsOption(ReadOptions::Option option) const;
+    virtual bool supportsOption(WriteOptions::Option option) const;
+    virtual QVector<QByteArray> supportedSubTypes() const;
+
 private:
     enum State { NoState, HeaderReadState, DataReadState, ErrorState } state;
 
@@ -48,14 +52,10 @@ public:
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
-    explicit ImageIOHandlerPlugin() {}
+    explicit ImageIOHandlerPlugin();
 
-    virtual ImageIOHandler *create() = 0;
-    virtual Capabilities capabilities() const = 0;
-
-    virtual bool supportsOption(ReadOptions::Option option) const { Q_UNUSED(option); return false; }
-    virtual bool supportsOption(WriteOptions::Option option) const { Q_UNUSED(option); return false; }
-    virtual QVector<QByteArray> subTypes() const { return QVector<QByteArray>(); }
+    virtual ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) = 0;
+    virtual Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const = 0;
 };
 
 #endif // IMAGEIOHANDLER_H

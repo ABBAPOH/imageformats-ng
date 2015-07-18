@@ -44,7 +44,7 @@ public:
     ImageIOHandlerDatabase();
     ~ImageIOHandlerDatabase();
 
-    ImageIOHandler *create(const QString &mimeType);
+    ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType);
     QVector<QMimeType> availableMimeTypes(ImageIOHandlerPlugin::Capabilities caps) const;
     ImageIOHandlerPlugin *plugin(const QString &mimeType) const;
 

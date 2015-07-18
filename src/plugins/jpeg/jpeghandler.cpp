@@ -1122,3 +1122,17 @@ QByteArray JpegHandler::name() const
 {
     return "jpeg";
 }
+
+JpegHandler *JpegHandlerPlugin::create(QIODevice *device, const QMimeType &mimeType)
+{
+    Q_UNUSED(device);
+    Q_UNUSED(mimeType);
+    return new JpegHandler();
+}
+
+ImageIOHandlerPlugin::Capabilities JpegHandlerPlugin::capabilities(QIODevice *device, const QMimeType &mimeType) const
+{
+    Q_UNUSED(device);
+    Q_UNUSED(mimeType);
+    return Capabilities(CanRead | CanWrite);
+}

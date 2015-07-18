@@ -63,20 +63,21 @@ ImageIOHandlerDatabase::~ImageIOHandlerDatabase()
     qDeleteAll(map);
 }
 
-ImageIOHandler *ImageIOHandlerDatabase::create(const QString &mimeType)
+ImageIOHandler *ImageIOHandlerDatabase::create(QIODevice *device, const QMimeType &mimeType)
 {
-    auto plugin = map.value(mimeType);
+    auto plugin = map.value(mimeType.name());
     if (!plugin)
         return 0;
-    return plugin->create();
+    return plugin->create(device, mimeType);
 }
 
 QVector<QMimeType> ImageIOHandlerDatabase::availableMimeTypes(ImageIOHandlerPlugin::Capabilities caps) const
 {
     QVector<QMimeType> result;
     for (auto it = map.begin(), end = map.end(); it != end; it++) {
-        if (it.value()->capabilities() & caps)
-            result.append(QMimeDatabase().mimeTypeForName(it.key()));
+        auto mt = QMimeDatabase().mimeTypeForName(it.key());
+        if (it.value()->capabilities(nullptr, mt) & caps)
+            result.append(mt);
     }
     return result;
 }
@@ -101,8 +102,11 @@ ImageDocumentPrivate::ImageDocumentPrivate(ImageDocument *qq) :
 
 bool ImageDocumentPrivate::initHandler()
 {
+    if (!device || !mimeType.isValid())
+        return false;
+
     auto db = ImageIOHandlerDatabase::instance();
-    handler = db->create(mimeType.name());
+    handler = db->create(device, mimeType);
     if (!handler)
         return false;
 
@@ -245,22 +249,22 @@ QVector<QMimeType> ImageDocument::supportedOutputMimetypes() const
 
 bool ImageDocument::supportsOption(ReadOptions::Option option)
 {
-    if (!mimeType().isValid())
+    Q_D(ImageDocument);
+
+    if (!d->ensureHandlerInitialised())
         return false;
-    auto plugin = ImageIOHandlerDatabase::instance()->plugin(mimeType().name());
-    if (!plugin)
-        return false;
-    return plugin->supportsOption(option);
+
+    return d->handler->supportsOption(option);
 }
 
 bool ImageDocument::supportsOption(WriteOptions::Option option)
 {
-    if (!mimeType().isValid())
+    Q_D(ImageDocument);
+
+    if (!d->ensureHandlerInitialised())
         return false;
-    auto plugin = ImageIOHandlerDatabase::instance()->plugin(mimeType().name());
-    if (!plugin)
-        return false;
-    return plugin->supportsOption(option);
+
+    return d->handler->supportsOption(option);
 }
 
 QByteArray ImageDocument::subType() const
@@ -281,13 +285,12 @@ void ImageDocument::setSubType(QByteArray subType)
 
 QVector<QByteArray> ImageDocument::supportedSubTypes() const
 {
-    if (!mimeType().isValid())
+    Q_D(const ImageDocument);
+
+    if (!d->ensureHandlerInitialised())
         return QVector<QByteArray>();
 
-    auto plugin = ImageIOHandlerDatabase::instance()->plugin(mimeType().name());
-    if (!plugin)
-        return QVector<QByteArray>();
-    return plugin->subTypes();
+    return d->handler->supportedSubTypes();
 }
 
 ImageContents ImageDocument::contents() const

@@ -2,6 +2,8 @@ import qbs.base 1.0
 
 Project {
     Lib {
+        Depends { name: "cpp" }
+        cpp.cFlags: base.concat(["-Wno-unused-parameter"])
         name: "LibJPEG"
         Group {
             name: "files"

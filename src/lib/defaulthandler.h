@@ -16,8 +16,8 @@ public:
 class DefaultHandlerPlugin : public ImageIOHandlerPlugin
 {
 public:
-    DefaultHandler *create() { return new DefaultHandler(); }
-    Capabilities capabilities() const Q_DECL_OVERRIDE;
+    DefaultHandler *create(QIODevice *device, const QMimeType &mimeType);
+    Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
 };
 
 #endif // DEFAULTHANDLER_H

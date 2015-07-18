@@ -76,7 +76,16 @@ bool DefaultHandler::write(const ImageContents &contents, const WriteOptions &op
     return true;
 }
 
-ImageIOHandlerPlugin::Capabilities DefaultHandlerPlugin::capabilities() const
+DefaultHandler *DefaultHandlerPlugin::create(QIODevice *device, const QMimeType &mimeType)
 {
+    Q_UNUSED(device);
+    Q_UNUSED(mimeType);
+    return new DefaultHandler();
+}
+
+ImageIOHandlerPlugin::Capabilities DefaultHandlerPlugin::capabilities(QIODevice *device, const QMimeType &mimeType) const
+{
+    Q_UNUSED(device);
+    Q_UNUSED(mimeType);
     return Capabilities(CanRead | CanWrite);
 }

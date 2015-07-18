@@ -81,8 +81,8 @@ class DdsHandlerPlugin : public ImageIOHandlerPlugin
     Q_PLUGIN_METADATA(IID "org.arch.ImageDocument.DdsHandlerPlugin" FILE "dds.json")
 public:
     DdsHandlerPlugin() {}
-    DDSHandler *create() { return new DDSHandler(); }
-    Capabilities capabilities() const Q_DECL_OVERRIDE;
+    DDSHandler *create(QIODevice *device, const QMimeType &mimeType);
+    Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
 };
 
 #endif // DDSHANDLER_H

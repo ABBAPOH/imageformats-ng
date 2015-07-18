@@ -78,8 +78,8 @@ class JpegHandlerPlugin : public ImageIOHandlerPlugin
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.arch.ImageDocument.JpegHandlerPlugin" FILE "jpeg.json")
 public:
-    JpegHandler *create() { return new JpegHandler(); }
-    Capabilities capabilities() const Q_DECL_OVERRIDE { return Capabilities(CanRead | CanWrite); }
+    JpegHandler *create(QIODevice *device, const QMimeType &mimeType) Q_DECL_OVERRIDE;
+    Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
 };
 
 #endif // JPEGHANDLER_P_H
