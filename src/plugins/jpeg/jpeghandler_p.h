@@ -45,7 +45,7 @@
 // We mean it.
 //
 
-#include <imageiohandler.h>
+#include <ImageIOHandler>
 #include <QtCore/QSize>
 #include <QtCore/QRect>
 

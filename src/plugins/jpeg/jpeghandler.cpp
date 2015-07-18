@@ -742,7 +742,7 @@ public:
 
     int quality;
     int exifOrientation;
-    QVariant size;
+    QSize size;
     QImage::Format format;
     QSize scaledSize;
     QRect scaledClipRect;
@@ -1024,7 +1024,7 @@ bool JpegHandler::readHeader(ImageContents &contents)
     contents.setSize(d->size);
     contents.setImageFormat(d->format);
 
-    return false;
+    return true;
 }
 
 bool JpegHandler::canRead(QIODevice *device)
