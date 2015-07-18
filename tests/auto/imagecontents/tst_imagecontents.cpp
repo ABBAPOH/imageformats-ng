@@ -26,33 +26,33 @@ void TestImageContents::defaultValues()
 
 void TestImageContents::setters()
 {
-    ImageContents doc;
+    ImageContents c;
 
-    doc.setType(ImageContents::Animation);
-    QCOMPARE(doc.type(), ImageContents::Animation);
+    c.setType(ImageContents::Animation);
+    QCOMPARE(c.type(), ImageContents::Animation);
 
-    doc.setSize(QSize(64, 64));
-    QCOMPARE(doc.size(), QSize(64, 64));
+    c.setSize(QSize(64, 64));
+    QCOMPARE(c.size(), QSize(64, 64));
 
-    doc.setImageFormat(QImage::Format_ARGB32);
-    QCOMPARE(doc.imageFormat(), QImage::Format_ARGB32);
+    c.setImageFormat(QImage::Format_ARGB32);
+    QCOMPARE(c.imageFormat(), QImage::Format_ARGB32);
 
-    doc.setImageCount(2);
-    QCOMPARE(doc.imageCount(), 2);
+    c.setImageCount(2);
+    QCOMPARE(c.imageCount(), 2);
 
-    doc.setMipmapCount(2);
-    QCOMPARE(doc.mipmapCount(), 2);
+    c.setMipmapCount(2);
+    QCOMPARE(c.mipmapCount(), 2);
 
-    doc.setLoopCount(10);
-    QCOMPARE(doc.loopCount(), 10);
+    c.setLoopCount(10);
+    QCOMPARE(c.loopCount(), 10);
 
-    for (int i = 0; i < doc.imageCount(); ++i) {
-        for (int j = 0; j < doc.mipmapCount(); ++j) {
-            int size = 1 << (doc.mipmapCount() - j - 1);
+    for (int i = 0; i < c.imageCount(); ++i) {
+        for (int j = 0; j < c.mipmapCount(); ++j) {
+            int size = 1 << (c.mipmapCount() - j - 1);
             QImage image(size, size, QImage::Format_ARGB32);
             image.fill(QColor(255 * i / 2, 255 * j / 2, 255 * (i + j) / 4));
-            doc.setImage(image, i, j);
-            QCOMPARE(doc.image(i, j), image);
+            c.setImage(image, i, j);
+            QCOMPARE(c.image(i, j), image);
         }
     }
 }
