@@ -52,7 +52,7 @@ public:
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
-    explicit ImageIOHandlerPlugin();
+    explicit ImageIOHandlerPlugin() {}
 
     virtual ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) = 0;
     virtual Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const = 0;

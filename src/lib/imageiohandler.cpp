@@ -86,11 +86,10 @@ QVector<QByteArray> ImageIOHandler::supportedSubTypes() const
 }
 
 /*!
+    \fn ImageIOHandlerPlugin::ImageIOHandlerPlugin()
+
     Constructs a new object with the given parent.
 */
-ImageIOHandlerPlugin::ImageIOHandlerPlugin()
-{
-}
 
 /*!
     \fn ImageIOHandler *ImageIOHandlerPlugin::create(QIODevice *device, const QMimeType &mimeType)
