@@ -1,8 +1,8 @@
 #include "imageiohandler.h"
 
 ImageIOHandler::ImageIOHandler() :
-    _device(0),
-    state(NoState)
+    state(NoState),
+    _device(Q_NULLPTR)
 {
 }
 

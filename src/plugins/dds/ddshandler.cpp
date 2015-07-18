@@ -80,8 +80,6 @@ struct FaceOffset
     int x, y;
 };
 
-static const FaceOffset faceOffsets[6] = { {2, 1}, {0, 1}, {1, 0}, {1, 2}, {1, 1}, {3, 1} };
-
 static int faceFlags[6] = {
     DDSHeader::Caps2CubeMapPositiveX,
     DDSHeader::Caps2CubeMapNegativeX,
@@ -290,11 +288,6 @@ static inline quint32 readValue(QDataStream &s, quint32 size)
         value += (quint32(tmp) << bit);
     }
     return value;
-}
-
-static inline bool hasAlpha(const DDSHeader &dds)
-{
-    return (dds.pixelFormat.flags & (DDSPixelFormat::FlagAlphaPixels | DDSPixelFormat::FlagAlpha)) != 0;
 }
 
 static inline bool isCubeMap(const DDSHeader &dds)
@@ -1322,29 +1315,12 @@ static qint64 mipmapOffset(const DDSHeader &dds, const int format, const int lev
 
 static bool readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, ImageContents &contents, int level)
 {
-//    QImage::Format format = hasAlpha(dds) ? QImage::Format_ARGB32 : QImage::Format_RGB32;
-//    QImage image(4 * dds.width, 3 * dds.height, format);
-
-//    image.fill(0);
-
     for (int i = 0; i < 6; i++) {
         if (!(dds.caps2 & faceFlags[i]))
             continue; // Skip face.
 
         const QImage face = readLayer(s, dds, fmt, dds.width, dds.height);
-
-        // Compute face offsets.
-//        int offset_x = faceOffsets[i].x * dds.width;
-//        int offset_y = faceOffsets[i].y * dds.height;
-
         contents.setImage(face, i, level);
-
-        // Copy face on the image.
-//        for (quint32 y = 0; y < dds.height; y++) {
-//            const QRgb *src = reinterpret_cast<const QRgb *>(face.scanLine(y));
-//            QRgb *dst = reinterpret_cast<QRgb *>(image.scanLine(y + offset_y)) + offset_x;
-//            memcpy(dst, src, sizeof(QRgb) * dds.width);
-//        }
     }
 
     return true;
@@ -1372,9 +1348,7 @@ static int formatByName(const QByteArray &name)
 }
 
 DDSHandler::DDSHandler() :
-    m_format(FormatA8R8G8B8),
-    m_currentImage(0),
-    m_scanState(ScanNotScanned)
+    m_format(FormatA8R8G8B8)
 {
 }
 
