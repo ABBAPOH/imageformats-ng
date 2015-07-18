@@ -179,6 +179,9 @@ bool ImageDocument::read()
     if (!d->ensureHandlerInitialised())
         return false;
 
+    if (d->handler->state == ImageIOHandler::ErrorState)
+        return false;
+
     if (d->handler->state == ImageIOHandler::NoState) {
         if (!d->handler->canRead()) {
             d->handler->state = ImageIOHandler::ErrorState;
