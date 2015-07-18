@@ -1,10 +1,10 @@
 #ifndef IMAGECONTENTS_H
 #define IMAGECONTENTS_H
 
+#include <ImageExifMeta>
+
 #include <QtCore/QSharedDataPointer>
 #include <QtGui/QImage>
-
-#include "imageexifmeta.h"
 
 class ImageContentsData;
 

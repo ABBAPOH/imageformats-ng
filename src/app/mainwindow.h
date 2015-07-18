@@ -4,7 +4,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtGui/QStandardItemModel>
 
-#include <imagedocument.h>
+#include <ImageDocument>
 
 namespace Ui {
 class MainWindow;

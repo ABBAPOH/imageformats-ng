@@ -1,7 +1,7 @@
 #ifndef IMAGEIOHANDLER_H
 #define IMAGEIOHANDLER_H
 
-#include "imagedocument.h"
+#include <ImageDocument>
 
 #include <QtCore/QSet>
 

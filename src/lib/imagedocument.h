@@ -1,10 +1,10 @@
 #ifndef IMAGEDOCUMENT_H
 #define IMAGEDOCUMENT_H
 
-#include "abstractdocument.h"
-#include "imagecontents.h"
-#include "readoptions.h"
-#include "writeoptions.h"
+#include <AbstractDocument>
+#include <ImageContents>
+#include <ReadOptions>
+#include <WriteOptions>
 
 #include <QtCore/QObject>
 #include <QtCore/QVariant>

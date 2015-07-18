@@ -1,6 +1,6 @@
 #include <QtTest>
 
-#include <imagedocument.h>
+#include <ImageDocument>
 
 class TestImageDocument : public QObject
 {

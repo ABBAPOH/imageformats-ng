@@ -1,6 +1,6 @@
 #include <QtTest>
 
-#include <imagecontents.h>
+#include <ImageContents>
 
 class TestImageContents : public QObject
 {

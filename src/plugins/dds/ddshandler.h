@@ -43,7 +43,7 @@
 #ifndef DDSHANDLER_H
 #define DDSHANDLER_H
 
-#include <imageiohandler.h>
+#include <ImageIOHandler>
 #include "ddsheader.h"
 
 class DDSHandler : public ImageIOHandler

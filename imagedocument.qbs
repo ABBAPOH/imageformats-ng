@@ -42,7 +42,7 @@ Project {
             return "share/" + app_target
     }
 
-    property stringList includePaths: [ path + "/src/lib/" ]
+    property stringList includePaths: [ path + "/include/" ]
     property stringList libraryPaths: []
 
     property stringList cFlags: []
