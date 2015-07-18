@@ -1381,6 +1381,8 @@ bool DDSHandler::readHeader(ImageContents &contents)
         contents.setType(ImageContents::Image);
     }
 
+    setSubType(formatName(m_format));
+
     return true;
 }
 
@@ -1412,6 +1414,11 @@ bool DDSHandler::write(const ImageContents &contents, const WriteOptions &option
     Q_UNUSED(options);
     auto outImage = contents.image();
 
+    m_format = formatByName(subType().toUpper());
+    if (m_format == FormatUnknown) {
+        qWarning() << "unknown format" << subType();
+        return false;
+    }
     if (m_format != FormatA8R8G8B8) {
         qWarning() << "Format" << formatName(m_format) << "is not supported";
         return false;
@@ -1468,41 +1475,10 @@ bool DDSHandler::write(const ImageContents &contents, const WriteOptions &option
     return true;
 }
 
-//QVariant DDSHandler::option(QImageIOHandler::ImageOption option) const
-//{
-//    if (!supportsOption(option) || !ensureScanned())
-//        return QVariant();
-
-//    switch (option) {
-//    case QImageIOHandler::Size:
-//        return QSize(m_header.width, m_header.height);
-//    case QImageIOHandler::SubType:
-//        return formatName(m_format);
-//    case QImageIOHandler::SupportedSubTypes:
-//        return QVariant::fromValue(QList<QByteArray>() << formatName(FormatA8R8G8B8));
-//    default:
-//        break;
-//    }
-
-//    return QVariant();
-//}
-
-//void DDSHandler::setOption(QImageIOHandler::ImageOption option, const QVariant &value)
-//{
-//    if (option == QImageIOHandler::SubType) {
-//        const QByteArray subType = value.toByteArray();
-//        m_format = formatByName(subType.toUpper());
-//        if (m_format == FormatUnknown)
-//            qWarning() << "unknown format" << subType;
-//    }
-//}
-
-//bool DDSHandler::supportsOption(QImageIOHandler::ImageOption option) const
-//{
-//    return (option == QImageIOHandler::Size)
-//            || (option == QImageIOHandler::SubType)
-//            || (option == QImageIOHandler::SupportedSubTypes);
-//}
+QVector<QByteArray> DDSHandler::supportedSubTypes() const
+{
+    return QVector<QByteArray>() << formatName(FormatA8R8G8B8);
+}
 
 bool DDSHandler::canRead(QIODevice *device)
 {

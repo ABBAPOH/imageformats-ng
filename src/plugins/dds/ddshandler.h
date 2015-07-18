@@ -58,9 +58,7 @@ public:
     bool read(ImageContents &contents, const ReadOptions &options);
     bool write(const ImageContents &contents, const WriteOptions &options);
 
-//    QVariant option(QImageIOHandler::ImageOption option) const;
-//    void setOption(ImageOption option, const QVariant &value);
-//    bool supportsOption(QImageIOHandler::ImageOption option) const;
+    QVector<QByteArray> supportedSubTypes() const Q_DECL_OVERRIDE;
 
     static bool canRead(QIODevice *device);
 
