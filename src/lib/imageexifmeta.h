@@ -14,12 +14,13 @@ public:
         DocumentName = 0x10d,
         ImageDescription = 0x010e
     };
+    typedef QHash<Tag, QVariant> Values;
 
     ImageExifMeta();
     ~ImageExifMeta();
 
-    QMap<Tag, QVariant> values() const { return _values; }
-    void setValues(const QMap<Tag, QVariant> &values) { _values = values; }
+    Values values() const { return _values; }
+    void setValues(const Values &values) { _values = values; }
 
     QVariant value(Tag tag) const;
     void setValue(Tag tag, const QVariant &value);
@@ -27,9 +28,8 @@ public:
     void clear();
 
 private:
-    typedef QMap<Tag, QVariant> ValueMap;
 
-    ValueMap _values;
+    Values _values;
 };
 
 inline bool operator==(const ImageExifMeta &lhs, const ImageExifMeta &rhs)
