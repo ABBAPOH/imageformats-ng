@@ -17,6 +17,7 @@ void TestImageContents::defaultValues()
     QCOMPARE(contents.type(), ImageContents::Image);
     QCOMPARE(contents.size(), QSize());
     QCOMPARE(contents.imageFormat(), QImage::Format_Invalid);
+    QCOMPARE(contents.name(), QString());
     QCOMPARE(contents.imageCount(), 1);
     QCOMPARE(contents.mipmapCount(), 1);
     QCOMPARE(contents.loopCount(), -1);
@@ -36,6 +37,9 @@ void TestImageContents::setters()
 
     c.setImageFormat(QImage::Format_ARGB32);
     QCOMPARE(c.imageFormat(), QImage::Format_ARGB32);
+
+    c.setName(QString("name"));
+    QCOMPARE(c.name(), QString("name"));
 
     c.setImageCount(2);
     QCOMPARE(c.imageCount(), 2);
@@ -68,6 +72,11 @@ void TestImageContents::equals()
     QVERIFY(c1 != c2);
 
     c2.setSize(QSize(64, 64));
+    QVERIFY(c1 == c2);
+
+    c1.setName(QString("name"));
+    QVERIFY(c1 != c2);
+    c2.setName(QString("name"));
     QVERIFY(c1 == c2);
 
     c1.setImageCount(2);

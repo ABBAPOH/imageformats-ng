@@ -33,6 +33,9 @@ public:
     QImage::Format imageFormat() const;
     void setImageFormat(QImage::Format format);
 
+    QString name() const;
+    void setName(const QString &name);
+
     int imageCount() const;
     void setImageCount(int count);
 

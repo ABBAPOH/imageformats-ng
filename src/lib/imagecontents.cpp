@@ -8,6 +8,7 @@ public:
     ImageContents::Type type;
     QSize size;
     QImage::Format imageFormat;
+    QString name;
     int imageCount;
     int mipmapCount;
     QMap<ImageIndex, QImage> images;
@@ -95,6 +96,16 @@ void ImageContents::setImageFormat(QImage::Format format)
     d->imageFormat = format;
 }
 
+QString ImageContents::name() const
+{
+    return d->name;
+}
+
+void ImageContents::setName(const QString &name)
+{
+    d->name = name;
+}
+
 int ImageContents::imageCount() const
 {
     return d->imageCount;
@@ -179,6 +190,7 @@ bool operator==(const ImageContents &lhs, const ImageContents &rhs)
             (lhs.d->type == rhs.d->type
              && lhs.d->size == rhs.d->size
              && lhs.d->imageFormat == rhs.d->imageFormat
+             && lhs.d->name == rhs.d->name
              && lhs.d->imageCount == rhs.d->imageCount
              && lhs.d->mipmapCount == rhs.d->mipmapCount
              && lhs.d->images == rhs.d->images
