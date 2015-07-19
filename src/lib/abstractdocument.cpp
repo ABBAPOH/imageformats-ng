@@ -4,9 +4,10 @@
 #include <QtCore/QMimeDatabase>
 
 AbstractDocumentPrivate::AbstractDocumentPrivate(AbstractDocument *qq) :
+    device(Q_NULLPTR),
+    modified(false),
     q_ptr(qq)
 {
-    modified = false;
 }
 
 QString AbstractDocumentPrivate::errorString(AbstractDocument::Result::ErrorCode code)
@@ -86,6 +87,7 @@ void AbstractDocument::setFileName(const QString &fileName)
     d->file.reset(new QFile(fileName));
     d->device = d->file.data();
     d->mimeType = QMimeDatabase().mimeTypeForFile(fileName);
+    d->fileName = fileName;
     d->changed();
     emit fileNameChanged(fileName);
     emit deviceChanged();
@@ -141,6 +143,8 @@ AbstractDocument::Result AbstractDocument::open()
     if (!read())
         return Result::IOError;
 
+    // TODO: auto close file if it wasn't opened?
+
     return Result();
 }
 
@@ -162,6 +166,8 @@ AbstractDocument::Result AbstractDocument::save()
 
     if (!write())
         return Result::IOError;
+
+    // TODO: auto close file if it wasn't opened?
 
     return Result();
 }
