@@ -23,6 +23,19 @@ private:
 
 ImageIOHandlerDatabase::ImageIOHandlerDatabase()
 {
+    for (auto staticPlugin : QPluginLoader::staticPlugins()) {
+        auto plugin = staticPlugin.instance();
+        auto handlerPlugin = qobject_cast<ImageIOHandlerPlugin *>(plugin);
+        if (!handlerPlugin)
+            continue;
+
+        const auto metaData = staticPlugin.metaData().value("MetaData").toObject();
+        const auto mimeTypes = metaData.value("MimeTypes").toArray();
+        for (auto mimeType : mimeTypes) {
+            map.insert(mimeType.toString(), handlerPlugin);
+        }
+    }
+
     foreach (const QString &folder, qApp->libraryPaths()) {
         QDir dir(folder);
         if (!dir.cd("imageformats2"))
@@ -54,7 +67,6 @@ ImageIOHandlerDatabase::ImageIOHandlerDatabase()
         }
     }
 
-    map.insert("image/png", new DefaultHandlerPlugin());
     map.insert("image/gif", new DefaultHandlerPlugin());
 }
 
