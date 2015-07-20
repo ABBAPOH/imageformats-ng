@@ -723,7 +723,7 @@ public:
     };
 
     JpegHandlerPrivate(JpegHandler *qq)
-        : quality(75), exifOrientation(1), iod_src(0), state(Ready), q(qq)
+        : exifOrientation(1), iod_src(0), state(Ready), q(qq)
     {}
 
     ~JpegHandlerPrivate()
@@ -736,17 +736,11 @@ public:
         }
     }
 
-    bool readJpegHeader(QIODevice*);
-    bool read(QImage *image);
+    bool readJpegHeader(QIODevice*, ImageContents &contents);
+    bool read(QImage *image, const ReadOptions &options);
     void applyExifOrientation(QImage *image);
 
-    int quality;
     int exifOrientation;
-    QSize size;
-    QImage::Format format;
-    QSize scaledSize;
-    QRect scaledClipRect;
-    QRect clipRect;
     QString description;
     QStringList readTexts;
 
@@ -853,7 +847,7 @@ static int getExifOrientation(QByteArray &exifData)
 /*!
     \internal
 */
-bool JpegHandlerPrivate::readJpegHeader(QIODevice *device)
+bool JpegHandlerPrivate::readJpegHeader(QIODevice *device, ImageContents &contents)
 {
     if(state == Ready)
     {
@@ -876,10 +870,11 @@ bool JpegHandlerPrivate::readJpegHeader(QIODevice *device)
             int width = 0;
             int height = 0;
             read_jpeg_size(width, height, &info);
-            size = QSize(width, height);
+            contents.setSize(QSize(width, height));
 
-            format = QImage::Format_Invalid;
+            auto format = QImage::Format_Invalid;
             read_jpeg_format(format, &info);
+            contents.setImageFormat(format);
 
             QByteArray exifData;
 
@@ -967,11 +962,17 @@ void JpegHandlerPrivate::applyExifOrientation(QImage *image)
     exifOrientation = 1;
 }
 
-bool JpegHandlerPrivate::read(QImage *image)
+bool JpegHandlerPrivate::read(QImage *image, const ReadOptions &options)
 {
     if(state == ReadHeader)
     {
-        bool success = read_jpeg_image(image, scaledSize, scaledClipRect, clipRect, quality, &info, &err);
+        bool success = read_jpeg_image(image,
+                                       options.scaledSize(),
+                                       options.scaledCliptRect(),
+                                       options.clipRect(),
+                                       options.quality(),
+                                       &info,
+                                       &err);
         if (success) {
             for (int i = 0; i < readTexts.size()-1; i+=2)
                 image->setText(readTexts.at(i), readTexts.at(i+1));
@@ -1014,12 +1015,10 @@ bool JpegHandler::readHeader(ImageContents &contents)
 //    }
 
     if (d->state == JpegHandlerPrivate::Ready) {
-        if (!d->readJpegHeader(device()))
+        if (!d->readJpegHeader(device(), contents))
             return false;
     }
 
-    contents.setSize(d->size);
-    contents.setImageFormat(d->format);
     ImageExifMeta meta;
     meta.setOrientation(ImageExifMeta::Orientation(d->exifOrientation));
     contents.setExifMeta(meta);
@@ -1042,9 +1041,8 @@ bool JpegHandler::canRead(QIODevice *device)
 
 bool JpegHandler::read(ImageContents &contents, const ReadOptions &options)
 {
-    Q_UNUSED(options);
     QImage image;
-    bool ok = d->read(&image);
+    bool ok = d->read(&image, options);
     if (!ok)
         return false;
     contents.setImage(image);
@@ -1053,70 +1051,21 @@ bool JpegHandler::read(ImageContents &contents, const ReadOptions &options)
 
 bool JpegHandler::write(const ImageContents &contents, const WriteOptions &options)
 {
-    Q_UNUSED(options);
-    return write_jpeg_image(contents.image(), device(), d->quality, d->description);
+    return write_jpeg_image(contents.image(), device(), options.quality(), d->description);
 }
 
-//bool JpegHandler::supportsOption(ImageOption option) const
-//{
-//    return option == Quality
-//        || option == ScaledSize
-//        || option == ScaledClipRect
-//        || option == ClipRect
-//        || option == Description
-//        || option == Size
-//        || option == ImageFormat;
-//}
+bool JpegHandler::supportsOption(ReadOptions::Option option) const
+{
+    return option == ReadOptions::Quality
+        || option == ReadOptions::ScaledSize
+        || option == ReadOptions::ScaledClipRect
+        || option == ReadOptions::ClipRect;
+}
 
-//QVariant JpegHandler::option(ImageOption option) const
-//{
-//    switch(option) {
-//    case Quality:
-//        return d->quality;
-//    case ScaledSize:
-//        return d->scaledSize;
-//    case ScaledClipRect:
-//        return d->scaledClipRect;
-//    case ClipRect:
-//        return d->clipRect;
-//    case Description:
-//        d->readJpegHeader(device());
-//        return d->description;
-//    case Size:
-//        d->readJpegHeader(device());
-//        return d->size;
-//    case ImageFormat:
-//        d->readJpegHeader(device());
-//        return d->format;
-//    default:
-//        break;
-//    }
-
-//    return QVariant();
-//}
-
-//void JpegHandler::setOption(ImageOption option, const QVariant &value)
-//{
-//    switch(option) {
-//    case Quality:
-//        d->quality = value.toInt();
-//        break;
-//    case ScaledSize:
-//        d->scaledSize = value.toSize();
-//        break;
-//    case ScaledClipRect:
-//        d->scaledClipRect = value.toRect();
-//        break;
-//    case ClipRect:
-//        d->clipRect = value.toRect();
-//        break;
-//    case Description:
-//        d->description = value.toString();
-//        break;
-//    default:
-//        break;
-//    }
-//}
+bool JpegHandler::supportsOption(WriteOptions::Option option) const
+{
+    return option == WriteOptions::Quality;
+}
 
 QByteArray JpegHandler::name() const
 {

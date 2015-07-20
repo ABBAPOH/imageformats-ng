@@ -65,9 +65,8 @@ public:
 
     static bool canRead(QIODevice *device);
 
-//    QVariant option(ImageOption option) const;
-//    void setOption(ImageOption option, const QVariant &value);
-//    bool supportsOption(ImageOption option) const;
+    bool supportsOption(ReadOptions::Option option) const Q_DECL_OVERRIDE;
+    bool supportsOption(WriteOptions::Option option) const Q_DECL_OVERRIDE;
 
 private:
     JpegHandlerPrivate *d;

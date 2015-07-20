@@ -10,6 +10,9 @@ class ReadOptions
 {
 public:
     enum Option {
+        ClipRect,
+        ScaledSize,
+        ScaledClipRect,
         Quality,
         BackgroundColor
     };
@@ -17,6 +20,18 @@ public:
     ReadOptions();
 
     bool isEmpty() const { return _options.isEmpty(); }
+
+    QRect clipRect() const;
+    void setClipRect(const QRect &rect);
+
+    QSize scaledSize() const;
+    void setScaledSize(const QSize &size);
+
+    QRect scaledCliptRect() const;
+    void setScaledCliptRect(const QRect &rect);
+
+    int quality() const;
+    void setQuality(int quality);
 
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &color);
