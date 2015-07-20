@@ -10,4 +10,7 @@ Project {
     SubProject {
         filePath: "imagedocument/imagedocument.qbs"
     }
+    SubProject {
+        filePath: "jpeg/jpeg.qbs"
+    }
 }

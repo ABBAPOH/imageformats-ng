@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>beavis.jpg</file>
+        <file>qtbug13653-no_eoi.jpg</file>
+        <file>corrupt.jpg</file>
+    </qresource>
+</RCC>
