@@ -141,7 +141,13 @@ QImage ImageContents::image(int index, int level) const
 
 void ImageContents::setImage(const QImage &image, int index, int level)
 {
-    d->images.insert(ImageContentsData::ImageIndex(index, level), image);
+    if (d->imageFormat == QImage::Format_Invalid) {
+        d->imageFormat = image.format();
+    }
+    QImage copy(image);
+    if (image.format() != d->imageFormat)
+        copy = image.convertToFormat(d->imageFormat);
+    d->images.insert(ImageContentsData::ImageIndex(index, level), copy);
 }
 
 int ImageContents::imageDelay()

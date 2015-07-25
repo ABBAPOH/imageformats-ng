@@ -18,6 +18,7 @@ public:
         Cubemap,
         VolumeTexture
     };
+    Q_ENUMS(Type)
 
     ImageContents();
     ImageContents(const ImageContents &other);

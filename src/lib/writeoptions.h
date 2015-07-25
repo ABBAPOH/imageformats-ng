@@ -18,6 +18,9 @@ public:
 
     bool isEmpty() const;
 
+    int compression() const;
+    void setCompression(int compression);
+
     int gamma() const;
     void setGamma(int gamma);
 
