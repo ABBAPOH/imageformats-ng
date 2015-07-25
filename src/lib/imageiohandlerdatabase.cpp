@@ -20,7 +20,7 @@ ImageIOHandlerDatabase::ImageIOHandlerDatabase()
         const auto metaData = staticPlugin.metaData().value("MetaData").toObject();
         const auto mimeTypes = metaData.value("MimeTypes").toArray();
         for (auto mimeType : mimeTypes) {
-            map.insert(mimeType.toString(), handlerPlugin);
+            registerPlugin(mimeType.toString(), handlerPlugin);
         }
     }
 
@@ -49,8 +49,8 @@ ImageIOHandlerDatabase::ImageIOHandlerDatabase()
                            << "does not contain an imageformat plugin";
                 continue;
             }
-            for (auto mimeType : mimeTypes) {
-                registerPlugin(mimeType.toString(), handlerPlugin);
+            for (auto mimeTypeName : mimeTypes) {
+                registerPlugin(mimeTypeName.toString(), handlerPlugin);
             }
         }
     }
@@ -90,6 +90,13 @@ ImageIOHandlerPlugin *ImageIOHandlerDatabase::plugin(const QString &mimeType) co
 void ImageIOHandlerDatabase::registerPlugin(const QString &mimeType, ImageIOHandlerPlugin *plugin)
 {
     Q_ASSERT(plugin);
+
+    const QMimeType type = QMimeDatabase().mimeTypeForName(mimeType);
+    if (!type.isValid()) {
+        qWarning() << "ImageIOHandlerDatabase::registerPlugin: Invalid mimetype" << mimeType;
+        return;
+    }
+
     map.insert(mimeType, plugin);
 }
 
