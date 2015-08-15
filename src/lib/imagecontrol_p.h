@@ -3,6 +3,8 @@
 
 #include "imagecontrol.h"
 
+#include <QtCore/QSize>
+
 class ImageControlPrivate
 {
     Q_DECLARE_PUBLIC(ImageControl)
@@ -13,6 +15,9 @@ public:
     void init();
 
     ImageDocument *doc {Q_NULLPTR};
+    QSize size;
+    int currentIndex {0};
+    int currentLevel {0};
 
 protected:
     ImageControl *q_ptr {Q_NULLPTR};

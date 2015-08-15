@@ -4,6 +4,7 @@
 #include <QtCore/QObject>
 
 class QPainter;
+class QResizeEvent;
 
 class ImageDocument;
 
@@ -22,9 +23,14 @@ public:
     void setDocument(ImageDocument *doc);
 
     void paint(QPainter *painter);
+    void resizeEvent(QResizeEvent *event);
+
+public slots:
+    void jumpTo(int index, int level);
 
 signals:
     void documentChanged();
+    void updateRequested();
 
 protected:
     QScopedPointer<ImageControlPrivate> d_ptr;

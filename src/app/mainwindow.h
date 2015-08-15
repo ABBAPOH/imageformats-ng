@@ -6,6 +6,8 @@
 
 #include <ImageDocument>
 
+class ImageView;
+
 namespace Ui {
 class MainWindow;
 }
@@ -35,6 +37,7 @@ private:
 
     QStandardItemModel *_model;
     ImageDocument *_document;
+    ImageView *_view {Q_NULLPTR};
 };
 
 #endif // MAINWINDOW_H

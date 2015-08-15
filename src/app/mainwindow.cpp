@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "imageview.h"
+
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtWidgets/QFileDialog>
@@ -21,6 +23,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->treeView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &MainWindow::onClicked);
+
+    _view = new ImageView;
+    _view->setDocument(_document);
+    setCentralWidget(_view);
 }
 
 MainWindow::~MainWindow()
@@ -79,7 +85,7 @@ void MainWindow::buildModel(QStandardItem *parent, int index, int level)
         item = new QStandardItem(tr("Image"));
         parent->appendRow(item);
     }
-    item->setData(_document->contents().image(index, level));
+    item->setData(QVariant::fromValue(qMakePair(index, level)));
 }
 
 void MainWindow::onClicked(const QModelIndex &index)
@@ -88,7 +94,8 @@ void MainWindow::onClicked(const QModelIndex &index)
     if (!item)
         return;
 
-    ui->label->setPixmap(QPixmap::fromImage(item->data().value<QImage>()));
+    auto data = item->data().value<QPair<int, int>>();
+    _view->jumpTo(data.first, data.second);
 }
 
 QString tagName(ImageExifMeta::Tag tag)

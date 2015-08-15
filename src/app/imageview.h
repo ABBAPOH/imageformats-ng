@@ -20,11 +20,15 @@ public:
     ImageDocument *document() const;
     void setDocument(ImageDocument *doc);
 
+public slots:
+    void jumpTo(int index, int level);
+
 signals:
     void documentChanged();
 
 protected:
     void paintEvent(QPaintEvent *event);
+    bool viewportEvent(QEvent *event);
 
 protected:
     QScopedPointer<ImageViewPrivate> d_ptr;
