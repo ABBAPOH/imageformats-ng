@@ -10,8 +10,8 @@ ImageItem::ImageItem()
     control->document()->setFileName("/Users/arch/images/cubemap.dds");
     control->document()->open();
 
-    connect(this, &QQuickPaintedItem::widthChanged, this, &ImageItem::onContentsSizeChanged);
-    connect(this, &QQuickPaintedItem::heightChanged, this, &ImageItem::onContentsSizeChanged);
+    connect(this, &QQuickPaintedItem::widthChanged, this, &ImageItem::makeDirty);
+    connect(this, &QQuickPaintedItem::heightChanged, this, &ImageItem::makeDirty);
 }
 
 void ImageItem::paint(QPainter *painter)
@@ -24,11 +24,8 @@ void ImageItem::paint(QPainter *painter)
     control->paint(painter);
 }
 
-void ImageItem::onContentsSizeChanged()
+void ImageItem::makeDirty()
 {
     dirty = true;
-    QResizeEvent event(contentsSize(), contentsSize());
-//    event.size() = ;
-    control->resizeEvent(&event);
 }
 

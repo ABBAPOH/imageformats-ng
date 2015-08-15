@@ -18,7 +18,7 @@ signals:
 public slots:
 
 private slots:
-    void onContentsSizeChanged();
+    void makeDirty();
 
 protected:
     QScopedPointer<ImageControl> control;
