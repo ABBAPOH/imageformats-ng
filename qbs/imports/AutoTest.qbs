@@ -17,6 +17,7 @@ Product {
     cpp.includePaths: project.includePaths
     cpp.libraryPaths: project.libraryPaths
     cpp.cxxLanguageVersion: "c++11"
+    cpp.cxxStandardLibrary: qbs.targetOS.contains("osx") ? "libc++" : base
     cpp.minimumOsxVersion: "10.7"
     cpp.rpaths: qbs.targetOS.contains("osx")
                 ? [ "@executable_path/.." ]
