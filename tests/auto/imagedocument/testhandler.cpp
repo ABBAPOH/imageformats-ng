@@ -10,7 +10,7 @@ QDataStream &operator <<(QDataStream &stream, const TestImageData &data)
     stream << quint32(data.type);
     stream << data.size;
     stream << data.name;
-    stream << data.imageFormat;
+    stream << quint32(data.imageFormat);
     stream << data.imageCount;
     stream << data.mipmapCount;
     stream << data.loopCount;
@@ -26,6 +26,7 @@ QDataStream &operator <<(QDataStream &stream, const TestImageData &data)
 QDataStream &operator >>(QDataStream &stream, TestImageData &data)
 {
     quint32 magic = 0;
+    quint32 value;
     stream >> magic;
     if (magic != 0)
         return stream;
@@ -34,12 +35,12 @@ QDataStream &operator >>(QDataStream &stream, TestImageData &data)
 
     data.magic = magic;
     stream >> data.subType;
-    Q_ASSERT(sizeof(quint32) == sizeof(data.type));
-    stream >> reinterpret_cast<quint32 &>(data.type);
+    stream >> value;
+    data.type = ImageContents::Type(value);
     stream >> data.size;
     stream >> data.name;
-    Q_ASSERT(sizeof(quint32) == sizeof(data.imageFormat));
-    stream >> reinterpret_cast<quint32 &>(data.imageFormat);
+    stream >> value;
+    data.imageFormat = QImage::Format(value);
     stream >> data.imageCount;
     stream >> data.mipmapCount;
     stream >> data.loopCount;
