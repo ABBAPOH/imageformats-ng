@@ -7,7 +7,7 @@
 
 class ImageMetaData;
 
-class ImageExifMeta
+class LIB_EXPORT ImageExifMeta
 {
 public:
     enum Tag {

@@ -2,8 +2,9 @@ import qbs.base 1.0
 
 Project {
     Lib {
+        isStatic: true
         Depends { name: "cpp" }
-        cpp.cFlags: base.concat(["-Wno-unused-parameter"])
+        //cpp.cFlags: !cpp.compilerName.contains("MSVC") ? base.concat(["-Wno-unused-parameter"]) : ""
         name: "LibJPEG"
         Group {
             name: "files"
@@ -64,6 +65,7 @@ Project {
     }
 
     Lib {
+        isStatic: true
         Depends { name: "cpp" }
         Depends { name: "LibZ" }
         name: "LibPNG"

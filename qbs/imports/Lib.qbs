@@ -1,6 +1,8 @@
 import qbs.base 1.0
 
-DynamicLibrary {
+Product {
+    property bool isStatic: false
+    type: isStatic ? "staticlibrary" : "dynamiclibrary"
     Depends { name: "cpp" }
     Depends { name: "Qt.core" }
     Depends { name: "Qt.gui" }
@@ -22,7 +24,8 @@ DynamicLibrary {
                 : [ "$ORIGIN" ]
 
     Group {
-        fileTagsFilter: product.type
+        condition: !isStatic
+        ileTagsFilter: product.type
         qbs.install: true
         qbs.installDir: project.install_library_path
     }

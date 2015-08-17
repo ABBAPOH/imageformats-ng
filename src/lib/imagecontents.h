@@ -8,7 +8,7 @@
 
 class ImageContentsData;
 
-class ImageContents
+class LIB_EXPORT ImageContents
 {
 public:
     enum Type {
@@ -61,12 +61,12 @@ public:
 private:
     QSharedDataPointer<ImageContentsData> d;
 
-    friend bool operator==(const ImageContents &lhs, const ImageContents &rhs);
+    friend bool LIB_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
 };
 
-bool operator==(const ImageContents &lhs, const ImageContents &rhs);
+bool LIB_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
 
-inline bool operator!=(const ImageContents &lhs, const ImageContents &rhs)
+inline bool LIB_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs)
 {
     return !(lhs == rhs);
 }

@@ -4,7 +4,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QVariant>
 
-class WriteOptions
+class LIB_EXPORT WriteOptions
 {
 public:
     enum Option {
