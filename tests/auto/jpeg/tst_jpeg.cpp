@@ -16,11 +16,7 @@ private slots:
 
 void TestJpeg::initTestCase()
 {
-#if defined(Q_OS_LINUX)
-    qApp->addLibraryPath(qApp->applicationDirPath() + "/../lib/imageviewer/plugins/");
-#elif defined(Q_OS_MAC)
-    qApp->addLibraryPath(qApp->applicationDirPath() + "/../PlugIns/");
-#endif
+    qApp->addLibraryPath(qApp->applicationDirPath() + ImageDocument::pluginsDirPath());
 }
 
 void TestJpeg::readImage_data()

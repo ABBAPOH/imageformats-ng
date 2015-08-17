@@ -2,17 +2,14 @@
 #include <QtGui/QGuiApplication>
 #include <QtQuick/QQuickView>
 
+#include <ImageDocument>
 #include "imageitem.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
-#if defined(Q_OS_LINUX)
-    app.addLibraryPath(app.applicationDirPath() + "/../lib/imageviewer/plugins/");
-#elif defined(Q_OS_MAC)
-    app.addLibraryPath(app.applicationDirPath() + "/../PlugIns/");
-#endif
+    app.addLibraryPath(app.applicationDirPath() + ImageDocument::pluginsDirPath());
 
     qmlRegisterType<ImageItem>("com.arch.ImageViewer", 1, 0, "ImageItem");
 

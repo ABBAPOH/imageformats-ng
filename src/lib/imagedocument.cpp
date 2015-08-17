@@ -225,3 +225,16 @@ void ImageDocument::setContents(const ImageContents &contents)
     Q_D(ImageDocument);
     d->contents = contents;
 }
+
+QString ImageDocument::pluginsDirPath()
+{
+#if defined(Q_OS_LINUX)
+    return QStringLiteral("/../lib/imageviewer/plugins/");
+#elif defined(Q_OS_MAC)
+    return QStringLiteral("/../PlugIns/");
+#elif defined(Q_OS_WIN)
+    return QStringLiteral("/plugins/");
+#else
+    return QString();
+#endif
+}

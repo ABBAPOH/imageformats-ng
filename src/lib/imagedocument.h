@@ -41,6 +41,8 @@ public:
     ImageContents contents() const;
     void setContents(const ImageContents &contents);
 
+    static QString pluginsDirPath();
+
 protected:
     bool read() Q_DECL_OVERRIDE;
     bool write() Q_DECL_OVERRIDE;
