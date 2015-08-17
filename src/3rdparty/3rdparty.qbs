@@ -4,7 +4,7 @@ Project {
     Lib {
         isStatic: true
         Depends { name: "cpp" }
-        cpp.cFlags: !qbs.toolchain.contains("msvc") ? base.concat(["-Wno-unused-parameter"]) : ""
+        cpp.cFlags: !qbs.toolchain.contains("msvc") ? base.concat(["-Wno-unused-parameter"]) : base
         name: "LibJPEG"
         Group {
             name: "files"
