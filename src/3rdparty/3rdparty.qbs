@@ -4,7 +4,7 @@ Project {
     Lib {
         isStatic: true
         Depends { name: "cpp" }
-        //cpp.cFlags: !cpp.compilerName.contains("MSVC") ? base.concat(["-Wno-unused-parameter"]) : ""
+        cpp.cFlags: !qbs.toolchain.contains("msvc") ? base.concat(["-Wno-unused-parameter"]) : ""
         name: "LibJPEG"
         Group {
             name: "files"
@@ -87,6 +87,7 @@ Project {
             "libpng/pngwutil.c"
         ]
         Export {
+            Depends { name: "LibZ" }
             Depends { name: "cpp" }
             cpp.includePaths: [ "libpng" ]
         }
