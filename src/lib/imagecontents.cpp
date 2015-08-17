@@ -203,3 +203,8 @@ bool operator==(const ImageContents &lhs, const ImageContents &rhs)
              && lhs.d->loopCount == rhs.d->loopCount
              && lhs.d->exif == rhs.d->exif);
 }
+
+bool operator!=(const ImageContents &lhs, const ImageContents &rhs)
+{
+    return !(lhs == rhs);
+}

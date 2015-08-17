@@ -62,13 +62,10 @@ private:
     QSharedDataPointer<ImageContentsData> d;
 
     friend bool LIB_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
+    friend bool LIB_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
 };
 
 bool LIB_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
-
-inline bool LIB_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs)
-{
-    return !(lhs == rhs);
-}
+bool LIB_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
 
 #endif // IMAGECONTENTS_H
