@@ -5,7 +5,7 @@
 
 #include <ImageControl>
 
-class ImageViewItem : public QQuickPaintedItem
+class IMAGEVIEW_EXPORT ImageViewItem : public QQuickPaintedItem
 {
     Q_OBJECT
 public:
