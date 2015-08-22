@@ -45,6 +45,26 @@ void ImageControl::setDocument(ImageDocument *doc)
     d->doc = doc;
 }
 
+QSize ImageControl::size() const
+{
+    Q_D(const ImageControl);
+    return d->size;
+}
+
+void ImageControl::setSize(const QSize &size)
+{
+    Q_D(ImageControl);
+    if (d->size == size)
+        return;
+    d->size = size;
+    emit sizeChanged(size);
+}
+
+void ImageControl::setSize(int width, int height)
+{
+    setSize(QSize(width, height));
+}
+
 void ImageControl::paint(QPainter *painter)
 {
     Q_D(ImageControl);
@@ -65,12 +85,6 @@ void ImageControl::paint(QPainter *painter)
     const auto center = rect.center();
     const auto point = QPoint(center.x() - size.width(), center.y() - size.height());
     painter->drawImage(point, image);
-}
-
-void ImageControl::resizeEvent(QResizeEvent *event)
-{
-    Q_D(ImageControl);
-    d->size = event->size();
 }
 
 void ImageControl::jumpTo(int index, int level)

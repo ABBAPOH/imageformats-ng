@@ -59,7 +59,7 @@ bool ImageView::viewportEvent(QEvent *event)
     switch (event->type()) {
     case QEvent::Resize : {
         Q_D(ImageView);
-        d->control->resizeEvent(static_cast<QResizeEvent *>(event));
+        d->control->setSize(static_cast<QResizeEvent *>(event)->size());
     }
     default:
         break;

@@ -1,5 +1,7 @@
 #include "imageviewitem.h"
 
+#include <QDebug>
+#include <QQuickWindow>
 #include <ImageDocument>
 
 ImageViewItem::ImageViewItem()
@@ -10,22 +12,17 @@ ImageViewItem::ImageViewItem()
     control->document()->setFileName("/Users/arch/images/cubemap.dds");
     control->document()->open();
 
-    connect(this, &QQuickPaintedItem::widthChanged, this, &ImageViewItem::makeDirty);
-    connect(this, &QQuickPaintedItem::heightChanged, this, &ImageViewItem::makeDirty);
+    connect(this, &QQuickPaintedItem::widthChanged, this, &ImageViewItem::onSizeChanged);
+    connect(this, &QQuickPaintedItem::heightChanged, this, &ImageViewItem::onSizeChanged);
 }
 
 void ImageViewItem::paint(QPainter *painter)
 {
-    if (dirty) {
-        QResizeEvent event(QSize(width(), height()), contentsSize());
-        control->resizeEvent(&event);
-        dirty = false;
-    }
     control->paint(painter);
 }
 
-void ImageViewItem::makeDirty()
+void ImageViewItem::onSizeChanged()
 {
-    dirty = true;
+    control->setSize(width(), height());
 }
 
