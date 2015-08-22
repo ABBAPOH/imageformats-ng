@@ -4,7 +4,7 @@ Project {
     Lib {
         isStatic: true
         Depends { name: "cpp" }
-        name: "LibJPEG"
+        name: "JPEGLib"
         Group {
             name: "files"
             cpp.cFlags: {
@@ -73,8 +73,8 @@ Project {
     Lib {
         isStatic: true
         Depends { name: "cpp" }
-        Depends { name: "LibZ" }
-        name: "LibPNG"
+        Depends { name: "ZLib" }
+        name: "PNGLib"
         files: [
             "libpng/png.c",
             "libpng/pngerror.c",
@@ -93,7 +93,7 @@ Project {
             "libpng/pngwutil.c"
         ]
         Export {
-            Depends { name: "LibZ" }
+            Depends { name: "ZLib" }
             Depends { name: "cpp" }
             cpp.includePaths: [ "libpng" ]
         }
@@ -101,7 +101,7 @@ Project {
 
     Lib {
         Depends { name: "cpp" }
-        name: "LibZ"
+        name: "ZLib"
         files: [
             "zlib/adler32.c",
             "zlib/compress.c",
