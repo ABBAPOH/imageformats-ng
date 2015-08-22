@@ -1,8 +1,7 @@
 import qbs.base 1.0
 
 Project {
-    Lib {
-        isStatic: true
+    StaticLib {
         Depends { name: "cpp" }
         name: "JPEGLib"
         Group {
@@ -70,8 +69,7 @@ Project {
         }
     }
 
-    Lib {
-        isStatic: true
+    StaticLib {
         Depends { name: "cpp" }
         Depends { name: "ZLib" }
         name: "PNGLib"
