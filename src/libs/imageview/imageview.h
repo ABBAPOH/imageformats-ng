@@ -6,7 +6,7 @@
 class ImageDocument;
 
 class ImageViewPrivate;
-class ImageView : public QAbstractScrollArea
+class IMAGEVIEW_EXPORT ImageView : public QAbstractScrollArea
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ImageView)
