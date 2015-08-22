@@ -4,7 +4,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QVariant>
 
-class LIB_EXPORT WriteOptions
+class IMAGEDOCUMENT_EXPORT WriteOptions
 {
 public:
     enum Option {

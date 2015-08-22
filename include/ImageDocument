@@ -1,1 +1,1 @@
-#include "../src/lib/imagedocument.h"
+#include "../src/libs/imagedocument/imagedocument.h"

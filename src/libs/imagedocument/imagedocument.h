@@ -11,7 +11,7 @@
 #include <QtGui/QImage>
 
 class ImageDocumentPrivate;
-class LIB_EXPORT ImageDocument : public AbstractDocument
+class IMAGEDOCUMENT_EXPORT ImageDocument : public AbstractDocument
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ImageDocument)

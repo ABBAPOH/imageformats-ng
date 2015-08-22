@@ -1,1 +1,1 @@
-#include "../src/lib/imageexifmeta.h"
+#include "../src/libs/imagedocument/imageexifmeta.h"

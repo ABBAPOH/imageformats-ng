@@ -8,7 +8,7 @@
 
 class ImageContentsData;
 
-class LIB_EXPORT ImageContents
+class IMAGEDOCUMENT_EXPORT ImageContents
 {
 public:
     enum Type {
@@ -61,11 +61,11 @@ public:
 private:
     QSharedDataPointer<ImageContentsData> d;
 
-    friend bool LIB_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
-    friend bool LIB_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
+    friend bool IMAGEDOCUMENT_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
+    friend bool IMAGEDOCUMENT_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
 };
 
-bool LIB_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
-bool LIB_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
+bool IMAGEDOCUMENT_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
+bool IMAGEDOCUMENT_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
 
 #endif // IMAGECONTENTS_H

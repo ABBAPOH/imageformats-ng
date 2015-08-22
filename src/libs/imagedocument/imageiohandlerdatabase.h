@@ -3,7 +3,7 @@
 
 #include <ImageIOHandler>
 
-class LIB_EXPORT ImageIOHandlerDatabase
+class IMAGEDOCUMENT_EXPORT ImageIOHandlerDatabase
 {
 public:
     ImageIOHandlerDatabase();

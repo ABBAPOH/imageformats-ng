@@ -6,7 +6,7 @@
 #include <QtCore/QVariant>
 #include <QtGui/QColor>
 
-class LIB_EXPORT ReadOptions
+class IMAGEDOCUMENT_EXPORT ReadOptions
 {
 public:
     enum Option {

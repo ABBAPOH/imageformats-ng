@@ -9,7 +9,7 @@ class QResizeEvent;
 class ImageDocument;
 
 class ImageControlPrivate;
-class LIB_EXPORT ImageControl : public QObject
+class IMAGEDOCUMENT_EXPORT ImageControl : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ImageControl)

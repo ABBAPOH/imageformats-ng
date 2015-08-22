@@ -7,7 +7,7 @@
 #include <QtCore/QVector>
 
 class AbstractDocumentPrivate;
-class LIB_EXPORT AbstractDocument : public QObject
+class IMAGEDOCUMENT_EXPORT AbstractDocument : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(AbstractDocument)
@@ -60,7 +60,7 @@ protected:
     QScopedPointer<AbstractDocumentPrivate> d_ptr;
 };
 
-class LIB_EXPORT AbstractDocument::Result
+class IMAGEDOCUMENT_EXPORT AbstractDocument::Result
 {
 public:
     enum ErrorCode

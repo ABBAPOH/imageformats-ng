@@ -5,7 +5,7 @@
 
 #include <QtCore/QSet>
 
-class LIB_EXPORT ImageIOHandler
+class IMAGEDOCUMENT_EXPORT ImageIOHandler
 {
 public:
     ImageIOHandler();
@@ -41,7 +41,7 @@ private:
     friend class ImageDocument;
 };
 
-class LIB_EXPORT ImageIOHandlerPlugin : public QObject
+class IMAGEDOCUMENT_EXPORT ImageIOHandlerPlugin : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(ImageIOHandlerPlugin)

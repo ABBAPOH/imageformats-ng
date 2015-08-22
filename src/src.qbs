@@ -8,7 +8,7 @@ Project {
         filePath: "qmlapp/qmlapp.qbs"
     }
     SubProject {
-        filePath: "lib/lib.qbs"
+        filePath: "libs/libs.qbs"
     }
     SubProject {
         filePath: "3rdparty/3rdparty.qbs"
