@@ -1,6 +1,7 @@
 import qbs.base 1.0
 
 Lib {
+    Depends { name: "Qt.gui" }
     Export {
         Depends { name: "cpp" }
         cpp.defines: [ "IMAGEDOCUMENT_EXPORT=Q_DECL_IMPORT" ]

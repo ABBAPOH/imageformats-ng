@@ -1,13 +1,7 @@
 import qbs.base 1.0
 
-BaseProduct {
-    Depends { name: "Qt.test" }
-
-    type: ["application", "autotest"]
-
-    destinationDirectory: project.install_binary_path
-
-    consoleApplication: true
+Product {
+    Depends { name: "cpp" }
 
     cpp.cFlags: project.cFlags
     cpp.cxxFlags: project.cxxFlags
@@ -17,7 +11,7 @@ BaseProduct {
     cpp.cxxLanguageVersion: "c++11"
     cpp.cxxStandardLibrary: qbs.targetOS.contains("osx") ? "libc++" : base
     cpp.minimumOsxVersion: "10.7"
-    cpp.rpaths: qbs.targetOS.contains("osx")
-                ? [ "@executable_path/.." ]
-                : [ "$ORIGIN/../lib/" + project.app_target ]
+
+    Depends { name: "bundle" }
+    Depends { name: "Qt.core" }
 }
