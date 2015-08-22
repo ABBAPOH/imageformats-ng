@@ -1,15 +1,15 @@
-#ifndef IMAGEITEM_H
-#define IMAGEITEM_H
+#ifndef IMAGEVIEWITEM_H
+#define IMAGEVIEWITEM_H
 
 #include <QtQuick/QQuickPaintedItem>
 
 #include <ImageControl>
 
-class ImageItem : public QQuickPaintedItem
+class ImageViewItem : public QQuickPaintedItem
 {
     Q_OBJECT
 public:
-    ImageItem();
+    ImageViewItem();
 
     void paint(QPainter *painter);
 
@@ -25,4 +25,4 @@ protected:
     bool dirty {true};
 };
 
-#endif // IMAGEITEM_H
+#endif // IMAGEVIEWITEM_H

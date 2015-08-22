@@ -2,7 +2,7 @@
 
 #include <ImageDocument>
 
-ImageItem::ImageItem()
+ImageViewItem::ImageViewItem()
 {
     control.reset(new ImageControl);
     auto doc = new ImageDocument(control.data());
@@ -10,11 +10,11 @@ ImageItem::ImageItem()
     control->document()->setFileName("/Users/arch/images/cubemap.dds");
     control->document()->open();
 
-    connect(this, &QQuickPaintedItem::widthChanged, this, &ImageItem::makeDirty);
-    connect(this, &QQuickPaintedItem::heightChanged, this, &ImageItem::makeDirty);
+    connect(this, &QQuickPaintedItem::widthChanged, this, &ImageViewItem::makeDirty);
+    connect(this, &QQuickPaintedItem::heightChanged, this, &ImageViewItem::makeDirty);
 }
 
-void ImageItem::paint(QPainter *painter)
+void ImageViewItem::paint(QPainter *painter)
 {
     if (dirty) {
         QResizeEvent event(QSize(width(), height()), contentsSize());
@@ -24,7 +24,7 @@ void ImageItem::paint(QPainter *painter)
     control->paint(painter);
 }
 
-void ImageItem::makeDirty()
+void ImageViewItem::makeDirty()
 {
     dirty = true;
 }

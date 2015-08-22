@@ -5,9 +5,6 @@ Project {
         filePath: "app/app.qbs"
     }
     SubProject {
-        filePath: "qmlapp/qmlapp.qbs"
-    }
-    SubProject {
         filePath: "libs/libs.qbs"
     }
     SubProject {

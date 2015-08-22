@@ -2,8 +2,8 @@ import QtQuick 2.0
 
 import com.arch.ImageViewer 1.0
 
-ImageItem {
-    width: 100
-    height: 62
+ImageView {
+    width: 640
+    height: 480
     anchors.fill: parent
 }
