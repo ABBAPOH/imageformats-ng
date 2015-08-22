@@ -2,6 +2,7 @@ import qbs.base 1.0
 
 Product {
     Depends { name: "cpp" }
+    Depends { name: "bundle" }
     Depends { name: "Qt.core" }
     Depends { name: "Qt.test" }
 

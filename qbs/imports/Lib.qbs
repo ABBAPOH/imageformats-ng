@@ -4,6 +4,7 @@ Product {
     property bool isStatic: false
     type: isStatic ? "staticlibrary" : "dynamiclibrary"
     Depends { name: "cpp" }
+    Depends { name: "bundle" }
     Depends { name: "Qt.core" }
     Depends { name: "Qt.gui" }
 

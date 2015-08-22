@@ -3,6 +3,7 @@ import qbs.FileInfo
 
 Application {
     Depends { name: "cpp" }
+    Depends { name: "bundle" }
 
     destinationDirectory: project.install_app_path
 
