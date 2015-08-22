@@ -46,7 +46,7 @@ Project {
     property stringList libraryPaths: []
 
     property stringList cFlags: []
-    property stringList cxxFlags: []
+    property stringList cxxFlags: qbs.targetOS.contains("osx") ? ["-Wno-unknown-pragmas"] : []
     property stringList linkFlags: []
 
     qbsSearchPaths: "qbs"
