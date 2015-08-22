@@ -4,6 +4,7 @@ AutoTest {
     type: "application"
     Depends { name: "Qt.quick" }
     Depends { name: "ImageDocument" }
+    Depends { name: "ImageView" }
     name: "qmlapp"
     bundle.isBundle: false
     files: [

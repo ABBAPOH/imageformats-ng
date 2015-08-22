@@ -1,7 +1,7 @@
 #include "imagecontrol.h"
 #include "imagecontrol_p.h"
 
-#include "imagedocument.h"
+#include <ImageDocument>
 
 #include <QtGui/QPainter>
 #include <QtGui/QResizeEvent>

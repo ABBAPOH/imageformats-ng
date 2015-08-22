@@ -1,1 +1,1 @@
-#include "../src/libs/imagedocument/imagecontrol.h"
+#include "../src/libs/imageview/imagecontrol.h"

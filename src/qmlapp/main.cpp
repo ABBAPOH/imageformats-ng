@@ -3,7 +3,7 @@
 #include <QtQuick/QQuickView>
 
 #include <ImageDocument>
-#include "imageitem.h"
+#include <ImageViewItem>
 
 int main(int argc, char *argv[])
 {

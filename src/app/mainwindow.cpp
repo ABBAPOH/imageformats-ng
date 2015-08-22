@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "imageview.h"
+#include <ImageView>
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>

@@ -1,4 +1,4 @@
-#include "imageitem.h"
+#include "imageviewitem.h"
 
 #include <ImageDocument>
 
