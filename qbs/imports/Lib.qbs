@@ -25,7 +25,7 @@ Product {
 
     Group {
         condition: !isStatic
-        ileTagsFilter: product.type
+        fileTagsFilter: product.type
         qbs.install: true
         qbs.installDir: project.install_library_path
     }
