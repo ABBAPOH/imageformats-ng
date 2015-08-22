@@ -4,10 +4,16 @@ Project {
     Lib {
         isStatic: true
         Depends { name: "cpp" }
-        cpp.cFlags: !qbs.toolchain.contains("msvc") ? base.concat(["-Wno-unused-parameter"]) : base
         name: "LibJPEG"
         Group {
             name: "files"
+            cpp.cFlags: {
+                if (qbs.toolchain.contains("mingw"))
+                    return base.concat(["-Wno-unused-parameter", "-Wno-main"])
+                else if (qbs.toolchain.contains("msvc"))
+                    return base
+                return base.concat(["-Wno-unused-parameter"])
+            }
             files: [
                 "jaricom.c",
                 "jcapimin.c",
