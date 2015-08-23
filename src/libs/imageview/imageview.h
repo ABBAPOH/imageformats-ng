@@ -22,6 +22,8 @@ public:
 
 public slots:
     void jumpTo(int index, int level);
+    void zoomIn();
+    void zoomOut();
 
 signals:
     void documentChanged();

@@ -27,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent) :
     _view = new ImageView;
     _view->setDocument(_document);
     setCentralWidget(_view);
+
+    connect(ui->actionZoom_In, &QAction::triggered, _view, &ImageView::zoomIn);
+    connect(ui->actionZoom_Out, &QAction::triggered, _view, &ImageView::zoomOut);
 }
 
 MainWindow::~MainWindow()

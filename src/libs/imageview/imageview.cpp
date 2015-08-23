@@ -46,6 +46,18 @@ void ImageView::jumpTo(int index, int level)
     d->control->jumpTo(index, level);
 }
 
+void ImageView::zoomIn()
+{
+    Q_D(ImageView);
+    d->control->zoomIn();
+}
+
+void ImageView::zoomOut()
+{
+    Q_D(ImageView);
+    d->control->zoomOut();
+}
+
 void ImageView::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);

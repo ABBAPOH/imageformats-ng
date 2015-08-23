@@ -6,10 +6,68 @@
 #include <QtGui/QPainter>
 #include <QtGui/QResizeEvent>
 
+ZoomAnimation::ZoomAnimation(ImageControlPrivate *dd, QObject *parent) :
+    QVariantAnimation(parent),
+    d(dd)
+{
+}
+
+void ZoomAnimation::updateCurrentValue(const QVariant &value)
+{
+    d->setVisualZoomFactor(value.toReal());
+}
+
 void ImageControlPrivate::init()
 {
     Q_Q(ImageControl);
     Q_UNUSED(q);
+}
+
+void ImageControlPrivate::setZoomFactor(qreal factor, bool animated)
+{
+//    Q_Q(ImageControl);
+
+    if (zoomFactor == factor)
+        return;
+
+    if (!doc)
+        return;
+
+    if (factor < 0.01)
+        factor = 0.01;
+
+//    q->clearSelection();
+
+    zoomFactor = factor;
+
+    if (!animated) {
+        setVisualZoomFactor(factor);
+        return;
+    }
+
+    if (zoomAnimation.state() == QVariantAnimation::Running) {
+        zoomAnimation.stop();
+    }
+
+    zoomAnimation.setStartValue(visualZoomFactor);
+    zoomAnimation.setEndValue(zoomFactor);
+    zoomAnimation.setDuration(75);
+    zoomAnimation.setEasingCurve(QEasingCurve::Linear);
+    zoomAnimation.start();
+}
+
+void ImageControlPrivate::setVisualZoomFactor(qreal factor)
+{
+    Q_Q(ImageControl);
+    visualZoomFactor = factor;
+
+    //    updateScrollBars();
+    emit q->updateRequested();
+}
+
+QPointF ImageControlPrivate::getCenter() const
+{
+    return QPointF(size.width() / 2.0, size.height() / 2.0);
 }
 
 /*!
@@ -43,6 +101,7 @@ void ImageControl::setDocument(ImageDocument *doc)
     if (d->doc && d->doc->parent() == this)
         delete d->doc;
     d->doc = doc;
+    d->setZoomFactor(1.0, false);
 }
 
 QSize ImageControl::size() const
@@ -80,11 +139,21 @@ void ImageControl::paint(QPainter *painter)
     if (!d->doc)
         return;
 
+    QPointF center = d->getCenter();
+
+    QTransform matrix;
+    matrix.translate(center.x(), center.y());
+
+    painter->save();
+    painter->setTransform(matrix);
+    painter->scale(d->visualZoomFactor, d->visualZoomFactor);
+
     const QImage image = d->doc->contents().image(d->currentIndex, d->currentLevel);
-    const auto size = image.size() / 2;
-    const auto center = rect.center();
-    const auto point = QPoint(center.x() - size.width(), center.y() - size.height());
-    painter->drawImage(point, image);
+    QRectF imageRect(QRect(QPoint(0, 0), image.size()));
+    imageRect.translate(-imageRect.center());
+    painter->drawImage(imageRect, image);
+
+    painter->restore();
 }
 
 void ImageControl::jumpTo(int index, int level)
@@ -93,4 +162,16 @@ void ImageControl::jumpTo(int index, int level)
     d->currentIndex = index;
     d->currentLevel = level;
     emit updateRequested();
+}
+
+void ImageControl::zoomIn()
+{
+    Q_D(ImageControl);
+    d->setZoomFactor(d->zoomFactor*1.2);
+}
+
+void ImageControl::zoomOut()
+{
+    Q_D(ImageControl);
+    d->setZoomFactor(d->zoomFactor*0.8);
 }
