@@ -1,6 +1,7 @@
 #include <QtTest>
 
 #include <ImageContents>
+#include <ImageExifMeta>
 
 class TestImageContents : public QObject
 {

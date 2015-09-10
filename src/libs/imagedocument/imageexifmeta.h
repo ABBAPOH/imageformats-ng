@@ -1,6 +1,8 @@
 #ifndef IMAGEEXIFMETA_H
 #define IMAGEEXIFMETA_H
 
+#include "optional.h"
+
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QSize>
 #include <QtCore/QVariant>
@@ -11,6 +13,8 @@ class IMAGEDOCUMENT_EXPORT ImageExifMeta
 {
 public:
     enum Tag {
+        TagImageWidth = 0x0100,
+        TagImageHeight = 0x0101,
         TagDocumentName = 0x010d,
         TagImageDescription = 0x010e,
         TagOrientation = 0x0112
@@ -18,7 +22,6 @@ public:
     typedef QHash<Tag, QVariant> Values;
 
     enum Orientation {
-        OrientationNone = 0, // TODO: use optional?
         OrientationHorizontal = 1,
         OrientationHMirro = 2,
         OrientationRotate180 = 3,
@@ -39,9 +42,14 @@ public:
     QVariant value(Tag tag) const;
     void setValue(Tag tag, const QVariant &value);
 
-    bool hasOrientation() const { return _values.contains(TagOrientation); }
-    Orientation orientation() const { return Orientation(_values.value(TagOrientation).toInt()); }
-    void setOrientation(Orientation orientation) { _values.insert(TagOrientation, orientation); }
+    Optional<qint32> imageWidth() const;
+    void setImageWidth(Optional<qint32> w);
+
+    Optional<qint32> imageHeigth() const;
+    void setImageHeigth(Optional<qint32> w);
+
+    Optional<Orientation> orientation() const;
+    void setOrientation(Optional<Orientation> orientation);
 
     void clear();
 
