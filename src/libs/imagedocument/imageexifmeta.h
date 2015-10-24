@@ -20,7 +20,7 @@ public:
         TagImageDescription = 0x010e,
         TagOrientation = 0x0112
     };
-    typedef QHash<Tag, QVariant> Values;
+    using Values = QHash<Tag, QVariant>;
 
     enum Orientation {
         OrientationHorizontal = 1,
