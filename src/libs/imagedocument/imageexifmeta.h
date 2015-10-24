@@ -7,6 +7,10 @@
 #include <QtCore/QSize>
 #include <QtCore/QVariant>
 
+#define DECLARE_EXIF_PROPERTY(Type, get, set, Tag) \
+    inline Type get() const { return value(Tag).value<Type>(); } \
+    inline void set(Type t) { setValue(Tag, QVariant::fromValue<Type>(t)); }
+
 class ImageMetaData;
 
 class IMAGEDOCUMENT_EXPORT ImageExifMeta
@@ -52,11 +56,19 @@ public:
     void setValue(Tag tag, const QVariant &value);
     void removeValue(Tag tag);
 
+    DECLARE_EXIF_PROPERTY(int, imageWidth, setImageWidth, TagImageWidth)
+    DECLARE_EXIF_PROPERTY(int, imageHeight, setImageHeight, TagImageHeight)
+    DECLARE_EXIF_PROPERTY(QString, documentName, setDocumentName, TagDocumentName)
+    DECLARE_EXIF_PROPERTY(QString, imageDescription, setImageDescription, TagImageDescription)
+    DECLARE_EXIF_PROPERTY(Orientation, orientation, setOrientation, TagOrientation)
+
     void clear();
 
 private:
     Values _values;
 };
+
+#undef DECLARE_EXIF_PROPERTY
 
 inline bool operator==(const ImageExifMeta &lhs, const ImageExifMeta &rhs)
 {
