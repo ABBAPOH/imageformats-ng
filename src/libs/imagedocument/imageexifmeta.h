@@ -11,6 +11,7 @@ class ImageMetaData;
 
 class IMAGEDOCUMENT_EXPORT ImageExifMeta
 {
+    Q_GADGET
 public:
     enum Tag {
         TagImageWidth = 0x0100,
@@ -23,7 +24,7 @@ public:
 
     enum Orientation {
         OrientationHorizontal = 1,
-        OrientationHMirro = 2,
+        OrientationHMirror = 2,
         OrientationRotate180 = 3,
         OrientationVMirror180 = 4,
         OrientationHMirrorRotate270 = 5,
@@ -31,6 +32,7 @@ public:
         OrientationHMirrorRotate90 = 7,
         OrientationRotate270 = 8
     };
+    Q_ENUM(Orientation)
 
     ImageExifMeta();
     ~ImageExifMeta();
@@ -41,20 +43,11 @@ public:
     bool hasValue(Tag tag) const { return _values.contains(tag); }
     QVariant value(Tag tag) const;
     void setValue(Tag tag, const QVariant &value);
-
-    Optional<qint32> imageWidth() const;
-    void setImageWidth(Optional<qint32> w);
-
-    Optional<qint32> imageHeigth() const;
-    void setImageHeigth(Optional<qint32> w);
-
-    Optional<Orientation> orientation() const;
-    void setOrientation(Optional<Orientation> orientation);
+    void removeValue(Tag tag);
 
     void clear();
 
 private:
-
     Values _values;
 };
 

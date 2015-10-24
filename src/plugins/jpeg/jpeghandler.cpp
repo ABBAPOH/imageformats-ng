@@ -1020,7 +1020,7 @@ bool JpegHandler::readHeader(ImageContents &contents)
     }
 
     ImageExifMeta meta;
-    meta.setOrientation(ImageExifMeta::Orientation(d->exifOrientation));
+    meta.setValue(ImageExifMeta::TagOrientation, QVariant::fromValue(ImageExifMeta::Orientation(d->exifOrientation)));
     contents.setExifMeta(meta);
 
     return true;

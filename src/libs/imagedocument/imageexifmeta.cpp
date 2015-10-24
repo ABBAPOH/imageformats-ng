@@ -36,34 +36,9 @@ void ImageExifMeta::setValue(ImageExifMeta::Tag tag, const QVariant &value)
     _values.insert(tag, value);
 }
 
-Optional<qint32> ImageExifMeta::imageWidth() const
+void ImageExifMeta::removeValue(ImageExifMeta::Tag tag)
 {
-    return getInt<qint32>(_values, TagImageWidth);
-}
-
-void ImageExifMeta::setImageWidth(Optional<qint32> w)
-{
-    set(_values, TagImageWidth, w);
-}
-
-Optional<qint32> ImageExifMeta::imageHeigth() const
-{
-    return getInt<qint32>(_values, TagImageHeight);
-}
-
-void ImageExifMeta::setImageHeigth(Optional<qint32> w)
-{
-    set(_values, TagImageHeight, w);
-}
-
-Optional<ImageExifMeta::Orientation> ImageExifMeta::orientation() const
-{
-    return getInt<Orientation>(_values, TagOrientation);
-}
-
-void ImageExifMeta::setOrientation(Optional<Orientation> orientation)
-{
-    set(_values, TagOrientation, orientation);
+    _values.remove(tag);
 }
 
 void ImageExifMeta::clear()
