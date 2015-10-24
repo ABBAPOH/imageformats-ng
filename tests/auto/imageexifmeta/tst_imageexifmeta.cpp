@@ -23,14 +23,13 @@ void TestImageExifMeta::setters()
     meta.setValue(ImageExifMeta::TagImageWidth, 640);
     meta.setValue(ImageExifMeta::TagImageHeight, 480);
     meta.setValue(ImageExifMeta::TagDocumentName, QStringLiteral("name"));
-    meta.setValue(ImageExifMeta::TagOrientation, QVariant::fromValue<ImageExifMeta::Orientation>(ImageExifMeta::OrientationHorizontal));
+    meta.setValue(ImageExifMeta::TagOrientation, QVariant::fromValue(ImageExifMeta::OrientationHorizontal));
 
     QCOMPARE(meta.value(ImageExifMeta::TagImageWidth).toInt(), 640);
     QCOMPARE(meta.value(ImageExifMeta::TagImageHeight).toInt(), 480);
     QCOMPARE(meta.value(ImageExifMeta::TagDocumentName).toString(), QStringLiteral("name"));
     QCOMPARE(meta.value(ImageExifMeta::TagOrientation).value<ImageExifMeta::Orientation>(),
              ImageExifMeta::OrientationHorizontal);
-
 
     meta.setImageWidth(800);
     meta.setImageHeight(600);
