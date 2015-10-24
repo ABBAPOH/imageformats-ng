@@ -18,14 +18,6 @@ static void set(ImageExifMeta::Values &values, ImageExifMeta::Tag tag, const Opt
         values.remove(tag);
 }
 
-ImageExifMeta::ImageExifMeta()
-{
-}
-
-ImageExifMeta::~ImageExifMeta()
-{
-}
-
 QVariant ImageExifMeta::value(Tag option) const
 {
     return _values.value(option);

@@ -34,8 +34,13 @@ public:
     };
     Q_ENUM(Orientation)
 
-    ImageExifMeta();
-    ~ImageExifMeta();
+    ImageExifMeta() = default;
+    ImageExifMeta(const ImageExifMeta &other) = default;
+    ImageExifMeta(ImageExifMeta &&other) = default;
+    ~ImageExifMeta() = default;
+
+    ImageExifMeta &operator =(const ImageExifMeta &other) = default;
+    ImageExifMeta &operator =(ImageExifMeta &&other) = default;
 
     Values values() const { return _values; }
     void setValues(const Values &values) { _values = values; }
