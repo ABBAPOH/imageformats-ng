@@ -25,6 +25,10 @@ public slots:
     void zoomIn();
     void zoomOut();
 
+private slots:
+    void onScrollBarValueChanged();
+    void onViewPortSizeChanged(const QSize size);
+
 signals:
     void documentChanged();
 

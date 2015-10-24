@@ -6,6 +6,8 @@
 #include <QtGui/QPainter>
 #include <QtGui/QResizeEvent>
 
+#include <QDebug>
+
 ZoomAnimation::ZoomAnimation(ImageControlPrivate *dd, QObject *parent) :
     QVariantAnimation(parent),
     d(dd)
@@ -60,7 +62,7 @@ void ImageControlPrivate::setVisualZoomFactor(qreal factor)
 {
     Q_Q(ImageControl);
     visualZoomFactor = factor;
-
+    emit q->viewportSizeChanged(q->viewportSize());
     //    updateScrollBars();
     emit q->updateRequested();
 }
@@ -124,6 +126,34 @@ void ImageControl::setSize(int width, int height)
     setSize(QSize(width, height));
 }
 
+QPoint ImageControl::pos() const
+{
+    Q_D(const ImageControl);
+    return d->pos;
+}
+
+void ImageControl::setPos(QPoint pos)
+{
+    Q_D(ImageControl);
+
+    if (d->pos == pos)
+        return;
+    d->pos = pos;
+    emit posChanged(pos);
+    emit updateRequested();
+}
+
+QSize ImageControl::viewportSize() const
+{
+    Q_D(const ImageControl);
+    const QImage image = d->doc->contents().image(d->currentIndex, d->currentLevel);
+    const QSize imageSize = image.size() * d->visualZoomFactor;
+    if (imageSize.isNull())
+        return QSize();
+    return QSize(qMax(0, imageSize.width() - d->size.width()),
+                 qMax(0, imageSize.height() - d->size.height())) / 2;
+}
+
 void ImageControl::paint(QPainter *painter)
 {
     Q_D(ImageControl);
@@ -143,6 +173,7 @@ void ImageControl::paint(QPainter *painter)
 
     QTransform matrix;
     matrix.translate(center.x(), center.y());
+    matrix.translate(-d->pos.x(), -d->pos.y());
 
     painter->save();
     painter->setTransform(matrix);

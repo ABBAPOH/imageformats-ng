@@ -3,17 +3,37 @@
 
 #include <ImageControl>
 
+#include <QtWidgets/QScrollBar>
+
 #include <QtGui/QPainter>
 #include <QtGui/QResizeEvent>
+
+#include <QDebug>
 
 void ImageViewPrivate::init()
 {
     Q_Q(ImageView);
 
+    q->horizontalScrollBar()->setRange(0, 0);
+    q->horizontalScrollBar()->setValue(0);
+    q->horizontalScrollBar()->setSingleStep(20);
+
+    q->verticalScrollBar()->setRange(0, 0);
+    q->verticalScrollBar()->setValue(0);
+    q->verticalScrollBar()->setSingleStep(20);
+
     control.reset(new ImageControl(q));
     QObject::connect(control.data(), &ImageControl::documentChanged, q, &ImageView::documentChanged);
     QObject::connect(control.data(), &ImageControl::updateRequested,
                      q->viewport(), static_cast<void(QWidget::*)()>(&QWidget::update));
+
+    QObject::connect(q->horizontalScrollBar(), &QAbstractSlider::valueChanged,
+                     q, &ImageView::onScrollBarValueChanged);
+    QObject::connect(q->verticalScrollBar(), &QAbstractSlider::valueChanged,
+                     q, &ImageView::onScrollBarValueChanged);
+
+    QObject::connect(control.data(), &ImageControl::viewportSizeChanged,
+                     q, &ImageView::onViewPortSizeChanged);
 }
 
 ImageView::ImageView(QWidget *parent) :
@@ -56,6 +76,21 @@ void ImageView::zoomOut()
 {
     Q_D(ImageView);
     d->control->zoomOut();
+}
+
+void ImageView::onScrollBarValueChanged()
+{
+    Q_D(ImageView);
+    d->control->setPos(QPoint(horizontalScrollBar()->value(), verticalScrollBar()->value()));
+}
+
+void ImageView::onViewPortSizeChanged(const QSize size)
+{
+    horizontalScrollBar()->setMinimum(-size.width());
+    horizontalScrollBar()->setMaximum(size.width());
+
+    verticalScrollBar()->setMinimum(-size.height());
+    verticalScrollBar()->setMaximum(size.height());
 }
 
 void ImageView::paintEvent(QPaintEvent *event)
