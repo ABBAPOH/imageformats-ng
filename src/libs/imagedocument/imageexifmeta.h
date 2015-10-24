@@ -7,11 +7,31 @@
 #include <QtCore/QSize>
 #include <QtCore/QVariant>
 
-#define DECLARE_EXIF_PROPERTY(Type, get, set, Tag) \
-    inline Type get() const { return value(Tag).value<Type>(); } \
-    inline void set(Type t) { setValue(Tag, QVariant::fromValue<Type>(t)); }
-
 class ImageMetaData;
+
+template <typename T>
+class ImageMetaValue
+{
+public:
+    ImageMetaValue() {}
+    ImageMetaValue(const T &t) : data(QVariant::fromValue<T>(t)) {}
+    ImageMetaValue(const QVariant &v) : data(v) {}
+    ImageMetaValue(const ImageMetaValue &other) : data(other.data) {}
+
+    inline operator bool() const { return data.isValid(); }
+    inline bool operator !() const { return data.isNull(); }
+
+    T operator *() const { return data.value<T>(); }
+
+    QString toString() const { return data.toString(); }
+
+private:
+    QVariant data;
+};
+
+#define DECLARE_EXIF_PROPERTY(Type, get, set, Tag) \
+    inline ImageMetaValue<Type> get() const { return value(Tag); } \
+    inline void set(Type t) { setValue(Tag, QVariant::fromValue<Type>(t)); }
 
 class IMAGEDOCUMENT_EXPORT ImageExifMeta
 {

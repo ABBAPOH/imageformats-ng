@@ -36,10 +36,10 @@ void TestImageExifMeta::setters()
     meta.setDocumentName(QStringLiteral("new name"));
     meta.setOrientation(ImageExifMeta::OrientationHMirror);
 
-    QCOMPARE(meta.imageWidth(), 800);
-    QCOMPARE(meta.imageHeight(), 600);
-    QCOMPARE(meta.documentName(), QStringLiteral("new name"));
-    QCOMPARE(meta.orientation(), ImageExifMeta::OrientationHMirror);
+    QCOMPARE(*meta.imageWidth(), 800);
+    QCOMPARE(*meta.imageHeight(), 600);
+    QCOMPARE(*meta.documentName(), QStringLiteral("new name"));
+    QCOMPARE(*meta.orientation(), ImageExifMeta::OrientationHMirror);
 }
 
 QTEST_APPLESS_MAIN(TestImageExifMeta)
