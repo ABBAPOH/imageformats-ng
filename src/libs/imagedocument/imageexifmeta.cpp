@@ -1,7 +1,7 @@
 #include "imageexifmeta.h"
 
 template<typename T>
-static Optional<T> getInt(const ImageExifMeta::Values &values, ImageExifMeta::Tag tag)
+static Optional<T> getInt(const ImageExifMeta::TagVariantHash &values, ImageExifMeta::Tag tag)
 {
     const auto it = values.find(tag);
     if (it == values.end())
@@ -10,7 +10,7 @@ static Optional<T> getInt(const ImageExifMeta::Values &values, ImageExifMeta::Ta
 }
 
 template<typename T>
-static void set(ImageExifMeta::Values &values, ImageExifMeta::Tag tag, const Optional<T> &value)
+static void set(ImageExifMeta::TagVariantHash &values, ImageExifMeta::Tag tag, const Optional<T> &value)
 {
     if (value)
         values.insert(tag, *value);
@@ -21,7 +21,7 @@ static void set(ImageExifMeta::Values &values, ImageExifMeta::Tag tag, const Opt
 class ImageExifMeta::Data : public QSharedData
 {
 public:
-    ImageExifMeta::Values values;
+    ImageExifMeta::TagVariantHash values;
 };
 
 ImageExifMeta::ImageExifMeta() :
@@ -57,14 +57,14 @@ ImageExifMeta &ImageExifMeta::operator =(ImageExifMeta &&other)
     return *this;
 }
 
-ImageExifMeta::Values ImageExifMeta::values() const
+ImageExifMeta::TagVariantHash ImageExifMeta::toHash() const
 {
     return d->values;
 }
 
-void ImageExifMeta::setValues(const ImageExifMeta::Values &values)
+void ImageExifMeta::setHash(const ImageExifMeta::TagVariantHash &hash)
 {
-    d->values = values;
+    d->values = hash;
 }
 
 bool ImageExifMeta::hasValue(ImageExifMeta::Tag tag) const
