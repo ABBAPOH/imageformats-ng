@@ -20,7 +20,7 @@ public:
         TagImageDescription = 0x010e,
         TagOrientation = 0x0112
     };
-    using TagVariantHash = QHash<Tag, QVariant>;
+    using Values = QHash<Tag, QVariant>;
 
     enum Orientation {
         OrientationHorizontal = 1,
@@ -42,8 +42,8 @@ public:
     ImageExifMeta &operator =(const ImageExifMeta &other);
     ImageExifMeta &operator =(ImageExifMeta &&other);
 
-    TagVariantHash toHash() const;
-    void setHash(const TagVariantHash &hash);
+    Values values() const;
+    void setValues(const Values &values);
 
     bool hasValue(Tag tag) const;
     QVariant value(Tag tag) const;
@@ -59,7 +59,7 @@ private:
 
 inline bool operator==(const ImageExifMeta &lhs, const ImageExifMeta &rhs)
 {
-    return lhs.toHash() == rhs.toHash();
+    return lhs.values() == rhs.values();
 }
 
 inline bool operator!=(const ImageExifMeta &lhs, const ImageExifMeta &rhs)

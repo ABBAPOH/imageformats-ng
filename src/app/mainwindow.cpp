@@ -115,7 +115,7 @@ void MainWindow::showInfo()
 {
     QTreeView *view = new QTreeView();
     QStandardItemModel *model = new QStandardItemModel(view);
-    auto values = _document->contents().exifMeta().toHash();
+    auto values = _document->contents().exifMeta().values();
     for (auto it = values.begin(), end = values.end(); it != end; ++it) {
         QStandardItem *nameItem = new QStandardItem(tagName(it.key()));
         QStandardItem *valueItem = new QStandardItem(it.value().toString());
