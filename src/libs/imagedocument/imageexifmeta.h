@@ -34,18 +34,18 @@ public:
     };
     Q_ENUM(Orientation)
 
-    ImageExifMeta();
-    ImageExifMeta(const ImageExifMeta &other);
-    ImageExifMeta(ImageExifMeta &&other);
-    ~ImageExifMeta();
+    ImageExifMeta() = default;
+    ImageExifMeta(const ImageExifMeta &other) = default;
+    ImageExifMeta(ImageExifMeta &&other) = default;
+    ~ImageExifMeta() = default;
 
-    ImageExifMeta &operator =(const ImageExifMeta &other);
-    ImageExifMeta &operator =(ImageExifMeta &&other);
+    ImageExifMeta &operator =(const ImageExifMeta &other) = default;
+    ImageExifMeta &operator =(ImageExifMeta &&other) = default;
 
-    Values values() const;
-    void setValues(const Values &values);
+    Values values() const { return _values; }
+    void setValues(const Values &values) { _values = values; }
 
-    bool hasValue(Tag tag) const;
+    bool hasValue(Tag tag) const { return _values.contains(tag); }
     QVariant value(Tag tag) const;
     void setValue(Tag tag, const QVariant &value);
     void removeValue(Tag tag);
@@ -53,8 +53,7 @@ public:
     void clear();
 
 private:
-    class Data;
-    QSharedDataPointer<Data> d;
+    Values _values;
 };
 
 inline bool operator==(const ImageExifMeta &lhs, const ImageExifMeta &rhs)
