@@ -45,6 +45,8 @@ public:
     Values values() const { return _values; }
     void setValues(const Values &values) { _values = values; }
 
+    inline bool isEmpty() const { return _values.isEmpty(); }
+
     bool hasValue(Tag tag) const { return _values.contains(tag); }
     QVariant value(Tag tag) const;
     void setValue(Tag tag, const QVariant &value);

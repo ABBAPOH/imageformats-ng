@@ -11,6 +11,9 @@ Project {
         filePath: "imagedocument/imagedocument.qbs"
     }
     SubProject {
+        filePath: "imageexifmeta/imageexifmeta.qbs"
+    }
+    SubProject {
         filePath: "jpeg/jpeg.qbs"
     }
 }
