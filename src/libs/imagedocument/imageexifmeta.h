@@ -26,6 +26,7 @@ public:
         TagImageDescription = 0x010e,
         TagOrientation = 0x0112
     };
+    Q_ENUM(Tag)
 
     enum Orientation {
         OrientationHorizontal = 1,
@@ -49,6 +50,9 @@ public:
 
     QHash<Tag, QVariant> toHash() const;
     static Optional<ImageExifMeta> fromHash(const QHash<Tag, QVariant> &hash);
+
+    QVariantMap toVariantMap() const;
+    static Optional<ImageExifMeta> fromVariantMap(const QVariantMap &map);
 
     bool isEmpty() const;
 

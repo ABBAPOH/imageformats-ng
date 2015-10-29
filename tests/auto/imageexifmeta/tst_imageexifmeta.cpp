@@ -10,6 +10,7 @@ private slots:
     void setters();
     void toHash();
     void fromHash();
+    void toVariantMap();
 };
 
 void TestImageExifMeta::defaultValues()
@@ -73,6 +74,27 @@ void TestImageExifMeta::fromHash()
     QCOMPARE(*meta->imageWidth(), 640);
     QVERIFY(meta->documentName());
     QCOMPARE(*meta->documentName(), QStringLiteral("name"));
+}
+
+void TestImageExifMeta::toVariantMap()
+{
+    ImageExifMeta meta;
+
+    meta.setImageWidth(640);
+    meta.setDocumentName(QStringLiteral("name"));
+
+    auto map = meta.toVariantMap();
+    QVERIFY(map.size() == 2);
+    QCOMPARE(map.value("TagImageWidth"), QVariant(640));
+    QCOMPARE(map.value("TagDocumentName"), QVariant(QStringLiteral("name")));
+
+    const auto meta2 = ImageExifMeta::fromVariantMap(map);
+    QVERIFY(meta2);
+    QCOMPARE(*meta2, meta);
+
+    map.insert("unknown", 10);
+    const auto meta3 = ImageExifMeta::fromVariantMap(map);
+    QVERIFY(!meta3);
 }
 
 QTEST_APPLESS_MAIN(TestImageExifMeta)

@@ -1,5 +1,7 @@
 #include "imageexifmeta.h"
 
+#include <QDebug>
+
 class ImageExifMeta::Data : public QSharedData
 {
 public:
@@ -51,6 +53,27 @@ Optional<ImageExifMeta> ImageExifMeta::fromHash(const QHash<Tag, QVariant> &hash
     dd->values = hash;
     dd->values.detach();
     return ImageExifMeta(dd.take());
+}
+
+QVariantMap ImageExifMeta::toVariantMap() const
+{
+    QVariantMap result;
+    for (auto it = d->values.begin(), end = d->values.end(); it != end; ++it) {
+        result.insert(QVariant::fromValue(it.key()).toString(), it.value());
+    }
+    return result;
+}
+
+Optional<ImageExifMeta> ImageExifMeta::fromVariantMap(const QVariantMap &map)
+{
+    QHash<Tag, QVariant> hash;
+    for (auto it = map.begin(), end = map.end(); it != end; ++it) {
+        const auto key = QVariant(it.key()).value<Tag>();
+        if (key == 0)
+            return Nothing();
+        hash.insert(key, it.value());
+    }
+    return fromHash(hash);
 }
 
 bool ImageExifMeta::isEmpty() const
