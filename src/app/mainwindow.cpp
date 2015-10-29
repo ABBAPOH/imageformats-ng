@@ -102,16 +102,6 @@ void MainWindow::onClicked(const QModelIndex &index)
     _view->jumpTo(data.first, data.second);
 }
 
-QString tagName(ImageExifMeta::Tag tag)
-{
-    switch (tag) {
-    case ImageExifMeta::TagOrientation: return MainWindow::tr("Orientation");
-    default:
-        break;
-    }
-    return QString();
-}
-
 void MainWindow::showInfo()
 {
     QTreeView *view = new QTreeView();
