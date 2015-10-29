@@ -8,6 +8,8 @@ class TestImageExifMeta : public QObject
 private slots:
     void defaultValues();
     void setters();
+    void toHash();
+    void fromHash();
 };
 
 void TestImageExifMeta::defaultValues()
@@ -40,6 +42,37 @@ void TestImageExifMeta::setters()
     QCOMPARE(*meta.imageHeight(), 600);
     QCOMPARE(*meta.documentName(), QStringLiteral("new name"));
     QCOMPARE(*meta.orientation(), ImageExifMeta::OrientationHMirror);
+}
+
+void TestImageExifMeta::toHash()
+{
+    ImageExifMeta meta;
+
+    meta.setImageWidth(640);
+    meta.setDocumentName(QStringLiteral("name"));
+
+    auto hash = meta.toHash();
+    QVERIFY(hash.size() == 2);
+    QCOMPARE(hash.value(ImageExifMeta::TagImageWidth).type(), QVariant::Int);
+    QCOMPARE(hash.value(ImageExifMeta::TagImageWidth).toInt(), 640);
+
+    QCOMPARE(hash.value(ImageExifMeta::TagDocumentName).type(), QVariant::String);
+    QCOMPARE(hash.value(ImageExifMeta::TagDocumentName).toString(), QStringLiteral("name"));
+}
+
+void TestImageExifMeta::fromHash()
+{
+    QHash<ImageExifMeta::Tag, QVariant> hash;
+    hash.insert(ImageExifMeta::TagImageWidth, 640);
+    hash.insert(ImageExifMeta::TagDocumentName, QStringLiteral("name"));
+
+    auto meta = ImageExifMeta::fromHash(hash);
+    QVERIFY(meta);
+
+    QVERIFY(meta->imageWidth());
+    QCOMPARE(*meta->imageWidth(), 640);
+    QVERIFY(meta->documentName());
+    QCOMPARE(*meta->documentName(), QStringLiteral("name"));
 }
 
 QTEST_APPLESS_MAIN(TestImageExifMeta)

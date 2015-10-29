@@ -3,7 +3,7 @@
 class ImageExifMeta::Data : public QSharedData
 {
 public:
-    ImageExifMeta::Values values;
+    QHash<ImageExifMeta::Tag, QVariant> values;
 };
 
 ImageExifMeta::ImageExifMeta() :
@@ -39,14 +39,18 @@ ImageExifMeta &ImageExifMeta::operator =(ImageExifMeta &&other)
     return *this;
 }
 
-ImageExifMeta::Values ImageExifMeta::values() const
+QHash<ImageExifMeta::Tag, QVariant> ImageExifMeta::toHash() const
 {
     return d->values;
 }
 
-void ImageExifMeta::setValues(const ImageExifMeta::Values &values)
+Optional<ImageExifMeta> ImageExifMeta::fromHash(const QHash<Tag, QVariant> &hash)
 {
-    d->values = values;
+    QScopedPointer<Data> dd(new Data);
+    // TODO: check types
+    dd->values = hash;
+    dd->values.detach();
+    return ImageExifMeta(dd.take());
 }
 
 bool ImageExifMeta::isEmpty() const
@@ -77,4 +81,9 @@ void ImageExifMeta::removeValue(ImageExifMeta::Tag tag)
 void ImageExifMeta::clear()
 {
     d->values.clear();
+}
+
+ImageExifMeta::ImageExifMeta(ImageExifMeta::Data *dd) :
+    d(dd)
+{
 }
