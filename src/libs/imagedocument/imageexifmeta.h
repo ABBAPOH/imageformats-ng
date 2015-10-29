@@ -40,20 +40,20 @@ public:
     };
     Q_ENUM(Orientation)
 
-    ImageExifMeta() = default;
-    ImageExifMeta(const ImageExifMeta &other) = default;
-    ImageExifMeta(ImageExifMeta &&other) = default;
-    ~ImageExifMeta() = default;
+    ImageExifMeta();
+    ImageExifMeta(const ImageExifMeta &other);
+    ImageExifMeta(ImageExifMeta &&other);
+    ~ImageExifMeta();
 
-    ImageExifMeta &operator =(const ImageExifMeta &other) = default;
-    ImageExifMeta &operator =(ImageExifMeta &&other) = default;
+    ImageExifMeta &operator =(const ImageExifMeta &other);
+    ImageExifMeta &operator =(ImageExifMeta &&other);
 
-    Values values() const { return _values; }
-    void setValues(const Values &values) { _values = values; }
+    Values values() const;
+    void setValues(const Values &values);
 
-    inline bool isEmpty() const { return _values.isEmpty(); }
+    bool isEmpty() const;
 
-    bool hasValue(Tag tag) const { return _values.contains(tag); }
+    bool hasValue(Tag tag) const;
     QVariant value(Tag tag) const;
     void setValue(Tag tag, const QVariant &value);
     void removeValue(Tag tag);
@@ -67,7 +67,8 @@ public:
     void clear();
 
 private:
-    Values _values;
+    class Data;
+    QSharedDataPointer<Data> d;
 };
 
 #undef DECLARE_EXIF_PROPERTY
