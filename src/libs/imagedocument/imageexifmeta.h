@@ -11,7 +11,7 @@ class ImageMetaData;
 
 #define DECLARE_EXIF_PROPERTY(Type, get, set, Tag) \
     inline Optional<Type> get() const \
-    { auto v = value(Tag); if (v.isNull()) return v.value<Type>(); else return Nothing(); } \
+    { auto v = value(Tag); if (!v.isNull()) return v.value<Type>(); else return Nothing(); } \
     inline void set(Optional<Type> t) \
     { if (t) setValue(Tag, QVariant::fromValue<Type>(*t)); else removeValue(Tag); }
 
