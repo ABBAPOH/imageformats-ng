@@ -3,7 +3,7 @@
 
 #include <QtCore/QAbstractTableModel>
 
-class VariantMapModel : public QAbstractTableModel
+class IMAGEDOCUMENT_EXPORT VariantMapModel : public QAbstractTableModel
 {
 public:
     enum Column { Key, Value };

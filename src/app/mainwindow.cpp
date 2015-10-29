@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <ImageView>
+#include <VariantMapModel>
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
@@ -114,13 +115,9 @@ QString tagName(ImageExifMeta::Tag tag)
 void MainWindow::showInfo()
 {
     QTreeView *view = new QTreeView();
-    QStandardItemModel *model = new QStandardItemModel(view);
-    auto values = _document->contents().exifMeta().toHash();
-    for (auto it = values.begin(), end = values.end(); it != end; ++it) {
-        QStandardItem *nameItem = new QStandardItem(tagName(it.key()));
-        QStandardItem *valueItem = new QStandardItem(it.value().toString());
-        model->invisibleRootItem()->appendRow(QList<QStandardItem *> () << nameItem << valueItem);
-    }
+    auto values = _document->contents().exifMeta().toVariantMap();
+    auto model = new VariantMapModel(view);
+    model->setVariantMap(values);
     view->resize(300, 400);
     view->setModel(model);
     view->show();
