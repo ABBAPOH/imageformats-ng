@@ -54,9 +54,9 @@ public:
     QByteArray name() const;
 
     bool canRead() Q_DECL_OVERRIDE;
-    bool readHeader(ImageContents &contents);
-    bool read(ImageContents &contents, const ReadOptions &options);
-    bool write(const ImageContents &contents, const WriteOptions &options);
+    bool readHeader(ImageContents &contents) Q_DECL_OVERRIDE;
+    bool read(ImageContents &contents, const ReadOptions &options) Q_DECL_OVERRIDE;
+    bool write(const ImageContents &contents, const WriteOptions &options) Q_DECL_OVERRIDE;
 
     QVector<QByteArray> supportedSubTypes() const Q_DECL_OVERRIDE;
 
@@ -79,7 +79,7 @@ class DdsHandlerPlugin : public ImageIOHandlerPlugin
     Q_PLUGIN_METADATA(IID "org.arch.ImageDocument.DdsHandlerPlugin" FILE "dds.json")
 public:
     DdsHandlerPlugin() {}
-    DDSHandler *create(QIODevice *device, const QMimeType &mimeType);
+    DDSHandler *create(QIODevice *device, const QMimeType &mimeType) Q_DECL_OVERRIDE;
     Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
 };
 

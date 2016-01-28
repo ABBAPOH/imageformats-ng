@@ -54,7 +54,7 @@ public:
     QPngHandler();
     ~QPngHandler();
 
-    bool canRead();
+    bool canRead() Q_DECL_OVERRIDE;
     bool read(ImageContents &contents, const ReadOptions &options) Q_DECL_OVERRIDE;
     bool write(const ImageContents &contents, const WriteOptions &options) Q_DECL_OVERRIDE;
 
@@ -75,7 +75,7 @@ class PngHandlerPlugin : public ImageIOHandlerPlugin
     Q_PLUGIN_METADATA(IID "org.arch.ImageDocument.PngHandlerPlugin" FILE "png.json")
 public:
     PngHandlerPlugin() {}
-    ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType);
+    ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) Q_DECL_OVERRIDE;
     Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
 };
 

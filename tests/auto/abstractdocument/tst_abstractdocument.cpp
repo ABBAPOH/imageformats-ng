@@ -22,8 +22,8 @@ public:
     void setText(const QString &text) { _text = text; }
 
 protected:
-    bool read();
-    bool write();
+    bool read() Q_DECL_OVERRIDE;
+    bool write() Q_DECL_OVERRIDE;
 
 private:
     QString _text;
