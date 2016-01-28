@@ -26,7 +26,10 @@ class ImageControlPrivate
     Q_DECLARE_PUBLIC(ImageControl)
     Q_DISABLE_COPY(ImageControlPrivate)
 public:
-    explicit ImageControlPrivate(ImageControl *qq) : q_ptr(qq), zoomAnimation(this) {}
+    explicit ImageControlPrivate(ImageControl *qq) :
+        zoomAnimation(this),
+        q_ptr(qq)
+    {}
 
     void init();
     void setZoomFactor(qreal factor, bool animated = true);
