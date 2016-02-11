@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 
-#include <ImageDocument>
+#include <ImageIO>
 #include <ImageViewItem>
 
 #include <QtCore/QCommandLineParser>
@@ -11,7 +11,7 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    app.addLibraryPath(app.applicationDirPath() + ImageDocument::pluginsDirPath());
+    app.addLibraryPath(app.applicationDirPath() + ImageIO::pluginsDirPath());
 
     QCommandLineParser parser;
     QCommandLineOption useQmlOption("qml", QCoreApplication::translate("main", "Use qml instead of widgets"));

@@ -2,6 +2,7 @@
 #include "abstractdocument_p.h"
 
 #include <QtCore/QMimeDatabase>
+#include <memory>
 
 AbstractDocumentPrivate::AbstractDocumentPrivate(AbstractDocument *qq) :
     device(Q_NULLPTR),

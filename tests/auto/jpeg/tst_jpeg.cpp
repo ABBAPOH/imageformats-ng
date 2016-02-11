@@ -1,6 +1,7 @@
 #include <QtTest>
 
 #include <ImageDocument>
+#include <ImageIO>
 #include <QMimeDatabase>
 
 class TestJpeg : public QObject
@@ -16,7 +17,7 @@ private slots:
 
 void TestJpeg::initTestCase()
 {
-    qApp->addLibraryPath(qApp->applicationDirPath() + ImageDocument::pluginsDirPath());
+    qApp->addLibraryPath(qApp->applicationDirPath() + ImageIO::pluginsDirPath());
 }
 
 void TestJpeg::readImage_data()
