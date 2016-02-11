@@ -84,6 +84,26 @@ ImageIO::ImageIO(const QString &fileName) :
     setFileName(fileName);
 }
 
+ImageIO::ImageIO(const QString &fileName, const QMimeType &mimeType) :
+    d_ptr(new ImageIOPrivate(this))
+{
+    setFileName(fileName);
+    setMimeType(mimeType);
+}
+
+ImageIO::ImageIO(QIODevice *device) :
+    d_ptr(new ImageIOPrivate(this))
+{
+    setDevice(device);
+}
+
+ImageIO::ImageIO(QIODevice *device, const QMimeType &mimeType) :
+    d_ptr(new ImageIOPrivate(this))
+{
+    setDevice(device);
+    setMimeType(mimeType);
+}
+
 ImageIO::~ImageIO()
 {
 }
