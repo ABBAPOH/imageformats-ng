@@ -46,8 +46,7 @@ bool ImageDocumentPrivate::ensureHandlerInitialised() const
 
 void ImageDocumentPrivate::killHandler()
 {
-    delete handler;
-    handler = 0;
+    handler.reset();
 }
 
 ImageDocument::ImageDocument(QObject *parent) :

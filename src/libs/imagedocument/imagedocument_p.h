@@ -28,7 +28,7 @@ public:
     bool ensureHandlerInitialised() const;
     void killHandler();
 
-    ImageIOHandler *handler;
+    std::unique_ptr<ImageIOHandler> handler;
 
     QByteArray subType;
     OpenFlags openFlags;

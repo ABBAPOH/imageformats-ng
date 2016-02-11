@@ -17,7 +17,7 @@ public:
     bool ensureHandlerCreated();
     void resetHandler();
 
-    QScopedPointer<ImageIOHandler> handler;
+    std::unique_ptr<ImageIOHandler> handler;
 
     QString fileName;
     QScopedPointer<QFile> file;
@@ -57,7 +57,7 @@ bool ImageIOPrivate::ensureHandlerCreated()
     }
 
     auto db = ImageIOHandlerDatabase::instance();
-    handler.reset(db->create(device, mimeType));
+    handler = db->create(device, mimeType);
     if (!handler)
         return false;
 

@@ -63,12 +63,12 @@ ImageIOHandlerDatabase::~ImageIOHandlerDatabase()
     qDeleteAll(map);
 }
 
-ImageIOHandler *ImageIOHandlerDatabase::create(QIODevice *device, const QMimeType &mimeType)
+std::unique_ptr<ImageIOHandler> ImageIOHandlerDatabase::create(QIODevice *device, const QMimeType &mimeType)
 {
     auto plugin = map.value(mimeType.name());
     if (!plugin)
-        return 0;
-    return plugin->create(device, mimeType);
+        return std::unique_ptr<ImageIOHandler>();
+    return std::unique_ptr<ImageIOHandler>(plugin->create(device, mimeType));
 }
 
 QVector<QMimeType> ImageIOHandlerDatabase::availableMimeTypes(ImageIOHandlerPlugin::Capabilities caps) const
