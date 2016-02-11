@@ -184,3 +184,21 @@ QString ImageIO::pluginsDirPath()
 #endif
 }
 
+QString ImageIO::Error::errorString() const
+{
+    switch (_error) {
+    case AbstractDocument::Result::NoError:
+        return AbstractDocument::tr("No error");
+    case AbstractDocument::Result::InvalidMimeTypeError:
+        return AbstractDocument::tr("Invalid mimetype");
+    case AbstractDocument::Result::FileNotFoundError:
+        return AbstractDocument::tr("File not found");
+    case AbstractDocument::Result::DeviceError:
+        return AbstractDocument::tr("Device error");
+    case AbstractDocument::Result::UnsupportedMimeTypeError:
+        return AbstractDocument::tr("Unsupported format");
+    case AbstractDocument::Result::IOError:
+        return AbstractDocument::tr("Handler error");
+    }
+    return QString();
+}

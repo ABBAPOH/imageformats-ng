@@ -6,6 +6,7 @@
 #include <QtCore/QString>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QMimeType>
+#include <QCoreApplication>
 
 class QIODevice;
 
@@ -43,6 +44,7 @@ private:
 
 class IMAGEDOCUMENT_EXPORT ImageIO::Error
 {
+    Q_DECLARE_TR_FUNCTIONS(Error)
 public:
     enum ErrorCode
     {
