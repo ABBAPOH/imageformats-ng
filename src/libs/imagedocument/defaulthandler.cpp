@@ -26,7 +26,7 @@ DefaultHandler::DefaultHandler()
 
 }
 
-bool DefaultHandler::read(ImageContents &contents, const ReadOptions &options)
+bool DefaultHandler::read(ImageContents &contents, const ImageOptions &options)
 {
     Q_UNUSED(options);
     QImageReader reader(device(), mimeTypeToFormat(mimeType()));
@@ -65,7 +65,7 @@ bool DefaultHandler::read(ImageContents &contents, const ReadOptions &options)
     return true;
 }
 
-bool DefaultHandler::write(const ImageContents &contents, const WriteOptions &options)
+bool DefaultHandler::write(const ImageContents &contents, const ImageOptions &options)
 {
     Q_UNUSED(options);
     QImageWriter writer(device(), mimeTypeToFormat(mimeType()));

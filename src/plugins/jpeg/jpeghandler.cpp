@@ -737,7 +737,7 @@ public:
     }
 
     bool readJpegHeader(QIODevice*, ImageContents &contents);
-    bool read(QImage *image, const ReadOptions &options);
+    bool read(QImage *image, const ImageOptions &options);
     void applyExifOrientation(QImage *image);
 
     int exifOrientation;
@@ -962,7 +962,7 @@ void JpegHandlerPrivate::applyExifOrientation(QImage *image)
     exifOrientation = 1;
 }
 
-bool JpegHandlerPrivate::read(QImage *image, const ReadOptions &options)
+bool JpegHandlerPrivate::read(QImage *image, const ImageOptions &options)
 {
     if(state == ReadHeader)
     {
@@ -1039,7 +1039,7 @@ bool JpegHandler::canRead(QIODevice *device)
     return uchar(buffer[0]) == 0xff && uchar(buffer[1]) == 0xd8;
 }
 
-bool JpegHandler::read(ImageContents &contents, const ReadOptions &options)
+bool JpegHandler::read(ImageContents &contents, const ImageOptions &options)
 {
     QImage image;
     bool ok = d->read(&image, options);
@@ -1049,22 +1049,18 @@ bool JpegHandler::read(ImageContents &contents, const ReadOptions &options)
     return true;
 }
 
-bool JpegHandler::write(const ImageContents &contents, const WriteOptions &options)
+bool JpegHandler::write(const ImageContents &contents, const ImageOptions &options)
 {
     return write_jpeg_image(contents.image(), device(), options.quality(), d->description);
 }
 
-bool JpegHandler::supportsOption(ReadOptions::Option option) const
+bool JpegHandler::supportsOption(ImageOptions::Option option) const
 {
-    return option == ReadOptions::Quality
-        || option == ReadOptions::ScaledSize
-        || option == ReadOptions::ScaledClipRect
-        || option == ReadOptions::ClipRect;
-}
-
-bool JpegHandler::supportsOption(WriteOptions::Option option) const
-{
-    return option == WriteOptions::Quality;
+    return option == ImageOptions::InputQuality
+        || option == ImageOptions::ScaledSize
+        || option == ImageOptions::ScaledClipRect
+        || option == ImageOptions::ClipRect
+        || option == ImageOptions::Quality;
 }
 
 QByteArray JpegHandler::name() const

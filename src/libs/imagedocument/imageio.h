@@ -3,6 +3,7 @@
 
 #include "optional.h"
 #include <ImageContents>
+#include <ImageOptions>
 #include <QtCore/QString>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QMimeType>
@@ -34,8 +35,10 @@ public:
     QMimeType mimeType() const;
     void setMimeType(const QMimeType &mimeType);
 
-    Optional<ImageContents> read();
-    bool write(const ImageContents &contents);
+    Optional<ImageContents> read(const ImageOptions &options);
+    bool write(const ImageContents &contents, const ImageOptions &options);
+
+    bool supportsOption(ImageOptions::Option option);
 
     Error error() const;
 

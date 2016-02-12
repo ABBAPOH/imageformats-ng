@@ -26,9 +26,6 @@ public:
     QMimeType mimeType;
     QByteArray subType;
 
-    ReadOptions readOptions;
-    WriteOptions writeOptions;
-
     ImageIO::Error error {ImageIO::Error::NoError};
 };
 
@@ -158,31 +155,40 @@ void ImageIO::setMimeType(const QMimeType &mimeType)
     d->resetHandler();
 }
 
-Optional<ImageContents> ImageIO::read()
+Optional<ImageContents> ImageIO::read(const ImageOptions &options)
 {
     Q_D(ImageIO);
     if (!d->ensureHandlerCreated())
         return Nothing();
 
     ImageContents result;
-    if (!d->handler->read(result, ReadOptions())) {
+    if (!d->handler->read(result, options)) {
         d->error = Error::IOError;
         return Nothing();
     }
     return result;
 }
 
-bool ImageIO::write(const ImageContents &contents)
+bool ImageIO::write(const ImageContents &contents, const ImageOptions &options)
 {
     Q_D(ImageIO);
     if (!d->ensureHandlerCreated())
         return false;
 
-    if (!d->handler->write(contents, WriteOptions())) {
+    if (!d->handler->write(contents, options)) {
         d->error = Error::IOError;
         return false;
     }
     return true;
+}
+
+bool ImageIO::supportsOption(ImageOptions::Option option)
+{
+    Q_D(ImageIO);
+    if (!d->ensureHandlerCreated())
+        return false;
+
+    return d->handler->supportsOption(option);
 }
 
 ImageIO::Error ImageIO::error() const
@@ -207,18 +213,18 @@ QString ImageIO::pluginsDirPath()
 QString ImageIO::Error::errorString() const
 {
     switch (_error) {
-    case AbstractDocument::Result::NoError:
-        return AbstractDocument::tr("No error");
-    case AbstractDocument::Result::InvalidMimeTypeError:
-        return AbstractDocument::tr("Invalid mimetype");
-    case AbstractDocument::Result::FileNotFoundError:
-        return AbstractDocument::tr("File not found");
-    case AbstractDocument::Result::DeviceError:
-        return AbstractDocument::tr("Device error");
-    case AbstractDocument::Result::UnsupportedMimeTypeError:
-        return AbstractDocument::tr("Unsupported format");
-    case AbstractDocument::Result::IOError:
-        return AbstractDocument::tr("Handler error");
+    case ImageIO::Error::NoError:
+        return ImageIO::Error::tr("No error");
+    case ImageIO::Error::InvalidMimeTypeError:
+        return ImageIO::Error::tr("Invalid mimetype");
+    case ImageIO::Error::FileNotFoundError:
+        return ImageIO::Error::tr("File not found");
+    case ImageIO::Error::DeviceError:
+        return ImageIO::Error::tr("Device error");
+    case ImageIO::Error::UnsupportedMimeTypeError:
+        return ImageIO::Error::tr("Unsupported format");
+    case ImageIO::Error::IOError:
+        return ImageIO::Error::tr("Handler error");
     }
     return QString();
 }

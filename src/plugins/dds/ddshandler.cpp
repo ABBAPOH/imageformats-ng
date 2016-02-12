@@ -1386,7 +1386,7 @@ bool DDSHandler::readHeader(ImageContents &contents)
     return true;
 }
 
-bool DDSHandler::read(ImageContents &contents, const ReadOptions &options)
+bool DDSHandler::read(ImageContents &contents, const ImageOptions &options)
 {
     Q_UNUSED(options);
     for (quint32 i = 0; i < qMax<quint32>(1, m_header.mipMapCount); i++) {
@@ -1409,7 +1409,7 @@ bool DDSHandler::read(ImageContents &contents, const ReadOptions &options)
     return true;
 }
 
-bool DDSHandler::write(const ImageContents &contents, const WriteOptions &options)
+bool DDSHandler::write(const ImageContents &contents, const ImageOptions &options)
 {
     Q_UNUSED(options);
     auto outImage = contents.image();

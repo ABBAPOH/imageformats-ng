@@ -55,8 +55,8 @@ public:
 
     bool canRead() Q_DECL_OVERRIDE;
     bool readHeader(ImageContents &contents) Q_DECL_OVERRIDE;
-    bool read(ImageContents &contents, const ReadOptions &options) Q_DECL_OVERRIDE;
-    bool write(const ImageContents &contents, const WriteOptions &options) Q_DECL_OVERRIDE;
+    bool read(ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
+    bool write(const ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
 
     QVector<QByteArray> supportedSubTypes() const Q_DECL_OVERRIDE;
 

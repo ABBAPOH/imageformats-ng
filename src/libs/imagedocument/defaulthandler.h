@@ -9,8 +9,8 @@ public:
     DefaultHandler();
 
     bool canRead() Q_DECL_OVERRIDE { return true; }
-    bool read(ImageContents &contents, const ReadOptions &options) Q_DECL_OVERRIDE;
-    bool write(const ImageContents &contents, const WriteOptions &options) Q_DECL_OVERRIDE;
+    bool read(ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
+    bool write(const ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
 };
 
 class DefaultHandlerPlugin : public ImageIOHandlerPlugin

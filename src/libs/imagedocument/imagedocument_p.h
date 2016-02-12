@@ -32,8 +32,8 @@ public:
 
     QByteArray subType;
     OpenFlags openFlags;
-    ReadOptions readOptions;
-    WriteOptions writeOptions;
+    ImageOptions readOptions;
+    ImageOptions writeOptions;
 
     ImageContents contents;
 };

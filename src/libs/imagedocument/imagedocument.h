@@ -3,8 +3,7 @@
 
 #include <AbstractDocument>
 #include <ImageContents>
-#include <ReadOptions>
-#include <WriteOptions>
+#include <ImageOptions>
 
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
@@ -25,14 +24,11 @@ public:
     ~ImageDocument();
 
     Result openHeader();
-    Result open(const ReadOptions &options = ReadOptions());
-    Result save(const WriteOptions &options = WriteOptions());
+    Result open(const ImageOptions &options = ImageOptions());
+    Result save(const ImageOptions &options = ImageOptions());
 
     QVector<QMimeType> supportedInputMimetypes() const Q_DECL_OVERRIDE;
     QVector<QMimeType> supportedOutputMimetypes() const Q_DECL_OVERRIDE;
-
-    bool supportsOption(ReadOptions::Option option);
-    bool supportsOption(WriteOptions::Option option);
 
     QByteArray subType() const;
     void setSubType(QByteArray subType);

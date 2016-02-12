@@ -57,21 +57,9 @@ void ImageIOHandler::setSubType(const QByteArray &subType)
 /*!
     Returns true if the ImageIOHandler supports the option \a option; otherwise
     returns false. For example, if the ImageIOHandler supports the
-    ReadOptions::Quality option, supportsOption(Quality) must return true.
+    ImageOptions::Quality option, supportsOption(Quality) must return true.
 */
-bool ImageIOHandler::supportsOption(ReadOptions::Option option) const
-{
-    Q_UNUSED(option);
-    return false;
-}
-
-/*!
-    Returns true if the ImageIOHandler supports the option \a option; otherwise
-    returns false. For example, if the ImageIOHandler supports the
-    WriteOptions::Quality option, supportsOption(WriteOptions::Quality) must
-    return true.
-*/
-bool ImageIOHandler::supportsOption(WriteOptions::Option option) const
+bool ImageIOHandler::supportsOption(ImageOptions::Option option) const
 {
     Q_UNUSED(option);
     return false;

@@ -301,7 +301,7 @@ void TestImageDocument::writeOptions()
     doc.setMimeType("application/octet-stream");
     doc.setContents(contents);
 
-    WriteOptions options;
+    ImageOptions options;
     if (compression != -1)
         options.setCompression(compression);
     if (gamma != -1)

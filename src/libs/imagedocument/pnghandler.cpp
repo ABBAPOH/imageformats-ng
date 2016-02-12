@@ -1030,7 +1030,7 @@ bool QPngHandler::canRead(QIODevice *device)
     return device->peek(8) == "\x89\x50\x4E\x47\x0D\x0A\x1A\x0A";
 }
 
-bool QPngHandler::read(ImageContents &contents, const ReadOptions &options)
+bool QPngHandler::read(ImageContents &contents, const ImageOptions &options)
 {
     Q_UNUSED(options);
     if (!canRead())
@@ -1043,7 +1043,7 @@ bool QPngHandler::read(ImageContents &contents, const ReadOptions &options)
     return ok;
 }
 
-bool QPngHandler::write(const ImageContents &contents, const WriteOptions &options)
+bool QPngHandler::write(const ImageContents &contents, const ImageOptions &options)
 {
     Q_UNUSED(options);
     return write_png_image(contents.image(), device(), d->quality, d->gamma, d->description);

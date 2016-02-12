@@ -73,11 +73,11 @@ AbstractDocument::Result ImageDocument::openHeader()
     return AbstractDocument::open();
 }
 
-AbstractDocument::Result ImageDocument::open(const ReadOptions &options)
+AbstractDocument::Result ImageDocument::open(const ImageOptions &options)
 {
     Q_D(ImageDocument);
     Guard<ImageDocumentPrivate::OpenFlags> openFlagsGuard(&d->openFlags);
-    Guard<ReadOptions> readOptionsGuard(&d->readOptions);
+    Guard<ImageOptions> readOptionsGuard(&d->readOptions);
 
     d->openFlags = ImageDocumentPrivate::OpenFlags(ImageDocumentPrivate::OpenHeader |
                                                    ImageDocumentPrivate::OpenData);
@@ -85,10 +85,10 @@ AbstractDocument::Result ImageDocument::open(const ReadOptions &options)
     return AbstractDocument::open();
 }
 
-AbstractDocument::Result ImageDocument::save(const WriteOptions &options)
+AbstractDocument::Result ImageDocument::save(const ImageOptions &options)
 {
     Q_D(ImageDocument);
-    Guard<WriteOptions> writeOptionsGuard(&d->writeOptions);
+    Guard<ImageOptions> writeOptionsGuard(&d->writeOptions);
 
     d->writeOptions = options;
     return AbstractDocument::save();
@@ -126,7 +126,7 @@ bool ImageDocument::read()
     if (d->openFlags & ImageDocumentPrivate::OpenData
             && d->handler->state == ImageIOHandler::HeaderReadState) {
         ImageContents contents = d->contents;
-        if (!d->handler->read(contents, d->readOptions)) {
+        if (!d->handler->read(contents, ImageOptions())) {
             d->handler->state = ImageIOHandler::ErrorState;
             return false;
         }
@@ -151,7 +151,7 @@ bool ImageDocument::write()
 
     d->handler->setSubType(d->subType);
 
-    if (!d->handler->write(contents(), d->writeOptions))
+    if (!d->handler->write(contents(), ImageOptions()))
         return false;
 
     return true;
@@ -165,26 +165,6 @@ QVector<QMimeType> ImageDocument::supportedInputMimetypes() const
 QVector<QMimeType> ImageDocument::supportedOutputMimetypes() const
 {
     return ImageIOHandlerDatabase::instance()->availableMimeTypes(ImageIOHandlerPlugin::CanWrite);
-}
-
-bool ImageDocument::supportsOption(ReadOptions::Option option)
-{
-    Q_D(ImageDocument);
-
-    if (!d->ensureHandlerInitialised())
-        return false;
-
-    return d->handler->supportsOption(option);
-}
-
-bool ImageDocument::supportsOption(WriteOptions::Option option)
-{
-    Q_D(ImageDocument);
-
-    if (!d->ensureHandlerInitialised())
-        return false;
-
-    return d->handler->supportsOption(option);
 }
 
 QByteArray ImageDocument::subType() const

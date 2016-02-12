@@ -1,7 +1,7 @@
 #ifndef IMAGEIOHANDLER_H
 #define IMAGEIOHANDLER_H
 
-#include <ImageDocument>
+#include <ImageIO>
 
 #include <QtCore/QSet>
 
@@ -23,11 +23,10 @@ public:
     virtual bool canRead() = 0;
     virtual bool readHeader(ImageContents &contents) { Q_UNUSED(contents); return true; }
     // TODO: use Optional?
-    virtual bool read(ImageContents &contents, const ReadOptions &options) = 0;
-    virtual bool write(const ImageContents &contents, const WriteOptions &options) = 0;
+    virtual bool read(ImageContents &contents, const ImageOptions &options) = 0;
+    virtual bool write(const ImageContents &contents, const ImageOptions &options) = 0;
 
-    virtual bool supportsOption(ReadOptions::Option option) const;
-    virtual bool supportsOption(WriteOptions::Option option) const;
+    virtual bool supportsOption(ImageOptions::Option option) const;
     virtual QVector<QByteArray> supportedSubTypes() const;
 
 private:

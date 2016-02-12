@@ -78,7 +78,7 @@ bool TestHandler::readHeader(ImageContents &contents)
     return true;
 }
 
-bool TestHandler::read(ImageContents &contents, const ReadOptions &options)
+bool TestHandler::read(ImageContents &contents, const ImageOptions &options)
 {
     Q_UNUSED(contents);
     Q_UNUSED(options);
@@ -92,7 +92,7 @@ bool TestHandler::read(ImageContents &contents, const ReadOptions &options)
     return true;
 }
 
-bool TestHandler::write(const ImageContents &contents, const WriteOptions &options)
+bool TestHandler::write(const ImageContents &contents, const ImageOptions &options)
 {
     Q_UNUSED(contents);
     Q_UNUSED(options);

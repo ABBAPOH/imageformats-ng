@@ -58,15 +58,14 @@ public:
 
     bool canRead() Q_DECL_OVERRIDE;
     bool readHeader(ImageContents &contents) Q_DECL_OVERRIDE;
-    bool read(ImageContents &contents, const ReadOptions &options) Q_DECL_OVERRIDE;
-    bool write(const ImageContents &contents, const WriteOptions &options) Q_DECL_OVERRIDE;
+    bool read(ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
+    bool write(const ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
 
     QByteArray name() const;
 
     static bool canRead(QIODevice *device);
 
-    bool supportsOption(ReadOptions::Option option) const Q_DECL_OVERRIDE;
-    bool supportsOption(WriteOptions::Option option) const Q_DECL_OVERRIDE;
+    bool supportsOption(ImageOptions::Option option) const Q_DECL_OVERRIDE;
 
 private:
     JpegHandlerPrivate *d;
