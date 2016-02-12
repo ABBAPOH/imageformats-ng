@@ -55,11 +55,14 @@ bool ImageIOPrivate::ensureHandlerCreated()
 
     auto db = ImageIOHandlerDatabase::instance();
     handler = db->create(device, mimeType);
-    if (!handler)
+    if (!handler) {
+        error = ImageIO::Error::UnsupportedMimeTypeError;
         return false;
+    }
 
     handler->setDevice(device);
     handler->setMimeType(mt);
+    handler->setSubType(subType);
 
     return true;
 }
@@ -181,6 +184,10 @@ Optional<ImageContents> ImageIO::read(const ImageOptions &options)
         return Nothing();
 
     ImageContents result;
+    if (!d->handler->readHeader(result)) {
+        d->error = Error::IOError;
+        return Nothing();
+    }
     if (!d->handler->read(result, options)) {
         d->error = Error::IOError;
         return Nothing();

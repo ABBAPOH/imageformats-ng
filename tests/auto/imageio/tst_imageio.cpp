@@ -156,6 +156,7 @@ void TestImageDocument::read()
     io.setDevice(&buffer);
     io.setMimeType("application/octet-stream");
     const auto maybeContents = io.read();
+    QVERIFY(maybeContents);
     auto ok = io.error();
     QVERIFY2(ok, ok.errorString().toUtf8().constData());
 
