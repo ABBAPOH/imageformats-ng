@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include <ImageIO>
 #include <ImageView>
 #include <VariantMapModel>
 
@@ -42,11 +43,15 @@ void MainWindow::open()
 {
     QString path = QFileDialog::getOpenFileName(this, tr("open"));
 
-    _document->setFileName(path);
+    ImageIO io(path);
+    auto contents = io.read();
+    if (!contents) {
+        qWarning() << "Can't open" << io.error().errorString();
+        return;
+    }
 
-    auto ok = _document->open();
-    if (!ok)
-        qWarning() << "Can't open" << ok.errorString();
+    _document->setContents(*contents);
+
     buildModel();
 }
 

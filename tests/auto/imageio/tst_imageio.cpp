@@ -6,6 +6,8 @@
 
 #include <private/ImageIOHandlerDatabase>
 
+#include <QtCore/QMimeType>
+
 class TestImageDocument : public QObject
 {
     Q_OBJECT
@@ -13,7 +15,6 @@ private slots:
     void initTestCase();
     void defaultValues();
     void setters();
-    void handlerLoaded();
     void read_data();
     void read();
     void write_data();
@@ -28,35 +29,39 @@ void TestImageDocument::initTestCase()
 
 void TestImageDocument::defaultValues()
 {
-    ImageDocument doc;
+    ImageIO io;
 
-    QCOMPARE(doc.subType(), QByteArray());
-    QCOMPARE(doc.contents(), ImageContents());
+    QCOMPARE(io.subType(), QByteArray());
 
-    ImageDocument doc2(QStringLiteral("image.png"));
-    QCOMPARE(doc2.fileName(), QStringLiteral("image.png"));
+    ImageIO io2(QStringLiteral("image.png"));
+    QCOMPARE(io2.fileName(), QStringLiteral("image.png"));
 }
 
 void TestImageDocument::setters()
 {
-    ImageDocument doc;
+    QFile file("file.txt");
+    file.remove();
+    file.open(QIODevice::WriteOnly);
+    file.write("Hello, world!");
+    file.close();
 
-    doc.setSubType("subType");
-    QCOMPARE(doc.subType(), QByteArray("subType"));
+    ImageIO io;
 
-    ImageContents c;
-    c.setType(ImageContents::Cubemap);
-    doc.setContents(c);
-    QCOMPARE(doc.contents(), c);
-}
+    io.setDevice(&file);
+    QCOMPARE(io.device(), &file);
+    io.setDevice(nullptr);
+    QVERIFY(io.device() == nullptr);
 
-void TestImageDocument::handlerLoaded()
-{
-    const auto mimeType = QMimeDatabase().mimeTypeForName("application/octet-stream");
-    QVERIFY(mimeType.isValid());
-    ImageDocument doc;
-    QVERIFY(doc.supportedInputMimetypes().contains(mimeType));
-    QVERIFY(doc.supportedOutputMimetypes().contains(mimeType));
+    io.setFileName("file.txt");
+    QCOMPARE(io.fileName(), QString("file.txt"));
+    QVERIFY(qobject_cast<QFile *>(io.device()) != nullptr);
+    QCOMPARE(io.mimeType().name(), QString("text/plain"));
+
+    io.setMimeType(QMimeDatabase().mimeTypeForName("text/html"));
+    QCOMPARE(io.mimeType().name(), QString("text/html"));
+
+    io.setSubType("subType");
+    QCOMPARE(io.subType(), QByteArray("subType"));
 }
 
 void TestImageDocument::read_data()
@@ -147,13 +152,14 @@ void TestImageDocument::read()
     stream << data;
     buffer.seek(0);
 
-    ImageDocument doc;
-    doc.setDevice(&buffer);
-    doc.setMimeType("application/octet-stream");
-    const auto ok = doc.open();
+    ImageIO io;
+    io.setDevice(&buffer);
+    io.setMimeType("application/octet-stream");
+    const auto maybeContents = io.read();
+    auto ok = io.error();
     QVERIFY2(ok, ok.errorString().toUtf8().constData());
 
-    const auto contents = doc.contents();
+    const auto contents = *maybeContents;
     QCOMPARE(contents.size(), size);
     if (imageFormat != QImage::Format_Invalid)
         QCOMPARE(int(contents.imageFormat()), imageFormat);
@@ -208,9 +214,9 @@ void TestImageDocument::write()
     QBuffer buffer;
     QVERIFY(buffer.open(QIODevice::ReadWrite));
 
-    ImageDocument doc;
-    doc.setDevice(&buffer);
-    doc.setMimeType("application/octet-stream");
+    ImageIO io;
+    io.setDevice(&buffer);
+    io.setMimeType("application/octet-stream");
 
     ImageContents contents;
     contents.setType(ImageContents::Type(type));
@@ -228,10 +234,9 @@ void TestImageDocument::write()
             contents.setImage(images[i], index, level);
         }
     }
-    doc.setContents(contents);
 
-    const auto ok = doc.save();
-    QVERIFY2(ok, ok.errorString().toUtf8().constData());
+    const auto ok = io.write(contents);
+    QVERIFY2(ok, io.error().errorString().toUtf8().constData());
 
     TestImageData data;
     buffer.seek(0);
@@ -296,10 +301,9 @@ void TestImageDocument::writeOptions()
     QBuffer buffer;
     QVERIFY(buffer.open(QIODevice::ReadWrite));
 
-    ImageDocument doc;
-    doc.setDevice(&buffer);
-    doc.setMimeType("application/octet-stream");
-    doc.setContents(contents);
+    ImageIO io;
+    io.setDevice(&buffer);
+    io.setMimeType("application/octet-stream");
 
     ImageOptions options;
     if (compression != -1)
@@ -309,8 +313,8 @@ void TestImageDocument::writeOptions()
     if (quality != -1)
         options.setQuality(quality);
 
-    const auto ok = doc.save(options);
-    QVERIFY2(ok, ok.errorString().toUtf8().constData());
+    const auto ok = io.write(contents, options);
+    QVERIFY2(ok, io.error().errorString().toUtf8().constData());
 
     TestImageData data;
     buffer.seek(0);
@@ -324,4 +328,4 @@ void TestImageDocument::writeOptions()
 
 QTEST_APPLESS_MAIN(TestImageDocument)
 
-#include "tst_imagedocument.moc"
+#include "tst_imageio.moc"

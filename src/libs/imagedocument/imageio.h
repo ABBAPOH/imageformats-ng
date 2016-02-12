@@ -34,9 +34,13 @@ public:
 
     QMimeType mimeType() const;
     void setMimeType(const QMimeType &mimeType);
+    void setMimeType(const QString &mimeType);
 
-    Optional<ImageContents> read(const ImageOptions &options);
-    bool write(const ImageContents &contents, const ImageOptions &options);
+    QByteArray subType() const;
+    void setSubType(const QByteArray &subType);
+
+    Optional<ImageContents> read(const ImageOptions &options = ImageOptions());
+    bool write(const ImageContents &contents, const ImageOptions &options = ImageOptions());
 
     bool supportsOption(ImageOptions::Option option);
 

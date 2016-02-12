@@ -6,6 +6,6 @@ AutoTest {
 
     cpp.defines: base.concat(["QT_STATICPLUGIN=1"])
 
-    name: "imagedocument"
+    name: "imageio"
     files: [ "*.cpp", "*.h" ]
 }

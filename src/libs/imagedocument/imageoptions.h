@@ -22,8 +22,7 @@ public:
         // write options
         CompressionRatio,
         Gamma,
-        Quality,
-        SubType
+        Quality
     };
     Q_ENUMS(Option)
 

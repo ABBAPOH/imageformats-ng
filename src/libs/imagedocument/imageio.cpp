@@ -155,6 +155,25 @@ void ImageIO::setMimeType(const QMimeType &mimeType)
     d->resetHandler();
 }
 
+void ImageIO::setMimeType(const QString &mimeType)
+{
+    Q_D(ImageIO);
+    d->mimeType = QMimeDatabase().mimeTypeForName(mimeType);
+    d->resetHandler();
+}
+
+QByteArray ImageIO::subType() const
+{
+    Q_D(const ImageIO);
+    return d->subType;
+}
+
+void ImageIO::setSubType(const QByteArray &subType)
+{
+    Q_D(ImageIO);
+    d->subType = subType;
+}
+
 Optional<ImageContents> ImageIO::read(const ImageOptions &options)
 {
     Q_D(ImageIO);
