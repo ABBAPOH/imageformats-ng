@@ -33,7 +33,9 @@ bool DefaultHandler::read(ImageContents &contents, const ImageOptions &options)
 
     int count = reader.imageCount();
     if (reader.supportsOption(QImageIOHandler::Animation)) {
-        contents.setImageCount(count);
+        ImageHeader header;
+        header.setImageCount(count);
+        contents.setHeader(header);
         for (int i = 0; i < count; i++) {
             QImage image;
             const bool ok = reader.read(&image);
@@ -43,7 +45,9 @@ bool DefaultHandler::read(ImageContents &contents, const ImageOptions &options)
             contents.setImage(image, i);
         }
     } else if (count > 0) {
-        contents.setMipmapCount(count);
+        ImageHeader header;
+        header.setMipmapCount(count);
+        contents.setHeader(header);
         for (int i = 0; i < count; i++) {
             QImage image;
             reader.jumpToImage(i);

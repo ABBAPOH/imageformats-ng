@@ -21,7 +21,7 @@ public:
     void setSubType(const QByteArray &subType);
 
     virtual bool canRead() = 0;
-    virtual bool readHeader(ImageContents &contents) { Q_UNUSED(contents); return true; }
+    virtual bool readHeader(ImageHeader &header) { Q_UNUSED(header); return true; }
     // TODO: use Optional?
     virtual bool read(ImageContents &contents, const ImageOptions &options) = 0;
     virtual bool write(const ImageContents &contents, const ImageOptions &options) = 0;

@@ -8,6 +8,9 @@ Project {
         filePath: "imagecontents/imagecontents.qbs"
     }
     SubProject {
+        filePath: "imageheader/imageheader.qbs"
+    }
+    SubProject {
         filePath: "imageio/imageio.qbs"
     }
     SubProject {

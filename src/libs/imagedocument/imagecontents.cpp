@@ -5,15 +5,8 @@ class ImageContentsData : public QSharedData
 public:
     typedef QPair<int, int> ImageIndex;
 
-    ImageContents::Type type;
-    QSize size;
-    QImage::Format imageFormat;
-    QString name;
-    int imageCount;
-    int mipmapCount;
+    ImageHeader header;
     QMap<ImageIndex, QImage> images;
-    int imageDelay;
-    int loopCount;
     ImageExifMeta exif;
 
     ImageContentsData();
@@ -27,14 +20,7 @@ ImageContentsData::ImageContentsData()
 
 void ImageContentsData::clear()
 {
-    type = ImageContents::Image;
-    size = QSize();
-    imageFormat = QImage::Format_Invalid;
-    imageCount = 1;
-    mipmapCount = 1;
     images.clear();
-    imageDelay = 0;
-    loopCount = -1;
     exif.clear();
 }
 
@@ -66,108 +52,34 @@ ImageContents::~ImageContents()
 
 }
 
-ImageContents::Type ImageContents::type() const
+ImageHeader ImageContents::header() const
 {
-    return d->type;
+    return d->header;
 }
 
-void ImageContents::setType(ImageContents::Type t)
+void ImageContents::setHeader(const ImageHeader &header)
 {
-    d->type = t;
-}
-
-QSize ImageContents::size() const
-{
-    return d->size;
-}
-
-void ImageContents::setSize(QSize size)
-{
-    d->size = size;
-}
-
-QImage::Format ImageContents::imageFormat() const
-{
-    return d->imageFormat;
-}
-
-void ImageContents::setImageFormat(QImage::Format format)
-{
-    d->imageFormat = format;
-}
-
-QString ImageContents::name() const
-{
-    return d->name;
-}
-
-void ImageContents::setName(const QString &name)
-{
-    d->name = name;
-}
-
-int ImageContents::imageCount() const
-{
-    return d->imageCount;
-}
-
-void ImageContents::setImageCount(int count)
-{
-    if (count < 1)
-        return;
-    d->imageCount = count;
-}
-
-int ImageContents::mipmapCount() const
-{
-    return d->mipmapCount;
-}
-
-void ImageContents::setMipmapCount(int count)
-{
-    if (count < 1)
-        return;
-    d->mipmapCount = count;
+    d->header = header;
 }
 
 QImage ImageContents::image(int index, int level) const
 {
-    if (index < 0 || index >= imageCount())
+    if (index < 0 || index >= header().imageCount())
         return QImage();
-    if (level < 0 || level >= mipmapCount())
+    if (level < 0 || level >= header().mipmapCount())
         return QImage();
     return d->images.value(ImageContentsData::ImageIndex(index, level));
 }
 
 void ImageContents::setImage(const QImage &image, int index, int level)
 {
-    if (d->imageFormat == QImage::Format_Invalid) {
-        d->imageFormat = image.format();
+    if (d->header.imageFormat() == QImage::Format_Invalid) {
+        d->header.setImageFormat(image.format());
     }
     QImage copy(image);
-    if (image.format() != d->imageFormat)
-        copy = image.convertToFormat(d->imageFormat);
+    if (image.format() != d->header.imageFormat())
+        copy = image.convertToFormat(d->header.imageFormat());
     d->images.insert(ImageContentsData::ImageIndex(index, level), copy);
-}
-
-int ImageContents::imageDelay()
-{
-    return d->imageDelay;
-}
-
-void ImageContents::setImageDelay(int delay)
-{
-    d->imageDelay = delay;
-}
-
-int ImageContents::loopCount() const
-{
-    return d->loopCount;
-}
-
-void ImageContents::setLoopCount(int count)
-{
-    d->loopCount = count;
 }
 
 ImageExifMeta ImageContents::exifMeta() const
@@ -193,14 +105,8 @@ void ImageContents::swap(ImageContents &other)
 bool operator==(const ImageContents &lhs, const ImageContents &rhs)
 {
     return lhs.d == rhs.d ||
-            (lhs.d->type == rhs.d->type
-             && lhs.d->size == rhs.d->size
-             && lhs.d->imageFormat == rhs.d->imageFormat
-             && lhs.d->name == rhs.d->name
-             && lhs.d->imageCount == rhs.d->imageCount
-             && lhs.d->mipmapCount == rhs.d->mipmapCount
+            (lhs.d->header == rhs.d->header
              && lhs.d->images == rhs.d->images
-             && lhs.d->loopCount == rhs.d->loopCount
              && lhs.d->exif == rhs.d->exif);
 }
 

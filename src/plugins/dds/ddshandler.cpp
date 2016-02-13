@@ -1362,7 +1362,7 @@ bool DDSHandler::canRead()
     return canRead(device());
 }
 
-bool DDSHandler::readHeader(ImageContents &contents)
+bool DDSHandler::readHeader(ImageHeader &header)
 {
     if (!canRead(device()))
         return false;
@@ -1370,15 +1370,15 @@ bool DDSHandler::readHeader(ImageContents &contents)
     if (!doScan())
         return false;
 
-    contents.setSize(QSize(m_header.width, m_header.height));
-    contents.setImageFormat(QImage::Format_ARGB32);
-    contents.setMipmapCount(qMax<quint32>(1, m_header.mipMapCount));
+    header.setSize(QSize(m_header.width, m_header.height));
+    header.setImageFormat(QImage::Format_ARGB32);
+    header.setMipmapCount(qMax<quint32>(1, m_header.mipMapCount));
 
     if (isCubeMap(m_header)) {
-        contents.setType(ImageContents::Cubemap);
-        contents.setImageCount(6);
+        header.setType(ImageHeader::Cubemap);
+        header.setImageCount(6);
     } else {
-        contents.setType(ImageContents::Image);
+        header.setType(ImageHeader::Image);
     }
 
     setSubType(formatName(m_format));

@@ -736,7 +736,7 @@ public:
         }
     }
 
-    bool readJpegHeader(QIODevice*, ImageContents &contents);
+    bool readJpegHeader(QIODevice*, ImageHeader &header);
     bool read(QImage *image, const ImageOptions &options);
     void applyExifOrientation(QImage *image);
 
@@ -847,7 +847,7 @@ static int getExifOrientation(QByteArray &exifData)
 /*!
     \internal
 */
-bool JpegHandlerPrivate::readJpegHeader(QIODevice *device, ImageContents &contents)
+bool JpegHandlerPrivate::readJpegHeader(QIODevice *device, ImageHeader &header)
 {
     if(state == Ready)
     {
@@ -870,11 +870,11 @@ bool JpegHandlerPrivate::readJpegHeader(QIODevice *device, ImageContents &conten
             int width = 0;
             int height = 0;
             read_jpeg_size(width, height, &info);
-            contents.setSize(QSize(width, height));
+            header.setSize(QSize(width, height));
 
             auto format = QImage::Format_Invalid;
             read_jpeg_format(format, &info);
-            contents.setImageFormat(format);
+            header.setImageFormat(format);
 
             QByteArray exifData;
 
@@ -1004,7 +1004,7 @@ bool JpegHandler::canRead()
     return canRead(device());
 }
 
-bool JpegHandler::readHeader(ImageContents &contents)
+bool JpegHandler::readHeader(ImageHeader &contents)
 {
     if(d->state == JpegHandlerPrivate::Ready && !canRead(device()))
         return false;
@@ -1018,10 +1018,6 @@ bool JpegHandler::readHeader(ImageContents &contents)
         if (!d->readJpegHeader(device(), contents))
             return false;
     }
-
-    ImageExifMeta meta;
-    meta.setValue(ImageExifMeta::TagOrientation, QVariant::fromValue(ImageExifMeta::Orientation(d->exifOrientation)));
-    contents.setExifMeta(meta);
 
     return true;
 }
@@ -1046,6 +1042,11 @@ bool JpegHandler::read(ImageContents &contents, const ImageOptions &options)
     if (!ok)
         return false;
     contents.setImage(image);
+
+    ImageExifMeta meta;
+    meta.setValue(ImageExifMeta::TagOrientation, QVariant::fromValue(ImageExifMeta::Orientation(d->exifOrientation)));
+    contents.setExifMeta(meta);
+
     return true;
 }
 

@@ -183,11 +183,14 @@ Optional<ImageContents> ImageIO::read(const ImageOptions &options)
     if (!d->ensureHandlerCreated())
         return Nothing();
 
-    ImageContents result;
-    if (!d->handler->readHeader(result)) {
+    ImageHeader header;
+    if (!d->handler->readHeader(header)) {
         d->error = Error::IOError;
         return Nothing();
     }
+
+    ImageContents result;
+    result.setHeader(header);
     if (!d->handler->read(result, options)) {
         d->error = Error::IOError;
         return Nothing();

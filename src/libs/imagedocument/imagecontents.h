@@ -2,55 +2,25 @@
 #define IMAGECONTENTS_H
 
 #include <ImageExifMeta>
+#include <ImageHeader>
 
 #include <QtCore/QSharedDataPointer>
-#include <QtGui/QImage>
 
 class ImageContentsData;
 
 class IMAGEDOCUMENT_EXPORT ImageContents
 {
 public:
-    enum Type {
-        Image,
-        Animation,
-        ImageArray,
-        Cubemap,
-        VolumeTexture
-    };
-    Q_ENUMS(Type)
-
     ImageContents();
     ImageContents(const ImageContents &other);
     ImageContents &operator=(const ImageContents &other);
     ~ImageContents();
 
-    Type type() const;
-    void setType(Type t);
-
-    QSize size() const;
-    void setSize(QSize size);
-
-    QImage::Format imageFormat() const;
-    void setImageFormat(QImage::Format format);
-
-    QString name() const;
-    void setName(const QString &name);
-
-    int imageCount() const;
-    void setImageCount(int count);
-
-    int mipmapCount() const;
-    void setMipmapCount(int count);
+    ImageHeader header() const;
+    void setHeader(const ImageHeader &header);
 
     QImage image(int index = 0, int level = 0) const;
     void setImage(const QImage &image, int index = 0, int level = 0);
-
-    int imageDelay(); // TODO: should we support separate delays for each frame?
-    void setImageDelay(int delay); // TODO: this could be only called by handler. Move to DocData?
-
-    int loopCount() const;
-    void setLoopCount(int count);
 
     ImageExifMeta exifMeta() const;
     void setExifMeta(const ImageExifMeta &exif);
