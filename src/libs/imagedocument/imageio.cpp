@@ -12,6 +12,12 @@ class ImageIOPrivate
     ImageIO *q_ptr {nullptr};
 
 public:
+    enum class State {
+        NoState,
+        HeaderRead,
+        DataRead
+    };
+
     explicit ImageIOPrivate(ImageIO *qq) : q_ptr(qq) {}
 
     bool ensureHandlerCreated();
@@ -27,6 +33,10 @@ public:
     QByteArray subType;
 
     ImageIO::Error error {ImageIO::Error::NoError};
+    State state {State::NoState};
+
+    Optional<ImageHeader> header;
+    Optional<ImageContents> contents;
 };
 
 bool ImageIOPrivate::ensureHandlerCreated()
@@ -71,6 +81,9 @@ void ImageIOPrivate::resetHandler()
 {
     handler.reset();
     error = ImageIO::Error::NoError;
+    state = State::NoState;
+    header = Nothing();
+    contents = Nothing();
 }
 
 ImageIO::ImageIO() :
@@ -177,25 +190,49 @@ void ImageIO::setSubType(const QByteArray &subType)
     d->subType = subType;
 }
 
-Optional<ImageContents> ImageIO::read(const ImageOptions &options)
+Optional<ImageHeader> ImageIO::readHeader()
 {
     Q_D(ImageIO);
+
+    if (d->state == ImageIOPrivate::State::HeaderRead
+            || d->state == ImageIOPrivate::State::DataRead) {
+        return d->header;
+    }
+
     if (!d->ensureHandlerCreated())
         return Nothing();
 
     ImageHeader header;
-    if (!d->handler->readHeader(header)) {
+    if (d->handler->readHeader(header)) {
+        d->header = header;
+    } else {
         d->error = Error::IOError;
-        return Nothing();
     }
+    d->state = ImageIOPrivate::State::HeaderRead;
+    return d->header;
+}
+
+Optional<ImageContents> ImageIO::read(const ImageOptions &options)
+{
+    Q_D(ImageIO);
+
+    if (d->state == ImageIOPrivate::State::DataRead)
+        return d->contents;
+
+    const auto header = readHeader();
+    if (!header)
+        return Nothing();
 
     ImageContents result;
-    result.setHeader(header);
+    result.setHeader(*header);
     if (!d->handler->read(result, options)) {
         d->error = Error::IOError;
-        return Nothing();
+    } else {
+        d->contents = result;
     }
-    return result;
+    d->state = ImageIOPrivate::State::DataRead;
+
+    return d->contents;
 }
 
 bool ImageIO::write(const ImageContents &contents, const ImageOptions &options)

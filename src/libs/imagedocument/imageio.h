@@ -39,6 +39,7 @@ public:
     QByteArray subType() const;
     void setSubType(const QByteArray &subType);
 
+    Optional<ImageHeader> readHeader();
     Optional<ImageContents> read(const ImageOptions &options = ImageOptions());
     bool write(const ImageContents &contents, const ImageOptions &options = ImageOptions());
 
