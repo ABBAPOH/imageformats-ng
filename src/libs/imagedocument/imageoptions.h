@@ -13,6 +13,9 @@ public:
 
     enum Option {
         // read options
+        ClipRect,
+        ScaledSize,
+        ScaledClipRect,
         InputQuality,
         BackgroundColor,
 
@@ -24,6 +27,15 @@ public:
     Q_ENUMS(Option)
 
     bool isEmpty() const;
+
+    QRect clipRect() const;
+    void setClipRect(const QRect &rect);
+
+    QSize scaledSize() const;
+    void setScaledSize(const QSize &size);
+
+    QRect scaledCliptRect() const;
+    void setScaledCliptRect(const QRect &rect);
 
     int inputQuality() const;
     void setInputQuality(int quality);

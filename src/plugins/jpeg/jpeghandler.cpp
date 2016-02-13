@@ -967,9 +967,9 @@ bool JpegHandlerPrivate::read(QImage *image, const ImageOptions &options)
     if(state == ReadHeader)
     {
         bool success = read_jpeg_image(image,
-                                       QSize(),
-                                       QRect(),
-                                       QRect(),
+                                       options.scaledSize(),
+                                       options.scaledCliptRect(),
+                                       options.clipRect(),
                                        options.quality(),
                                        &info,
                                        &err);
@@ -1057,6 +1057,9 @@ bool JpegHandler::write(const ImageContents &contents, const ImageOptions &optio
 bool JpegHandler::supportsOption(ImageOptions::Option option) const
 {
     return option == ImageOptions::InputQuality
+        || option == ImageOptions::ScaledSize
+        || option == ImageOptions::ScaledClipRect
+        || option == ImageOptions::ClipRect
         || option == ImageOptions::Quality;
 }
 
