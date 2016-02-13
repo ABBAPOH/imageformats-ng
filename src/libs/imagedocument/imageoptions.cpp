@@ -9,36 +9,6 @@ bool ImageOptions::isEmpty() const
     return _options.isEmpty();
 }
 
-QRect ImageOptions::clipRect() const
-{
-    return _options.value(ClipRect, QRect()).toRect();
-}
-
-void ImageOptions::setClipRect(const QRect &rect)
-{
-    _options.insert(ClipRect, rect);
-}
-
-QSize ImageOptions::scaledSize() const
-{
-    return _options.value(ScaledSize, QSize()).toSize();
-}
-
-void ImageOptions::setScaledSize(const QSize &size)
-{
-    _options.insert(ScaledSize, size);
-}
-
-QRect ImageOptions::scaledCliptRect() const
-{
-    return _options.value(ScaledClipRect, QRect()).toRect();
-}
-
-void ImageOptions::setScaledCliptRect(const QRect &rect)
-{
-    _options.insert(ScaledClipRect, rect);
-}
-
 int ImageOptions::inputQuality() const
 {
     return _options.value(InputQuality, -1).toInt();
