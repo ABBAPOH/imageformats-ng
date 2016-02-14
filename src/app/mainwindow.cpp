@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_document, &AbstractDocument::saveFinished, this, &MainWindow::onSaveFinished);
 
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::open);
+    connect(ui->actionSave, &QAction::triggered, this, &MainWindow::save);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
     connect(ui->actionShowInfo, &QAction::triggered, this, &MainWindow::showInfo);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
@@ -49,6 +50,11 @@ void MainWindow::open()
 
     _document->setUrl(QUrl::fromLocalFile(path));
     _document->open();
+}
+
+void MainWindow::save()
+{
+    _document->save();
 }
 
 void MainWindow::saveAs()
