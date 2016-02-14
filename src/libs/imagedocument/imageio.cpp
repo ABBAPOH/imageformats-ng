@@ -20,7 +20,8 @@ public:
 
     explicit ImageIOPrivate(ImageIO *qq) : q_ptr(qq) {}
 
-    bool ensureHandlerCreated();
+    bool ensureDeviceOpened(QIODevice::OpenMode mode);
+    bool ensureHandlerCreated(QIODevice::OpenMode mode);
     void resetHandler();
 
     std::unique_ptr<ImageIOHandler> handler;
@@ -39,11 +40,8 @@ public:
     Optional<ImageContents> contents;
 };
 
-bool ImageIOPrivate::ensureHandlerCreated()
+bool ImageIOPrivate::ensureDeviceOpened(QIODevice::OpenMode mode)
 {
-    if (handler)
-        return true;
-
     if (!device) {
         error = ImageIO::Error::DeviceError;
         return false;
@@ -54,8 +52,26 @@ bool ImageIOPrivate::ensureHandlerCreated()
         return false;
     }
 
+    if (!(device->openMode() & mode)) {
+        if (!device->open(mode | device->openMode())) {
+            error = ImageIO::Error::DeviceError;
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ImageIOPrivate::ensureHandlerCreated(QIODevice::OpenMode mode)
+{
+    if (!ensureDeviceOpened(mode))
+        return false;
+
+    if (handler)
+        return true;
+
     auto mt = mimeType;
-    if (!mt.isValid())
+    if (!mt.isValid() && (device->openMode() & QIODevice::ReadOnly))
         mt = QMimeDatabase().mimeTypeForData(device->peek(256));
 
     if (!mt.isValid()) {
@@ -199,7 +215,7 @@ Optional<ImageHeader> ImageIO::readHeader()
         return d->header;
     }
 
-    if (!d->ensureHandlerCreated())
+    if (!d->ensureHandlerCreated(QIODevice::ReadOnly))
         return Nothing();
 
     ImageHeader header;
@@ -238,7 +254,7 @@ Optional<ImageContents> ImageIO::read(const ImageOptions &options)
 bool ImageIO::write(const ImageContents &contents, const ImageOptions &options)
 {
     Q_D(ImageIO);
-    if (!d->ensureHandlerCreated())
+    if (!d->ensureHandlerCreated(QIODevice::WriteOnly))
         return false;
 
     if (!d->handler->write(contents, options)) {
@@ -251,7 +267,7 @@ bool ImageIO::write(const ImageContents &contents, const ImageOptions &options)
 bool ImageIO::supportsOption(ImageOptions::Option option)
 {
     Q_D(ImageIO);
-    if (!d->ensureHandlerCreated())
+    if (!d->ensureHandlerCreated(QIODevice::ReadOnly))
         return false;
 
     return d->handler->supportsOption(option);

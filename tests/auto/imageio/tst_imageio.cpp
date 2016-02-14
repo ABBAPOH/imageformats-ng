@@ -147,10 +147,10 @@ void TestImageDocument::read()
     data.images = generateImages(size, imageCount, mipmapCount, data.imageFormat);
 
     QBuffer buffer;
-    QVERIFY(buffer.open(QIODevice::ReadWrite));
+    QVERIFY(buffer.open(QIODevice::WriteOnly));
     QDataStream stream(&buffer);
     stream << data;
-    buffer.seek(0);
+    buffer.close(); // close device to ensure ImageIO will open it with correct mode
 
     ImageIO io;
     io.setDevice(&buffer);
@@ -214,7 +214,6 @@ void TestImageDocument::write()
     QFETCH(int, loopCount);
 
     QBuffer buffer;
-    QVERIFY(buffer.open(QIODevice::ReadWrite));
 
     ImageIO io;
     io.setDevice(&buffer);
@@ -243,7 +242,9 @@ void TestImageDocument::write()
     QVERIFY2(ok, io.error().errorString().toUtf8().constData());
 
     TestImageData data;
-    buffer.seek(0);
+    buffer.close();
+
+    QVERIFY(buffer.open(QIODevice::ReadOnly));
     QDataStream stream(&buffer);
     stream >> data;
 
