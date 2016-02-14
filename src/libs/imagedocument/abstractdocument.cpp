@@ -30,6 +30,13 @@ AbstractDocument::AbstractDocument(AbstractDocumentPrivate &dd, QObject *parent)
 }
 
 /*!
+    Destroys the AbstractDocument object.
+*/
+AbstractDocument::~AbstractDocument()
+{
+}
+
+/*!
     \fn void AbstractDocument::doOpen(const QUrl &url);
 
     Reimplement this function to open document contents located at \a url.
@@ -57,10 +64,6 @@ void AbstractDocument::finishOpen(bool ok)
 void AbstractDocument::finishSave(bool ok)
 {
     emit saveFinished(ok);
-}
-
-AbstractDocument::~AbstractDocument()
-{
 }
 
 QUrl AbstractDocument::url() const
