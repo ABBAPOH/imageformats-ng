@@ -12,7 +12,7 @@
 class QIODevice;
 
 class ImageIOPrivate;
-class IMAGEDOCUMENT_EXPORT ImageIO
+class IMAGEDOCUMENT_EXPORT  ImageIO
 {
     Q_DISABLE_COPY(ImageIO)
     Q_DECLARE_PRIVATE(ImageIO)

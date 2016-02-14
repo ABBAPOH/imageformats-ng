@@ -1,6 +1,7 @@
 #ifndef IMAGEDOCUMENT_H
 #define IMAGEDOCUMENT_H
 
+#include <AbstractDocument>
 #include <ImageContents>
 #include <ImageOptions>
 
@@ -9,7 +10,7 @@
 #include <QtGui/QImage>
 
 class ImageDocumentPrivate;
-class IMAGEDOCUMENT_EXPORT ImageDocument : public QObject
+class IMAGEDOCUMENT_EXPORT ImageDocument : public AbstractDocument
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ImageDocument)
@@ -21,6 +22,9 @@ public:
     explicit ImageDocument(QObject *parent = 0);
     ~ImageDocument();
 
+    QVector<QMimeType> supportedInputMimetypes() const override;
+    QVector<QMimeType> supportedOutputMimetypes() const override;
+
     ImageContents contents() const;
     void setContents(const ImageContents &contents);
 
@@ -28,7 +32,8 @@ signals:
     void contentsChanged();
 
 protected:
-    QScopedPointer<ImageDocumentPrivate> d_ptr;
+    void doOpen(const QUrl &url) override;
+    void doSave(const QUrl &url) override;
 };
 
 #endif // IMAGEDOCUMENT_H

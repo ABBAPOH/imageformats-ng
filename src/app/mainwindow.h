@@ -34,10 +34,8 @@ private:
 private slots:
     void onClicked(const QModelIndex &index);
     void showInfo();
-
-private:
-    QPair<Optional<ImageContents>, ImageIO::Error> loadContents(const QString &path);
-    ImageIO::Error saveContents(const QString &path, const ImageContents &contents);
+    void onOpenFinished(bool ok);
+    void onSaveFinished(bool ok);
 
 private:
     Ui::MainWindow *ui;

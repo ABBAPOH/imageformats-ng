@@ -5,7 +5,6 @@
 #include <ImageView>
 #include <VariantMapModel>
 
-#include <QtConcurrent/QtConcurrent>
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtWidgets/QFileDialog>
@@ -20,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->treeView->setModel(_model);
 
     _document = new ImageDocument(this);
+    connect(_document, &AbstractDocument::openFinished, this, &MainWindow::onOpenFinished);
+    connect(_document, &AbstractDocument::saveFinished, this, &MainWindow::onSaveFinished);
 
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::open);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
@@ -46,18 +47,8 @@ void MainWindow::open()
 {
     QString path = QFileDialog::getOpenFileName(this, tr("open"));
 
-    const auto contents = loadContents(path);
-    if (!contents.first) {
-        QMessageBox::warning(this,
-                             tr("Open"),
-                             tr("Can't open file : %1").arg(contents.second.errorString()),
-                             QMessageBox::Close);
-        return;
-    }
-
-    _document->setContents(*contents.first);
-
-    buildModel();
+    _document->setUrl(QUrl::fromLocalFile(path));
+    _document->open();
 }
 
 void MainWindow::saveAs()
@@ -66,13 +57,8 @@ void MainWindow::saveAs()
     if (path.isEmpty())
         return;
 
-    const auto ok = saveContents(path, _document->contents());
-    if (!ok) {
-        QMessageBox::warning(this,
-                             tr("Save"),
-                             tr("Can't save file : %1").arg(ok.errorString()),
-                             QMessageBox::Close);
-    }
+    _document->setUrl(QUrl::fromLocalFile(path));
+    _document->save();
 }
 
 void MainWindow::buildModel()
@@ -138,29 +124,25 @@ void MainWindow::showInfo()
     view->show();
 }
 
-QPair<Optional<ImageContents>, ImageIO::Error> MainWindow::loadContents(const QString &path)
+void MainWindow::onOpenFinished(bool ok)
 {
-    using Result = QPair<Optional<ImageContents>, ImageIO::Error>;
+    if (!ok) {
+        QMessageBox::warning(this,
+                             tr("Open"),
+                             tr("Can't open file"),
+                             QMessageBox::Close);
+        return;
+    }
 
-    setEnabled(false);
-    auto functor = [](const QString &path)
-    {
-        ImageIO io(path);
-        auto contents = io.read();
-        return qMakePair(contents, io.error());
-    };
-    QFutureWatcher<Result> watcher;
-    QEventLoop loop;
-    connect(&watcher, &QFutureWatcherBase::finished, &loop, &QEventLoop::quit);
-    watcher.setFuture(QtConcurrent::run(functor, path));
-    loop.exec();
-    setEnabled(true);
-    return watcher.future().result();
+    buildModel();
 }
 
-ImageIO::Error MainWindow::saveContents(const QString &path, const ImageContents &contents)
+void MainWindow::onSaveFinished(bool ok)
 {
-    ImageIO io(path);
-    io.write(contents);
-    return io.error();
+    if (!ok) {
+        QMessageBox::warning(this,
+                             tr("Save"),
+                             tr("Can't save file"),
+                             QMessageBox::Close);
+    }
 }

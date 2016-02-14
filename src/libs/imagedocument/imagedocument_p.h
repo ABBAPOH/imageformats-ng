@@ -12,10 +12,9 @@
 class ImageIOHandler;
 class ImageIOHandlerPlugin;
 
-class ImageDocumentPrivate
+class ImageDocumentPrivate : public AbstractDocumentPrivate
 {
     Q_DECLARE_PUBLIC(ImageDocument)
-    ImageDocument *q_ptr {nullptr};
 
 public:
     explicit ImageDocumentPrivate(ImageDocument *qq);
