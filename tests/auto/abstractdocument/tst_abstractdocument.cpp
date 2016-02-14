@@ -65,7 +65,7 @@ void TestAbstractDocument::defaultValues()
     TestDocument doc;
     QCOMPARE(doc.url(), QUrl());
     QCOMPARE(doc.mimeType(), QMimeType());
-    QCOMPARE(doc.modified(), false);
+    QCOMPARE(doc.isModified(), false);
 }
 
 void TestAbstractDocument::setters()
@@ -87,7 +87,7 @@ void TestAbstractDocument::setters()
     QCOMPARE(doc.mimeType().name(), QString("text/html"));
 
     doc.setModified(true);
-    QCOMPARE(doc.modified(), true);
+    QCOMPARE(doc.isModified(), true);
 
     file.remove();
 }

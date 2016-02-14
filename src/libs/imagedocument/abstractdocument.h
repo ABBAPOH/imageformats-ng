@@ -17,7 +17,7 @@ class IMAGEDOCUMENT_EXPORT AbstractDocument : public QObject
     Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
     Q_PROPERTY(QMimeType mimeType READ mimeType WRITE setMimeType NOTIFY mimeTypeChanged)
     Q_PROPERTY(bool opened READ isOpened NOTIFY openedChanged)
-    Q_PROPERTY(bool modified READ modified WRITE setModified NOTIFY modificationChanged)
+    Q_PROPERTY(bool modified READ isModified WRITE setModified NOTIFY modificationChanged)
 
 public:
     class Result;
@@ -33,7 +33,7 @@ public:
     void setMimeType(const QString &name);
 
     bool isOpened() const;
-    bool modified() const;
+    bool isModified() const;
 
     virtual QVector<QMimeType> supportedInputMimetypes() const = 0;
     virtual QVector<QMimeType> supportedOutputMimetypes() const { return QVector<QMimeType>(); }

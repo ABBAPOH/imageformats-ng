@@ -90,7 +90,7 @@ bool AbstractDocument::isOpened() const
     return d->opened;
 }
 
-bool AbstractDocument::modified() const
+bool AbstractDocument::isModified() const
 {
     Q_D(const AbstractDocument);
     return d->modified;
