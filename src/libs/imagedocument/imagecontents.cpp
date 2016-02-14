@@ -1,5 +1,7 @@
 #include "imagecontents.h"
 
+#include <QtCore/QDebug>
+
 class ImageContentsData : public QSharedData
 {
 public:
@@ -64,10 +66,18 @@ void ImageContents::setHeader(const ImageHeader &header)
 
 QImage ImageContents::image(int index, int level) const
 {
-    if (index < 0 || index >= header().imageCount())
+    if (index < 0 || index >= d->header.imageCount()) {
+        qWarning() << "Attempt to get image with index = " << index
+                   << "which is out of bounds" << 0 << d->header.imageCount();
         return QImage();
-    if (level < 0 || level >= header().mipmapCount())
-        return QImage();
+    }
+    if (d->header.mipmapCount() > 0) {
+        if (level < 0 || level >= d->header.mipmapCount()) {
+            qWarning() << "Attempt to get image with level = " << level
+                       << "which is out of bounds" << 0 << d->header.mipmapCount();
+            return QImage();
+        }
+    }
     return d->images.value(ImageContentsData::ImageIndex(index, level));
 }
 
