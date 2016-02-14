@@ -20,8 +20,6 @@ class IMAGEDOCUMENT_EXPORT AbstractDocument : public QObject
     Q_PROPERTY(bool modified READ isModified WRITE setModified NOTIFY modificationChanged)
 
 public:
-    class Result;
-
     explicit AbstractDocument(QObject *parent = Q_NULLPTR);
     ~AbstractDocument();
 
