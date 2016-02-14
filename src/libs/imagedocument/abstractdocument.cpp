@@ -4,40 +4,14 @@
 #include <QtCore/QMimeDatabase>
 #include <memory>
 
-AbstractDocumentPrivate::AbstractDocumentPrivate(AbstractDocument *qq) :
-    device(Q_NULLPTR),
-    modified(false),
-    q_ptr(qq)
+void AbstractDocumentPrivate::setOpened(bool opened)
 {
-}
+    Q_Q(AbstractDocument);
 
-QString AbstractDocumentPrivate::errorString(AbstractDocument::Result::ErrorCode code)
-{
-    switch (code) {
-    case AbstractDocument::Result::NoError:
-        return AbstractDocument::tr("No error");
-    case AbstractDocument::Result::InvalidMimeTypeError:
-        return AbstractDocument::tr("Invalid mimetype");
-    case AbstractDocument::Result::FileNotFoundError:
-        return AbstractDocument::tr("File not found");
-    case AbstractDocument::Result::DeviceError:
-        return AbstractDocument::tr("Device error");
-    case AbstractDocument::Result::UnsupportedMimeTypeError:
-        return AbstractDocument::tr("Unsupported format");
-    case AbstractDocument::Result::IOError:
-        return AbstractDocument::tr("Handler error");
-    }
-    return QString();
-}
-
-bool AbstractDocumentPrivate::ensureDeviceOpened(QIODevice::OpenMode mode)
-{
-    if ((device->openMode() & mode) != mode) {
-        device->close();
-        if (!device->open(mode))
-            return false;
-    }
-    return true;
+    if (this->opened == opened)
+        return;
+    this->opened = opened;
+    emit q->openedChanged(opened);
 }
 
 AbstractDocument::AbstractDocument(QObject *parent) :
@@ -52,47 +26,42 @@ AbstractDocument::AbstractDocument(AbstractDocumentPrivate &dd, QObject *parent)
 {
 }
 
+void AbstractDocument::finishOpen(bool ok)
+{
+    Q_D(AbstractDocument);
+
+    d->setOpened(ok);
+    emit openFinished(ok);
+}
+
+void AbstractDocument::finishSave(bool ok)
+{
+    emit saveFinished(ok);
+}
+
 AbstractDocument::~AbstractDocument()
 {
 }
 
-QIODevice *AbstractDocument::device() const
+QUrl AbstractDocument::url() const
 {
     Q_D(const AbstractDocument);
-    return d->device;
+    return d->url;
 }
 
-void AbstractDocument::setDevice(QIODevice *device)
+void AbstractDocument::setUrl(const QUrl &url)
 {
     Q_D(AbstractDocument);
-    if (d->device == device)
-        return;
-    d->file.reset();
-    d->device = device;
-    d->changed();
-    emit deviceChanged();
-}
-
-QString AbstractDocument::fileName() const
-{
-    Q_D(const AbstractDocument);
-    return d->fileName;
-}
-
-void AbstractDocument::setFileName(const QString &fileName)
-{
-    Q_D(AbstractDocument);
-    if (d->fileName == fileName)
+    if (d->url == url)
         return;
 
-    d->file.reset(new QFile(fileName));
-    d->device = d->file.data();
-    d->mimeType = QMimeDatabase().mimeTypeForFile(fileName);
-    d->fileName = fileName;
-    d->changed();
-    emit fileNameChanged(fileName);
-    emit deviceChanged();
-    emit mimeTypeChanged(d->mimeType);
+    d->url = url;
+    const auto oldMt = d->mimeType;
+    d->mimeType = QMimeDatabase().mimeTypeForUrl(url);
+
+    emit urlChanged(d->url);
+    if (oldMt != d->mimeType)
+        emit mimeTypeChanged(d->mimeType);
 }
 
 QMimeType AbstractDocument::mimeType() const
@@ -107,7 +76,6 @@ void AbstractDocument::setMimeType(const QMimeType &mimeType)
     if (d->mimeType == mimeType)
         return;
     d->mimeType = mimeType;
-    d->changed();
     emit mimeTypeChanged(d->mimeType);
 }
 
@@ -116,61 +84,36 @@ void AbstractDocument::setMimeType(const QString &name)
     setMimeType(QMimeDatabase().mimeTypeForName(name));
 }
 
+bool AbstractDocument::isOpened() const
+{
+    Q_D(const AbstractDocument);
+    return d->opened;
+}
+
 bool AbstractDocument::modified() const
 {
     Q_D(const AbstractDocument);
     return d->modified;
 }
 
-AbstractDocument::Result AbstractDocument::open()
+void AbstractDocument::open()
 {
     Q_D(AbstractDocument);
+    if (d->url.isEmpty()) {
+        finishOpen(false);
+    }
 
-    if (!d->mimeType.isValid())
-        return Result::InvalidMimeTypeError;
-
-    if (!d->device)
-        return Result::DeviceError;
-
-    if (d->file && !d->file->exists())
-        return Result::FileNotFoundError;
-
-    if (!supportedInputMimetypes().contains(d->mimeType))
-        return Result::UnsupportedMimeTypeError;
-
-    if (!d->ensureDeviceOpened(QIODevice::ReadOnly))
-        return Result::DeviceError;
-
-    if (!read())
-        return Result::IOError;
-
-    // TODO: auto close file if it wasn't opened?
-
-    return Result();
+    doOpen();
 }
 
-AbstractDocument::Result AbstractDocument::save()
+void AbstractDocument::save()
 {
     Q_D(AbstractDocument);
+    if (d->url.isEmpty()) {
+        finishSave(false);
+    }
 
-    if (!d->mimeType.isValid())
-        return Result::InvalidMimeTypeError;
-
-    if (!d->device)
-        return Result::DeviceError;
-
-    if (!supportedOutputMimetypes().contains(d->mimeType))
-        return Result::UnsupportedMimeTypeError;
-
-    if (!d->ensureDeviceOpened(QIODevice::WriteOnly))
-        return Result::DeviceError;
-
-    if (!write())
-        return Result::IOError;
-
-    // TODO: auto close file if it wasn't opened?
-
-    return Result();
+    doSave();
 }
 
 void AbstractDocument::setModified(bool modified)
@@ -181,9 +124,4 @@ void AbstractDocument::setModified(bool modified)
 
     d->modified = modified;
     emit modificationChanged(modified);
-}
-
-QString AbstractDocument::Result::errorString() const
-{
-    return AbstractDocumentPrivate::errorString(_error);
 }

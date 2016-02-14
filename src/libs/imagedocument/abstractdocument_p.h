@@ -9,23 +9,21 @@ class AbstractDocumentPrivate
     Q_DECLARE_PUBLIC(AbstractDocument)
     Q_DISABLE_COPY(AbstractDocumentPrivate)
 
-public:
-    explicit AbstractDocumentPrivate(AbstractDocument *qq);
-    virtual ~AbstractDocumentPrivate() {}
-
-    static QString errorString(AbstractDocument::Result::ErrorCode code);
-    virtual void changed() {}
-    bool ensureDeviceOpened(QIODevice::OpenMode mode);
-
-    QIODevice *device;
-    QString fileName;
-    QScopedPointer<QFile> file;
-    QMimeType mimeType;
-
-    bool modified;
-
 protected:
     AbstractDocument *q_ptr;
+
+public:
+    explicit AbstractDocumentPrivate(AbstractDocument *qq) : q_ptr(qq) {}
+    virtual ~AbstractDocumentPrivate() {}
+
+    void setOpened(bool opened);
+
+    QUrl url;
+    QMimeType mimeType;
+
+    bool opened {false};
+    bool modified {false};
+
 };
 
 #endif // ABSTRACTDOCUMENT_P

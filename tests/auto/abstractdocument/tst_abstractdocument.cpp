@@ -22,24 +22,32 @@ public:
     void setText(const QString &text) { _text = text; }
 
 protected:
-    bool read() Q_DECL_OVERRIDE;
-    bool write() Q_DECL_OVERRIDE;
+    void doOpen() Q_DECL_OVERRIDE;
+    void doSave() Q_DECL_OVERRIDE;
 
 private:
     QString _text;
 };
 
-bool TestDocument::read()
+void TestDocument::doOpen()
 {
-    const auto data = device()->readAll();
+    QVERIFY(url().isLocalFile());
+    QFile file(url().toLocalFile());
+    QVERIFY(file.open(QIODevice::ReadOnly));
+    const auto data = file.readAll();
     _text = QString::fromUtf8(data);
-    return true;
+    finishOpen(true);
 }
 
-bool TestDocument::write()
+void TestDocument::doSave()
 {
+    QVERIFY(url().isLocalFile());
+    QFile file(url().toLocalFile());
+    QVERIFY(file.open(QIODevice::WriteOnly));
+
     auto data = _text.toUtf8();
-    return device()->write(data) == data.length();
+    const bool ok = file.write(data) == data.length();
+    finishSave(ok);
 }
 
 class TestAbstractDocument : public QObject
@@ -55,8 +63,7 @@ private slots:
 void TestAbstractDocument::defaultValues()
 {
     TestDocument doc;
-    QVERIFY(doc.device() == Q_NULLPTR);
-    QCOMPARE(doc.fileName(), QString());
+    QCOMPARE(doc.url(), QUrl());
     QCOMPARE(doc.mimeType(), QMimeType());
     QCOMPARE(doc.modified(), false);
 }
@@ -70,14 +77,10 @@ void TestAbstractDocument::setters()
     file.close();
 
     TestDocument doc;
-    doc.setDevice(&file);
-    QCOMPARE(doc.device(), &file);
-    doc.setDevice(Q_NULLPTR);
-    QVERIFY(doc.device() == Q_NULLPTR);
 
-    doc.setFileName("file.txt");
-    QCOMPARE(doc.fileName(), QString("file.txt"));
-    QVERIFY(qobject_cast<QFile *>(doc.device()) != Q_NULLPTR);
+    doc.setUrl(QUrl("file://file.txt"));
+    QCOMPARE(doc.url(), QUrl("file://file.txt"));
+
     QCOMPARE(doc.mimeType().name(), QString("text/plain"));
 
     doc.setMimeType("text/html");
@@ -98,16 +101,16 @@ void TestAbstractDocument::read()
     file.close();
 
     TestDocument doc;
-    auto ok = doc.open();
-    QCOMPARE(ok.errorCode(), AbstractDocument::Result::InvalidMimeTypeError);
+    doc.setUrl(QUrl::fromLocalFile("file.txt"));
+    doc.open();
+    QVERIFY(doc.isOpened());
 
     doc.setMimeType("text/plain");
-    ok = doc.open();
-    QCOMPARE(ok.errorCode(), AbstractDocument::Result::DeviceError);
+    doc.open();
+    QVERIFY(doc.isOpened());
 
-    doc.setDevice(&file);
-    ok = doc.open();
-    QCOMPARE(ok.errorCode(), AbstractDocument::Result::NoError);
+    doc.open();
+    QVERIFY(doc.isOpened());
     QCOMPARE(doc.text(), QStringLiteral("Hello, world!"));
     file.remove();
 }
@@ -115,24 +118,11 @@ void TestAbstractDocument::read()
 void TestAbstractDocument::write()
 {
     TestDocument doc;
+    doc.setUrl(QUrl::fromLocalFile("file.txt"));
     doc.setText(QStringLiteral("Hello, world!"));
-
-    auto ok = doc.save();
-    QCOMPARE(ok.errorCode(), AbstractDocument::Result::InvalidMimeTypeError);
-
-    doc.setMimeType("text/plain");
-
-    ok = doc.save();
-    QCOMPARE(ok.errorCode(), AbstractDocument::Result::DeviceError);
+    doc.save();
 
     QFile file("file.txt");
-    file.remove();
-    doc.setDevice(&file);
-
-    ok = doc.save();
-    QCOMPARE(ok.errorCode(), AbstractDocument::Result::NoError);
-    file.close();
-
     QVERIFY(file.open(QIODevice::ReadOnly));
     QCOMPARE(file.readAll(), QByteArray("Hello, world!"));
 }

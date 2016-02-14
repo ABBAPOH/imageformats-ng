@@ -102,6 +102,13 @@ void ImageIOPrivate::resetHandler()
     contents = Nothing();
 }
 
+/*!
+    Basic Image unput/output.
+
+    Can be used for a customised image reading/writing. In most cases, you can simply use
+    ImageDocument class instead.
+*/
+
 ImageIO::ImageIO() :
     d_ptr(new ImageIOPrivate(this))
 {
