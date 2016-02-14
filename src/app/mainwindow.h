@@ -4,6 +4,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtGui/QStandardItemModel>
 
+#include <ImageIO>
 #include <ImageDocument>
 
 class ImageView;
@@ -31,6 +32,9 @@ private:
 private slots:
     void onClicked(const QModelIndex &index);
     void showInfo();
+
+private:
+    QPair<Optional<ImageContents>, ImageIO::Error> loadContents(const QString &path);
 
 private:
     Ui::MainWindow *ui;

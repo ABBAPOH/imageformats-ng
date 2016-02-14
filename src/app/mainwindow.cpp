@@ -5,9 +5,11 @@
 #include <ImageView>
 #include <VariantMapModel>
 
+#include <QtConcurrent/QtConcurrent>
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -43,14 +45,16 @@ void MainWindow::open()
 {
     QString path = QFileDialog::getOpenFileName(this, tr("open"));
 
-    ImageIO io(path);
-    auto contents = io.read();
-    if (!contents) {
-        qWarning() << "Can't open" << io.error().errorString();
+    const auto contents = loadContents(path);
+    if (!contents.first) {
+        QMessageBox::warning(this,
+                             tr("Open"),
+                             tr("Can't open file : %1").arg(contents.second.errorString()),
+                             QMessageBox::Close);
         return;
     }
 
-    _document->setContents(*contents);
+    _document->setContents(*contents.first);
 
     buildModel();
 }
@@ -63,7 +67,7 @@ void MainWindow::buildModel()
 
 void MainWindow::buildModel(QStandardItem *parent)
 {
-    if (_document->contents().header().mipmapCount() == 1) {
+    if (_document->contents().header().mipmapCount() <= 1) {
         buildModel(parent, 0);
     } else {
         for (int i = 0; i < _document->contents().header().mipmapCount(); ++i) {
@@ -116,4 +120,24 @@ void MainWindow::showInfo()
     view->resize(300, 400);
     view->setModel(model);
     view->show();
+}
+
+QPair<Optional<ImageContents>, ImageIO::Error> MainWindow::loadContents(const QString &path)
+{
+    using Result = QPair<Optional<ImageContents>, ImageIO::Error>;
+
+    setEnabled(false);
+    auto functor = [](const QString &path)
+    {
+        ImageIO io(path);
+        auto contents = io.read();
+        return qMakePair(contents, io.error());
+    };
+    QFutureWatcher<Result> watcher;
+    QEventLoop loop;
+    connect(&watcher, &QFutureWatcherBase::finished, &loop, &QEventLoop::quit);
+    watcher.setFuture(QtConcurrent::run(functor, path));
+    loop.exec();
+    setEnabled(true);
+    return watcher.future().result();
 }
