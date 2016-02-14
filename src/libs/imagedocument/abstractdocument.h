@@ -54,8 +54,8 @@ signals:
 protected:
     explicit AbstractDocument(AbstractDocumentPrivate &dd, QObject *parent = Q_NULLPTR);
 
-    virtual void doOpen() = 0;
-    virtual void doSave() {}
+    virtual void doOpen(const QUrl &url) = 0;
+    virtual void doSave(const QUrl &url);
     void finishOpen(bool ok);
     void finishSave(bool ok);
 

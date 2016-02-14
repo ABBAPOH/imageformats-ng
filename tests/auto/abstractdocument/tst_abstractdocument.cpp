@@ -22,27 +22,27 @@ public:
     void setText(const QString &text) { _text = text; }
 
 protected:
-    void doOpen() Q_DECL_OVERRIDE;
-    void doSave() Q_DECL_OVERRIDE;
+    void doOpen(const QUrl &url) Q_DECL_OVERRIDE;
+    void doSave(const QUrl &url) Q_DECL_OVERRIDE;
 
 private:
     QString _text;
 };
 
-void TestDocument::doOpen()
+void TestDocument::doOpen(const QUrl &url)
 {
-    QVERIFY(url().isLocalFile());
-    QFile file(url().toLocalFile());
+    QVERIFY(url.isLocalFile());
+    QFile file(url.toLocalFile());
     QVERIFY(file.open(QIODevice::ReadOnly));
     const auto data = file.readAll();
     _text = QString::fromUtf8(data);
     finishOpen(true);
 }
 
-void TestDocument::doSave()
+void TestDocument::doSave(const QUrl &url)
 {
-    QVERIFY(url().isLocalFile());
-    QFile file(url().toLocalFile());
+    QVERIFY(url.isLocalFile());
+    QFile file(url.toLocalFile());
     QVERIFY(file.open(QIODevice::WriteOnly));
 
     auto data = _text.toUtf8();

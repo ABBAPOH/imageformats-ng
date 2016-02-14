@@ -14,6 +14,9 @@ void AbstractDocumentPrivate::setOpened(bool opened)
     emit q->openedChanged(opened);
 }
 
+/*!
+    Constructs an AbstractDocument with the given \a parent.
+*/
 AbstractDocument::AbstractDocument(QObject *parent) :
     QObject(parent),
     d_ptr(new AbstractDocumentPrivate(this))
@@ -24,6 +27,23 @@ AbstractDocument::AbstractDocument(AbstractDocumentPrivate &dd, QObject *parent)
     QObject(parent),
     d_ptr(&dd)
 {
+}
+
+/*!
+    \fn void AbstractDocument::doOpen(const QUrl &url);
+
+    Reimplement this function to open document contents located at \a url.
+*/
+
+/*!
+    Reimplement this function to save document contents to the \a url.
+
+    \note An \a url parameter can differ from value returned by url() function (for example, in
+    case of autosaving)
+*/
+void AbstractDocument::doSave(const QUrl &url)
+{
+    Q_UNUSED(url);
 }
 
 void AbstractDocument::finishOpen(bool ok)
@@ -103,7 +123,7 @@ void AbstractDocument::open()
         finishOpen(false);
     }
 
-    doOpen();
+    doOpen(d->url);
 }
 
 void AbstractDocument::save()
@@ -113,7 +133,7 @@ void AbstractDocument::save()
         finishSave(false);
     }
 
-    doSave();
+    doSave(d->url);
 }
 
 void AbstractDocument::setModified(bool modified)
