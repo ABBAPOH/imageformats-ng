@@ -47,7 +47,7 @@ bool ImageIOPrivate::ensureDeviceOpened(QIODevice::OpenMode mode)
         return false;
     }
 
-    if (file && !file->exists()) {
+    if ((mode & QIODevice::ReadOnly) && file && !file->exists()) {
         error = ImageIO::Error::FileNotFoundError;
         return false;
     }

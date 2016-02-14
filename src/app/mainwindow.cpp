@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     _document = new ImageDocument(this);
 
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::open);
+    connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
     connect(ui->actionShowInfo, &QAction::triggered, this, &MainWindow::showInfo);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
 
@@ -57,6 +58,21 @@ void MainWindow::open()
     _document->setContents(*contents.first);
 
     buildModel();
+}
+
+void MainWindow::saveAs()
+{
+    const auto path = QFileDialog::getSaveFileName(this, tr("Save As"));
+    if (path.isEmpty())
+        return;
+
+    const auto ok = saveContents(path, _document->contents());
+    if (!ok) {
+        QMessageBox::warning(this,
+                             tr("Save"),
+                             tr("Can't save file : %1").arg(ok.errorString()),
+                             QMessageBox::Close);
+    }
 }
 
 void MainWindow::buildModel()
@@ -140,4 +156,11 @@ QPair<Optional<ImageContents>, ImageIO::Error> MainWindow::loadContents(const QS
     loop.exec();
     setEnabled(true);
     return watcher.future().result();
+}
+
+ImageIO::Error MainWindow::saveContents(const QString &path, const ImageContents &contents)
+{
+    ImageIO io(path);
+    io.write(contents);
+    return io.error();
 }

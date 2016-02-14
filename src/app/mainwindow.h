@@ -21,7 +21,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
     void open();
+    void saveAs();
 
 private:
     void buildModel();
@@ -35,6 +37,7 @@ private slots:
 
 private:
     QPair<Optional<ImageContents>, ImageIO::Error> loadContents(const QString &path);
+    ImageIO::Error saveContents(const QString &path, const ImageContents &contents);
 
 private:
     Ui::MainWindow *ui;
