@@ -75,6 +75,8 @@ class PngHandlerPlugin : public ImageIOHandlerPlugin
     Q_PLUGIN_METADATA(IID "org.arch.ImageDocument.PngHandlerPlugin" FILE "png.json")
 public:
     PngHandlerPlugin() {}
+    QByteArray name() const override;
+    QVector<ImageOptions::Option> supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const override;
     ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) Q_DECL_OVERRIDE;
     Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
 };

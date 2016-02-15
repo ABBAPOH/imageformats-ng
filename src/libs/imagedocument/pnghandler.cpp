@@ -1099,6 +1099,20 @@ QT_END_NAMESPACE
 #endif // QT_NO_IMAGEFORMAT_PNG
 
 
+QByteArray PngHandlerPlugin::name() const
+{
+    return "png";
+}
+
+QVector<ImageOptions::Option> PngHandlerPlugin::supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const
+{
+    return {
+        ImageOptions::Gamma,
+        ImageOptions::Quality,
+        ImageOptions::ScaledSize
+    };
+}
+
 ImageIOHandler *PngHandlerPlugin::create(QIODevice *device, const QMimeType &mimeType)
 {
     Q_UNUSED(device);
@@ -1114,3 +1128,4 @@ ImageIOHandlerPlugin::Capabilities PngHandlerPlugin::capabilities(QIODevice *dev
 }
 
 Q_IMPORT_PLUGIN(PngHandlerPlugin)
+

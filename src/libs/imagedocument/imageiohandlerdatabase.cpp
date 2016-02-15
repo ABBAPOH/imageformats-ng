@@ -1,6 +1,7 @@
 #include "imageiohandlerdatabase.h"
 
 #include "defaulthandler.h"
+#include "imageformatinfo_p.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QCoreApplication>
@@ -98,6 +99,28 @@ void ImageIOHandlerDatabase::registerPlugin(const QString &mimeType, ImageIOHand
     }
 
     map.insert(mimeType, plugin);
+}
+
+QVector<ImageFormatInfo> ImageIOHandlerDatabase::supportedImageFormats() const
+{
+    QVector<ImageFormatInfo> result;
+    for (auto it = map.begin(), end = map.end(); it != end; ++it) {
+        result.append(getInfo(QMimeDatabase().mimeTypeForName(it.key()), it.value()));
+    }
+    return result;
+}
+
+ImageFormatInfo ImageIOHandlerDatabase::getInfo(const QMimeType &mt,  ImageIOHandlerPlugin *plugin)
+{
+    ImageFormatInfoData data;
+    data.name = plugin->name();
+    data.mimeType = mt;
+    data.subTypes = plugin->supportedSubTypes(mt);
+    data.options[""] = plugin->supportedOptions(mt, QByteArray());
+    for (const auto subType : data.subTypes) {
+        data.options[subType] = plugin->supportedOptions(mt, subType);
+    }
+    return ImageFormatInfo(data);
 }
 
 Q_GLOBAL_STATIC(ImageIOHandlerDatabase, static_instance)

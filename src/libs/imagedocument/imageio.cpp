@@ -286,6 +286,11 @@ ImageIO::Error ImageIO::error() const
     return d->error;
 }
 
+QVector<ImageFormatInfo> ImageIO::supportedImageFormats()
+{
+    return ImageIOHandlerDatabase::instance()->supportedImageFormats();
+}
+
 QString ImageIO::pluginsDirPath()
 {
 #if defined(Q_OS_LINUX)

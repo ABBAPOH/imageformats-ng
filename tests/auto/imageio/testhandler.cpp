@@ -130,6 +130,11 @@ TestHandlerPlugin::TestHandlerPlugin()
 {
 }
 
+QByteArray TestHandlerPlugin::name() const
+{
+    return "test";
+}
+
 ImageIOHandler *TestHandlerPlugin::create(QIODevice *device, const QMimeType &mimeType)
 {
     Q_UNUSED(device);

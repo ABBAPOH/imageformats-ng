@@ -27,7 +27,6 @@ public:
     virtual bool write(const ImageContents &contents, const ImageOptions &options) = 0;
 
     virtual bool supportsOption(ImageOptions::Option option) const;
-    virtual QVector<QByteArray> supportedSubTypes() const;
 
 private:
     enum State { NoState, HeaderReadState, DataReadState, ErrorState } state;
@@ -53,8 +52,12 @@ public:
 
     explicit ImageIOHandlerPlugin() {}
 
-    virtual ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) = 0;
+    virtual QByteArray name() const = 0;
     virtual Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const = 0;
+    virtual QVector<QByteArray> supportedSubTypes(const QMimeType &mimeType) const;
+    virtual QVector<ImageOptions::Option> supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const;
+
+    virtual ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) = 0;
 };
 
 #endif // IMAGEIOHANDLER_H

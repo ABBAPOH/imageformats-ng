@@ -3,6 +3,7 @@
 
 #include "optional.h"
 #include <ImageContents>
+#include <ImageFormatInfo>
 #include <ImageOptions>
 #include <QtCore/QString>
 #include <QtCore/QScopedPointer>
@@ -46,6 +47,8 @@ public:
     bool supportsOption(ImageOptions::Option option);
 
     Error error() const;
+
+    static QVector<ImageFormatInfo> supportedImageFormats();
 
     static QString pluginsDirPath();
 

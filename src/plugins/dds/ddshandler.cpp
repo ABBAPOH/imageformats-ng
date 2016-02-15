@@ -1475,11 +1475,6 @@ bool DDSHandler::write(const ImageContents &contents, const ImageOptions &option
     return true;
 }
 
-QVector<QByteArray> DDSHandler::supportedSubTypes() const
-{
-    return QVector<QByteArray>() << formatName(FormatA8R8G8B8);
-}
-
 bool DDSHandler::canRead(QIODevice *device)
 {
     if (!device) {
@@ -1551,6 +1546,17 @@ bool DDSHandler::verifyHeader(const DDSHeader &dds) const
     }
 
     return true;
+}
+
+QByteArray DdsHandlerPlugin::name() const
+{
+    return "dds";
+}
+
+QVector<QByteArray> DdsHandlerPlugin::supportedSubTypes(const QMimeType &mimeType) const
+{
+    Q_UNUSED(mimeType);
+    return QVector<QByteArray>() << formatName(FormatA8R8G8B8);
 }
 
 DDSHandler *DdsHandlerPlugin::create(QIODevice *device, const QMimeType &mimeType)

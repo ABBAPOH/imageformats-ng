@@ -80,6 +80,11 @@ bool DefaultHandler::write(const ImageContents &contents, const ImageOptions &op
     return true;
 }
 
+QByteArray DefaultHandlerPlugin::name() const
+{
+    return "default";
+}
+
 DefaultHandler *DefaultHandlerPlugin::create(QIODevice *device, const QMimeType &mimeType)
 {
     Q_UNUSED(device);

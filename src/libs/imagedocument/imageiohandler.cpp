@@ -66,14 +66,6 @@ bool ImageIOHandler::supportsOption(ImageOptions::Option option) const
 }
 
 /*!
-    Returns the list of the subtypes that can be used when writing image.
-*/
-QVector<QByteArray> ImageIOHandler::supportedSubTypes() const
-{
-    return QVector<QByteArray>();
-}
-
-/*!
     \fn ImageIOHandlerPlugin::ImageIOHandlerPlugin()
 
     Constructs a new object with the given parent.
@@ -97,3 +89,20 @@ QVector<QByteArray> ImageIOHandler::supportedSubTypes() const
     It should do this without changing the state of device (typically by using
     QIODevice::peek()).
 */
+
+/*!
+    Returns the list of the subtypes that can be used when writing image.
+*/
+QVector<QByteArray> ImageIOHandlerPlugin::supportedSubTypes(const QMimeType &mimeType) const
+{
+    Q_UNUSED(mimeType);
+    return QVector<QByteArray>();
+}
+
+QVector<ImageOptions::Option> ImageIOHandlerPlugin::supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const
+{
+    Q_UNUSED(mimeType);
+    Q_UNUSED(subType);
+
+    return QVector<ImageOptions::Option>();
+}

@@ -58,8 +58,6 @@ public:
     bool read(ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
     bool write(const ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
 
-    QVector<QByteArray> supportedSubTypes() const Q_DECL_OVERRIDE;
-
     static bool canRead(QIODevice *device);
 
 private:
@@ -79,6 +77,8 @@ class DdsHandlerPlugin : public ImageIOHandlerPlugin
     Q_PLUGIN_METADATA(IID "org.arch.ImageDocument.DdsHandlerPlugin" FILE "dds.json")
 public:
     DdsHandlerPlugin() {}
+    QByteArray name() const Q_DECL_OVERRIDE;
+    QVector<QByteArray> supportedSubTypes(const QMimeType &mimeType) const Q_DECL_OVERRIDE;
     DDSHandler *create(QIODevice *device, const QMimeType &mimeType) Q_DECL_OVERRIDE;
     Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
 };

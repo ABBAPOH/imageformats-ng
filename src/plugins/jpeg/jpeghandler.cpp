@@ -1064,7 +1064,7 @@ bool JpegHandler::supportsOption(ImageOptions::Option option) const
         || option == ImageOptions::Quality;
 }
 
-QByteArray JpegHandler::name() const
+QByteArray JpegHandlerPlugin::name() const
 {
     return "jpeg";
 }

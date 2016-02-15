@@ -61,8 +61,6 @@ public:
     bool read(ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
     bool write(const ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
 
-    QByteArray name() const;
-
     static bool canRead(QIODevice *device);
 
     bool supportsOption(ImageOptions::Option option) const Q_DECL_OVERRIDE;
@@ -76,6 +74,7 @@ class JpegHandlerPlugin : public ImageIOHandlerPlugin
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.arch.ImageDocument.JpegHandlerPlugin" FILE "jpeg.json")
 public:
+    QByteArray name() const Q_DECL_OVERRIDE;
     JpegHandler *create(QIODevice *device, const QMimeType &mimeType) Q_DECL_OVERRIDE;
     Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
 };
