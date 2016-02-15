@@ -291,6 +291,16 @@ QVector<ImageFormatInfo> ImageIO::supportedImageFormats()
     return ImageIOHandlerDatabase::instance()->supportedImageFormats();
 }
 
+Optional<ImageFormatInfo> ImageIO::imageFormat(const QMimeType &mimeType)
+{
+    return ImageIOHandlerDatabase::instance()->imageFormat(mimeType);
+}
+
+Optional<ImageFormatInfo> ImageIO::imageFormat(const QString &mimeTypeName)
+{
+    return imageFormat(QMimeDatabase().mimeTypeForName(mimeTypeName));
+}
+
 QString ImageIO::pluginsDirPath()
 {
 #if defined(Q_OS_LINUX)

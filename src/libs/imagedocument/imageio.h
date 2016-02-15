@@ -49,6 +49,8 @@ public:
     Error error() const;
 
     static QVector<ImageFormatInfo> supportedImageFormats();
+    static Optional<ImageFormatInfo> imageFormat(const QMimeType &mimeType);
+    static Optional<ImageFormatInfo> imageFormat(const QString &mimeTypeName);
 
     static QString pluginsDirPath();
 

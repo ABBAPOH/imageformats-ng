@@ -15,6 +15,7 @@ public:
     void registerPlugin(const QString &mimeType, ImageIOHandlerPlugin *plugin);
 
     QVector<ImageFormatInfo> supportedImageFormats() const;
+    Optional<ImageFormatInfo> imageFormat(const QMimeType &mt) const;
     static ImageFormatInfo getInfo(const QMimeType &mt, ImageIOHandlerPlugin *plugin);
 
     static ImageIOHandlerDatabase *instance();

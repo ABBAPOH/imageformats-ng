@@ -110,6 +110,14 @@ QVector<ImageFormatInfo> ImageIOHandlerDatabase::supportedImageFormats() const
     return result;
 }
 
+Optional<ImageFormatInfo> ImageIOHandlerDatabase::imageFormat(const QMimeType &mt) const
+{
+    auto plugin = map.value(mt.name());
+    if (!plugin)
+        return Nothing();
+    return getInfo(mt, plugin);
+}
+
 ImageFormatInfo ImageIOHandlerDatabase::getInfo(const QMimeType &mt,  ImageIOHandlerPlugin *plugin)
 {
     ImageFormatInfoData data;
