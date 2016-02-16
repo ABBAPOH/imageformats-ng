@@ -1,6 +1,8 @@
 #ifndef IMAGEVIEW_H
 #define IMAGEVIEW_H
 
+#include "imageview_global.h"
+
 #include <QtWidgets/QAbstractScrollArea>
 
 class ImageDocument;

@@ -1,9 +1,11 @@
 #ifndef VARIANTMAPMODEL_H
 #define VARIANTMAPMODEL_H
 
+#include "utils_global.h"
+
 #include <QtCore/QAbstractTableModel>
 
-class IMAGEDOCUMENT_EXPORT VariantMapModel : public QAbstractTableModel
+class UTILS_EXPORT VariantMapModel : public QAbstractTableModel
 {
 public:
     enum Column { Key, Value };

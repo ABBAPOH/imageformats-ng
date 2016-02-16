@@ -1,11 +1,13 @@
 #ifndef IMAGEIOHANDLER_H
 #define IMAGEIOHANDLER_H
 
+#include "imageio_global.h"
+
 #include <ImageIO>
 
 #include <QtCore/QSet>
 
-class IMAGEDOCUMENT_EXPORT ImageIOHandler
+class IMAGEIO_EXPORT ImageIOHandler
 {
 public:
     ImageIOHandler();
@@ -39,7 +41,7 @@ private:
     friend class ImageDocument;
 };
 
-class IMAGEDOCUMENT_EXPORT ImageIOHandlerPlugin : public QObject
+class IMAGEIO_EXPORT ImageIOHandlerPlugin : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(ImageIOHandlerPlugin)

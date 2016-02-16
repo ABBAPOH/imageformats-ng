@@ -1,14 +1,16 @@
 #ifndef OPTIONAL_H
 #define OPTIONAL_H
 
+#include "utils_global.h"
+
 #include <QtCore/qglobal.h>
 #include <QtCore/QHash>
 
-template<typename T> class Optional;
+template<typename T> class UTILS_EXPORT Optional;
 typedef Optional<void> Nothing;
 
 template<typename T>
-class Optional
+class UTILS_EXPORT Optional
 {
 private:
     typedef bool (Optional::*RestrictedBool)() const;

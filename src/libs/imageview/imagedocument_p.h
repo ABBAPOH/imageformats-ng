@@ -1,9 +1,9 @@
 #ifndef IMAGEDOCUMENT_P
 #define IMAGEDOCUMENT_P
 
-#include "abstractdocument_p.h"
-#include "imagedocument.h"
-#include "imageiohandler.h"
+#include <AbstractDocumentPrivate>
+#include <ImageDocument>
+#include <ImageIOHandler>
 
 #include <QtCore/QFile>
 #include <QtCore/QHash>

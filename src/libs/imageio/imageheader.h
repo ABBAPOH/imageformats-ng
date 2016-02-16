@@ -1,11 +1,13 @@
 #ifndef IMAGEHEADER_H
 #define IMAGEHEADER_H
 
+#include "imageio_global.h"
+
 #include <QtCore/QSharedDataPointer>
 #include <QtGui/QImage>
 
 class ImageHeaderData;
-class ImageHeader
+class IMAGEIO_EXPORT ImageHeader
 {
 public:
     enum Type {
@@ -52,11 +54,11 @@ public:
 private:
     QSharedDataPointer<ImageHeaderData> d;
 
-    friend bool IMAGEDOCUMENT_EXPORT operator==(const ImageHeader &lhs, const ImageHeader &rhs);
-    friend bool IMAGEDOCUMENT_EXPORT operator!=(const ImageHeader &lhs, const ImageHeader &rhs);
+    friend bool IMAGEIO_EXPORT operator==(const ImageHeader &lhs, const ImageHeader &rhs);
+    friend bool IMAGEIO_EXPORT operator!=(const ImageHeader &lhs, const ImageHeader &rhs);
 };
 
-bool IMAGEDOCUMENT_EXPORT operator==(const ImageHeader &lhs, const ImageHeader &rhs);
-bool IMAGEDOCUMENT_EXPORT operator!=(const ImageHeader &lhs, const ImageHeader &rhs);
+bool IMAGEIO_EXPORT operator==(const ImageHeader &lhs, const ImageHeader &rhs);
+bool IMAGEIO_EXPORT operator!=(const ImageHeader &lhs, const ImageHeader &rhs);
 
 #endif // IMAGEHEADER_H

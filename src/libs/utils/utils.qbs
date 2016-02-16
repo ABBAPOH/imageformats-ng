@@ -1,8 +1,8 @@
 import qbs.base 1.0
 
-AutoTest {
+Lib {
     Depends { name: "Qt.gui" }
-    Depends { name: "ImageIO" }
-
+    cpp.defines: base.concat(["UTILS_LIBRARY"])
+    name: "Utils"
     files: [ "*.cpp", "*.h" ]
 }

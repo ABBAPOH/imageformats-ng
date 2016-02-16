@@ -1,6 +1,8 @@
 #ifndef IMAGEOPTIONS_H
 #define IMAGEOPTIONS_H
 
+#include "imageio_global.h"
+
 #include <QtCore/QHash>
 #include <QtCore/QRect>
 #include <QtCore/QVariant>

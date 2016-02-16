@@ -1,6 +1,8 @@
 #ifndef IMAGECONTENTS_H
 #define IMAGECONTENTS_H
 
+#include "imageio_global.h"
+
 #include <ImageExifMeta>
 #include <ImageHeader>
 
@@ -8,7 +10,7 @@
 
 class ImageContentsData;
 
-class IMAGEDOCUMENT_EXPORT ImageContents
+class IMAGEIO_EXPORT ImageContents
 {
 public:
     ImageContents();
@@ -31,11 +33,11 @@ public:
 private:
     QSharedDataPointer<ImageContentsData> d;
 
-    friend bool IMAGEDOCUMENT_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
-    friend bool IMAGEDOCUMENT_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
+    friend bool IMAGEIO_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
+    friend bool IMAGEIO_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
 };
 
-bool IMAGEDOCUMENT_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
-bool IMAGEDOCUMENT_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
+bool IMAGEIO_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
+bool IMAGEIO_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
 
 #endif // IMAGECONTENTS_H

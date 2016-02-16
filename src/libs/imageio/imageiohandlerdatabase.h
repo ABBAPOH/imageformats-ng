@@ -1,9 +1,11 @@
 #ifndef IMAGEIOHANDLERDATABASE_H
 #define IMAGEIOHANDLERDATABASE_H
 
+#include "imageio_global.h"
+
 #include <ImageIOHandler>
 
-class IMAGEDOCUMENT_EXPORT ImageIOHandlerDatabase
+class IMAGEIO_EXPORT ImageIOHandlerDatabase
 {
 public:
     ImageIOHandlerDatabase();

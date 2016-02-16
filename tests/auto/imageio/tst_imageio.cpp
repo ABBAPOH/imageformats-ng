@@ -2,7 +2,7 @@
 
 #include "testhandler.h"
 #include "testhandler_p.h"
-#include <ImageDocument>
+#include <ImageIO>
 
 #include <private/ImageIOHandlerDatabase>
 

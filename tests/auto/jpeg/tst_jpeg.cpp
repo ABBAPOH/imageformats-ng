@@ -1,6 +1,5 @@
 #include <QtTest>
 
-#include <ImageDocument>
 #include <ImageIO>
 #include <QMimeDatabase>
 

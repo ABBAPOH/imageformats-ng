@@ -1,6 +1,8 @@
 #ifndef IMAGECONTROL_H
 #define IMAGECONTROL_H
 
+#include "imageview_global.h"
+
 #include <QtCore/QObject>
 #include <QtCore/QPoint>
 #include <QtCore/QSize>

@@ -1,6 +1,6 @@
 import qbs.base 1.0
 
 Plugin {
-    Depends { name: "ImageDocument" }
+    Depends { name: "ImageIO" }
     files: [ "*.cpp", "*.h" ]
 }

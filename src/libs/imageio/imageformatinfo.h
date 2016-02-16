@@ -1,13 +1,15 @@
 #ifndef IMAGEFORMATINFO_H
 #define IMAGEFORMATINFO_H
 
+#include "imageio_global.h"
+
 #include <ImageOptions>
 #include <QtCore/QMimeType>
 #include <QtCore/QVector>
 #include <QtCore/QSharedDataPointer>
 
 class ImageFormatInfoData;
-class ImageFormatInfo
+class IMAGEIO_EXPORT ImageFormatInfo
 {
 public:
     ImageFormatInfo();

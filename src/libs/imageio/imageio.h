@@ -1,7 +1,9 @@
 #ifndef IMAGEIO_H
 #define IMAGEIO_H
 
-#include "optional.h"
+#include "imageio_global.h"
+
+#include <Optional>
 #include <ImageContents>
 #include <ImageFormatInfo>
 #include <ImageOptions>
@@ -13,7 +15,7 @@
 class QIODevice;
 
 class ImageIOPrivate;
-class IMAGEDOCUMENT_EXPORT  ImageIO
+class IMAGEIO_EXPORT  ImageIO
 {
     Q_DISABLE_COPY(ImageIO)
     Q_DECLARE_PRIVATE(ImageIO)
@@ -58,7 +60,7 @@ private:
     QScopedPointer<ImageIOPrivate> d_ptr;
 };
 
-class IMAGEDOCUMENT_EXPORT ImageIO::Error
+class IMAGEIO_EXPORT ImageIO::Error
 {
     Q_DECLARE_TR_FUNCTIONS(Error)
 public:

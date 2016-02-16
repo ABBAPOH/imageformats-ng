@@ -1,6 +1,8 @@
 #ifndef ABSTRACTDOCUMENT_H
 #define ABSTRACTDOCUMENT_H
 
+#include "utils_global.h"
+
 #include <QtCore/QObject>
 #include <QtCore/QUrl>
 #include <QtCore/QIODevice>
@@ -8,7 +10,7 @@
 #include <QtCore/QVector>
 
 class AbstractDocumentPrivate;
-class IMAGEDOCUMENT_EXPORT AbstractDocument : public QObject
+class UTILS_EXPORT AbstractDocument : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(AbstractDocument)

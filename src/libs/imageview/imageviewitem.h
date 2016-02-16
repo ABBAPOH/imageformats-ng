@@ -1,6 +1,8 @@
 #ifndef IMAGEVIEWITEM_H
 #define IMAGEVIEWITEM_H
 
+#include "imageview_global.h"
+
 #include <QtQuick/QQuickPaintedItem>
 
 #include <ImageControl>

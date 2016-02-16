@@ -1,8 +1,11 @@
 #ifndef IMAGEEXIFMETA_H
 #define IMAGEEXIFMETA_H
 
-#include "optional.h"
+#include "imageio_global.h"
 
+#include <Optional>
+
+#include <QtCore/QObject>
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QSize>
 #include <QtCore/QVariant>
@@ -15,7 +18,7 @@ class ImageMetaData;
     inline void set(Optional<Type> t) \
     { if (t) setValue(Tag, QVariant::fromValue<Type>(*t)); else removeValue(Tag); }
 
-class IMAGEDOCUMENT_EXPORT ImageExifMeta
+class IMAGEIO_EXPORT ImageExifMeta
 {
     Q_GADGET
 public:
