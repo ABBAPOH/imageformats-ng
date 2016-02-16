@@ -38,4 +38,14 @@ private:
     friend class ImageIOHandlerDatabase;
 };
 
+inline bool operator==(const ImageFormatInfo &lhs, const ImageFormatInfo &rhs)
+{
+    return lhs.mimeType() == rhs.mimeType();
+}
+
+inline bool operator!=(const ImageFormatInfo &lhs, const ImageFormatInfo &rhs)
+{
+    return !(lhs == rhs);
+}
+
 #endif // IMAGEFORMATINFO_H
