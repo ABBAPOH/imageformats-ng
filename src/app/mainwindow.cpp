@@ -73,7 +73,7 @@ void MainWindow::open()
 {
     const auto formats = ImageIO::supportedImageFormats(ImageFormatInfo::CanRead);
     const auto filters = tr("All Files (*);;") + mimeTypesToFilters(formatsToMimeTypes(formats));
-    QString path = QFileDialog::getOpenFileName(this, tr("open"), QString(), filters);
+    const auto path = QFileDialog::getOpenFileName(this, tr("open"), QString(), filters);
 
     _document->setUrl(QUrl::fromLocalFile(path));
     _document->open();
