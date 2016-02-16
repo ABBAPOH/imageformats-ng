@@ -9,7 +9,7 @@ SupportedFormatsDialog::SupportedFormatsDialog(QWidget *parent) :
     _model(new SupportedFormatsModel)
 {
     ui->setupUi(this);
-    ui->tableView->setModel(_model.data());
+    ui->view->setModel(_model.data());
 }
 
 SupportedFormatsDialog::~SupportedFormatsDialog()
