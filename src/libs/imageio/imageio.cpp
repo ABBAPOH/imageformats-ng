@@ -286,9 +286,22 @@ ImageIO::Error ImageIO::error() const
     return d->error;
 }
 
-QVector<ImageFormatInfo> ImageIO::supportedImageFormats()
+QVector<ImageFormatInfo> ImageIO::supportedImageFormats(ImageFormatInfo::Capabilities caps)
 {
-    return ImageIOHandlerDatabase::instance()->supportedImageFormats();
+    auto formats = ImageIOHandlerDatabase::instance()->supportedImageFormats();
+    const auto predicate = [caps](const ImageFormatInfo &info)
+    {
+        return !(info.capabilities() & caps);
+    };
+    const auto end = std::remove_if(formats.begin(), formats.end(), predicate);
+    formats.resize(int(end - formats.begin()));
+    return formats;
+//    QVector<ImageFormatInfo> result;
+//    for (auto format : formats) {
+//        if (format.capabilities() & caps)
+//            result.push_back(format);
+//    }
+//    return result;
 }
 
 Optional<ImageFormatInfo> ImageIO::imageFormat(const QMimeType &mimeType)

@@ -50,7 +50,7 @@ public:
 
     Error error() const;
 
-    static QVector<ImageFormatInfo> supportedImageFormats();
+    static QVector<ImageFormatInfo> supportedImageFormats(ImageFormatInfo::Capabilities caps = ImageFormatInfo::ReadWrite);
     static Optional<ImageFormatInfo> imageFormat(const QMimeType &mimeType);
     static Optional<ImageFormatInfo> imageFormat(const QString &mimeTypeName);
 

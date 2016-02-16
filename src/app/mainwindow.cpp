@@ -13,6 +13,26 @@
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 
+namespace {
+
+QVector<QMimeType> formatsToMimeTypes(const QVector<ImageFormatInfo> &formats)
+{
+    QVector<QMimeType> result;
+    for (auto format : formats)
+        result.append(format.mimeType());
+    return result;
+}
+
+QString mimeTypesToFilters(const QVector<QMimeType> &mimeTypes)
+{
+    QStringList result;
+    for (auto mt : mimeTypes)
+        result.append(mt.filterString());
+    return result.join(";;");
+}
+
+} // namespace
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -51,7 +71,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::open()
 {
-    QString path = QFileDialog::getOpenFileName(this, tr("open"));
+    const auto formats = ImageIO::supportedImageFormats(ImageFormatInfo::CanRead);
+    const auto filters = tr("All Files (*);;") + mimeTypesToFilters(formatsToMimeTypes(formats));
+    QString path = QFileDialog::getOpenFileName(this, tr("open"), QString(), filters);
 
     _document->setUrl(QUrl::fromLocalFile(path));
     _document->open();
@@ -64,7 +86,9 @@ void MainWindow::save()
 
 void MainWindow::saveAs()
 {
-    const auto path = QFileDialog::getSaveFileName(this, tr("Save As"));
+    const auto formats = ImageIO::supportedImageFormats(ImageFormatInfo::CanWrite);
+    const auto filters = tr("All Files (*);;") + mimeTypesToFilters(formatsToMimeTypes(formats));
+    const auto path = QFileDialog::getSaveFileName(this, tr("Save As"), QString(), filters);
     if (path.isEmpty())
         return;
 
