@@ -84,6 +84,14 @@ QMimeType ImageFormatInfo::mimeType() const
 }
 
 /*!
+    Returns the capabilities supported by the image format.
+*/
+ImageFormatInfo::Capabilities ImageFormatInfo::capabilities() const
+{
+    return d->capabilities;
+}
+
+/*!
     Returns the list of the subtypes that the image format can write.
     If the list is empty, that can mean that format doesn't support writing, or it supports only
     one, unnamed subtype.
