@@ -11,12 +11,14 @@
 class ImageFormatInfoData;
 class IMAGEIO_EXPORT ImageFormatInfo
 {
+    Q_GADGET
 public:
     enum Capability {
         CanRead = 0x1,
         CanWrite = 0x2
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
+    Q_FLAG(Capabilities)
 
     ImageFormatInfo();
     ImageFormatInfo(const ImageFormatInfo &other);

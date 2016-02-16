@@ -1,11 +1,21 @@
 #include "supportedformatsmodel.h"
 
+#include <QtCore/QMetaEnum>
+
 QStringList subTypesToStringList(const QVector<QByteArray> &subTypes)
 {
     QStringList result;
     for (auto subType : subTypes)
         result.append(QString::fromLatin1(subType));
     return result;
+}
+
+QString capabilitesToString(ImageFormatInfo::Capabilities caps)
+{
+    const auto index = ImageFormatInfo::staticMetaObject.indexOfEnumerator("Capabilities");
+    Q_ASSERT(index != -1);
+    const auto enumerator = ImageFormatInfo::staticMetaObject.enumerator(index);
+    return enumerator.valueToKeys(caps);
 }
 
 SupportedFormatsModel::SupportedFormatsModel(QObject *parent) :
@@ -43,6 +53,25 @@ int SupportedFormatsModel::columnCount(const QModelIndex &parent) const
     return ColumnCount;
 }
 
+QVariant SupportedFormatsModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Vertical)
+        return QAbstractTableModel::headerData(section, orientation, role);
+
+    if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
+        switch (section) {
+        case ColumnName: return tr("Name");
+        case ColumnMimeType: return tr("Mime type");
+        case ColumnSubTypes: return tr("Sub types");
+        case ColumnCapabilities: return tr("Capabilities");
+        default:
+            break;
+        }
+    }
+
+    return QAbstractTableModel::headerData(section, orientation, role);
+}
+
 QVariant SupportedFormatsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
@@ -51,10 +80,14 @@ QVariant SupportedFormatsModel::data(const QModelIndex &index, int role) const
     const auto &format = _formats.at(index.row());
     const int column = index.column();
     if (role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole) {
-        if (column == ColumnMimeType)
+        if (column == ColumnName)
+            return format.name();
+        else if (column == ColumnMimeType)
             return format.mimeType().name();
         else if (column == ColumnSubTypes)
             return subTypesToStringList(format.supportedSubTypes()).join(", ");
+        else if (column == ColumnCapabilities)
+            return capabilitesToString(format.capabilities());
     }
 
     return QVariant();

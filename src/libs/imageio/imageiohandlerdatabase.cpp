@@ -123,6 +123,7 @@ ImageFormatInfo ImageIOHandlerDatabase::getInfo(const QMimeType &mt,  ImageIOHan
     ImageFormatInfoData data;
     data.name = plugin->name();
     data.mimeType = mt;
+    data.capabilities = plugin->capabilities(nullptr, mt);
     data.subTypes = plugin->supportedSubTypes(mt);
     data.options[""] = plugin->supportedOptions(mt, QByteArray());
     for (const auto subType : data.subTypes) {
