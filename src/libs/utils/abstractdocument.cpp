@@ -124,6 +124,7 @@ void AbstractDocument::open()
     Q_D(AbstractDocument);
     if (d->url.isEmpty()) {
         finishOpen(false);
+        return;
     }
 
     doOpen(d->url);
@@ -134,6 +135,7 @@ void AbstractDocument::save()
     Q_D(AbstractDocument);
     if (d->url.isEmpty()) {
         finishSave(false);
+        return;
     }
 
     doSave(d->url);
