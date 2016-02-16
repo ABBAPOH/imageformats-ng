@@ -25,6 +25,7 @@ public slots:
     void open();
     void save();
     void saveAs();
+    void showSupportedFormatsDialog();
 
 private:
     void buildModel();

@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "supportedformatsdialog.h"
+#include "supportedformatsmodel.h"
+
 #include <ImageIO>
 #include <ImageView>
 #include <VariantMapModel>
@@ -27,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
     connect(ui->actionShowInfo, &QAction::triggered, this, &MainWindow::showInfo);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
+    connect(ui->actionSupportedFormats, &QAction::triggered,
+            this, &MainWindow::showSupportedFormatsDialog);
 
     connect(ui->treeView->selectionModel(), &QItemSelectionModel::currentChanged,
             this, &MainWindow::onClicked);
@@ -65,6 +70,13 @@ void MainWindow::saveAs()
 
     _document->setUrl(QUrl::fromLocalFile(path));
     _document->save();
+}
+
+void MainWindow::showSupportedFormatsDialog()
+{
+    SupportedFormatsDialog dialog;
+    dialog.model()->setFormats(ImageIO::supportedImageFormats());
+    dialog.exec();
 }
 
 void MainWindow::buildModel()
