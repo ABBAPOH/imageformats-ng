@@ -12,7 +12,6 @@ class ImageFormatInfoData;
 class IMAGEIO_EXPORT ImageFormatInfo
 {
 public:
-    ImageFormatInfo();
     ImageFormatInfo(const ImageFormatInfo &other);
     ImageFormatInfo(ImageFormatInfo &&other);
     ~ImageFormatInfo();
