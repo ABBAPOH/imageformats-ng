@@ -10,6 +10,15 @@
 */
 
 /*!
+    \internal
+*/
+// TODO: remove this ctor
+ImageFormatInfo::ImageFormatInfo() :
+    d(new ImageFormatInfoData())
+{
+}
+
+/*!
     Constructs a new ImageFormatInfo that is a copy of the given \a other ImageFormatInfo.
 */
 ImageFormatInfo::ImageFormatInfo(const ImageFormatInfo &other) :

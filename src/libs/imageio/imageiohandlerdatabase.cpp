@@ -72,7 +72,7 @@ std::unique_ptr<ImageIOHandler> ImageIOHandlerDatabase::create(QIODevice *device
     return std::unique_ptr<ImageIOHandler>(plugin->create(device, mimeType));
 }
 
-QVector<QMimeType> ImageIOHandlerDatabase::availableMimeTypes(ImageIOHandlerPlugin::Capabilities caps) const
+QVector<QMimeType> ImageIOHandlerDatabase::availableMimeTypes(ImageFormatInfo::Capabilities caps) const
 {
     QVector<QMimeType> result;
     for (auto it = map.begin(), end = map.end(); it != end; it++) {

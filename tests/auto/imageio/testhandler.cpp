@@ -142,13 +142,12 @@ ImageIOHandler *TestHandlerPlugin::create(QIODevice *device, const QMimeType &mi
     return new TestHandler();
 }
 
-ImageIOHandlerPlugin::Capabilities TestHandlerPlugin::capabilities(QIODevice *device,
+ImageFormatInfo::Capabilities TestHandlerPlugin::capabilities(QIODevice *device,
                                                                    const QMimeType &mimeType) const
 {
     Q_UNUSED(device);
     Q_UNUSED(mimeType);
-    return ImageIOHandlerPlugin::Capabilities(ImageIOHandlerPlugin::CanRead
-                                              | ImageIOHandlerPlugin::CanWrite);
+    return ImageFormatInfo::Capabilities(ImageFormatInfo::CanRead | ImageFormatInfo::CanWrite);
 }
 
 Q_IMPORT_PLUGIN(TestHandlerPlugin)

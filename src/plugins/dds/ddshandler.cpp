@@ -1566,9 +1566,9 @@ DDSHandler *DdsHandlerPlugin::create(QIODevice *device, const QMimeType &mimeTyp
     return new DDSHandler();
 }
 
-ImageIOHandlerPlugin::Capabilities DdsHandlerPlugin::capabilities(QIODevice *device, const QMimeType &mimeType) const
+ImageFormatInfo::Capabilities DdsHandlerPlugin::capabilities(QIODevice *device, const QMimeType &mimeType) const
 {
     Q_UNUSED(device);
     Q_UNUSED(mimeType);
-    return Capabilities(CanRead | CanWrite);
+    return ImageFormatInfo::Capabilities(ImageFormatInfo::CanRead | ImageFormatInfo::CanWrite);
 }

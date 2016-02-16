@@ -12,6 +12,13 @@ class ImageFormatInfoData;
 class IMAGEIO_EXPORT ImageFormatInfo
 {
 public:
+    enum Capability {
+        CanRead = 0x1,
+        CanWrite = 0x2
+    };
+    Q_DECLARE_FLAGS(Capabilities, Capability)
+
+    ImageFormatInfo();
     ImageFormatInfo(const ImageFormatInfo &other);
     ImageFormatInfo(ImageFormatInfo &&other);
     ~ImageFormatInfo();
@@ -21,6 +28,8 @@ public:
 
     QByteArray name() const;
     QMimeType mimeType() const;
+
+    Capabilities capabilities() const;
 
     QVector<QByteArray> supportedSubTypes() const;
 

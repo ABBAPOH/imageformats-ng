@@ -80,7 +80,7 @@ public:
     QByteArray name() const Q_DECL_OVERRIDE;
     QVector<QByteArray> supportedSubTypes(const QMimeType &mimeType) const Q_DECL_OVERRIDE;
     DDSHandler *create(QIODevice *device, const QMimeType &mimeType) Q_DECL_OVERRIDE;
-    Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
+    ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
 };
 
 #endif // DDSHANDLER_H

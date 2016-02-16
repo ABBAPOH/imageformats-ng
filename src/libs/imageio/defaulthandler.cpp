@@ -92,9 +92,9 @@ DefaultHandler *DefaultHandlerPlugin::create(QIODevice *device, const QMimeType 
     return new DefaultHandler();
 }
 
-ImageIOHandlerPlugin::Capabilities DefaultHandlerPlugin::capabilities(QIODevice *device, const QMimeType &mimeType) const
+ImageFormatInfo::Capabilities DefaultHandlerPlugin::capabilities(QIODevice *device, const QMimeType &mimeType) const
 {
     Q_UNUSED(device);
     Q_UNUSED(mimeType);
-    return Capabilities(CanRead | CanWrite);
+    return ImageFormatInfo::Capabilities(ImageFormatInfo::CanRead | ImageFormatInfo::CanWrite);
 }

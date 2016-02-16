@@ -46,16 +46,10 @@ class IMAGEIO_EXPORT ImageIOHandlerPlugin : public QObject
     Q_OBJECT
     Q_DISABLE_COPY(ImageIOHandlerPlugin)
 public:
-    enum Capability {
-        CanRead = 0x1,
-        CanWrite = 0x2
-    };
-    Q_DECLARE_FLAGS(Capabilities, Capability)
-
     explicit ImageIOHandlerPlugin() {}
 
     virtual QByteArray name() const = 0;
-    virtual Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const = 0;
+    virtual ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const = 0;
     virtual QVector<QByteArray> supportedSubTypes(const QMimeType &mimeType) const;
     virtual QVector<ImageOptions::Option> supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const;
 

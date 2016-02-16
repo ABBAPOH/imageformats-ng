@@ -76,7 +76,7 @@ class JpegHandlerPlugin : public ImageIOHandlerPlugin
 public:
     QByteArray name() const Q_DECL_OVERRIDE;
     JpegHandler *create(QIODevice *device, const QMimeType &mimeType) Q_DECL_OVERRIDE;
-    Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
+    ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
 };
 
 #endif // JPEGHANDLER_P_H

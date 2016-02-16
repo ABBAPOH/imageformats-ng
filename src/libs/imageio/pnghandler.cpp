@@ -1120,11 +1120,11 @@ ImageIOHandler *PngHandlerPlugin::create(QIODevice *device, const QMimeType &mim
     return new QPngHandler();
 }
 
-ImageIOHandlerPlugin::Capabilities PngHandlerPlugin::capabilities(QIODevice *device, const QMimeType &mimeType) const
+ImageFormatInfo::Capabilities PngHandlerPlugin::capabilities(QIODevice *device, const QMimeType &mimeType) const
 {
     Q_UNUSED(device);
     Q_UNUSED(mimeType);
-    return ImageIOHandlerPlugin::Capabilities(CanRead | CanWrite);
+    return ImageFormatInfo::Capabilities(ImageFormatInfo::CanRead | ImageFormatInfo::CanWrite);
 }
 
 Q_IMPORT_PLUGIN(PngHandlerPlugin)
