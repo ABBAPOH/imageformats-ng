@@ -13,6 +13,7 @@ public:
         ColumnMimeType,
         ColumnSubTypes,
         ColumnCapabilities,
+        ColumnOptions,
         ColumnCount
     };
 

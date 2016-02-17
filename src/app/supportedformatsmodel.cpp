@@ -1,6 +1,9 @@
 #include "supportedformatsmodel.h"
 
 #include <QtCore/QMetaEnum>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonDocument>
+#include <QtCore/QJsonObject>
 
 QStringList subTypesToStringList(const QVector<QByteArray> &subTypes)
 {
@@ -16,6 +19,28 @@ QString capabilitesToString(ImageFormatInfo::Capabilities caps)
     Q_ASSERT(index != -1);
     const auto enumerator = ImageFormatInfo::staticMetaObject.enumerator(index);
     return enumerator.valueToKeys(caps);
+}
+
+QJsonObject optionsToJson(const ImageFormatInfo &info, const QByteArray &key)
+{
+    auto enumerator = QMetaEnum::fromType<ImageOptions::Option>();
+    QStringList enums;
+    for (auto option : info.supportedOptions(key))
+        enums.append(enumerator.valueToKeys(option));
+    QJsonObject result;
+    result.insert(QString::fromLatin1(key), enums.join("|"));
+    return result;
+}
+
+QString optionsToString(const ImageFormatInfo &info)
+{
+    QJsonDocument doc;
+    QJsonArray array;
+    array.append(optionsToJson(info, ""));
+    for (auto subType : info.supportedSubTypes())
+        array.append(optionsToJson(info, subType));
+    doc.setArray(array);
+    return QString::fromLatin1(doc.toJson(QJsonDocument::Compact));
 }
 
 SupportedFormatsModel::SupportedFormatsModel(QObject *parent) :
@@ -64,6 +89,7 @@ QVariant SupportedFormatsModel::headerData(int section, Qt::Orientation orientat
         case ColumnMimeType: return tr("Mime type");
         case ColumnSubTypes: return tr("Sub types");
         case ColumnCapabilities: return tr("Capabilities");
+        case ColumnOptions: return tr("Options");
         default:
             break;
         }
@@ -88,6 +114,8 @@ QVariant SupportedFormatsModel::data(const QModelIndex &index, int role) const
             return subTypesToStringList(format.supportedSubTypes()).join(", ");
         else if (column == ColumnCapabilities)
             return capabilitesToString(format.capabilities());
+        else if (column == ColumnOptions)
+            return optionsToString(format);
     }
 
     return QVariant();

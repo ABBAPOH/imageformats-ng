@@ -10,6 +10,7 @@
 
 class ImageOptions
 {
+    Q_GADGET
 public:
     ImageOptions();
 
@@ -26,7 +27,7 @@ public:
         Gamma,
         Quality
     };
-    Q_ENUMS(Option)
+    Q_ENUM(Option)
 
     bool isEmpty() const;
 
