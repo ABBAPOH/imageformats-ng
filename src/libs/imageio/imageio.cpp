@@ -271,13 +271,17 @@ bool ImageIO::write(const ImageContents &contents, const ImageOptions &options)
     return true;
 }
 
-bool ImageIO::supportsOption(ImageOptions::Option option)
+bool ImageIO::supportsOption(ImageOptions::Option option, const QByteArray &subType) const
 {
-    Q_D(ImageIO);
-    if (!d->ensureHandlerCreated(QIODevice::ReadOnly))
+    Q_D(const ImageIO);
+
+    if (!d->mimeType.isValid())
         return false;
 
-    return d->handler->supportsOption(option);
+    const auto info = imageFormat(d->mimeType);
+    if (!info)
+        return false;
+    return info->supportsOption(subType, option);
 }
 
 ImageIO::Error ImageIO::error() const

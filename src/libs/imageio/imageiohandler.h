@@ -28,8 +28,6 @@ public:
     virtual bool read(ImageContents &contents, const ImageOptions &options) = 0;
     virtual bool write(const ImageContents &contents, const ImageOptions &options) = 0;
 
-    virtual bool supportsOption(ImageOptions::Option option) const;
-
 private:
     enum State { NoState, HeaderReadState, DataReadState, ErrorState } state;
 

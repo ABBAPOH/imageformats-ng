@@ -63,8 +63,6 @@ public:
 
     static bool canRead(QIODevice *device);
 
-    bool supportsOption(ImageOptions::Option option) const Q_DECL_OVERRIDE;
-
 private:
     JpegHandlerPrivate *d;
 };
@@ -75,6 +73,7 @@ class JpegHandlerPlugin : public ImageIOHandlerPlugin
     Q_PLUGIN_METADATA(IID "org.arch.ImageDocument.JpegHandlerPlugin" FILE "jpeg.json")
 public:
     QByteArray name() const Q_DECL_OVERRIDE;
+    QVector<ImageOptions::Option> supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const Q_DECL_OVERRIDE;
     JpegHandler *create(QIODevice *device, const QMimeType &mimeType) Q_DECL_OVERRIDE;
     ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
 };

@@ -1055,18 +1055,22 @@ bool JpegHandler::write(const ImageContents &contents, const ImageOptions &optio
     return write_jpeg_image(contents.image(), device(), options.quality(), d->description);
 }
 
-bool JpegHandler::supportsOption(ImageOptions::Option option) const
-{
-    return option == ImageOptions::InputQuality
-        || option == ImageOptions::ScaledSize
-        || option == ImageOptions::ScaledClipRect
-        || option == ImageOptions::ClipRect
-        || option == ImageOptions::Quality;
-}
-
 QByteArray JpegHandlerPlugin::name() const
 {
     return "jpeg";
+}
+
+QVector<ImageOptions::Option> JpegHandlerPlugin::supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const
+{
+    Q_UNUSED(mimeType);
+    Q_UNUSED(subType);
+    return {
+        ImageOptions::InputQuality,
+        ImageOptions::ScaledSize,
+        ImageOptions::ScaledClipRect,
+        ImageOptions::ClipRect,
+        ImageOptions::Quality
+    };
 }
 
 JpegHandler *JpegHandlerPlugin::create(QIODevice *device, const QMimeType &mimeType)

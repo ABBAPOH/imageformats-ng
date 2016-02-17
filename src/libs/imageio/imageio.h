@@ -46,7 +46,7 @@ public:
     Optional<ImageContents> read(const ImageOptions &options = ImageOptions());
     bool write(const ImageContents &contents, const ImageOptions &options = ImageOptions());
 
-    bool supportsOption(ImageOptions::Option option);
+    bool supportsOption(ImageOptions::Option option, const QByteArray &subType = QByteArray()) const;
 
     Error error() const;
 

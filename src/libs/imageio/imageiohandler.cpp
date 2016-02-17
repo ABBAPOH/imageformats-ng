@@ -55,17 +55,6 @@ void ImageIOHandler::setSubType(const QByteArray &subType)
 }
 
 /*!
-    Returns true if the ImageIOHandler supports the option \a option; otherwise
-    returns false. For example, if the ImageIOHandler supports the
-    ImageOptions::Quality option, supportsOption(Quality) must return true.
-*/
-bool ImageIOHandler::supportsOption(ImageOptions::Option option) const
-{
-    Q_UNUSED(option);
-    return false;
-}
-
-/*!
     \fn ImageIOHandlerPlugin::ImageIOHandlerPlugin()
 
     Constructs a new object with the given parent.
@@ -99,6 +88,12 @@ QVector<QByteArray> ImageIOHandlerPlugin::supportedSubTypes(const QMimeType &mim
     return QVector<QByteArray>();
 }
 
+/*!
+    Returns true the list of supported options by the handler for the \a mimeType and \a subType.
+    You should return read options for the empty subtype and write options for the specific
+    non-empty subtype. If handler doesn't support subtypes, return write options for the empty
+    subtype too.
+*/
 QVector<ImageOptions::Option> ImageIOHandlerPlugin::supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const
 {
     Q_UNUSED(mimeType);
