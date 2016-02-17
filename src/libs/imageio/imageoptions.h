@@ -8,7 +8,7 @@
 #include <QtCore/QVariant>
 #include <QtGui/QColor>
 
-class ImageOptions
+class IMAGEIO_EXPORT ImageOptions
 {
     Q_GADGET
 public:

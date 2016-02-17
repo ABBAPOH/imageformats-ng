@@ -4,6 +4,7 @@
 #include "imageio_global.h"
 
 #include <ImageIOHandler>
+#include <memory>
 
 class IMAGEIO_EXPORT ImageIOHandlerDatabase
 {

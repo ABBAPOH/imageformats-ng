@@ -3,11 +3,11 @@
 
 #include <QtWidgets/QDialog>
 
+class SupportedFormatsModel;
+
 namespace Ui {
 class SupportedFormatsDialog;
 }
-
-class SupportedFormatsModel;
 
 class SupportedFormatsDialog : public QDialog
 {
@@ -21,7 +21,7 @@ public:
 
 private:
     Ui::SupportedFormatsDialog *ui {nullptr};
-    QScopedPointer<SupportedFormatsModel> _model {nullptr};
+    QScopedPointer<SupportedFormatsModel> _model;
 };
 
 #endif // SUPPORTEDFORMATSDIALOG_H
