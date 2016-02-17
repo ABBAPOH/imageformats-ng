@@ -281,7 +281,7 @@ bool ImageIO::supportsOption(ImageOptions::Option option, const QByteArray &subT
     const auto info = imageFormat(d->mimeType);
     if (!info)
         return false;
-    return info->supportsOption(subType, option);
+    return info->supportsOption(option, subType);
 }
 
 ImageIO::Error ImageIO::error() const

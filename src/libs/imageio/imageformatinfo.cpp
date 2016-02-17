@@ -118,17 +118,9 @@ QVector<ImageOptions::Option> ImageFormatInfo::supportedOptions(const QByteArray
 }
 
 /*!
-    Returns list of available options.
+    Returns true, if format supports option \a option for the sub type \a subType.
 */
-bool ImageFormatInfo::supportsOption(ImageOptions::Option option) const
-{
-    return supportsOption(QByteArray(), option);
-}
-
-/*!
-    Convenience function to chech for a particular option.
-*/
-bool ImageFormatInfo::supportsOption(const QByteArray &subType, ImageOptions::Option option) const
+bool ImageFormatInfo::supportsOption(ImageOptions::Option option, const QByteArray &subType) const
 {
     return supportedOptions(subType).contains(option);
 }
