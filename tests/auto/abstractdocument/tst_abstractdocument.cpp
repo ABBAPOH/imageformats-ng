@@ -8,12 +8,12 @@ class TestDocument : public AbstractDocument
 public:
     explicit TestDocument(QObject *parent = Q_NULLPTR) : AbstractDocument(parent) {}
 
-    QVector<QMimeType> supportedInputMimetypes() const Q_DECL_OVERRIDE
+    QVector<QMimeType> supportedInputMimetypes() const override
     {
         return QVector<QMimeType>() << QMimeDatabase().mimeTypeForName("text/plain");
     }
 
-    QVector<QMimeType> supportedOutputMimetypes() const Q_DECL_OVERRIDE
+    QVector<QMimeType> supportedOutputMimetypes() const override
     {
         return QVector<QMimeType>() << QMimeDatabase().mimeTypeForName("text/plain");
     }
@@ -22,8 +22,8 @@ public:
     void setText(const QString &text) { _text = text; }
 
 protected:
-    void doOpen(const QUrl &url) Q_DECL_OVERRIDE;
-    void doSave(const QUrl &url) Q_DECL_OVERRIDE;
+    void doOpen(const QUrl &url) override;
+    void doSave(const QUrl &url) override;
 
 private:
     QString _text;

@@ -25,9 +25,9 @@ class TestHandlerPlugin : public ImageIOHandlerPlugin
 
 public:
     TestHandlerPlugin();
-    QByteArray name() const Q_DECL_OVERRIDE;
-    ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) Q_DECL_OVERRIDE;
-    ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
+    QByteArray name() const override;
+    ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) override;
+    ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const override;
 };
 
 #endif // TESTHANDLER_H

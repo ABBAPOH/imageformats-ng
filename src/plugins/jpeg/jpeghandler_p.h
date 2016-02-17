@@ -56,10 +56,10 @@ public:
     JpegHandler();
     ~JpegHandler();
 
-    bool canRead() Q_DECL_OVERRIDE;
-    bool readHeader(ImageHeader &contents) Q_DECL_OVERRIDE;
-    bool read(ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
-    bool write(const ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
+    bool canRead() override;
+    bool readHeader(ImageHeader &contents) override;
+    bool read(ImageContents &contents, const ImageOptions &options) override;
+    bool write(const ImageContents &contents, const ImageOptions &options) override;
 
     static bool canRead(QIODevice *device);
 
@@ -72,10 +72,10 @@ class JpegHandlerPlugin : public ImageIOHandlerPlugin
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.arch.ImageDocument.JpegHandlerPlugin" FILE "jpeg.json")
 public:
-    QByteArray name() const Q_DECL_OVERRIDE;
-    QVector<ImageOptions::Option> supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const Q_DECL_OVERRIDE;
-    JpegHandler *create(QIODevice *device, const QMimeType &mimeType) Q_DECL_OVERRIDE;
-    ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
+    QByteArray name() const override;
+    QVector<ImageOptions::Option> supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const override;
+    JpegHandler *create(QIODevice *device, const QMimeType &mimeType) override;
+    ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const override;
 };
 
 #endif // JPEGHANDLER_P_H

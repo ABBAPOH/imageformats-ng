@@ -54,9 +54,9 @@ public:
     QPngHandler();
     ~QPngHandler();
 
-    bool canRead() Q_DECL_OVERRIDE;
-    bool read(ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
-    bool write(const ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
+    bool canRead() override;
+    bool read(ImageContents &contents, const ImageOptions &options) override;
+    bool write(const ImageContents &contents, const ImageOptions &options) override;
 
 //    QVariant option(ImageOption option) const;
 //    void setOption(ImageOption option, const QVariant &value);
@@ -77,8 +77,8 @@ public:
     PngHandlerPlugin() {}
     QByteArray name() const override;
     QVector<ImageOptions::Option> supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const override;
-    ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) Q_DECL_OVERRIDE;
-    ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
+    ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) override;
+    ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const override;
 };
 
 

@@ -53,10 +53,10 @@ public:
 
     QByteArray name() const;
 
-    bool canRead() Q_DECL_OVERRIDE;
-    bool readHeader(ImageHeader &header) Q_DECL_OVERRIDE;
-    bool read(ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
-    bool write(const ImageContents &contents, const ImageOptions &options) Q_DECL_OVERRIDE;
+    bool canRead() override;
+    bool readHeader(ImageHeader &header) override;
+    bool read(ImageContents &contents, const ImageOptions &options) override;
+    bool write(const ImageContents &contents, const ImageOptions &options) override;
 
     static bool canRead(QIODevice *device);
 
@@ -77,10 +77,10 @@ class DdsHandlerPlugin : public ImageIOHandlerPlugin
     Q_PLUGIN_METADATA(IID "org.arch.ImageDocument.DdsHandlerPlugin" FILE "dds.json")
 public:
     DdsHandlerPlugin() {}
-    QByteArray name() const Q_DECL_OVERRIDE;
-    QVector<QByteArray> supportedSubTypes(const QMimeType &mimeType) const Q_DECL_OVERRIDE;
-    DDSHandler *create(QIODevice *device, const QMimeType &mimeType) Q_DECL_OVERRIDE;
-    ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const Q_DECL_OVERRIDE;
+    QByteArray name() const override;
+    QVector<QByteArray> supportedSubTypes(const QMimeType &mimeType) const override;
+    DDSHandler *create(QIODevice *device, const QMimeType &mimeType) override;
+    ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const override;
 };
 
 #endif // DDSHANDLER_H
