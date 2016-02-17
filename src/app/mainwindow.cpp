@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "imageinfodialog.h"
 #include "supportedformatsdialog.h"
 #include "supportedformatsmodel.h"
 
@@ -160,13 +161,9 @@ void MainWindow::onClicked(const QModelIndex &index)
 
 void MainWindow::showInfo()
 {
-    QTreeView *view = new QTreeView();
-    auto values = _document->contents().exifMeta().toVariantMap();
-    auto model = new VariantMapModel(view);
-    model->setVariantMap(values);
-    view->resize(300, 400);
-    view->setModel(model);
-    view->show();
+    ImageInfoDialog dialog;
+    dialog.setContents(_document->contents());
+    dialog.exec();
 }
 
 void MainWindow::onOpenFinished(bool ok)

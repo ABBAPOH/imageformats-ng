@@ -7,7 +7,7 @@ public:
     ImageHeaderData(const ImageHeaderData &) = default;
     ~ImageHeaderData() = default;
 
-    ImageHeader::Type type {ImageHeader::Image};
+    ImageHeader::Type type {ImageHeader::Invalid};
     QSize size;
     QImage::Format imageFormat {QImage::Format_Invalid};
     QString name;
@@ -50,6 +50,11 @@ ImageHeader &ImageHeader::operator=(ImageHeader &&other)
     if (this != &other)
         d.operator=(qMove(other.d));
     return *this;
+}
+
+bool ImageHeader::isNull() const
+{
+    return *this == ImageHeader();
 }
 
 ImageHeader::Type ImageHeader::type() const
@@ -116,7 +121,7 @@ void ImageHeader::setMipmapCount(int count)
     d->mipmapCount = count;
 }
 
-int ImageHeader::imageDelay()
+int ImageHeader::imageDelay() const
 {
     return d->imageDelay;
 }

@@ -9,15 +9,17 @@
 class ImageHeaderData;
 class IMAGEIO_EXPORT ImageHeader
 {
+    Q_GADGET
 public:
     enum Type {
+        Invalid,
         Image,
         Animation,
         ImageArray,
         Cubemap,
         VolumeTexture
     };
-    Q_ENUMS(Type)
+    Q_ENUM(Type)
 
     ImageHeader();
     ImageHeader(const ImageHeader &other);
@@ -26,6 +28,8 @@ public:
 
     ImageHeader &operator=(const ImageHeader &other);
     ImageHeader &operator=(ImageHeader &&other);
+
+    bool isNull() const;
 
     Type type() const;
     void setType(Type t);
@@ -45,7 +49,7 @@ public:
     int mipmapCount() const;
     void setMipmapCount(int count);
 
-    int imageDelay(); // TODO: should we support separate delays for each frame?
+    int imageDelay() const; // TODO: should we support separate delays for each frame?
     void setImageDelay(int delay); // TODO: this could be only called by handler. Move to DocData?
 
     int loopCount() const;
