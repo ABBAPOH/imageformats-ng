@@ -20,7 +20,6 @@ public:
 ImageHeader::ImageHeader() :
     d(new ImageHeaderData)
 {
-
 }
 
 ImageHeader::ImageHeader(const ImageHeader &other) :
