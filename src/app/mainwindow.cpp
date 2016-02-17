@@ -161,9 +161,11 @@ void MainWindow::onClicked(const QModelIndex &index)
 
 void MainWindow::showInfo()
 {
-    ImageInfoDialog dialog;
-    dialog.setContents(_document->contents());
-    dialog.exec();
+    if (!_imageInfoDialog)
+        _imageInfoDialog.reset(new ImageInfoDialog(this));
+
+    _imageInfoDialog->setContents(_document->contents());
+    _imageInfoDialog->show();
 }
 
 void MainWindow::onOpenFinished(bool ok)

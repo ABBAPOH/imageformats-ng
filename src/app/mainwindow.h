@@ -8,6 +8,7 @@
 #include <ImageDocument>
 
 class ImageView;
+class ImageInfoDialog;
 
 namespace Ui {
 class MainWindow;
@@ -45,6 +46,7 @@ private:
     QStandardItemModel *_model;
     ImageDocument *_document;
     ImageView *_view {Q_NULLPTR};
+    QScopedPointer<ImageInfoDialog> _imageInfoDialog;
 };
 
 #endif // MAINWINDOW_H
