@@ -227,7 +227,11 @@ Optional<ImageHeader> ImageIO::readHeader()
 
     ImageHeader header;
     if (d->handler->readHeader(header)) {
-        d->header = header;
+        if (header.isNull() || header.type() == ImageHeader::Invalid) {
+            d->error = Error::IOError;
+        } else {
+            d->header = header;
+        }
     } else {
         d->error = Error::IOError;
     }
