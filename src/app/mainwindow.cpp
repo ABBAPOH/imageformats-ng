@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->dockWidget->setTitleBarWidget(new QWidget());
     _model = new QStandardItemModel(this);
     ui->treeView->setModel(_model);
 
