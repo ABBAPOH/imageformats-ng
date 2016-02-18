@@ -23,6 +23,7 @@ public:
     ~MainWindow();
 
 public slots:
+    void newFromClipboard();
     void open();
     void save();
     void saveAs();

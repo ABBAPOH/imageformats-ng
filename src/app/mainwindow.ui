@@ -42,6 +42,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionNewFromClipboard"/>
     <addaction name="actionOpen"/>
     <addaction name="actionSave"/>
     <addaction name="actionSaveAs"/>
@@ -156,6 +157,14 @@
    </property>
    <property name="menuRole">
     <enum>QAction::ApplicationSpecificRole</enum>
+   </property>
+  </action>
+  <action name="actionNewFromClipboard">
+   <property name="text">
+    <string>New from clipboard</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
  </widget>

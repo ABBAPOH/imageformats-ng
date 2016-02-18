@@ -36,6 +36,18 @@ ImageContents::ImageContents() :
 
 }
 
+ImageContents::ImageContents(const QImage &image):
+    d(new ImageContentsData)
+{
+    if (image.isNull())
+        return;
+    d->header.setType(ImageHeader::Image);
+    d->header.setSize(image.size());
+    d->header.setImageFormat(image.format());
+    d->header.setImageCount(1);
+    setImage(image);
+}
+
 ImageContents::ImageContents(const ImageContents &other) :
     d(other.d)
 {

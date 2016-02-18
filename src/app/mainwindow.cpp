@@ -11,6 +11,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
+#include <QtGui/QClipboard>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 
@@ -47,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_document, &AbstractDocument::openFinished, this, &MainWindow::onOpenFinished);
     connect(_document, &AbstractDocument::saveFinished, this, &MainWindow::onSaveFinished);
 
+    connect(ui->actionNewFromClipboard, &QAction::triggered, this, &MainWindow::newFromClipboard);
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::open);
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::save);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
@@ -69,6 +71,17 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::newFromClipboard()
+{
+    const auto image = qApp->clipboard()->image();
+    if (image.isNull())
+        return;
+
+    ImageContents contents(image);
+    _document->setContents(contents);
+    buildModel();
 }
 
 void MainWindow::open()
