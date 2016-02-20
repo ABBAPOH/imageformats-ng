@@ -27,7 +27,55 @@ public:
     ImageHeader header;
     QMap<ImageIndex, QImage> images;
     ImageExifMeta exif;
+
+    QImage image(int side, int index, int level) const;
+    void setImage(const QImage &image, int side, int index, int level);
 };
+
+QImage ImageContentsData::image(int side, int index, int level) const
+{
+    if (index < 0 || index >= header.imageCount()) {
+        qWarning() << "Attempt to get image with index = " << index
+                   << "which is out of bounds" << 0 << header.imageCount();
+        return QImage();
+    }
+    if (header.mipmapCount() > 0) {
+        if (level < 0 || level >= header.mipmapCount()) {
+            qWarning() << "Attempt to get image with level = " << level
+                       << "which is out of bounds" << 0 << header.mipmapCount();
+            return QImage();
+        }
+    }
+
+    const auto realIndex = index * (header.type() == ImageHeader::Cubemap ? 6 : 1) + side;
+    return images.value(ImageContentsData::ImageIndex(realIndex, level));
+}
+
+void ImageContentsData::setImage(const QImage &image, int side, int index, int level)
+{
+    if (index < 0 || index >= header.imageCount()) {
+        qWarning() << "Attempt to get image with index = " << index
+                   << "which is out of bounds" << 0 << header.imageCount();
+        return;
+    }
+    if (header.mipmapCount() > 0) {
+        if (level < 0 || level >= header.mipmapCount()) {
+            qWarning() << "Attempt to get image with level = " << level
+                       << "which is out of bounds" << 0 << header.mipmapCount();
+            return;
+        }
+    }
+
+    if (header.imageFormat() == QImage::Format_Invalid) {
+        header.setImageFormat(image.format());
+    }
+    QImage copy(image);
+    if (image.format() != header.imageFormat())
+        copy = image.convertToFormat(header.imageFormat());
+
+    const auto realIndex = index * (header.type() == ImageHeader::Cubemap ? 6 : 1) + side;
+    images.insert(ImageContentsData::ImageIndex(realIndex, level), copy);
+}
 
 /*!
     \class ImageContents
@@ -81,42 +129,24 @@ void ImageContents::setHeader(const ImageHeader &header)
 
 QImage ImageContents::image(int index, int level) const
 {
-    if (index < 0 || index >= d->header.imageCount()) {
-        qWarning() << "Attempt to get image with index = " << index
-                   << "which is out of bounds" << 0 << d->header.imageCount();
-        return QImage();
-    }
-    if (d->header.mipmapCount() > 0) {
-        if (level < 0 || level >= d->header.mipmapCount()) {
-            qWarning() << "Attempt to get image with level = " << level
-                       << "which is out of bounds" << 0 << d->header.mipmapCount();
-            return QImage();
-        }
-    }
-    return d->images.value(ImageContentsData::ImageIndex(index, level));
+    return d->image(0, index, level);
 }
 
 void ImageContents::setImage(const QImage &image, int index, int level)
 {
-    if (d->header.imageFormat() == QImage::Format_Invalid) {
-        d->header.setImageFormat(image.format());
-    }
-    QImage copy(image);
-    if (image.format() != d->header.imageFormat())
-        copy = image.convertToFormat(d->header.imageFormat());
-    d->images.insert(ImageContentsData::ImageIndex(index, level), copy);
+    d->setImage(image, 0, index, level);
 }
 
 QImage ImageContents::image(ImageContents::Side side, int index, int level) const
 {
-    Q_ASSERT(index != 0);
-    return image(int(side), level);
+    Q_ASSERT(side >= PositiveX && side <= NegativeZ);
+    return d->image(int(side), index, level);
 }
 
 void ImageContents::setImage(const QImage &image, ImageContents::Side side, int index, int level)
 {
-    Q_ASSERT(index != 0);
-    setImage(image, int(side), level);
+    Q_ASSERT(side >= PositiveX && side <= NegativeZ);
+    d->setImage(image, int(side), index, level);
 }
 
 ImageExifMeta ImageContents::exifMeta() const
