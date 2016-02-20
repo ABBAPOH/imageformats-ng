@@ -194,13 +194,13 @@ Optional<ImageContents> ImageContents::toProjection(ImageContents::Projection pr
             image.fill(0);
 
             for (int side = PositiveX; side <= NegativeZ; side++) {
-                auto face = this->image(Side(side), index, level);
+                const auto face = this->image(Side(side), index, level);
                 if (face.isNull())
                     continue; // Skip face.
 
                 // Compute face offsets.
-                int offset_x = faceOffsets[projection][side].x * size;
-                int offset_y = faceOffsets[projection][side].y * size;
+                const int offset_x = faceOffsets[projection][side].x * size;
+                const int offset_y = faceOffsets[projection][side].y * size;
 
                 // Copy face on the image.
                 for (int y = 0; y < size; y++) {
