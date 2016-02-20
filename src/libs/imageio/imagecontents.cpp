@@ -165,11 +165,6 @@ void ImageContents::clear()
     swap(c);
 }
 
-void ImageContents::swap(ImageContents &other)
-{
-    d.swap(other.d);
-}
-
 Optional<ImageContents> ImageContents::toProjection(ImageContents::Projection projection) const
 {
     if (d->header.type() != ImageHeader::Cubemap)

@@ -42,7 +42,7 @@ public:
     void setExifMeta(const ImageExifMeta &exif);
 
     void clear();
-    void swap(ImageContents &other);
+    inline void swap(ImageContents &other) { qSwap(d, other.d); }
 
     enum Projection {
         HorizonalCross,

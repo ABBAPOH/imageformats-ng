@@ -55,6 +55,8 @@ public:
     int quality() const;
     void setQuality(int quality);
 
+    inline void swap(ImageOptions &other) { _options.swap(other._options); }
+
 private:
     QHash<Option, QVariant> _options;
 

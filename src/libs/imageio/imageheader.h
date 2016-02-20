@@ -58,6 +58,8 @@ public:
     int loopCount() const;
     void setLoopCount(int count);
 
+    inline void swap(ImageHeader &other) { qSwap(d, other.d); }
+
 private:
     QSharedDataPointer<ImageHeaderData> d;
 

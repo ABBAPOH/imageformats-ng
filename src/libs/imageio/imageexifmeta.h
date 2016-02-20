@@ -71,6 +71,7 @@ public:
     DECLARE_EXIF_PROPERTY(Orientation, orientation, setOrientation, TagOrientation)
 
     void clear();
+    inline void swap(ImageExifMeta &other) { qSwap(d, other.d); }
 
 private:
     class Data;
