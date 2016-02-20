@@ -1424,7 +1424,8 @@ bool DDSHandler::read(ImageContents &contents, const ImageOptions &options)
 bool DDSHandler::write(const ImageContents &contents, const ImageOptions &options)
 {
     Q_UNUSED(options);
-    auto outImage = contents.image();
+
+    const auto header = contents.header();
 
     m_format = formatByName(subType().toUpper());
     if (m_format == FormatUnknown) {
@@ -1436,8 +1437,6 @@ bool DDSHandler::write(const ImageContents &contents, const ImageOptions &option
 //        return false;
 //    }
 
-    const QImage image = outImage.convertToFormat(QImage::Format_ARGB32);
-
     QDataStream s(device());
     s.setByteOrder(QDataStream::LittleEndian);
 
@@ -1447,11 +1446,11 @@ bool DDSHandler::write(const ImageContents &contents, const ImageOptions &option
     dds.size = 124;
     dds.flags = DDSHeader::FlagCaps | DDSHeader::FlagHeight |
                 DDSHeader::FlagWidth | DDSHeader::FlagPixelFormat;
-    dds.height = image.height();
-    dds.width = image.width();
+    dds.height = header.height();
+    dds.width = header.width();
     dds.pitchOrLinearSize = 128;
     dds.depth = 0;
-    dds.mipMapCount = 0;
+    dds.mipMapCount = header.mipmapCount();
     for (int i = 0; i < DDSHeader::ReservedCount; i++)
         dds.reserved1[i] = 0;
     dds.caps = DDSHeader::CapsTexture;
@@ -1478,30 +1477,49 @@ bool DDSHandler::write(const ImageContents &contents, const ImageOptions &option
 
     s << dds;
 
-    if (m_format == FormatA8R8G8B8) {
-        for (int height = 0; height < image.height(); height++) {
-            for (int width = 0; width < image.width(); width++) {
-                QRgb pixel = image.pixel(width, height);
-                quint32 color;
-                quint8 alpha = qAlpha(pixel);
-                quint8 red = qRed(pixel);
-                quint8 green = qGreen(pixel);
-                quint8 blue = qBlue(pixel);
-                color = (alpha << 24) + (red << 16) + (green << 8) + blue;
-                s << color;
+    const int mipmapCount = header.mipmapCount() > 0
+            ? header.mipmapCount()
+            : 1;
+
+    if (header.width() != (1 << (mipmapCount - 1))
+            || header.height() != (1 << (mipmapCount - 1))) {
+        qWarning() << "Writing images with size not equal to power of 2 is not supported";
+        return false;
+    }
+
+    for (int level = 0; level < mipmapCount; ++level) {
+        // TODO: use min power of 2 that's greater or equal to width/height
+        const auto imageWidth = (1 << (mipmapCount - 1)) >> level;
+        const auto imageHeigth = (1 << (mipmapCount - 1)) >> level;
+
+        auto outImage = contents.image(0, level);
+        const QImage image = outImage.convertToFormat(QImage::Format_ARGB32);
+
+        if (m_format == FormatA8R8G8B8) {
+            for (int height = 0; height < imageHeigth; height++) {
+                for (int width = 0; width < imageWidth; width++) {
+                    QRgb pixel = image.pixel(width, height);
+                    quint32 color;
+                    quint8 alpha = qAlpha(pixel);
+                    quint8 red = qRed(pixel);
+                    quint8 green = qGreen(pixel);
+                    quint8 blue = qBlue(pixel);
+                    color = (alpha << 24) + (red << 16) + (green << 8) + blue;
+                    s << color;
+                }
             }
-        }
-    } else if (m_format == FormatA4R4G4B4) {
-        for (int height = 0; height < image.height(); height++) {
-            for (int width = 0; width < image.width(); width++) {
-                QRgb pixel = image.pixel(width, height);
-                quint16 color;
-                quint8 alpha = qAlpha(pixel) >> 4;
-                quint8 red = qRed(pixel) >> 4;
-                quint8 green = qGreen(pixel) >> 4;
-                quint8 blue = qBlue(pixel) >> 4;
-                color = (alpha << 12) + (red << 8) + (green << 4) + blue;
-                s << color;
+        } else if (m_format == FormatA4R4G4B4) {
+            for (int height = 0; height < imageHeigth; height++) {
+                for (int width = 0; width < imageWidth; width++) {
+                    QRgb pixel = image.pixel(width, height);
+                    quint16 color;
+                    quint8 alpha = qAlpha(pixel) >> 4;
+                    quint8 red = qRed(pixel) >> 4;
+                    quint8 green = qGreen(pixel) >> 4;
+                    quint8 blue = qBlue(pixel) >> 4;
+                    color = (alpha << 12) + (red << 8) + (green << 4) + blue;
+                    s << color;
+                }
             }
         }
     }
