@@ -12,7 +12,7 @@ public:
     ImageIOHandlerDatabase();
     ~ImageIOHandlerDatabase();
 
-    std::unique_ptr<ImageIOHandler> create(QIODevice *device, const QMimeType &mimeType);
+    std::unique_ptr<ImageIOHandler> create(QIODevice *device, const QMimeType &mimeType, const QByteArray &subType);
     QVector<QMimeType> availableMimeTypes(ImageFormatInfo::Capabilities caps) const;
     ImageIOHandlerPlugin *plugin(const QString &mimeType) const;
     void registerPlugin(const QString &mimeType, ImageIOHandlerPlugin *plugin);
