@@ -101,6 +101,7 @@ struct FormatInfo
 };
 
 static const FormatInfo formatInfos[] = {
+    { FormatUnknown,                            0,  0, 0x00000000, 0x00000000, 0x00000000, 0x00000000 },
     { FormatA8R8G8B8,    DDSPixelFormat::FlagRGBA, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000 },
     { FormatX8R8G8B8,    DDSPixelFormat::FlagRGB,  32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000 },
     { FormatA2B10G10R10, DDSPixelFormat::FlagRGBA, 32, 0x000003ff, 0x0000fc00, 0x3ff00000, 0xc0000000 },
@@ -329,6 +330,17 @@ static Format getFormat(const DDSHeader &dds)
     }
 
     return FormatUnknown;
+}
+
+static const FormatInfo &getFormatInfo(Format format)
+{
+    for (size_t i = 0; i < formatInfosSize; ++i) {
+        const FormatInfo &info = formatInfos[i];
+        if (info.format == format)
+            return info;
+    }
+    Q_ASSERT(false);
+    return formatInfos[0];
 }
 
 static inline void decodeColor(quint16 color, quint8 &red, quint8 &green, quint8 &blue)
@@ -1419,10 +1431,10 @@ bool DDSHandler::write(const ImageContents &contents, const ImageOptions &option
         qWarning() << "unknown format" << subType();
         return false;
     }
-    if (m_format != FormatA8R8G8B8) {
-        qWarning() << "Format" << formatName(m_format) << "is not supported";
-        return false;
-    }
+//    if (m_format != FormatA8R8G8B8) {
+//        qWarning() << "Format" << formatName(m_format) << "is not supported";
+//        return false;
+//    }
 
     const QImage image = outImage.convertToFormat(QImage::Format_ARGB32);
 
@@ -1448,27 +1460,49 @@ bool DDSHandler::write(const ImageContents &contents, const ImageOptions &option
     dds.caps4 = 0;
     dds.reserved2 = 0;
 
+    const auto &info = getFormatInfo(Format(m_format));
+    if (info.format == FormatUnknown) {
+        qWarning() << "Can't find info for format" << subType();
+        return false;
+    }
+
     // Filling pixelformat
-    dds.pixelFormat.size = 32;
-    dds.pixelFormat.flags = DDSPixelFormat::FlagAlphaPixels | DDSPixelFormat::FlagRGB;
+    dds.pixelFormat.size = pixelFormatSize;
+    dds.pixelFormat.flags = info.flags;
     dds.pixelFormat.fourCC = 0;
-    dds.pixelFormat.rgbBitCount = 32;
-    dds.pixelFormat.aBitMask = 0xff000000;
-    dds.pixelFormat.rBitMask = 0x00ff0000;
-    dds.pixelFormat.gBitMask = 0x0000ff00;
-    dds.pixelFormat.bBitMask = 0x000000ff;
+    dds.pixelFormat.rgbBitCount = info.bitCount;
+    dds.pixelFormat.aBitMask = info.aBitMask;
+    dds.pixelFormat.rBitMask = info.rBitMask;
+    dds.pixelFormat.gBitMask = info.gBitMask;
+    dds.pixelFormat.bBitMask = info.bBitMask;
 
     s << dds;
-    for (int height = 0; height < image.height(); height++) {
-        for (int width = 0; width < image.width(); width++) {
-            QRgb pixel = image.pixel(width, height);
-            quint32 color;
-            quint8 alpha = qAlpha(pixel);
-            quint8 red = qRed(pixel);
-            quint8 green = qGreen(pixel);
-            quint8 blue = qBlue(pixel);
-            color = (alpha << 24) + (red << 16) + (green << 8) + blue;
-            s << color;
+
+    if (m_format == FormatA8R8G8B8) {
+        for (int height = 0; height < image.height(); height++) {
+            for (int width = 0; width < image.width(); width++) {
+                QRgb pixel = image.pixel(width, height);
+                quint32 color;
+                quint8 alpha = qAlpha(pixel);
+                quint8 red = qRed(pixel);
+                quint8 green = qGreen(pixel);
+                quint8 blue = qBlue(pixel);
+                color = (alpha << 24) + (red << 16) + (green << 8) + blue;
+                s << color;
+            }
+        }
+    } else if (m_format == FormatA4R4G4B4) {
+        for (int height = 0; height < image.height(); height++) {
+            for (int width = 0; width < image.width(); width++) {
+                QRgb pixel = image.pixel(width, height);
+                quint16 color;
+                quint8 alpha = qAlpha(pixel) >> 4;
+                quint8 red = qRed(pixel) >> 4;
+                quint8 green = qGreen(pixel) >> 4;
+                quint8 blue = qBlue(pixel) >> 4;
+                color = (alpha << 12) + (red << 8) + (green << 4) + blue;
+                s << color;
+            }
         }
     }
 
@@ -1556,7 +1590,10 @@ QByteArray DdsHandlerPlugin::name() const
 QVector<QByteArray> DdsHandlerPlugin::supportedSubTypes(const QMimeType &mimeType) const
 {
     Q_UNUSED(mimeType);
-    return QVector<QByteArray>() << formatName(FormatA8R8G8B8);
+    return {
+        formatName(FormatA8R8G8B8),
+        formatName(FormatA4R4G4B4)
+    };
 }
 
 DDSHandler *DdsHandlerPlugin::create(QIODevice *device, const QMimeType &mimeType)
