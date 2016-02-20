@@ -124,7 +124,8 @@ void MainWindow::saveAs()
         return;
 
     _document->setUrl(QUrl::fromLocalFile(path));
-    _document->save();
+    _document->save({ {"subType",  dialog.subType()},
+                      {"imageOptions", QVariant::fromValue(dialog.options())} });
 }
 
 void MainWindow::showSupportedFormatsDialog()

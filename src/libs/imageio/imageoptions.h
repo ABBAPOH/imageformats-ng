@@ -65,4 +65,6 @@ private:
 bool IMAGEIO_EXPORT operator==(const ImageOptions &lhs, const ImageOptions &rhs);
 bool IMAGEIO_EXPORT operator!=(const ImageOptions &lhs, const ImageOptions &rhs);
 
+Q_DECLARE_METATYPE(ImageOptions);
+
 #endif // IMAGEOPTIONS_H

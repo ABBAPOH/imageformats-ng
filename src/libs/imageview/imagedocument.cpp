@@ -82,12 +82,16 @@ void ImageDocument::doSave(const QUrl &url, const QVariantMap &options)
         return;
     }
 
+    const auto subType = options["subType"].toByteArray();
+    const auto imageOptions = options["imageOptions"].value<ImageOptions>();
+
     using Result = bool;
 
-    auto worker = [](const QString &path, const ImageContents &contents)
+    auto worker = [subType, imageOptions](const QString &path, const ImageContents &contents)
     {
         ImageIO io(path);
-        return io.write(contents);
+        io.setSubType(subType);
+        return io.write(contents, imageOptions);
     };
 
     auto finisher = [this]()
