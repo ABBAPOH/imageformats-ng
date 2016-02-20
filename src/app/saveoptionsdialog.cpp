@@ -30,6 +30,13 @@ void SaveOptionsDialog::setImageFormat(const ImageFormatInfo &imageFormat)
     emit imageFormatChanged(imageFormat);
 }
 
+QByteArray SaveOptionsDialog::subType() const
+{
+    return ui->subTypeInput->count() > 0
+            ? ui->subTypeInput->currentText().toLatin1()
+            : QByteArray();
+}
+
 ImageOptions SaveOptionsDialog::options() const
 {
     return _options;
@@ -59,9 +66,7 @@ void SaveOptionsDialog::updateUi()
 
 void SaveOptionsDialog::updateUi2()
 {
-    const auto subType = ui->subTypeInput->count() > 0
-            ? ui->subTypeInput->currentText().toLatin1()
-            : QByteArray();
+    const auto subType = this->subType();
 
     const bool hasCompression = _imageFormat.supportsOption(ImageOptions::CompressionRatio, subType);
     ui->compressionLabel->setVisible(hasCompression);

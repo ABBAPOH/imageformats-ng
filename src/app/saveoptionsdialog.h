@@ -22,6 +22,8 @@ public:
     ImageFormatInfo imageFormat() const;
     void setImageFormat(const ImageFormatInfo &imageFormat);
 
+    QByteArray subType() const;
+
     ImageOptions options() const;
     void setOptions(const ImageOptions &options);
 
