@@ -27,21 +27,7 @@ public:
     ImageHeader header;
     QMap<ImageIndex, QImage> images;
     ImageExifMeta exif;
-
-    ImageContentsData();
-    void clear();
 };
-
-ImageContentsData::ImageContentsData()
-{
-    clear();
-}
-
-void ImageContentsData::clear()
-{
-    images.clear();
-    exif.clear();
-}
 
 /*!
     \class ImageContents
@@ -145,7 +131,8 @@ void ImageContents::setExifMeta(const ImageExifMeta &exif)
 
 void ImageContents::clear()
 {
-    d->clear();
+    ImageContents c;
+    swap(c);
 }
 
 void ImageContents::swap(ImageContents &other)
