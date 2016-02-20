@@ -4,6 +4,7 @@
 #include "utils_global.h"
 
 #include <QtCore/QObject>
+#include <QtCore/QVariant>
 #include <QtCore/QUrl>
 #include <QtCore/QIODevice>
 #include <QtCore/QMimeType>
@@ -39,8 +40,8 @@ public:
     virtual QVector<QMimeType> supportedOutputMimetypes() const { return QVector<QMimeType>(); }
 
 public slots:
-    void open();
-    void save();
+    void open(const QVariantMap &options = QVariantMap());
+    void save(const QVariantMap &options = QVariantMap());
     void setModified(bool modified);
 
 signals:
@@ -54,8 +55,8 @@ signals:
 protected:
     explicit AbstractDocument(AbstractDocumentPrivate &dd, QObject *parent = Q_NULLPTR);
 
-    virtual void doOpen(const QUrl &url) = 0;
-    virtual void doSave(const QUrl &url);
+    virtual void doOpen(const QUrl &url, const QVariantMap &options) = 0;
+    virtual void doSave(const QUrl &url, const QVariantMap &options);
     void finishOpen(bool ok);
     void finishSave(bool ok);
 

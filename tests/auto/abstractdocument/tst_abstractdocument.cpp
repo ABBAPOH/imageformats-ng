@@ -22,15 +22,16 @@ public:
     void setText(const QString &text) { _text = text; }
 
 protected:
-    void doOpen(const QUrl &url) override;
-    void doSave(const QUrl &url) override;
+    void doOpen(const QUrl &url, const QVariantMap &options) override;
+    void doSave(const QUrl &url, const QVariantMap &options) override;
 
 private:
     QString _text;
 };
 
-void TestDocument::doOpen(const QUrl &url)
+void TestDocument::doOpen(const QUrl &url, const QVariantMap &options)
 {
+    Q_UNUSED(options);
     QVERIFY(url.isLocalFile());
     QFile file(url.toLocalFile());
     QVERIFY(file.open(QIODevice::ReadOnly));
@@ -39,8 +40,9 @@ void TestDocument::doOpen(const QUrl &url)
     finishOpen(true);
 }
 
-void TestDocument::doSave(const QUrl &url)
+void TestDocument::doSave(const QUrl &url, const QVariantMap &options)
 {
+    Q_UNUSED(options);
     QVERIFY(url.isLocalFile());
     QFile file(url.toLocalFile());
     QVERIFY(file.open(QIODevice::WriteOnly));

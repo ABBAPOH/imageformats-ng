@@ -34,8 +34,8 @@ signals:
     void contentsChanged();
 
 protected:
-    void doOpen(const QUrl &url) override;
-    void doSave(const QUrl &url) override;
+    void doOpen(const QUrl &url, const QVariantMap &options) override;
+    void doSave(const QUrl &url, const QVariantMap &options) override;
 };
 
 #endif // IMAGEDOCUMENT_H

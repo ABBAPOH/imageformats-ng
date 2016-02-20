@@ -48,7 +48,7 @@ AbstractDocument::~AbstractDocument()
     \note An \a url parameter can differ from value returned by url() function (for example, in
     case of autosaving)
 */
-void AbstractDocument::doSave(const QUrl &url)
+void AbstractDocument::doSave(const QUrl &url, const QVariantMap &options)
 {
     Q_UNUSED(url);
 }
@@ -119,7 +119,7 @@ bool AbstractDocument::isModified() const
     return d->modified;
 }
 
-void AbstractDocument::open()
+void AbstractDocument::open(const QVariantMap &options)
 {
     Q_D(AbstractDocument);
     if (d->url.isEmpty()) {
@@ -127,10 +127,10 @@ void AbstractDocument::open()
         return;
     }
 
-    doOpen(d->url);
+    doOpen(d->url, options);
 }
 
-void AbstractDocument::save()
+void AbstractDocument::save(const QVariantMap &options)
 {
     Q_D(AbstractDocument);
     if (d->url.isEmpty()) {
@@ -138,7 +138,7 @@ void AbstractDocument::save()
         return;
     }
 
-    doSave(d->url);
+    doSave(d->url, options);
 }
 
 void AbstractDocument::setModified(bool modified)

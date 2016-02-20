@@ -45,7 +45,7 @@ void ImageDocument::setContents(const ImageContents &contents)
     emit contentsChanged();
 }
 
-void ImageDocument::doOpen(const QUrl &url)
+void ImageDocument::doOpen(const QUrl &url, const QVariantMap &options)
 {
     if (!url.isLocalFile()) {
         finishOpen(false);
@@ -75,7 +75,7 @@ void ImageDocument::doOpen(const QUrl &url)
     watcher->setFuture(QtConcurrent::run(worker, url.toLocalFile()));
 }
 
-void ImageDocument::doSave(const QUrl &url)
+void ImageDocument::doSave(const QUrl &url, const QVariantMap &options)
 {
     if (!url.isLocalFile()) {
         finishSave(false);
