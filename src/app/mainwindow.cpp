@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "imageinfodialog.h"
+#include "saveoptionsdialog.h"
 #include "supportedformatsdialog.h"
 #include "supportedformatsmodel.h"
 
@@ -11,6 +12,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
+#include <QtCore/QMimeDatabase>
 #include <QtGui/QClipboard>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
@@ -107,6 +109,18 @@ void MainWindow::saveAs()
     const auto filters = tr("All Files (*);;") + mimeTypesToFilters(formatsToMimeTypes(formats));
     const auto path = QFileDialog::getSaveFileName(this, tr("Save As"), QString(), filters);
     if (path.isEmpty())
+        return;
+
+    const auto mt = QMimeDatabase().mimeTypeForFile(path);
+    const auto info = ImageIO::imageFormat(mt);
+    if (!info) {
+        QMessageBox::warning(this, tr("Save"), tr("No format for mimetype %1").arg(mt.name()));
+        return;
+    }
+
+    SaveOptionsDialog dialog;
+    dialog.setImageFormat(*info);
+    if (dialog.exec() == QDialog::Rejected)
         return;
 
     _document->setUrl(QUrl::fromLocalFile(path));
