@@ -37,6 +37,9 @@ public:
     QSize size() const;
     void setSize(QSize size);
 
+    int width() const;
+    int height() const;
+
     QImage::Format imageFormat() const;
     void setImageFormat(QImage::Format format);
 

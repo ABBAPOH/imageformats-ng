@@ -76,6 +76,16 @@ void ImageHeader::setSize(QSize size)
     d->size = size;
 }
 
+int ImageHeader::width() const
+{
+    return d->size.width();
+}
+
+int ImageHeader::height() const
+{
+    return d->size.height();
+}
+
 QImage::Format ImageHeader::imageFormat() const
 {
     return d->imageFormat;
