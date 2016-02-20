@@ -69,12 +69,12 @@ void ImageOptions::setCompression(int compression)
     _options.insert(CompressionRatio, compression);
 }
 
-int ImageOptions::gamma() const
+float ImageOptions::gamma() const
 {
-    return _options.value(Gamma, -1).toInt();
+    return _options.value(Gamma, 1.0).toFloat();
 }
 
-void ImageOptions::setGamma(int gamma)
+void ImageOptions::setGamma(float gamma)
 {
     _options.insert(Gamma, gamma);
 }
@@ -87,4 +87,14 @@ int ImageOptions::quality() const
 void ImageOptions::setQuality(int quality)
 {
     _options.insert(Quality, quality);
+}
+
+bool operator==(const ImageOptions &lhs, const ImageOptions &rhs)
+{
+    return lhs._options == rhs._options;
+}
+
+bool operator!=(const ImageOptions &lhs, const ImageOptions &rhs)
+{
+    return !(lhs == rhs);
 }

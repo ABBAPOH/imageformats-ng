@@ -49,14 +49,20 @@ public:
     int compression() const;
     void setCompression(int compression);
 
-    int gamma() const;
-    void setGamma(int gamma);
+    float gamma() const;
+    void setGamma(float gamma);
 
     int quality() const;
     void setQuality(int quality);
 
 private:
     QHash<Option, QVariant> _options;
+
+    friend bool IMAGEIO_EXPORT operator==(const ImageOptions &lhs, const ImageOptions &rhs);
+    friend bool IMAGEIO_EXPORT operator!=(const ImageOptions &lhs, const ImageOptions &rhs);
 };
+
+bool IMAGEIO_EXPORT operator==(const ImageOptions &lhs, const ImageOptions &rhs);
+bool IMAGEIO_EXPORT operator!=(const ImageOptions &lhs, const ImageOptions &rhs);
 
 #endif // IMAGEOPTIONS_H
