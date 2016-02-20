@@ -2,6 +2,23 @@
 
 #include <QtCore/QDebug>
 
+namespace {
+
+struct FaceOffset
+{
+    int x, y;
+};
+
+static const FaceOffset faceOffsets[2][6] =  {
+    { {2, 1}, {0, 1}, {1, 0}, {1, 2}, {1, 1}, {3, 1} },
+    // TODO: fix vertical offsets
+    { {2, 1}, {0, 1}, {1, 0}, {1, 2}, {1, 1}, {1, 3} }
+};
+
+static const FaceOffset multipliers[2] = { {4, 3}, {3, 4} };
+
+} // namespace
+
 class ImageContentsData : public QSharedData
 {
 public:
@@ -104,6 +121,18 @@ void ImageContents::setImage(const QImage &image, int index, int level)
     d->images.insert(ImageContentsData::ImageIndex(index, level), copy);
 }
 
+QImage ImageContents::image(ImageContents::Side side, int index, int level) const
+{
+    Q_ASSERT(index != 0);
+    return image(int(side), level);
+}
+
+void ImageContents::setImage(const QImage &image, ImageContents::Side side, int index, int level)
+{
+    Q_ASSERT(index != 0);
+    setImage(image, int(side), level);
+}
+
 ImageExifMeta ImageContents::exifMeta() const
 {
     return d->exif;
@@ -122,6 +151,52 @@ void ImageContents::clear()
 void ImageContents::swap(ImageContents &other)
 {
     d.swap(other.d);
+}
+
+Optional<ImageContents> ImageContents::toProjection(ImageContents::Projection projection) const
+{
+    if (d->header.type() != ImageHeader::Cubemap)
+        return Nothing();
+
+    const auto qSize = d->header.size();
+    if (qSize.width() != qSize.height()) {
+        qWarning() << "Invalid size for cube texture" << qSize;
+        return Nothing();
+    }
+
+    ImageContents result;
+
+    const auto size = qSize.width();
+
+    for (int level = 0; level < d->header.mipmapCount(); ++level) {
+        for (int index = 0; index < d->header.imageCount(); ++index) {
+            QImage image(multipliers[projection].x * size,
+                         multipliers[projection].y * size,
+                         d->header.imageFormat());
+
+            image.fill(0);
+
+            for (int side = PositiveX; side <= NegativeZ; side++) {
+                auto face = this->image(Side(side), index, level);
+                if (face.isNull())
+                    continue; // Skip face.
+
+                // Compute face offsets.
+                int offset_x = faceOffsets[projection][side].x * size;
+                int offset_y = faceOffsets[projection][side].y * size;
+
+                // Copy face on the image.
+                for (int y = 0; y < size; y++) {
+                    const QRgb *src = reinterpret_cast<const QRgb *>(face.scanLine(y));
+                    QRgb *dst = reinterpret_cast<QRgb *>(image.scanLine(y + offset_y)) + offset_x;
+                    memcpy(dst, src, sizeof(QRgb) * unsigned(size));
+                }
+            }
+            result.setImage(image, index, level);
+        }
+    }
+
+    return QImage();
 }
 
 bool operator==(const ImageContents &lhs, const ImageContents &rhs)

@@ -55,7 +55,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionSave, &QAction::triggered, this, &MainWindow::save);
     connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::saveAs);
     connect(ui->actionShowInfo, &QAction::triggered, this, &MainWindow::showInfo);
+    connect(ui->actionConvertToProjection, &QAction::triggered,
+            this, &MainWindow::convertToProjection);
     connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
+
     connect(ui->actionSupportedFormats, &QAction::triggered,
             this, &MainWindow::showSupportedFormatsDialog);
 
@@ -126,6 +129,18 @@ void MainWindow::saveAs()
     _document->setUrl(QUrl::fromLocalFile(path));
     _document->save({ {"subType",  dialog.subType()},
                       {"imageOptions", QVariant::fromValue(dialog.options())} });
+}
+
+void MainWindow::convertToProjection()
+{
+    const auto projection = _document->contents().toProjection();
+    if (!projection) {
+        QMessageBox::warning(this,
+                             tr("Convert to projection"),
+                             tr("Can't convert file"));
+    }
+    _document->setContents(*projection);
+    buildModel();
 }
 
 void MainWindow::showSupportedFormatsDialog()
