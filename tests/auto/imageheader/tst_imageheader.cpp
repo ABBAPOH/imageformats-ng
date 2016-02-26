@@ -75,4 +75,4 @@ void TestImageHeader::equals()
 
 QTEST_APPLESS_MAIN(TestImageHeader)
 
-#include "tst_ImageHeader.moc"
+#include "tst_imageheader.moc"
