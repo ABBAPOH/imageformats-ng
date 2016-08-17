@@ -51,7 +51,7 @@ Project {
 
     qbsSearchPaths: "qbs"
 
-    name: "Image Document"
+    name: "Image Formats NG"
 
     SubProject {
         filePath: "src/src.qbs"
