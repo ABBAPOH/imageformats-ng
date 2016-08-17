@@ -5,6 +5,6 @@ Lib {
     Depends { name: "Utils" }
     Depends { name: "PNGLib" }
     cpp.defines: base.concat(["QT_STATICPLUGIN=1", "IMAGEIO_LIBRARY"])
-    name: "ImageIO"
+    name: "ImageFormatsNG"
     files: [ "*.cpp", "*.h" ]
 }

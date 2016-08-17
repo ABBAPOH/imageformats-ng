@@ -1,1 +1,1 @@
-#include "../src/libs/imageio/imageformatinfo.h"
+#include "../src/libs/imageformats-ng/imageformatinfo.h"
