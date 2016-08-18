@@ -2,18 +2,18 @@ import qbs.base 1.0
 
 Project {
     SubProject {
-        filePath: "abstractdocument/abstractdocument.qbs"
+        filePath: "test_abstractdocument/test_abstractdocument.qbs"
     }
     SubProject {
-        filePath: "imagecontents/imagecontents.qbs"
+        filePath: "test_imagecontents/test_imagecontents.qbs"
     }
     SubProject {
-        filePath: "imageio/imageio.qbs"
+        filePath: "test_imageio/test_imageio.qbs"
     }
     SubProject {
-        filePath: "imageexifmeta/imageexifmeta.qbs"
+        filePath: "test_imageexifmeta/test_imageexifmeta.qbs"
     }
     SubProject {
-        filePath: "jpeg/jpeg.qbs"
+        filePath: "test_jpeg/test_jpeg.qbs"
     }
 }

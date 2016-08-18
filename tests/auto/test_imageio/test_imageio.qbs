@@ -4,6 +4,7 @@ AutoTest {
     Depends { name: "Qt.gui" }
     Depends { name: "ImageFormatsNG" }
 
-    name: "imagecontents"
+    cpp.defines: base.concat(["QT_STATICPLUGIN=1"])
+
     files: [ "*.cpp", "*.h" ]
 }
