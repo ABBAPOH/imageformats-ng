@@ -1,7 +1,7 @@
 import qbs.base 1.0
 
 Project {
-    property string app_target: qbs.targetOS.contains("osx") ? "Image Viewer" : "imageviewer"
+    property string app_target: qbs.targetOS.contains("osx") ? "Image Viewer NG" : "imageviewer-ng"
 
     property string install_app_path: {
         if (qbs.targetOS.contains("osx") || qbs.targetOS.contains("windows"))
