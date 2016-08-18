@@ -19,14 +19,6 @@
 
 namespace {
 
-QVector<QMimeType> formatsToMimeTypes(const QVector<ImageFormatInfo> &formats)
-{
-    QVector<QMimeType> result;
-    for (auto format : formats)
-        result.append(format.mimeType());
-    return result;
-}
-
 QString mimeTypesToFilters(const QVector<QMimeType> &mimeTypes)
 {
     QStringList result;
@@ -91,8 +83,7 @@ void MainWindow::newFromClipboard()
 
 void MainWindow::open()
 {
-    const auto formats = ImageIO::supportedImageFormats(ImageFormatInfo::CanRead);
-    const auto filters = tr("All Files (*);;") + mimeTypesToFilters(formatsToMimeTypes(formats));
+    const auto filters = tr("All Files (*);;") + mimeTypesToFilters(_document->openableMimetypes());
     const auto path = QFileDialog::getOpenFileName(this, tr("open"), QString(), filters);
     if (path.isEmpty())
         return;
@@ -108,8 +99,7 @@ void MainWindow::save()
 
 void MainWindow::saveAs()
 {
-    const auto formats = ImageIO::supportedImageFormats(ImageFormatInfo::CanWrite);
-    const auto filters = tr("All Files (*);;") + mimeTypesToFilters(formatsToMimeTypes(formats));
+    const auto filters = tr("All Files (*);;") + mimeTypesToFilters(_document->openableMimetypes());
     const auto path = QFileDialog::getSaveFileName(this, tr("Save As"), QString(), filters);
     if (path.isEmpty())
         return;
