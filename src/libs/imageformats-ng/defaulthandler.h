@@ -9,7 +9,7 @@ public:
     DefaultHandler();
 
     bool canRead() override { return true; }
-    bool read(ImageContents &contents, const ImageOptions &options) override;
+    bool read(ImageContents &contents) override;
     bool write(const ImageContents &contents, const ImageOptions &options) override;
 };
 

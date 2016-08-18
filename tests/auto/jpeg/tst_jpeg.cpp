@@ -35,9 +35,10 @@ void TestJpeg::readImage()
     QFETCH(bool, success);
 
     ImageIO io(fileName);
-    io.read();
+    auto maybeImage = io.read();
     auto ok = io.error();
-    QVERIFY2(ok == ImageIO::Error::NoError, ok.errorString().toUtf8().constData());
+    qDebug() << ok.errorCode() << bool(ok == ImageIO::Error(ImageIO::Error::NoError));
+    QVERIFY2(ok == ImageIO::Error(ImageIO::Error::NoError), ok.errorString().toUtf8().constData());
 }
 
 void TestJpeg::testHeader_data()

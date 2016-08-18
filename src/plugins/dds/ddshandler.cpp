@@ -1374,7 +1374,7 @@ bool DDSHandler::canRead()
     return canRead(device());
 }
 
-bool DDSHandler::readHeader(ImageHeader &header)
+bool DDSHandler::read(ImageContents &contents)
 {
     if (!canRead(device()))
         return false;
@@ -1382,25 +1382,18 @@ bool DDSHandler::readHeader(ImageHeader &header)
     if (!doScan())
         return false;
 
-    header.setSize(QSize(m_header.width, m_header.height));
-    header.setImageFormat(QImage::Format_ARGB32);
-    header.setMipmapCount(qMax<quint32>(1, m_header.mipMapCount));
+    contents.setSize(QSize(m_header.width, m_header.height));
+    contents.setImageFormat(QImage::Format_ARGB32);
+    contents.setMipmapCount(qMax<quint32>(1, m_header.mipMapCount));
 
     if (isCubeMap(m_header)) {
-        header.setType(ImageHeader::Cubemap);
-        header.setImageCount(6);
+        contents.setType(ImageContents::Cubemap);
+        contents.setImageCount(6);
     } else {
-        header.setType(ImageHeader::Image);
+        contents.setType(ImageContents::Image);
     }
 
     setSubType(formatName(m_format));
-
-    return true;
-}
-
-bool DDSHandler::read(ImageContents &contents, const ImageOptions &options)
-{
-    Q_UNUSED(options);
     for (quint32 i = 0; i < qMax<quint32>(1, m_header.mipMapCount); i++) {
         qint64 pos = headerSize + mipmapOffset(m_header, m_format, i);
         if (!device()->seek(pos))
@@ -1425,8 +1418,6 @@ bool DDSHandler::write(const ImageContents &contents, const ImageOptions &option
 {
     Q_UNUSED(options);
 
-    const auto header = contents.header();
-
     m_format = formatByName(subType().toUpper());
     if (m_format == FormatUnknown) {
         qWarning() << "unknown format" << subType();
@@ -1446,11 +1437,11 @@ bool DDSHandler::write(const ImageContents &contents, const ImageOptions &option
     dds.size = 124;
     dds.flags = DDSHeader::FlagCaps | DDSHeader::FlagHeight |
                 DDSHeader::FlagWidth | DDSHeader::FlagPixelFormat;
-    dds.height = header.height();
-    dds.width = header.width();
+    dds.height = contents.height();
+    dds.width = contents.width();
     dds.pitchOrLinearSize = 128;
     dds.depth = 0;
-    dds.mipMapCount = header.mipmapCount();
+    dds.mipMapCount = contents.mipmapCount();
     for (int i = 0; i < DDSHeader::ReservedCount; i++)
         dds.reserved1[i] = 0;
     dds.caps = DDSHeader::CapsTexture;
@@ -1477,12 +1468,12 @@ bool DDSHandler::write(const ImageContents &contents, const ImageOptions &option
 
     s << dds;
 
-    const int mipmapCount = header.mipmapCount() > 0
-            ? header.mipmapCount()
+    const int mipmapCount = contents.mipmapCount() > 0
+            ? contents.mipmapCount()
             : 1;
 
-    if (header.width() != (1 << (mipmapCount - 1))
-            || header.height() != (1 << (mipmapCount - 1))) {
+    if (contents.width() != (1 << (mipmapCount - 1))
+            || contents.height() != (1 << (mipmapCount - 1))) {
         qWarning() << "Writing images with size not equal to power of 2 is not supported";
         return false;
     }

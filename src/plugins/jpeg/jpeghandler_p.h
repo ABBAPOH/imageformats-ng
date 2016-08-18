@@ -57,8 +57,7 @@ public:
     ~JpegHandler();
 
     bool canRead() override;
-    bool readHeader(ImageHeader &contents) override;
-    bool read(ImageContents &contents, const ImageOptions &options) override;
+    bool read(ImageContents &contents) override;
     bool write(const ImageContents &contents, const ImageOptions &options) override;
 
     static bool canRead(QIODevice *device);

@@ -14,7 +14,6 @@ class ImageIOPrivate
 public:
     enum class State {
         NoState,
-        HeaderRead,
         DataRead
     };
 
@@ -35,9 +34,6 @@ public:
 
     ImageIO::Error error {ImageIO::Error::NoError};
     State state {State::NoState};
-
-    Optional<ImageHeader> header;
-    Optional<ImageContents> contents;
 };
 
 bool ImageIOPrivate::ensureDeviceOpened(QIODevice::OpenMode mode)
@@ -94,8 +90,6 @@ void ImageIOPrivate::resetHandler()
     handler.reset();
     error = ImageIO::Error::NoError;
     state = State::NoState;
-    header = Nothing();
-    contents = Nothing();
 }
 
 /*!
@@ -209,53 +203,19 @@ void ImageIO::setSubType(const QByteArray &subType)
     d->subType = subType;
 }
 
-Optional<ImageHeader> ImageIO::readHeader()
+Optional<ImageContents> ImageIO::read()
 {
     Q_D(ImageIO);
-
-    if (d->state == ImageIOPrivate::State::HeaderRead
-            || d->state == ImageIOPrivate::State::DataRead) {
-        return d->header;
-    }
 
     if (!d->ensureHandlerCreated(QIODevice::ReadOnly))
         return Nothing();
 
-    ImageHeader header;
-    if (d->handler->readHeader(header)) {
-        if (header.isNull() || header.type() == ImageHeader::Invalid) {
-            d->error = Error::IOError;
-        } else {
-            d->header = header;
-        }
-    } else {
-        d->error = Error::IOError;
-    }
-    d->state = ImageIOPrivate::State::HeaderRead;
-    return d->header;
-}
-
-Optional<ImageContents> ImageIO::read(const ImageOptions &options)
-{
-    Q_D(ImageIO);
-
-    if (d->state == ImageIOPrivate::State::DataRead)
-        return d->contents;
-
-    const auto header = readHeader();
-    if (!header)
-        return Nothing();
-
     ImageContents result;
-    result.setHeader(*header);
-    if (!d->handler->read(result, options)) {
+    if (!d->handler->read(result)) {
         d->error = Error::IOError;
-    } else {
-        d->contents = result;
     }
-    d->state = ImageIOPrivate::State::DataRead;
 
-    return d->contents;
+    return result;
 }
 
 bool ImageIO::write(const ImageContents &contents, const ImageOptions &options)

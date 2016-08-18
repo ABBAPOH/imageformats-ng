@@ -2,17 +2,17 @@
 
 namespace {
 
-QString typeToString(const ImageHeader::Type type)
+QString typeToString(const ImageContents::Type type)
 {
     // As we can't use QMetaEnum for QImage, use manual switch here.
     // At least, we can translate types.
     switch (type) {
-    case ImageHeader::Invalid : return ImageInfoModel::tr("Invalid");
-    case ImageHeader::Image : return ImageInfoModel::tr("Image");
-    case ImageHeader::Animation : return ImageInfoModel::tr("Animation");
-    case ImageHeader::ImageArray : return ImageInfoModel::tr("Image array");
-    case ImageHeader::Cubemap : return ImageInfoModel::tr("Cubemap");
-    case ImageHeader::VolumeTexture : return ImageInfoModel::tr("Volume texture");
+    case ImageContents::Invalid : return ImageInfoModel::tr("Invalid");
+    case ImageContents::Image : return ImageInfoModel::tr("Image");
+    case ImageContents::Animation : return ImageInfoModel::tr("Animation");
+    case ImageContents::ImageArray : return ImageInfoModel::tr("Image array");
+    case ImageContents::Cubemap : return ImageInfoModel::tr("Cubemap");
+    case ImageContents::VolumeTexture : return ImageInfoModel::tr("Volume texture");
     default: return ImageInfoModel::tr("Unknown");
     }
     Q_UNREACHABLE();
@@ -65,18 +65,18 @@ ImageInfoModel::ImageInfoModel(QObject *parent) :
 {
 }
 
-ImageHeader ImageInfoModel::header() const
+ImageContents ImageInfoModel::contents() const
 {
-    return _header;
+    return _contents;
 }
 
-void ImageInfoModel::setImageHeader(const ImageHeader &header)
+void ImageInfoModel::setImageContents(const ImageContents &contents)
 {
-    if (_header == header)
+    if (_contents == contents)
         return;
 
     beginResetModel();
-    _header = header;
+    _contents = contents;
     endResetModel();
 }
 
@@ -84,7 +84,7 @@ int ImageInfoModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
-    return _header.isNull() ? 0 : RowCount;
+    return _contents.isNull() ? 0 : RowCount;
 }
 
 int ImageInfoModel::columnCount(const QModelIndex &parent) const
@@ -128,17 +128,17 @@ QVariant ImageInfoModel::data(const QModelIndex &index, int role) const
                 break;
             }
         } else if (index.column() == ColumnValue) {
-            if (_header.isNull())
+            if (_contents.isNull())
                 return QString();
             switch (index.row()) {
-            case RowType: return typeToString(_header.type());
-            case RowSize: return sizeToString(_header.size());
-            case RowImageFormat: return imageFormatToString(_header.imageFormat());
-            case RowName: return _header.name();
-            case RowImageCount: return _header.imageCount();
-            case RowMipmapCount: return _header.mipmapCount();
-            case RowImageDelay: return _header.imageDelay();
-            case RowLoopCount: return _header.loopCount();
+            case RowType: return typeToString(_contents.type());
+            case RowSize: return sizeToString(_contents.size());
+            case RowImageFormat: return imageFormatToString(_contents.imageFormat());
+            case RowName: return _contents.name();
+            case RowImageCount: return _contents.imageCount();
+            case RowMipmapCount: return _contents.mipmapCount();
+            case RowImageDelay: return _contents.imageDelay();
+            case RowLoopCount: return _contents.loopCount();
             default:
                 break;
             }

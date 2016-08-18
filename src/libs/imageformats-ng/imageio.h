@@ -42,8 +42,7 @@ public:
     QByteArray subType() const;
     void setSubType(const QByteArray &subType);
 
-    Optional<ImageHeader> readHeader();
-    Optional<ImageContents> read(const ImageOptions &options = ImageOptions());
+    Optional<ImageContents> read();
     bool write(const ImageContents &contents, const ImageOptions &options = ImageOptions());
 
     bool supportsOption(ImageOptions::Option option, const QByteArray &subType = QByteArray()) const;
@@ -83,5 +82,10 @@ public:
 private:
     ErrorCode _error;
 };
+
+inline bool operator==(const ImageIO::Error &lhs, const ImageIO::Error &rhs)
+{
+    return lhs.errorCode() == rhs.errorCode();
+}
 
 #endif // IMAGEIO_H

@@ -55,7 +55,7 @@ public:
     ~QPngHandler();
 
     bool canRead() override;
-    bool read(ImageContents &contents, const ImageOptions &options) override;
+    bool read(ImageContents &contents) override;
     bool write(const ImageContents &contents, const ImageOptions &options) override;
 
 //    QVariant option(ImageOption option) const;

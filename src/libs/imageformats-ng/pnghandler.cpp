@@ -1030,9 +1030,8 @@ bool QPngHandler::canRead(QIODevice *device)
     return device->peek(8) == "\x89\x50\x4E\x47\x0D\x0A\x1A\x0A";
 }
 
-bool QPngHandler::read(ImageContents &contents, const ImageOptions &options)
+bool QPngHandler::read(ImageContents &contents)
 {
-    Q_UNUSED(options);
     if (!canRead())
         return false;
     QImage image;

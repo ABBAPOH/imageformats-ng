@@ -736,8 +736,8 @@ public:
         }
     }
 
-    bool readJpegHeader(QIODevice*, ImageHeader &header);
-    bool read(QImage *image, const ImageOptions &options);
+    bool readJpegHeader(QIODevice*, ImageContents &contents);
+    bool read(QImage *image);
     void applyExifOrientation(QImage *image);
 
     int exifOrientation;
@@ -847,7 +847,7 @@ static int getExifOrientation(QByteArray &exifData)
 /*!
     \internal
 */
-bool JpegHandlerPrivate::readJpegHeader(QIODevice *device, ImageHeader &header)
+bool JpegHandlerPrivate::readJpegHeader(QIODevice *device, ImageContents &contents)
 {
     if(state == Ready)
     {
@@ -865,18 +865,18 @@ bool JpegHandlerPrivate::readJpegHeader(QIODevice *device, ImageHeader &header)
             jpeg_save_markers(&info, JPEG_COM, 0xFFFF);
             jpeg_save_markers(&info, JPEG_APP0+1, 0xFFFF); // Exif uses APP1 marker
 
-            header.setType(ImageHeader::Image);
+            contents.setType(ImageContents::Image);
 
             (void) jpeg_read_header(&info, TRUE);
 
             int width = 0;
             int height = 0;
             read_jpeg_size(width, height, &info);
-            header.setSize(QSize(width, height));
+            contents.setSize(QSize(width, height));
 
             auto format = QImage::Format_Invalid;
             read_jpeg_format(format, &info);
-            header.setImageFormat(format);
+            contents.setImageFormat(format);
 
             QByteArray exifData;
 
@@ -964,15 +964,15 @@ void JpegHandlerPrivate::applyExifOrientation(QImage *image)
     exifOrientation = 1;
 }
 
-bool JpegHandlerPrivate::read(QImage *image, const ImageOptions &options)
+bool JpegHandlerPrivate::read(QImage *image)
 {
     if(state == ReadHeader)
     {
         bool success = read_jpeg_image(image,
-                                       options.scaledSize(),
-                                       options.scaledCliptRect(),
-                                       options.clipRect(),
-                                       options.quality(),
+                                       QSize(),
+                                       QRect(),
+                                       QRect(),
+                                       -1,
                                        &info,
                                        &err);
         if (success) {
@@ -1006,7 +1006,20 @@ bool JpegHandler::canRead()
     return canRead(device());
 }
 
-bool JpegHandler::readHeader(ImageHeader &contents)
+bool JpegHandler::canRead(QIODevice *device)
+{
+    if (!device) {
+        qWarning("JpegHandler::canRead() called with no device");
+        return false;
+    }
+
+    char buffer[2];
+    if (device->peek(buffer, 2) != 2)
+        return false;
+    return uchar(buffer[0]) == 0xff && uchar(buffer[1]) == 0xd8;
+}
+
+bool JpegHandler::read(ImageContents &contents)
 {
     if(d->state == JpegHandlerPrivate::Ready && !canRead(device()))
         return false;
@@ -1021,26 +1034,8 @@ bool JpegHandler::readHeader(ImageHeader &contents)
             return false;
     }
 
-    return true;
-}
-
-bool JpegHandler::canRead(QIODevice *device)
-{
-    if (!device) {
-        qWarning("JpegHandler::canRead() called with no device");
-        return false;
-    }
-
-    char buffer[2];
-    if (device->peek(buffer, 2) != 2)
-        return false;
-    return uchar(buffer[0]) == 0xff && uchar(buffer[1]) == 0xd8;
-}
-
-bool JpegHandler::read(ImageContents &contents, const ImageOptions &options)
-{
     QImage image;
-    bool ok = d->read(&image, options);
+    bool ok = d->read(&image);
     if (!ok)
         return false;
     contents.setImage(image);

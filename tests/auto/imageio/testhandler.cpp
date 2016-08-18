@@ -36,7 +36,7 @@ QDataStream &operator >>(QDataStream &stream, TestImageData &data)
     data.magic = magic;
     stream >> data.subType;
     stream >> value;
-    data.type = ImageHeader::Type(value);
+    data.type = ImageContents::Type(value);
     stream >> data.size;
     stream >> data.name;
     stream >> value;
@@ -58,7 +58,7 @@ bool TestHandler::canRead()
     return true;
 }
 
-bool TestHandler::readHeader(ImageHeader &header)
+bool TestHandler::read(ImageContents &contents)
 {
     QDataStream s(device());
     s >> _data;
@@ -67,21 +67,13 @@ bool TestHandler::readHeader(ImageHeader &header)
 
     setSubType(_data.subType);
 
-    header.setType(_data.type);
-    header.setSize(_data.size);
-    header.setName(_data.name);
-    header.setImageFormat(_data.imageFormat);
-    header.setImageCount(_data.imageCount);
-    header.setMipmapCount(_data.mipmapCount);
-    header.setLoopCount(_data.loopCount);
-
-    return true;
-}
-
-bool TestHandler::read(ImageContents &contents, const ImageOptions &options)
-{
-    Q_UNUSED(contents);
-    Q_UNUSED(options);
+    contents.setType(_data.type);
+    contents.setSize(_data.size);
+    contents.setName(_data.name);
+    contents.setImageFormat(_data.imageFormat);
+    contents.setImageCount(_data.imageCount);
+    contents.setMipmapCount(_data.mipmapCount);
+    contents.setLoopCount(_data.loopCount);
 
     for (int level = 0, i = 0; level < _data.mipmapCount; ++level) {
         for (int index = 0; index < _data.imageCount; ++index, i++) {
@@ -99,14 +91,13 @@ bool TestHandler::write(const ImageContents &contents, const ImageOptions &optio
 
     _data = TestImageData();
 
-    const auto header = contents.header();
-    _data.type = header.type();
-    _data.size = header.size();
-    _data.name = header.name();
-    _data.imageFormat = header.imageFormat();
-    _data.imageCount = header.imageCount();
-    _data.mipmapCount = header.mipmapCount();
-    _data.loopCount = header.loopCount();
+    _data.type = contents.type();
+    _data.size = contents.size();
+    _data.name = contents.name();
+    _data.imageFormat = contents.imageFormat();
+    _data.imageCount = contents.imageCount();
+    _data.mipmapCount = contents.mipmapCount();
+    _data.loopCount = contents.loopCount();
 
     _data.images.resize(_data.mipmapCount * _data.imageCount);
 

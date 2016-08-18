@@ -1,7 +1,7 @@
 #ifndef IMAGEINFOMODEL_H
 #define IMAGEINFOMODEL_H
 
-#include <ImageHeader>
+#include <ImageContents>
 #include <QtCore/QAbstractTableModel>
 
 class ImageInfoModel : public QAbstractTableModel
@@ -27,8 +27,8 @@ public:
 
     explicit ImageInfoModel(QObject *parent = nullptr);
 
-    ImageHeader header() const;
-    void setImageHeader(const ImageHeader &header);
+    ImageContents contents() const;
+    void setImageContents(const ImageContents &contents);
 
 public: // QAbstractItemModel interface
     int rowCount(const QModelIndex &parent) const override;
@@ -37,7 +37,7 @@ public: // QAbstractItemModel interface
     QVariant data(const QModelIndex &index, int role) const override;
 
 private:
-    ImageHeader _header;
+    ImageContents _contents;
 };
 
 #endif // IMAGEINFOMODEL_H

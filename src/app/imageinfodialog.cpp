@@ -28,6 +28,6 @@ ImageContents ImageInfoDialog::contents()
 void ImageInfoDialog::setContents(const ImageContents &contents)
 {
     _contents = contents;
-    _imageInfoModel->setImageHeader(_contents.header());
+    _imageInfoModel->setImageContents(_contents);
     _exifInfoModel->setVariantMap(_contents.exifMeta().toVariantMap());
 }
