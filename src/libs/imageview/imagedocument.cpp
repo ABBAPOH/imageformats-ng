@@ -17,13 +17,13 @@ ImageDocument::~ImageDocument()
 {
 }
 
-QVector<QMimeType> ImageDocument::supportedInputMimetypes() const
+QVector<QMimeType> ImageDocument::openableMimetypes() const
 {
 #warning FIXME
     return QVector<QMimeType>();
 }
 
-QVector<QMimeType> ImageDocument::supportedOutputMimetypes() const
+QVector<QMimeType> ImageDocument::saveableMimetypes() const
 {
 #warning FIXME
     return QVector<QMimeType>();

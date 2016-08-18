@@ -36,8 +36,8 @@ public:
     bool isOpened() const;
     bool isModified() const;
 
-    virtual QVector<QMimeType> supportedInputMimetypes() const = 0;
-    virtual QVector<QMimeType> supportedOutputMimetypes() const { return QVector<QMimeType>(); }
+    virtual QVector<QMimeType> openableMimetypes() const = 0;
+    virtual QVector<QMimeType> saveableMimetypes() const { return QVector<QMimeType>(); }
 
 public slots:
     void open(const QVariantMap &options = QVariantMap());

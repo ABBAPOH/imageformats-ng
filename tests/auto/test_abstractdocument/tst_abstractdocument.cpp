@@ -8,12 +8,12 @@ class TestDocument : public AbstractDocument
 public:
     explicit TestDocument(QObject *parent = Q_NULLPTR) : AbstractDocument(parent) {}
 
-    QVector<QMimeType> supportedInputMimetypes() const override
+    QVector<QMimeType> openableMimetypes() const override
     {
         return QVector<QMimeType>() << QMimeDatabase().mimeTypeForName("text/plain");
     }
 
-    QVector<QMimeType> supportedOutputMimetypes() const override
+    QVector<QMimeType> saveableMimetypes() const override
     {
         return QVector<QMimeType>() << QMimeDatabase().mimeTypeForName("text/plain");
     }
