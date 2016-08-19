@@ -18,7 +18,6 @@ class UTILS_EXPORT AbstractDocument : public QObject
     Q_DISABLE_COPY(AbstractDocument)
 
     Q_PROPERTY(QUrl url READ url WRITE setUrl NOTIFY urlChanged)
-    Q_PROPERTY(QMimeType mimeType READ mimeType WRITE setMimeType NOTIFY mimeTypeChanged)
     Q_PROPERTY(bool opened READ isOpened NOTIFY openedChanged)
     Q_PROPERTY(bool modified READ isModified WRITE setModified NOTIFY modificationChanged)
 
@@ -29,15 +28,8 @@ public:
     QUrl url() const;
     void setUrl(const QUrl &url);
 
-    QMimeType mimeType() const;
-    void setMimeType(const QMimeType &mimeType);
-    void setMimeType(const QString &name);
-
     bool isOpened() const;
     bool isModified() const;
-
-    virtual QVector<QMimeType> openableMimetypes() const = 0;
-    virtual QVector<QMimeType> saveableMimetypes() const { return QVector<QMimeType>(); }
 
 public slots:
     void open(const QVariantMap &options = QVariantMap());
@@ -46,7 +38,6 @@ public slots:
 
 signals:
     void urlChanged(const QUrl &url);
-    void mimeTypeChanged(const QMimeType &mimeType);
     void modificationChanged(bool modified);
     void openedChanged(bool isOpened);
     void openFinished(bool ok);

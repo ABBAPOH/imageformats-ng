@@ -24,9 +24,6 @@ public:
     explicit ImageDocument(QObject *parent = 0);
     ~ImageDocument();
 
-    QVector<QMimeType> openableMimetypes() const override;
-    QVector<QMimeType> saveableMimetypes() const override;
-
     ImageContents contents() const;
     void setContents(const ImageContents &contents);
 

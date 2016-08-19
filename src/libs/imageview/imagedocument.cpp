@@ -17,18 +17,6 @@ ImageDocument::~ImageDocument()
 {
 }
 
-QVector<QMimeType> ImageDocument::openableMimetypes() const
-{
-#warning FIXME
-    return QVector<QMimeType>();
-}
-
-QVector<QMimeType> ImageDocument::saveableMimetypes() const
-{
-#warning FIXME
-    return QVector<QMimeType>();
-}
-
 ImageContents ImageDocument::contents() const
 {
     Q_D(const ImageDocument);

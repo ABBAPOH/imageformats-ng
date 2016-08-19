@@ -8,16 +8,6 @@ class TestDocument : public AbstractDocument
 public:
     explicit TestDocument(QObject *parent = Q_NULLPTR) : AbstractDocument(parent) {}
 
-    QVector<QMimeType> openableMimetypes() const override
-    {
-        return QVector<QMimeType>() << QMimeDatabase().mimeTypeForName("text/plain");
-    }
-
-    QVector<QMimeType> saveableMimetypes() const override
-    {
-        return QVector<QMimeType>() << QMimeDatabase().mimeTypeForName("text/plain");
-    }
-
     inline QString text() const { return _text; }
     void setText(const QString &text) { _text = text; }
 
@@ -66,7 +56,6 @@ void TestAbstractDocument::defaultValues()
 {
     TestDocument doc;
     QCOMPARE(doc.url(), QUrl());
-    QCOMPARE(doc.mimeType(), QMimeType());
     QCOMPARE(doc.isModified(), false);
 }
 
@@ -82,11 +71,6 @@ void TestAbstractDocument::setters()
 
     doc.setUrl(QUrl("file://file.txt"));
     QCOMPARE(doc.url(), QUrl("file://file.txt"));
-
-    QCOMPARE(doc.mimeType().name(), QString("text/plain"));
-
-    doc.setMimeType("text/html");
-    QCOMPARE(doc.mimeType().name(), QString("text/html"));
 
     doc.setModified(true);
     QCOMPARE(doc.isModified(), true);
@@ -107,7 +91,6 @@ void TestAbstractDocument::read()
     doc.open();
     QVERIFY(doc.isOpened());
 
-    doc.setMimeType("text/plain");
     doc.open();
     QVERIFY(doc.isOpened());
 

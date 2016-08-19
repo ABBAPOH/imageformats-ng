@@ -1,7 +1,6 @@
 #include "abstractdocument.h"
 #include "abstractdocument_p.h"
 
-#include <QtCore/QMimeDatabase>
 #include <memory>
 
 void AbstractDocumentPrivate::setOpened(bool opened)
@@ -79,32 +78,8 @@ void AbstractDocument::setUrl(const QUrl &url)
         return;
 
     d->url = url;
-    const auto oldMt = d->mimeType;
-    d->mimeType = QMimeDatabase().mimeTypeForUrl(url);
 
     emit urlChanged(d->url);
-    if (oldMt != d->mimeType)
-        emit mimeTypeChanged(d->mimeType);
-}
-
-QMimeType AbstractDocument::mimeType() const
-{
-    Q_D(const AbstractDocument);
-    return d->mimeType;
-}
-
-void AbstractDocument::setMimeType(const QMimeType &mimeType)
-{
-    Q_D(AbstractDocument);
-    if (d->mimeType == mimeType)
-        return;
-    d->mimeType = mimeType;
-    emit mimeTypeChanged(d->mimeType);
-}
-
-void AbstractDocument::setMimeType(const QString &name)
-{
-    setMimeType(QMimeDatabase().mimeTypeForName(name));
 }
 
 bool AbstractDocument::isOpened() const

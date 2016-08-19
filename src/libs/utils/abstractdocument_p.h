@@ -19,7 +19,6 @@ public:
     void setOpened(bool opened);
 
     QUrl url;
-    QMimeType mimeType;
 
     bool opened {false};
     bool modified {false};
