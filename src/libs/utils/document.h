@@ -30,6 +30,8 @@ public:
     bool canRedo() const;
     bool canUndo() const;
 
+    void clearUndoStack();
+
 public slots:
     void setModified(bool modified);
 

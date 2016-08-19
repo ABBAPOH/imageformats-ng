@@ -72,6 +72,15 @@ bool Document::canUndo() const
     return d->undoStack->canUndo();
 }
 
+/*!
+    Clears the undo redo stack.
+*/
+void Document::clearUndoStack()
+{
+    Q_D(const Document);
+    return d->undoStack->clear();
+}
+
 void Document::setModified(bool modified)
 {
     Q_D(Document);
