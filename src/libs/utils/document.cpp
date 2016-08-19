@@ -12,12 +12,6 @@ Document::Document(QObject *parent) :
 {
 }
 
-Document::Document(DocumentPrivate &dd, QObject *parent) :
-    QObject(parent),
-    d_ptr(&dd)
-{
-}
-
 /*!
     Destroys the AbstractDocument object.
 */
@@ -39,4 +33,13 @@ void Document::setModified(bool modified)
 
     d->modified = modified;
     emit modificationChanged(modified);
+}
+
+/*!
+    Constructs an AbstractDocument with the given \a parent and private class \a dd.
+*/
+Document::Document(DocumentPrivate &dd, QObject *parent) :
+    QObject(parent),
+    d_ptr(&dd)
+{
 }
