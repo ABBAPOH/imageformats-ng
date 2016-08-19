@@ -1,6 +1,6 @@
 #pragma once
 
-#include "imageio_global.h"
+#include "imageformatsng_global.h"
 
 #include <Optional>
 
@@ -17,7 +17,7 @@ class ImageMetaData;
     inline void set(Optional<Type> t) \
     { if (t) setValue(Tag, QVariant::fromValue<Type>(*t)); else removeValue(Tag); }
 
-class IMAGEIO_EXPORT ImageExifMeta
+class IMAGEFORMATSNG_EXPORT ImageExifMeta
 {
     Q_GADGET
 public:

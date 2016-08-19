@@ -1,6 +1,6 @@
 #pragma once
 
-#include "imageio_global.h"
+#include "imageformatsng_global.h"
 
 #include <ImageExifMeta>
 
@@ -9,7 +9,7 @@
 
 class ImageContentsData;
 
-class IMAGEIO_EXPORT ImageContents
+class IMAGEFORMATSNG_EXPORT ImageContents
 {
     Q_GADGET
 public:
@@ -94,9 +94,9 @@ public:
 private:
     QSharedDataPointer<ImageContentsData> d;
 
-    friend bool IMAGEIO_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
-    friend bool IMAGEIO_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
+    friend bool IMAGEFORMATSNG_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
+    friend bool IMAGEFORMATSNG_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
 };
 
-bool IMAGEIO_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
-bool IMAGEIO_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
+bool IMAGEFORMATSNG_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
+bool IMAGEFORMATSNG_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);

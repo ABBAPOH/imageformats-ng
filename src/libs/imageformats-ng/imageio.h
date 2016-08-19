@@ -1,6 +1,6 @@
 #pragma once
 
-#include "imageio_global.h"
+#include "imageformatsng_global.h"
 
 #include <Optional>
 #include <ImageContents>
@@ -14,7 +14,7 @@
 class QIODevice;
 
 class ImageIOPrivate;
-class IMAGEIO_EXPORT  ImageIO
+class IMAGEFORMATSNG_EXPORT  ImageIO
 {
     Q_DISABLE_COPY(ImageIO)
     Q_DECLARE_PRIVATE(ImageIO)
@@ -58,7 +58,7 @@ private:
     QScopedPointer<ImageIOPrivate> d_ptr;
 };
 
-class IMAGEIO_EXPORT ImageIO::Error
+class IMAGEFORMATSNG_EXPORT ImageIO::Error
 {
     Q_DECLARE_TR_FUNCTIONS(Error)
 public:

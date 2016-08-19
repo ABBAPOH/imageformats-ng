@@ -1,13 +1,13 @@
 #pragma once
 
-#include "imageio_global.h"
+#include "imageformatsng_global.h"
 
 #include <QtCore/QHash>
 #include <QtCore/QRect>
 #include <QtCore/QVariant>
 #include <QtGui/QColor>
 
-class IMAGEIO_EXPORT ImageOptions
+class IMAGEFORMATSNG_EXPORT ImageOptions
 {
     Q_GADGET
 public:
@@ -59,11 +59,11 @@ public:
 private:
     QHash<Option, QVariant> _options;
 
-    friend bool IMAGEIO_EXPORT operator==(const ImageOptions &lhs, const ImageOptions &rhs);
-    friend bool IMAGEIO_EXPORT operator!=(const ImageOptions &lhs, const ImageOptions &rhs);
+    friend bool IMAGEFORMATSNG_EXPORT operator==(const ImageOptions &lhs, const ImageOptions &rhs);
+    friend bool IMAGEFORMATSNG_EXPORT operator!=(const ImageOptions &lhs, const ImageOptions &rhs);
 };
 
-bool IMAGEIO_EXPORT operator==(const ImageOptions &lhs, const ImageOptions &rhs);
-bool IMAGEIO_EXPORT operator!=(const ImageOptions &lhs, const ImageOptions &rhs);
+bool IMAGEFORMATSNG_EXPORT operator==(const ImageOptions &lhs, const ImageOptions &rhs);
+bool IMAGEFORMATSNG_EXPORT operator!=(const ImageOptions &lhs, const ImageOptions &rhs);
 
 Q_DECLARE_METATYPE(ImageOptions);

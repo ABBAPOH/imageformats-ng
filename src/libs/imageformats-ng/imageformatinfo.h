@@ -1,6 +1,6 @@
 #pragma once
 
-#include "imageio_global.h"
+#include "imageformatsng_global.h"
 
 #include <ImageOptions>
 #include <QtCore/QMimeType>
@@ -8,7 +8,7 @@
 #include <QtCore/QSharedDataPointer>
 
 class ImageFormatInfoData;
-class IMAGEIO_EXPORT ImageFormatInfo
+class IMAGEFORMATSNG_EXPORT ImageFormatInfo
 {
     Q_GADGET
 public:

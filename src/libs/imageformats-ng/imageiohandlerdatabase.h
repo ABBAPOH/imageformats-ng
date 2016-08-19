@@ -1,11 +1,11 @@
 #pragma once
 
-#include "imageio_global.h"
+#include "imageformatsng_global.h"
 
 #include <ImageIOHandler>
 #include <memory>
 
-class IMAGEIO_EXPORT ImageIOHandlerDatabase
+class IMAGEFORMATSNG_EXPORT ImageIOHandlerDatabase
 {
 public:
     ImageIOHandlerDatabase();

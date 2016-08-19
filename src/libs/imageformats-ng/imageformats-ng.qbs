@@ -4,7 +4,7 @@ Lib {
     Depends { name: "Qt.gui" }
     Depends { name: "Utils" }
     Depends { name: "PNGLib" }
-    cpp.defines: base.concat(["QT_STATICPLUGIN=1", "IMAGEIO_LIBRARY"])
+    cpp.defines: base.concat(["QT_STATICPLUGIN=1", "IMAGEFORMATSNG_LIBRARY"])
     name: "ImageFormatsNG"
     files: [ "*.cpp", "*.h" ]
 }

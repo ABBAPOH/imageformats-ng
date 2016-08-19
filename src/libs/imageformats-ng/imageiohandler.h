@@ -1,12 +1,12 @@
 #pragma once
 
-#include "imageio_global.h"
+#include "imageformatsng_global.h"
 
 #include <ImageIO>
 
 #include <QtCore/QSet>
 
-class IMAGEIO_EXPORT ImageIOHandler
+class IMAGEFORMATSNG_EXPORT ImageIOHandler
 {
 public:
     ImageIOHandler();
@@ -37,7 +37,7 @@ private:
     friend class ImageDocument;
 };
 
-class IMAGEIO_EXPORT ImageIOHandlerPlugin : public QObject
+class IMAGEFORMATSNG_EXPORT ImageIOHandlerPlugin : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(ImageIOHandlerPlugin)
