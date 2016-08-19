@@ -37,6 +37,7 @@ void ImageViewPrivate::init()
                      q, &ImageView::onViewPortSizeChanged);
 
     createActions();
+    retranslateUi();
 }
 
 void ImageViewPrivate::createActions()
