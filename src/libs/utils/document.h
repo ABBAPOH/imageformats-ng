@@ -1,5 +1,4 @@
-#ifndef DOCUMENT_H
-#define DOCUMENT_H
+#pragma once
 
 #include "utils_global.h"
 
@@ -37,5 +36,3 @@ protected:
 protected:
     QScopedPointer<DocumentPrivate> d_ptr;
 };
-
-#endif // DOCUMENT_H

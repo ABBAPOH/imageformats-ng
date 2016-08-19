@@ -1,5 +1,4 @@
-#ifndef SUPPORTEDFORMATSDIALOG_H
-#define SUPPORTEDFORMATSDIALOG_H
+#pragma once
 
 #include <QtWidgets/QDialog>
 
@@ -23,5 +22,3 @@ private:
     Ui::SupportedFormatsDialog *ui {nullptr};
     QScopedPointer<SupportedFormatsModel> _model;
 };
-
-#endif // SUPPORTEDFORMATSDIALOG_H

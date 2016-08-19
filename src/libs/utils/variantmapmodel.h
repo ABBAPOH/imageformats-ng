@@ -1,5 +1,4 @@
-#ifndef VARIANTMAPMODEL_H
-#define VARIANTMAPMODEL_H
+#pragma once
 
 #include "utils_global.h"
 
@@ -26,5 +25,3 @@ private:
     struct Data { QString key; QVariant value; };
     QVector<Data> _data;
 };
-
-#endif // VARIANTMAPMODEL_H

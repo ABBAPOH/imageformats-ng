@@ -1,5 +1,4 @@
-#ifndef IMAGECONTROL_H
-#define IMAGECONTROL_H
+#pragma once
 
 #include "imageview_global.h"
 
@@ -66,5 +65,3 @@ protected:
 // 2. ScrollBar.MinimumValue = -(Image.size - ViewPort.size) / 2
 // 2. ScrollBar.Value = MinimumValue..MaximumValue
 // 2. ScrollBar.Value = Viewport.pos
-
-#endif // IMAGECONTROL_H

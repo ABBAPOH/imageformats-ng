@@ -1,5 +1,4 @@
-#ifndef IMAGEIO_GLOBAL_H
-#define IMAGEIO_GLOBAL_H
+#pragma once
 
 #include <QtCore/qglobal.h>
 
@@ -8,5 +7,3 @@
 #else
 #  define IMAGEIO_EXPORT Q_DECL_IMPORT
 #endif
-
-#endif // IMAGEIO_GLOBAL_H

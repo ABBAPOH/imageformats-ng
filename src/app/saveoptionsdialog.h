@@ -1,5 +1,4 @@
-#ifndef SAVEOPTIONSDIALOG_H
-#define SAVEOPTIONSDIALOG_H
+#pragma once
 
 #include <QtWidgets/QDialog>
 
@@ -40,5 +39,3 @@ private:
     ImageOptions _options;
     ImageFormatInfo _imageFormat;
 };
-
-#endif // SAVEOPTIONSDIALOG_H

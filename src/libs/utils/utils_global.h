@@ -1,5 +1,4 @@
-#ifndef UTILS_GLOBAL_H
-#define UTILS_GLOBAL_H
+#pragma once
 
 #include <QtCore/qglobal.h>
 
@@ -8,5 +7,3 @@
 #else
 #  define UTILS_EXPORT Q_DECL_IMPORT
 #endif
-
-#endif // UTILS_GLOBAL_H

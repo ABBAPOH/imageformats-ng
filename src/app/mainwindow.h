@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#pragma once
 
 #include <QtWidgets/QMainWindow>
 #include <QtGui/QStandardItemModel>
@@ -51,5 +50,3 @@ private:
     ImageView *_view {Q_NULLPTR};
     QScopedPointer<ImageInfoDialog> _imageInfoDialog;
 };
-
-#endif // MAINWINDOW_H

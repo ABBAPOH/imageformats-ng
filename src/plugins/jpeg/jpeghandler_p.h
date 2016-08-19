@@ -31,8 +31,7 @@
 **
 ****************************************************************************/
 
-#ifndef JPEGHANDLER_P_H
-#define JPEGHANDLER_P_H
+#pragma once
 
 //
 //  W A R N I N G
@@ -76,5 +75,3 @@ public:
     JpegHandler *create(QIODevice *device, const QMimeType &mimeType) override;
     ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const override;
 };
-
-#endif // JPEGHANDLER_P_H

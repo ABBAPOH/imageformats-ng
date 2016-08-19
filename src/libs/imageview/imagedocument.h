@@ -1,5 +1,4 @@
-#ifndef IMAGEDOCUMENT_H
-#define IMAGEDOCUMENT_H
+#pragma once
 
 #include "imageview_global.h"
 
@@ -30,5 +29,3 @@ public:
 signals:
     void contentsChanged();
 };
-
-#endif // IMAGEDOCUMENT_H

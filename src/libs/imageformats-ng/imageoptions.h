@@ -1,5 +1,4 @@
-#ifndef IMAGEOPTIONS_H
-#define IMAGEOPTIONS_H
+#pragma once
 
 #include "imageio_global.h"
 
@@ -68,5 +67,3 @@ bool IMAGEIO_EXPORT operator==(const ImageOptions &lhs, const ImageOptions &rhs)
 bool IMAGEIO_EXPORT operator!=(const ImageOptions &lhs, const ImageOptions &rhs);
 
 Q_DECLARE_METATYPE(ImageOptions);
-
-#endif // IMAGEOPTIONS_H

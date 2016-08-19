@@ -1,5 +1,4 @@
-#ifndef IMAGEIO_H
-#define IMAGEIO_H
+#pragma once
 
 #include "imageio_global.h"
 
@@ -87,5 +86,3 @@ inline bool operator==(const ImageIO::Error &lhs, const ImageIO::Error &rhs)
 {
     return lhs.errorCode() == rhs.errorCode();
 }
-
-#endif // IMAGEIO_H

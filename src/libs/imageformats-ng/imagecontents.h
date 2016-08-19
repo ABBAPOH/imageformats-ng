@@ -1,5 +1,4 @@
-#ifndef IMAGECONTENTS_H
-#define IMAGECONTENTS_H
+#pragma once
 
 #include "imageio_global.h"
 
@@ -101,5 +100,3 @@ private:
 
 bool IMAGEIO_EXPORT operator==(const ImageContents &lhs, const ImageContents &rhs);
 bool IMAGEIO_EXPORT operator!=(const ImageContents &lhs, const ImageContents &rhs);
-
-#endif // IMAGECONTENTS_H

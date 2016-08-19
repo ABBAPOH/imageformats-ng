@@ -1,5 +1,4 @@
-#ifndef TESTHANDLER_H
-#define TESTHANDLER_H
+#pragma once
 
 #include <ImageIOHandler>
 
@@ -28,5 +27,3 @@ public:
     ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) override;
     ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const override;
 };
-
-#endif // TESTHANDLER_H

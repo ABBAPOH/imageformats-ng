@@ -1,5 +1,4 @@
-#ifndef IMAGEINFODIALOG_H
-#define IMAGEINFODIALOG_H
+#pragma once
 
 #include <ImageContents>
 #include <QtWidgets/QDialog>
@@ -28,5 +27,3 @@ private:
     QScopedPointer<ImageInfoModel> _imageInfoModel;
     QScopedPointer<VariantMapModel> _exifInfoModel;
 };
-
-#endif // IMAGEINFODIALOG_H

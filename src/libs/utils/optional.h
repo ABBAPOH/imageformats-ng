@@ -1,5 +1,4 @@
-#ifndef OPTIONAL_H
-#define OPTIONAL_H
+#pragma once
 
 #include "utils_global.h"
 
@@ -254,5 +253,3 @@ Q_DECL_CONSTEXPR inline uint qHash(const Optional<T> &key, uint seed = 0)
 {
     return key ? seed : ::qHash(T(*key), seed) ;
 }
-
-#endif // OPTIONAL_H

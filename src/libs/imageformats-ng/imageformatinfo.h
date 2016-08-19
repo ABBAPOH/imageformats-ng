@@ -1,5 +1,4 @@
-#ifndef IMAGEFORMATINFO_H
-#define IMAGEFORMATINFO_H
+#pragma once
 
 #include "imageio_global.h"
 
@@ -59,5 +58,3 @@ inline bool operator!=(const ImageFormatInfo &lhs, const ImageFormatInfo &rhs)
 {
     return !(lhs == rhs);
 }
-
-#endif // IMAGEFORMATINFO_H

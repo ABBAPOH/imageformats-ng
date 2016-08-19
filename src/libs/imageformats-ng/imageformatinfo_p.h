@@ -1,5 +1,4 @@
-#ifndef IMAGEFORMATINFO_P_H
-#define IMAGEFORMATINFO_P_H
+#pragma once
 
 #include "imageformatinfo.h"
 
@@ -12,5 +11,3 @@ public:
     QVector<QByteArray> subTypes;
     QMap<QByteArray, QVector<ImageOptions::Option>> options;
 };
-
-#endif // IMAGEFORMATINFO_P_H

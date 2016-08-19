@@ -1,5 +1,4 @@
-#ifndef SUPPORTEDFORMATSMODEL_H
-#define SUPPORTEDFORMATSMODEL_H
+#pragma once
 
 #include <ImageFormatInfo>
 
@@ -33,4 +32,3 @@ private:
 
 };
 
-#endif // SUPPORTEDFORMATSMODEL_H

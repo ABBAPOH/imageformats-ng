@@ -1,5 +1,4 @@
-#ifndef IMAGEVIEW_GLOBAL_H
-#define IMAGEVIEW_GLOBAL_H
+#pragma once
 
 #include <QtCore/qglobal.h>
 
@@ -8,5 +7,3 @@
 #else
 #  define IMAGEVIEW_EXPORT Q_DECL_IMPORT
 #endif
-
-#endif // IMAGEVIEW_GLOBAL_H

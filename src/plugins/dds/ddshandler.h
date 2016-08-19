@@ -40,8 +40,7 @@
 **
 ****************************************************************************/
 
-#ifndef DDSHANDLER_H
-#define DDSHANDLER_H
+#pragma once
 
 #include <ImageIOHandler>
 #include "ddsheader.h"
@@ -81,5 +80,3 @@ public:
     DDSHandler *create(QIODevice *device, const QMimeType &mimeType) override;
     ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const override;
 };
-
-#endif // DDSHANDLER_H

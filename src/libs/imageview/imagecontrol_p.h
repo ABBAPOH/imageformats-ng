@@ -1,5 +1,4 @@
-#ifndef IMAGECONTROL_P
-#define IMAGECONTROL_P
+#pragma once
 
 #include "imagecontrol.h"
 
@@ -50,6 +49,3 @@ public:
 protected:
     ImageControl *q_ptr {Q_NULLPTR};
 };
-
-#endif // IMAGECONTROL_P
-

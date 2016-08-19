@@ -1,5 +1,4 @@
-#ifndef IMAGEVIEW_P
-#define IMAGEVIEW_P
+#pragma once
 
 #include "imageview.h"
 
@@ -20,6 +19,3 @@ public:
 protected:
     ImageView *q_ptr {Q_NULLPTR};
 };
-
-#endif // IMAGEVIEW_P
-

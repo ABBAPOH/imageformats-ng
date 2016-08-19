@@ -1,5 +1,4 @@
-#ifndef IMAGEEXIFMETA_H
-#define IMAGEEXIFMETA_H
+#pragma once
 
 #include "imageio_global.h"
 
@@ -90,5 +89,3 @@ inline bool operator!=(const ImageExifMeta &lhs, const ImageExifMeta &rhs)
 {
     return !(lhs == rhs);
 }
-
-#endif // IMAGEEXIFMETA_H

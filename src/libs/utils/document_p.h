@@ -1,5 +1,4 @@
-#ifndef DOCUMENT_P
-#define DOCUMENT_P
+#pragma once
 
 #include "document.h"
 #include <QtCore/QFile>
@@ -18,6 +17,3 @@ public:
 
     bool modified {false};
 };
-
-#endif // DOCUMENT_P
-

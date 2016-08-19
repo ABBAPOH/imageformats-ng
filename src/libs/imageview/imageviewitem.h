@@ -1,5 +1,4 @@
-#ifndef IMAGEVIEWITEM_H
-#define IMAGEVIEWITEM_H
+#pragma once
 
 #include "imageview_global.h"
 
@@ -25,5 +24,3 @@ private slots:
 protected:
     QScopedPointer<ImageControl> control;
 };
-
-#endif // IMAGEVIEWITEM_H

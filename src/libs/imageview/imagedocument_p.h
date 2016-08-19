@@ -1,5 +1,4 @@
-#ifndef IMAGEDOCUMENT_P
-#define IMAGEDOCUMENT_P
+#pragma once
 
 #include <ImageDocument>
 #include <ImageIOHandler>
@@ -21,6 +20,3 @@ public:
 
     ImageContents contents;
 };
-
-#endif // IMAGEDOCUMENT_P
-

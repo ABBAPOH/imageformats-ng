@@ -40,8 +40,7 @@
 **
 ****************************************************************************/
 
-#ifndef DDSHEADER_H
-#define DDSHEADER_H
+#pragma once
 
 #include <QtCore/QDataStream>
 
@@ -228,5 +227,3 @@ struct DDSHeaderDX10
 
 QDataStream &operator>>(QDataStream &s, DDSHeaderDX10 &header);
 QDataStream &operator<<(QDataStream &s, const DDSHeaderDX10 &header);
-
-#endif // DDSHEADER_H

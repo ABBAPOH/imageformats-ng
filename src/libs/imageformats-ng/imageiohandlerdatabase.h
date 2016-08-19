@@ -1,5 +1,4 @@
-#ifndef IMAGEIOHANDLERDATABASE_H
-#define IMAGEIOHANDLERDATABASE_H
+#pragma once
 
 #include "imageio_global.h"
 
@@ -27,5 +26,3 @@ private:
 
     QHash<QString, ImageIOHandlerPlugin *> map;
 };
-
-#endif // IMAGEIOHANDLERDATABASE_H

@@ -1,5 +1,4 @@
-#ifndef IMAGEVIEW_H
-#define IMAGEVIEW_H
+#pragma once
 
 #include "imageview_global.h"
 
@@ -41,5 +40,3 @@ protected:
 protected:
     QScopedPointer<ImageViewPrivate> d_ptr;
 };
-
-#endif // IMAGEVIEW_H

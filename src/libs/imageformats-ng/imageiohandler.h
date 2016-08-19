@@ -1,5 +1,4 @@
-#ifndef IMAGEIOHANDLER_H
-#define IMAGEIOHANDLER_H
+#pragma once
 
 #include "imageio_global.h"
 
@@ -52,5 +51,3 @@ public:
 
     virtual ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) = 0;
 };
-
-#endif // IMAGEIOHANDLER_H

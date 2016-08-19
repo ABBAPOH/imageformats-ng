@@ -1,5 +1,4 @@
-#ifndef DEFAULTHANDLER_H
-#define DEFAULTHANDLER_H
+#pragma once
 
 #include "imageiohandler.h"
 
@@ -21,4 +20,3 @@ public:
     DefaultHandler *create(QIODevice *device, const QMimeType &mimeType) override;
 };
 
-#endif // DEFAULTHANDLER_H

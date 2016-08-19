@@ -1,5 +1,4 @@
-#ifndef TESTHANDLER_P_H
-#define TESTHANDLER_P_H
+#pragma once
 
 #include <ImageContents>
 
@@ -23,5 +22,3 @@ struct TestImageData
 
 QDataStream &operator <<(QDataStream &stream, const TestImageData &data);
 QDataStream &operator >>(QDataStream &stream, TestImageData &data);
-
-#endif // TESTHANDLER_P_H

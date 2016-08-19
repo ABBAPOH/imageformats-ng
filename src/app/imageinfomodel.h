@@ -1,5 +1,4 @@
-#ifndef IMAGEINFOMODEL_H
-#define IMAGEINFOMODEL_H
+#pragma once
 
 #include <ImageContents>
 #include <QtCore/QAbstractTableModel>
@@ -39,5 +38,3 @@ public: // QAbstractItemModel interface
 private:
     ImageContents _contents;
 };
-
-#endif // IMAGEINFOMODEL_H

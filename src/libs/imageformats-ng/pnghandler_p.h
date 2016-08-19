@@ -31,8 +31,7 @@
 **
 ****************************************************************************/
 
-#ifndef QPNGHANDLER_P_H
-#define QPNGHANDLER_P_H
+#pragma once
 
 //
 //  W A R N I N G
@@ -80,6 +79,3 @@ public:
     ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) override;
     ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const override;
 };
-
-
-#endif // QPNGHANDLER_P_H
