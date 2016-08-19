@@ -35,18 +35,19 @@ private:
     void buildModel(QStandardItem *parent);
     void buildModel(QStandardItem *parent, int level);
     void buildModel(QStandardItem *parent, int index, int level);
+    void openDocument(const QUrl &url);
+    void saveDocument(const QUrl &url, const QByteArray &subType, const ImageOptions &options);
 
 private slots:
     void onClicked(const QModelIndex &index);
     void showInfo();
-    void onOpenFinished(bool ok);
-    void onSaveFinished(bool ok);
 
 private:
     Ui::MainWindow *ui;
 
     QStandardItemModel *_model;
     ImageDocument *_document;
+    QUrl _url;
     ImageView *_view {Q_NULLPTR};
     QScopedPointer<ImageInfoDialog> _imageInfoDialog;
 };

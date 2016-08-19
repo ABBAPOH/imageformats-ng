@@ -11,35 +11,30 @@ public:
     inline QString text() const { return _text; }
     void setText(const QString &text) { _text = text; }
 
-protected:
-    void doOpen(const QUrl &url, const QVariantMap &options) override;
-    void doSave(const QUrl &url, const QVariantMap &options) override;
+    void open(const QUrl &url);
+    void save(const QUrl &url);
 
 private:
     QString _text;
 };
 
-void TestDocument::doOpen(const QUrl &url, const QVariantMap &options)
+void TestDocument::open(const QUrl &url)
 {
-    Q_UNUSED(options);
     QVERIFY(url.isLocalFile());
     QFile file(url.toLocalFile());
     QVERIFY(file.open(QIODevice::ReadOnly));
     const auto data = file.readAll();
     _text = QString::fromUtf8(data);
-    finishOpen(true);
 }
 
-void TestDocument::doSave(const QUrl &url, const QVariantMap &options)
+void TestDocument::save(const QUrl &url)
 {
-    Q_UNUSED(options);
     QVERIFY(url.isLocalFile());
     QFile file(url.toLocalFile());
     QVERIFY(file.open(QIODevice::WriteOnly));
 
     auto data = _text.toUtf8();
     const bool ok = file.write(data) == data.length();
-    finishSave(ok);
 }
 
 class TestAbstractDocument : public QObject
@@ -55,7 +50,6 @@ private slots:
 void TestAbstractDocument::defaultValues()
 {
     TestDocument doc;
-    QCOMPARE(doc.url(), QUrl());
     QCOMPARE(doc.isModified(), false);
 }
 
@@ -68,9 +62,6 @@ void TestAbstractDocument::setters()
     file.close();
 
     TestDocument doc;
-
-    doc.setUrl(QUrl("file://file.txt"));
-    QCOMPARE(doc.url(), QUrl("file://file.txt"));
 
     doc.setModified(true);
     QCOMPARE(doc.isModified(), true);
@@ -87,15 +78,8 @@ void TestAbstractDocument::read()
     file.close();
 
     TestDocument doc;
-    doc.setUrl(QUrl::fromLocalFile("file.txt"));
-    doc.open();
-    QVERIFY(doc.isOpened());
+    doc.open(QUrl::fromLocalFile("file.txt"));
 
-    doc.open();
-    QVERIFY(doc.isOpened());
-
-    doc.open();
-    QVERIFY(doc.isOpened());
     QCOMPARE(doc.text(), QStringLiteral("Hello, world!"));
     file.remove();
 }
@@ -103,9 +87,8 @@ void TestAbstractDocument::read()
 void TestAbstractDocument::write()
 {
     TestDocument doc;
-    doc.setUrl(QUrl::fromLocalFile("file.txt"));
     doc.setText(QStringLiteral("Hello, world!"));
-    doc.save();
+    doc.save(QUrl::fromLocalFile("file.txt"));
 
     QFile file("file.txt");
     QVERIFY(file.open(QIODevice::ReadOnly));

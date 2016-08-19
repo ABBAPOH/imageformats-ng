@@ -3,16 +3,6 @@
 
 #include <memory>
 
-void AbstractDocumentPrivate::setOpened(bool opened)
-{
-    Q_Q(AbstractDocument);
-
-    if (this->opened == opened)
-        return;
-    this->opened = opened;
-    emit q->openedChanged(opened);
-}
-
 /*!
     Constructs an AbstractDocument with the given \a parent.
 */
@@ -35,85 +25,10 @@ AbstractDocument::~AbstractDocument()
 {
 }
 
-/*!
-    \fn void AbstractDocument::doOpen(const QUrl &url);
-
-    Reimplement this function to open document contents located at \a url.
-*/
-
-/*!
-    Reimplement this function to save document contents to the \a url.
-
-    \note An \a url parameter can differ from value returned by url() function (for example, in
-    case of autosaving)
-*/
-void AbstractDocument::doSave(const QUrl &url, const QVariantMap &options)
-{
-    Q_UNUSED(url);
-}
-
-void AbstractDocument::finishOpen(bool ok)
-{
-    Q_D(AbstractDocument);
-
-    d->setOpened(ok);
-    emit openFinished(ok);
-}
-
-void AbstractDocument::finishSave(bool ok)
-{
-    emit saveFinished(ok);
-}
-
-QUrl AbstractDocument::url() const
-{
-    Q_D(const AbstractDocument);
-    return d->url;
-}
-
-void AbstractDocument::setUrl(const QUrl &url)
-{
-    Q_D(AbstractDocument);
-    if (d->url == url)
-        return;
-
-    d->url = url;
-
-    emit urlChanged(d->url);
-}
-
-bool AbstractDocument::isOpened() const
-{
-    Q_D(const AbstractDocument);
-    return d->opened;
-}
-
 bool AbstractDocument::isModified() const
 {
     Q_D(const AbstractDocument);
     return d->modified;
-}
-
-void AbstractDocument::open(const QVariantMap &options)
-{
-    Q_D(AbstractDocument);
-    if (d->url.isEmpty()) {
-        finishOpen(false);
-        return;
-    }
-
-    doOpen(d->url, options);
-}
-
-void AbstractDocument::save(const QVariantMap &options)
-{
-    Q_D(AbstractDocument);
-    if (d->url.isEmpty()) {
-        finishSave(false);
-        return;
-    }
-
-    doSave(d->url, options);
 }
 
 void AbstractDocument::setModified(bool modified)

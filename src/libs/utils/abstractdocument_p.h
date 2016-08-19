@@ -16,13 +16,7 @@ public:
     explicit AbstractDocumentPrivate(AbstractDocument *qq) : q_ptr(qq) {}
     virtual ~AbstractDocumentPrivate() {}
 
-    void setOpened(bool opened);
-
-    QUrl url;
-
-    bool opened {false};
     bool modified {false};
-
 };
 
 #endif // ABSTRACTDOCUMENT_P

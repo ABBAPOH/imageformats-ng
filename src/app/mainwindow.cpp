@@ -13,6 +13,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtCore/QMimeDatabase>
+#include <QtConcurrent/QtConcurrent>
 #include <QtGui/QClipboard>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
@@ -47,8 +48,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->treeView->setModel(_model);
 
     _document = new ImageDocument(this);
-    connect(_document, &AbstractDocument::openFinished, this, &MainWindow::onOpenFinished);
-    connect(_document, &AbstractDocument::saveFinished, this, &MainWindow::onSaveFinished);
 
     connect(ui->actionNewFromClipboard, &QAction::triggered, this, &MainWindow::newFromClipboard);
     connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::open);
@@ -97,13 +96,12 @@ void MainWindow::open()
     if (path.isEmpty())
         return;
 
-    _document->setUrl(QUrl::fromLocalFile(path));
-    _document->open();
+    openDocument(QUrl::fromLocalFile(path));
 }
 
 void MainWindow::save()
 {
-    _document->save();
+    saveDocument(_url, QByteArray(), ImageOptions());
 }
 
 void MainWindow::saveAs()
@@ -126,9 +124,7 @@ void MainWindow::saveAs()
     if (dialog.exec() == QDialog::Rejected)
         return;
 
-    _document->setUrl(QUrl::fromLocalFile(path));
-    _document->save({ {"subType",  dialog.subType()},
-                      {"imageOptions", QVariant::fromValue(dialog.options())} });
+    saveDocument(QUrl::fromLocalFile(path), dialog.subType(), dialog.options());
 }
 
 void MainWindow::convertToProjection()
@@ -192,6 +188,77 @@ void MainWindow::buildModel(QStandardItem *parent, int index, int level)
     item->setData(QVariant::fromValue(qMakePair(index, level)));
 }
 
+void MainWindow::openDocument(const QUrl &url)
+{
+    if (!url.isLocalFile()) {
+        return;
+    }
+
+    _url = url;
+
+    using Result = Optional<ImageContents>;
+
+    auto worker = [](const QString &path)
+    {
+        ImageIO io(path);
+        return io.read();
+    };
+
+    auto finisher = [this]()
+    {
+        const auto watcher = static_cast<QFutureWatcher<Result> *>(sender());
+        const auto result = watcher->future().result();
+        watcher->deleteLater();
+        if (result) {
+            _document->setContents(*result);
+        } else {
+            QMessageBox::warning(this,
+                                 tr("Open"),
+                                 tr("Can't open file"),
+                                 QMessageBox::Close);
+        }
+    };
+
+    auto watcher = new QFutureWatcher<Result>(this);
+    connect(watcher, &QFutureWatcherBase::finished, this, finisher);
+    watcher->setFuture(QtConcurrent::run(worker, url.toLocalFile()));
+}
+
+void MainWindow::saveDocument(const QUrl &url, const QByteArray &subType, const ImageOptions &options)
+{
+    if (!url.isLocalFile()) {
+        return;
+    }
+
+    const auto workerSubType = subType;
+    const auto workerOptions = options;
+    using Result = bool;
+
+    auto worker = [workerSubType, workerOptions](const QString &path, const ImageContents &contents)
+    {
+        ImageIO io(path);
+        io.setSubType(workerSubType);
+        return io.write(contents, workerOptions);
+    };
+
+    auto finisher = [this]()
+    {
+        const auto watcher = static_cast<QFutureWatcher<Result> *>(sender());
+        const auto result = watcher->future().result();
+        watcher->deleteLater();
+        if (!result) {
+            QMessageBox::warning(this,
+                                 tr("Save"),
+                                 tr("Can't save file"),
+                                 QMessageBox::Close);
+        }
+    };
+
+    auto watcher = new QFutureWatcher<Result>(this);
+    connect(watcher, &QFutureWatcherBase::finished, this, finisher);
+    watcher->setFuture(QtConcurrent::run(worker, url.toLocalFile(), _document->contents()));
+}
+
 void MainWindow::onClicked(const QModelIndex &index)
 {
     auto item = _model->itemFromIndex(index);
@@ -209,27 +276,4 @@ void MainWindow::showInfo()
 
     _imageInfoDialog->setContents(_document->contents());
     _imageInfoDialog->show();
-}
-
-void MainWindow::onOpenFinished(bool ok)
-{
-    if (!ok) {
-        QMessageBox::warning(this,
-                             tr("Open"),
-                             tr("Can't open file"),
-                             QMessageBox::Close);
-        return;
-    }
-
-    buildModel();
-}
-
-void MainWindow::onSaveFinished(bool ok)
-{
-    if (!ok) {
-        QMessageBox::warning(this,
-                             tr("Save"),
-                             tr("Can't save file"),
-                             QMessageBox::Close);
-    }
 }
