@@ -5,6 +5,7 @@
 
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QCommandLineOption>
+#include <QtCore/QMimeDatabase>
 #include <QtQuick/QQuickView>
 #include <QtWidgets/QApplication>
 
@@ -12,6 +13,9 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     app.addLibraryPath(app.applicationDirPath() + ImageIO::pluginsDirPath());
+
+    // this is used to preload QMimeDatabase to speedup loading plugins
+    QMimeDatabase().mimeTypeForName("application/octet-stream");
 
     QCommandLineParser parser;
     QCommandLineOption useQmlOption("qml", QCoreApplication::translate("main", "Use qml instead of widgets"));
