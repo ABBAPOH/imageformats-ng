@@ -1,12 +1,12 @@
 #include <QtTest>
 
-#include <AbstractDocument>
+#include <Document>
 #include <QMimeDatabase>
 
-class TestDocument : public AbstractDocument
+class SimpleDocument : public Document
 {
 public:
-    explicit TestDocument(QObject *parent = Q_NULLPTR) : AbstractDocument(parent) {}
+    explicit SimpleDocument(QObject *parent = Q_NULLPTR) : Document(parent) {}
 
     inline QString text() const { return _text; }
     void setText(const QString &text) { _text = text; }
@@ -18,7 +18,7 @@ private:
     QString _text;
 };
 
-void TestDocument::open(const QUrl &url)
+void SimpleDocument::open(const QUrl &url)
 {
     QVERIFY(url.isLocalFile());
     QFile file(url.toLocalFile());
@@ -27,7 +27,7 @@ void TestDocument::open(const QUrl &url)
     _text = QString::fromUtf8(data);
 }
 
-void TestDocument::save(const QUrl &url)
+void SimpleDocument::save(const QUrl &url)
 {
     QVERIFY(url.isLocalFile());
     QFile file(url.toLocalFile());
@@ -37,7 +37,7 @@ void TestDocument::save(const QUrl &url)
     const bool ok = file.write(data) == data.length();
 }
 
-class TestAbstractDocument : public QObject
+class TestDocument : public QObject
 {
     Q_OBJECT
 private slots:
@@ -47,13 +47,13 @@ private slots:
     void write();
 };
 
-void TestAbstractDocument::defaultValues()
+void TestDocument::defaultValues()
 {
-    TestDocument doc;
+    SimpleDocument doc;
     QCOMPARE(doc.isModified(), false);
 }
 
-void TestAbstractDocument::setters()
+void TestDocument::setters()
 {
     QFile file("file.txt");
     file.remove();
@@ -61,7 +61,7 @@ void TestAbstractDocument::setters()
     file.write("Hello, world!");
     file.close();
 
-    TestDocument doc;
+    SimpleDocument doc;
 
     doc.setModified(true);
     QCOMPARE(doc.isModified(), true);
@@ -69,7 +69,7 @@ void TestAbstractDocument::setters()
     file.remove();
 }
 
-void TestAbstractDocument::read()
+void TestDocument::read()
 {
     QFile file("file.txt");
     file.remove();
@@ -77,16 +77,16 @@ void TestAbstractDocument::read()
     file.write("Hello, world!");
     file.close();
 
-    TestDocument doc;
+    SimpleDocument doc;
     doc.open(QUrl::fromLocalFile("file.txt"));
 
     QCOMPARE(doc.text(), QStringLiteral("Hello, world!"));
     file.remove();
 }
 
-void TestAbstractDocument::write()
+void TestDocument::write()
 {
-    TestDocument doc;
+    SimpleDocument doc;
     doc.setText(QStringLiteral("Hello, world!"));
     doc.save(QUrl::fromLocalFile("file.txt"));
 
@@ -95,6 +95,6 @@ void TestAbstractDocument::write()
     QCOMPARE(file.readAll(), QByteArray("Hello, world!"));
 }
 
-QTEST_APPLESS_MAIN(TestAbstractDocument)
+QTEST_APPLESS_MAIN(TestDocument)
 
-#include "tst_abstractdocument.moc"
+#include "tst_document.moc"

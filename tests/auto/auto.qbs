@@ -2,7 +2,7 @@ import qbs.base 1.0
 
 Project {
     SubProject {
-        filePath: "test_abstractdocument/test_abstractdocument.qbs"
+        filePath: "test_document/test_document.qbs"
     }
     SubProject {
         filePath: "test_imagecontents/test_imagecontents.qbs"

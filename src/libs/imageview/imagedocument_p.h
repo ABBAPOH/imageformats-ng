@@ -1,9 +1,9 @@
 #ifndef IMAGEDOCUMENT_P
 #define IMAGEDOCUMENT_P
 
-#include <AbstractDocumentPrivate>
 #include <ImageDocument>
 #include <ImageIOHandler>
+#include <private/DocumentPrivate>
 
 #include <QtCore/QFile>
 #include <QtCore/QHash>
@@ -12,7 +12,7 @@
 class ImageIOHandler;
 class ImageIOHandlerPlugin;
 
-class ImageDocumentPrivate : public AbstractDocumentPrivate
+class ImageDocumentPrivate : public DocumentPrivate
 {
     Q_DECLARE_PUBLIC(ImageDocument)
 

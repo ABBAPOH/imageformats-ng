@@ -2,12 +2,12 @@
 #include "imagedocument_p.h"
 
 ImageDocumentPrivate::ImageDocumentPrivate(ImageDocument *qq) :
-    AbstractDocumentPrivate(qq)
+    DocumentPrivate(qq)
 {
 }
 
 ImageDocument::ImageDocument(QObject *parent) :
-    AbstractDocument(*new ImageDocumentPrivate(this), parent)
+    Document(*new ImageDocumentPrivate(this), parent)
 {
 }
 

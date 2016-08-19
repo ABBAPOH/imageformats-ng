@@ -3,7 +3,7 @@
 
 #include "imageview_global.h"
 
-#include <AbstractDocument>
+#include <Document>
 #include <ImageContents>
 #include <ImageOptions>
 
@@ -12,7 +12,7 @@
 #include <QtGui/QImage>
 
 class ImageDocumentPrivate;
-class IMAGEVIEW_EXPORT ImageDocument : public AbstractDocument
+class IMAGEVIEW_EXPORT ImageDocument : public Document
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ImageDocument)
