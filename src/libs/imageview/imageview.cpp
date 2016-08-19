@@ -53,12 +53,19 @@ void ImageViewPrivate::createActions()
     actions[ImageView::ZoomOut]->setShortcut(QKeySequence::ZoomOut);
     q->addAction(actions[ImageView::ZoomOut].data());
     q->connect(actions[ImageView::ZoomOut].data(), &QAction::triggered, q, &ImageView::zoomOut);
+
+    actions[ImageView::NormalSize].reset(new QAction);
+    actions[ImageView::NormalSize]->setShortcut(QKeySequence("Ctrl+0"));
+    q->addAction(actions[ImageView::NormalSize].data());
+    q->connect(actions[ImageView::NormalSize].data(),
+            &QAction::triggered, q, &ImageView::normalSize);
 }
 
 void ImageViewPrivate::retranslateUi()
 {
     actions[ImageView::ZoomIn]->setText(ImageView::tr("Zoom in"));
     actions[ImageView::ZoomOut]->setText(ImageView::tr("Zoom out"));
+    actions[ImageView::NormalSize]->setText(ImageView::tr("Normal size"));
 }
 
 ImageView::ImageView(QWidget *parent) :
@@ -111,6 +118,12 @@ void ImageView::zoomOut()
 {
     Q_D(ImageView);
     d->control->zoomOut();
+}
+
+void ImageView::normalSize()
+{
+    Q_D(ImageView);
+    d->control->normalSize();
 }
 
 void ImageView::onScrollBarValueChanged()

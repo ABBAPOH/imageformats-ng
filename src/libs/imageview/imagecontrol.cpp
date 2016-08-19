@@ -206,3 +206,9 @@ void ImageControl::zoomOut()
     Q_D(ImageControl);
     d->setZoomFactor(d->zoomFactor*0.8);
 }
+
+void ImageControl::normalSize()
+{
+    Q_D(ImageControl);
+    d->setZoomFactor(1.0);
+}

@@ -18,6 +18,7 @@ public:
     enum Action {
         ZoomIn,
         ZoomOut,
+        NormalSize,
 
         ActionsCount
     };
@@ -33,8 +34,10 @@ public:
 
 public slots:
     void jumpTo(int index, int level);
+
     void zoomIn();
     void zoomOut();
+    void normalSize();
 
 private slots:
     void onScrollBarValueChanged();

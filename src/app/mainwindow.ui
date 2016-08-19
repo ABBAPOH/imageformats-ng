@@ -58,6 +58,7 @@
     </property>
     <addaction name="actionZoom_In"/>
     <addaction name="actionZoom_Out"/>
+    <addaction name="actionNormal_Size"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -172,6 +173,14 @@
   <action name="actionConvertToProjection">
    <property name="text">
     <string>Convert to projection...</string>
+   </property>
+  </action>
+  <action name="actionNormal_Size">
+   <property name="text">
+    <string>Normal Size</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+0</string>
    </property>
   </action>
  </widget>

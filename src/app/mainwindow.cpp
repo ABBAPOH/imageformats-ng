@@ -70,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->actionZoom_In, &QAction::triggered, _view, &ImageView::zoomIn);
     connect(ui->actionZoom_Out, &QAction::triggered, _view, &ImageView::zoomOut);
+    connect(ui->actionNormal_Size, &QAction::triggered, _view, &ImageView::normalSize);
 }
 
 MainWindow::~MainWindow()
