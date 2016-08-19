@@ -1,1 +1,1 @@
-#include "../src/libs/imageformats-ng/imageexifmeta.h"
+#include "../src/libs/imageformatsng/imageexifmeta.h"

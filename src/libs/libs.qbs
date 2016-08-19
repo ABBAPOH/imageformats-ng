@@ -5,7 +5,7 @@ Project {
         filePath: "3rdparty/3rdparty.qbs"
     }
     SubProject {
-        filePath: "imageformats-ng/imageformats-ng.qbs"
+        filePath: "imageformatsng/imageformatsng.qbs"
     }
     SubProject {
         filePath: "imageview/imageview.qbs"

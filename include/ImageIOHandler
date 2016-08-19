@@ -1,1 +1,1 @@
-#include "../src/libs/imageformats-ng/imageiohandler.h"
+#include "../src/libs/imageformatsng/imageiohandler.h"
