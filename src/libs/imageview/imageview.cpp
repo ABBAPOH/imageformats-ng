@@ -3,6 +3,7 @@
 
 #include <ImageControl>
 
+#include <QtWidgets/QAction>
 #include <QtWidgets/QScrollBar>
 
 #include <QtGui/QPainter>
@@ -34,6 +35,29 @@ void ImageViewPrivate::init()
 
     QObject::connect(control.data(), &ImageControl::viewportSizeChanged,
                      q, &ImageView::onViewPortSizeChanged);
+
+    createActions();
+}
+
+void ImageViewPrivate::createActions()
+{
+    Q_Q(ImageView);
+
+    actions[ImageView::ZoomIn].reset(new QAction);
+    actions[ImageView::ZoomIn]->setShortcut(QKeySequence::ZoomIn);
+    q->addAction(actions[ImageView::ZoomIn].data());
+    q->connect(actions[ImageView::ZoomIn].data(), &QAction::triggered, q, &ImageView::zoomIn);
+
+    actions[ImageView::ZoomOut].reset(new QAction);
+    actions[ImageView::ZoomOut]->setShortcut(QKeySequence::ZoomOut);
+    q->addAction(actions[ImageView::ZoomOut].data());
+    q->connect(actions[ImageView::ZoomOut].data(), &QAction::triggered, q, &ImageView::zoomOut);
+}
+
+void ImageViewPrivate::retranslateUi()
+{
+    actions[ImageView::ZoomIn]->setText(ImageView::tr("Zoom in"));
+    actions[ImageView::ZoomOut]->setText(ImageView::tr("Zoom out"));
 }
 
 ImageView::ImageView(QWidget *parent) :
@@ -46,6 +70,16 @@ ImageView::ImageView(QWidget *parent) :
 
 ImageView::~ImageView()
 {
+}
+
+QAction *ImageView::action(Action action) const
+{
+    Q_D(const ImageView);
+
+    if (action < 0 || action >= ActionsCount)
+        return 0;
+
+    return d->actions[action].data();
 }
 
 ImageDocument *ImageView::document() const
