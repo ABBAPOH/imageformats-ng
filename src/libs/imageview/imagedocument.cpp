@@ -3,14 +3,6 @@
 
 #include <QtConcurrent/QtConcurrent>
 
-QVector<QMimeType> formatsToMimeTypes(const QVector<ImageFormatInfo> &formats)
-{
-    QVector<QMimeType> result;
-    for (auto format : formats)
-        result.append(format.mimeType());
-    return result;
-}
-
 ImageDocumentPrivate::ImageDocumentPrivate(ImageDocument *qq) :
     AbstractDocumentPrivate(qq)
 {
@@ -27,12 +19,14 @@ ImageDocument::~ImageDocument()
 
 QVector<QMimeType> ImageDocument::openableMimetypes() const
 {
-    return formatsToMimeTypes(ImageIO::supportedImageFormats(ImageFormatInfo::CanRead));
+#warning FIXME
+    return QVector<QMimeType>();
 }
 
 QVector<QMimeType> ImageDocument::saveableMimetypes() const
 {
-    return formatsToMimeTypes(ImageIO::supportedImageFormats(ImageFormatInfo::CanWrite));
+#warning FIXME
+    return QVector<QMimeType>();
 }
 
 ImageContents ImageDocument::contents() const
