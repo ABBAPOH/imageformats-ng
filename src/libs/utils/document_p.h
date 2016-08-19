@@ -15,5 +15,9 @@ public:
     explicit DocumentPrivate(Document *qq) : q_ptr(qq) {}
     virtual ~DocumentPrivate() {}
 
+    void init();
+
+public:
     bool modified {false};
+    QScopedPointer<QUndoStack> undoStack;
 };

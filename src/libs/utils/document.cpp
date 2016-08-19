@@ -3,6 +3,22 @@
 
 #include <memory>
 
+void DocumentPrivate::init()
+{
+    Q_Q(Document);
+    undoStack.reset(new QUndoStack);
+
+    q->connect(undoStack.data(), &QUndoStack::canRedoChanged, q, &Document::canRedoChanged);
+    q->connect(undoStack.data(), &QUndoStack::canUndoChanged, q, &Document::canUndoChanged);
+}
+
+/*!
+    \class Document
+    Base class for all documents.
+
+    Provides base functionality like modified state or undo-redo stack.
+*/
+
 /*!
     Constructs an AbstractDocument with the given \a parent.
 */
@@ -10,6 +26,8 @@ Document::Document(QObject *parent) :
     QObject(parent),
     d_ptr(new DocumentPrivate(this))
 {
+    Q_D(Document);
+    d->init();
 }
 
 /*!
@@ -32,6 +50,28 @@ bool Document::isModified() const
     return d->modified;
 }
 
+/*!
+    \property Document::canRedo
+    This property holds whether there are any commands to redo.
+*/
+
+bool Document::canRedo() const
+{
+    Q_D(const Document);
+    return d->undoStack->canRedo();
+}
+
+/*!
+    \property Document::canUndo
+    This property holds whether there are any commands to redo.
+*/
+
+bool Document::canUndo() const
+{
+    Q_D(const Document);
+    return d->undoStack->canUndo();
+}
+
 void Document::setModified(bool modified)
 {
     Q_D(Document);
@@ -40,6 +80,18 @@ void Document::setModified(bool modified)
 
     d->modified = modified;
     emit modificationChanged(modified);
+}
+
+void Document::undo()
+{
+    Q_D(Document);
+    d->undoStack->undo();
+}
+
+void Document::redo()
+{
+    Q_D(Document);
+    d->undoStack->redo();
 }
 
 /*!
@@ -64,3 +116,14 @@ Document::Document(DocumentPrivate &dd, QObject *parent) :
     d_ptr(&dd)
 {
 }
+
+/*!
+    Returns pointer to the undo-redo stack.
+    Can be used to insert undo-redo commands.
+*/
+QUndoStack *Document::undoStack() const
+{
+    Q_D(const Document);
+    return d->undoStack.data();
+}
+
