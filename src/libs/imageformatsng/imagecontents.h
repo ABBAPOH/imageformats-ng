@@ -36,6 +36,7 @@ public:
     ImageContents();
     explicit ImageContents(const QImage &image);
     ImageContents(const ImageContents &other);
+    ImageContents(ImageContents &&other);
     ~ImageContents();
 
     ImageContents &operator=(const ImageContents &other);

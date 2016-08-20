@@ -29,7 +29,7 @@ public:
     QImage::Format imageFormat {QImage::Format_Invalid};
     QString name;
     int imageCount {1};
-    int mipmapCount {0};
+    int mipmapCount {1};
     int imageDelay {0};
     int loopCount {-1};
 
@@ -103,7 +103,6 @@ ImageContents::ImageContents(const QImage &image):
     d->type = ImageContents::Image;
     d->size = image.size();
     d->imageFormat = image.format();
-    d->imageCount = 1;
     setImage(image);
 }
 
@@ -111,6 +110,11 @@ ImageContents::ImageContents(const ImageContents &other) :
     d(other.d)
 {
 
+}
+
+ImageContents::ImageContents(ImageContents &&other) :
+    d(qMove(other.d))
+{
 }
 
 ImageContents::~ImageContents()
