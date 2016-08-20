@@ -334,6 +334,7 @@ void MainWindow::openDocument(const QUrl &url)
         watcher->deleteLater();
         if (result) {
             d->_document->setContents(*result);
+            buildModel();
         } else {
             QMessageBox::warning(this,
                                  tr("Open"),
@@ -345,7 +346,6 @@ void MainWindow::openDocument(const QUrl &url)
     auto watcher = new QFutureWatcher<Result>(this);
     connect(watcher, &QFutureWatcherBase::finished, this, finisher);
     watcher->setFuture(QtConcurrent::run(worker, url.toLocalFile()));
-    buildModel();
 }
 
 void MainWindow::saveDocument(const QUrl &url, const QByteArray &subType, const ImageOptions &options)
