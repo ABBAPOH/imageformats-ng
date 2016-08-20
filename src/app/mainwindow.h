@@ -13,10 +13,12 @@ namespace Ui {
 class MainWindow;
 }
 
+class MainWindowPrivate;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
+    Q_DECLARE_PRIVATE(MainWindow)
+    Q_DISABLE_COPY(MainWindow)
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -27,7 +29,7 @@ public slots:
     void save();
     void saveAs();
     void convertToProjection();
-    void showSupportedFormatsDialog();
+    void showSupportedFormats();
 
 private:
     void buildModel();
@@ -42,11 +44,5 @@ private slots:
     void showInfo();
 
 private:
-    Ui::MainWindow *ui;
-
-    QStandardItemModel *_model;
-    ImageDocument *_document;
-    QUrl _url;
-    ImageView *_view {Q_NULLPTR};
-    QScopedPointer<ImageInfoDialog> _imageInfoDialog;
+    QScopedPointer<MainWindowPrivate> d_ptr;
 };
