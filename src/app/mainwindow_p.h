@@ -1,6 +1,7 @@
 #pragma once
 
 #include "mainwindow.h"
+#include <ThumbnailsModel>
 
 class MainWindowPrivate
 {
@@ -28,7 +29,7 @@ public:
     void createMenuBar();
 
 public:
-    QScopedPointer<QStandardItemModel> _model;
+    QScopedPointer<ThumbnailsModel> _model;
     QScopedPointer<ImageDocument> _document;
     QScopedPointer<ImageView> _view;
     QScopedPointer<ImageInfoDialog> _imageInfoDialog;

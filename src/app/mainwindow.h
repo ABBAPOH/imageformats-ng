@@ -32,10 +32,6 @@ public slots:
     void showSupportedFormats();
 
 private:
-    void buildModel();
-    void buildModel(QStandardItem *parent);
-    void buildModel(QStandardItem *parent, int level);
-    void buildModel(QStandardItem *parent, int index, int level);
     void openDocument(const QUrl &url);
     void saveDocument(const QUrl &url, const QByteArray &subType, const ImageOptions &options);
 

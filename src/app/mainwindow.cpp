@@ -49,11 +49,12 @@ void MainWindowPrivate::init()
 
     q->resize(800, 600);
 
-    _model.reset(new QStandardItemModel);
+    _model.reset(new ThumbnailsModel);
     _document.reset(new ImageDocument);
     _view.reset(new ImageView);
 
     _view->setDocument(_document.data());
+    _model->setDocument(_document.data());
     q->setCentralWidget(_view.data());
 
     createDockWidget();
@@ -201,7 +202,6 @@ void MainWindow::newFromClipboard()
 
     ImageContents contents(image);
     d->_document->setContents(contents);
-    buildModel();
 }
 
 void MainWindow::open()
@@ -254,7 +254,6 @@ void MainWindow::convertToProjection()
                              tr("Can't convert file"));
     }
     d->_document->setContents(*projection);
-    buildModel();
 }
 
 void MainWindow::showSupportedFormats()
@@ -262,52 +261,6 @@ void MainWindow::showSupportedFormats()
     SupportedFormatsDialog dialog;
     dialog.model()->setFormats(ImageIO::supportedImageFormats());
     dialog.exec();
-}
-
-void MainWindow::buildModel()
-{
-    Q_D(MainWindow);
-    d->_model->clear();
-    buildModel(d->_model->invisibleRootItem());
-}
-
-void MainWindow::buildModel(QStandardItem *parent)
-{
-    Q_D(MainWindow);
-    if (d->_document->contents().mipmapCount() <= 1) {
-        buildModel(parent, 0);
-    } else {
-        for (int i = 0; i < d->_document->contents().mipmapCount(); ++i) {
-            QStandardItem *mipmapItem = new QStandardItem(tr("Mipmap %1").arg(i));
-            buildModel(mipmapItem, i);
-            parent->appendRow(mipmapItem);
-        }
-    }
-}
-
-void MainWindow::buildModel(QStandardItem *parent, int level)
-{
-    Q_D(MainWindow);
-    if (d->_document->contents().imageCount() == 1) {
-        buildModel(parent, 0, level);
-    } else {
-        for (int i = 0; i < d->_document->contents().imageCount(); i++) {
-            QStandardItem *item = new QStandardItem(tr("Image %1").arg(i));
-            buildModel(item, i, level);
-            parent->appendRow(item);
-        }
-    }
-}
-
-void MainWindow::buildModel(QStandardItem *parent, int index, int level)
-{
-    Q_D(MainWindow);
-    QStandardItem *item = parent;
-    if (item == d->_model->invisibleRootItem()) {
-        item = new QStandardItem(tr("Image"));
-        parent->appendRow(item);
-    }
-    item->setData(QVariant::fromValue(qMakePair(index, level)));
 }
 
 void MainWindow::openDocument(const QUrl &url)
@@ -334,7 +287,6 @@ void MainWindow::openDocument(const QUrl &url)
         watcher->deleteLater();
         if (result) {
             d->_document->setContents(*result);
-            buildModel();
         } else {
             QMessageBox::warning(this,
                                  tr("Open"),
@@ -388,11 +340,7 @@ void MainWindow::saveDocument(const QUrl &url, const QByteArray &subType, const 
 void MainWindow::onClicked(const QModelIndex &index)
 {
     Q_D(MainWindow);
-    auto item = d->_model->itemFromIndex(index);
-    if (!item)
-        return;
-
-    auto data = item->data().value<QPair<int, int>>();
+    const auto data = d->_model->data(index, ThumbnailsModel::IndexRole).value<QPair<int, int>>();
     d->_view->jumpTo(data.first, data.second);
 }
 
