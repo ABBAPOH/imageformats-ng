@@ -7,7 +7,7 @@ BaseProduct {
     destinationDirectory: project.install_plugin_path + "/imageformats2"
     bundle.isBundle: false
 
-    cpp.installNamePrefix: "@rpath/Frameworks"
+    cpp.sonamePrefix: "@rpath/Frameworks"
     cpp.rpaths: qbs.targetOS.contains("osx")
                 ? [ "@loader_path/..", "@executable_path/.." ]
                 : [ "$ORIGIN" ]
