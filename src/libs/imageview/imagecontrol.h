@@ -53,6 +53,9 @@ signals:
     void viewportSizeChanged(const QSize &size);
     void updateRequested();
 
+private slots:
+    void onContentsChanged();
+
 protected:
     QScopedPointer<ImageControlPrivate> d_ptr;
 };

@@ -24,7 +24,8 @@ void ImageViewPrivate::init()
     q->verticalScrollBar()->setSingleStep(20);
 
     control.reset(new ImageControl(q));
-    QObject::connect(control.data(), &ImageControl::documentChanged, q, &ImageView::documentChanged);
+    QObject::connect(control.data(), &ImageControl::documentChanged,
+                     q, &ImageView::documentChanged);
     QObject::connect(control.data(), &ImageControl::updateRequested,
                      q->viewport(), static_cast<void(QWidget::*)()>(&QWidget::update));
 

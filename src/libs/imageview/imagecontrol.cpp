@@ -100,10 +100,22 @@ void ImageControl::setDocument(ImageDocument *doc)
     if (d->doc == doc)
         return;
 
-    if (d->doc && d->doc->parent() == this)
-        delete d->doc;
+    if (d->doc) {
+        disconnect(d->doc, 0, this, 0);
+
+        if (d->doc->parent() == this)
+            delete d->doc;
+    }
+
     d->doc = doc;
     d->setZoomFactor(1.0, false);
+
+    if (d->doc) {
+        connect(d->doc, &ImageDocument::contentsChanged, this, &ImageControl::onContentsChanged);
+    }
+
+    emit documentChanged();
+    emit updateRequested();
 }
 
 QSize ImageControl::size() const
@@ -211,4 +223,9 @@ void ImageControl::normalSize()
 {
     Q_D(ImageControl);
     d->setZoomFactor(1.0);
+}
+
+void ImageControl::onContentsChanged()
+{
+    emit updateRequested();
 }
