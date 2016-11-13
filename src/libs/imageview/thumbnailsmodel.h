@@ -37,7 +37,7 @@ private:
 
 private:
     QScopedPointer<Item> _rootItem;
-    ImageDocument *_document;
+    ImageDocument *_document { nullptr };
 };
 
 #endif // THUMBNAILSMODEL_H
