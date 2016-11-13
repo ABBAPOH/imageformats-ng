@@ -21,11 +21,28 @@ ImageViewItem::ImageViewItem()
     if (!contents)
         return;
     doc->setContents(*contents);
+
+    setAcceptedMouseButtons(Qt::LeftButton);
 }
 
 void ImageViewItem::paint(QPainter *painter)
 {
     control->paint(painter);
+}
+
+void ImageViewItem::mousePressEvent(QMouseEvent *event)
+{
+    control->mousePressEvent(event);
+}
+
+void ImageViewItem::mouseMoveEvent(QMouseEvent *event)
+{
+    control->mouseMoveEvent(event);
+}
+
+void ImageViewItem::mouseReleaseEvent(QMouseEvent *event)
+{
+    control->mouseReleaseEvent(event);
 }
 
 void ImageViewItem::onSizeChanged()

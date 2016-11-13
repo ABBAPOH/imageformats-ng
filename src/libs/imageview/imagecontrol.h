@@ -8,6 +8,7 @@
 
 class QPainter;
 class QResizeEvent;
+class QMouseEvent;
 
 class ImageDocument;
 
@@ -39,6 +40,9 @@ public:
     QSize viewportSize() const;
 
     void paint(QPainter *painter);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 
 public slots:
     void jumpTo(int index, int level);

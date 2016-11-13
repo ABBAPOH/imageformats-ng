@@ -199,6 +199,18 @@ void ImageControl::paint(QPainter *painter)
     painter->restore();
 }
 
+void ImageControl::mousePressEvent(QMouseEvent *event)
+{
+}
+
+void ImageControl::mouseMoveEvent(QMouseEvent *event)
+{
+}
+
+void ImageControl::mouseReleaseEvent(QMouseEvent *event)
+{
+}
+
 void ImageControl::jumpTo(int index, int level)
 {
     Q_D(ImageControl);

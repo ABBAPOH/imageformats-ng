@@ -150,6 +150,24 @@ void ImageView::paintEvent(QPaintEvent *event)
     d->control->paint(&painter);
 }
 
+void ImageView::mousePressEvent(QMouseEvent *event)
+{
+    Q_D(ImageView);
+    d->control->mousePressEvent(event);
+}
+
+void ImageView::mouseMoveEvent(QMouseEvent *event)
+{
+    Q_D(ImageView);
+    d->control->mouseMoveEvent(event);
+}
+
+void ImageView::mouseReleaseEvent(QMouseEvent *event)
+{
+    Q_D(ImageView);
+    d->control->mouseReleaseEvent(event);
+}
+
 bool ImageView::viewportEvent(QEvent *event)
 {
     switch (event->type()) {
