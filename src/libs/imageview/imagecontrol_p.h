@@ -39,6 +39,7 @@ public:
     ImageDocument *doc {Q_NULLPTR};
     QSize size;
     QPoint pos;
+    QPoint eventPos;
     int currentIndex {0};
     int currentLevel {0};
 

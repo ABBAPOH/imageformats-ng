@@ -115,6 +115,7 @@ void ImageControl::setDocument(ImageDocument *doc)
     }
 
     emit documentChanged();
+    emit viewportSizeChanged(viewportSize());
     emit updateRequested();
 }
 
@@ -201,14 +202,23 @@ void ImageControl::paint(QPainter *painter)
 
 void ImageControl::mousePressEvent(QMouseEvent *event)
 {
+    Q_D(ImageControl);
+    d->eventPos = event->pos();
 }
 
 void ImageControl::mouseMoveEvent(QMouseEvent *event)
 {
+    Q_D(ImageControl);
+    auto dxy = d->eventPos - event->pos();
+    d->eventPos = event->pos();
+    setPos(pos() + dxy);
 }
 
 void ImageControl::mouseReleaseEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
+    Q_D(ImageControl);
+    d->eventPos = QPoint();
 }
 
 void ImageControl::jumpTo(int index, int level)
@@ -239,5 +249,6 @@ void ImageControl::normalSize()
 
 void ImageControl::onContentsChanged()
 {
+    emit viewportSizeChanged(viewportSize());
     emit updateRequested();
 }
