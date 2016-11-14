@@ -6,7 +6,7 @@ BaseProduct {
     destinationDirectory: project.install_library_path
     bundle.isBundle: false
 
-    cpp.sonamePrefix: "@rpath/Frameworks"
+    cpp.sonamePrefix: qbs.targetOS.contains("osx") ? "@rpath/Frameworks" : ""
     cpp.rpaths: qbs.targetOS.contains("osx")
                 ? [ "@loader_path/..", "@executable_path/.." ]
                 : [ "$ORIGIN" ]
