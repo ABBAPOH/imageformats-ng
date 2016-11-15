@@ -36,8 +36,6 @@ public:
     QRect calculatePositionBounds() const;
     void updatePositionBounds();
 
-    QPointF getCenter() const;
-
     ImageDocument *doc {Q_NULLPTR};
     QSize size;
     QPoint position;

@@ -91,11 +91,6 @@ void ImageControlPrivate::updatePositionBounds()
     emit q->positionBoundsChanged(positionBounds);
 }
 
-QPointF ImageControlPrivate::getCenter() const
-{
-    return QPointF(size.width() / 2.0, size.height() / 2.0);
-}
-
 /*!
     \class ImageControl
 */
@@ -215,7 +210,7 @@ void ImageControl::paint(QPainter *painter)
     if (!d->doc)
         return;
 
-    QPointF center = d->getCenter();
+    QPointF center = rect.center();
 
     QTransform matrix;
     matrix.translate(center.x(), center.y());
