@@ -141,27 +141,27 @@ void ImageControl::setSize(int width, int height)
     setSize(QSize(width, height));
 }
 
-QPoint ImageControl::pos() const
+QPoint ImageControl::position() const
 {
     Q_D(const ImageControl);
-    return d->pos;
+    return d->position;
 }
 
-void ImageControl::setPos(QPoint pos)
+void ImageControl::setPosition(QPoint pos)
 {
     Q_D(ImageControl);
 
-    if (d->pos == pos)
+    if (d->position == pos)
         return;
 
     const auto ranges = scrollBarRanges();
     pos.setX(qBound(ranges.topLeft().x(), pos.x(), ranges.bottomRight().x()));
     pos.setY(qBound(ranges.topLeft().y(), pos.y(), ranges.bottomRight().y()));
 
-    if (d->pos == pos)
+    if (d->position == pos)
         return;
-    d->pos = pos;
-    emit posChanged(pos);
+    d->position = pos;
+    emit positionChanged(pos);
     emit updateRequested();
 }
 
@@ -203,7 +203,7 @@ void ImageControl::paint(QPainter *painter)
 
     QTransform matrix;
     matrix.translate(center.x(), center.y());
-    matrix.translate(-d->pos.x(), -d->pos.y());
+    matrix.translate(-d->position.x(), -d->position.y());
 
     painter->save();
     painter->setTransform(matrix);
@@ -228,7 +228,7 @@ void ImageControl::mouseMoveEvent(QMouseEvent *event)
     Q_D(ImageControl);
     auto dxy = d->eventPos - event->pos();
     d->eventPos = event->pos();
-    setPos(pos() + dxy);
+    setPosition(position() + dxy);
 }
 
 void ImageControl::mouseReleaseEvent(QMouseEvent *event)

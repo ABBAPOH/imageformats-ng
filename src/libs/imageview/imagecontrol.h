@@ -21,7 +21,7 @@ class IMAGEVIEW_EXPORT ImageControl : public QObject
 
     Q_PROPERTY(ImageDocument * document READ document WRITE setDocument NOTIFY documentChanged)
     Q_PROPERTY(QSize size READ size WRITE setSize NOTIFY sizeChanged)
-    Q_PROPERTY(QPoint pos READ pos WRITE setPos NOTIFY posChanged)
+    Q_PROPERTY(QPoint position READ position WRITE setPosition NOTIFY positionChanged)
     Q_PROPERTY(QRect scrollBarRanges READ scrollBarRanges NOTIFY scrollBarRangesChanged)
 
 public:
@@ -35,8 +35,8 @@ public:
     void setSize(const QSize &size);
     void setSize(int width, int height);
 
-    QPoint pos() const;
-    void setPos(QPoint pos);
+    QPoint position() const;
+    void setPosition(QPoint pos);
 
     QRect scrollBarRanges() const;
 
@@ -54,7 +54,7 @@ public slots:
 signals:
     void documentChanged();
     void sizeChanged(const QSize &size);
-    void posChanged(const QPoint &pos);
+    void positionChanged(const QPoint &pos);
     void scrollBarRangesChanged(const QRect &rect);
     void updateRequested();
 
