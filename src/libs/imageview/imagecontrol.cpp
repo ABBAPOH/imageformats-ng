@@ -62,7 +62,7 @@ void ImageControlPrivate::setVisualZoomFactor(qreal factor)
 {
     Q_Q(ImageControl);
     visualZoomFactor = factor;
-    emit q->scrollBarRangesChanged(q->scrollBarRanges());
+    emit q->positionBoundsChanged(q->positionBounds());
     //    updateScrollBars();
     emit q->updateRequested();
 }
@@ -115,7 +115,7 @@ void ImageControl::setDocument(ImageDocument *doc)
     }
 
     emit documentChanged();
-    emit scrollBarRangesChanged(scrollBarRanges());
+    emit positionBoundsChanged(positionBounds());
     emit updateRequested();
 }
 
@@ -132,7 +132,7 @@ void ImageControl::setSize(const QSize &size)
         return;
     d->size = size;
     emit sizeChanged(size);
-    emit scrollBarRangesChanged(scrollBarRanges());
+    emit positionBoundsChanged(positionBounds());
     emit updateRequested();
 }
 
@@ -154,7 +154,7 @@ void ImageControl::setPosition(const QPoint &pos)
     if (d->position == pos)
         return;
 
-    const auto ranges = scrollBarRanges();
+    const auto ranges = positionBounds();
     const auto topLeft = ranges.topLeft();
     const auto bottomRight = ranges.bottomRight();
     const auto adjustedPos = QPoint(qBound(topLeft.x(), pos.x(), bottomRight.x()),
@@ -168,10 +168,9 @@ void ImageControl::setPosition(const QPoint &pos)
 }
 
 /*!
-    Returns vertical and horizontal scrollbar ranges
-    as QRect(QPoint(minXValue, minYValue), QPoint(maxXValue, maxYValue)).
+    Returns minimum and maximum position values as QRect.
 */
-QRect ImageControl::scrollBarRanges() const
+QRect ImageControl::positionBounds() const
 {
     Q_D(const ImageControl);
     const auto image = d->doc->contents().image(d->currentIndex, d->currentLevel);
@@ -268,6 +267,6 @@ void ImageControl::normalSize()
 
 void ImageControl::onContentsChanged()
 {
-    emit scrollBarRangesChanged(scrollBarRanges());
+    emit positionBoundsChanged(positionBounds());
     emit updateRequested();
 }

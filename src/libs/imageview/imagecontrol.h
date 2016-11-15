@@ -22,7 +22,7 @@ class IMAGEVIEW_EXPORT ImageControl : public QObject
     Q_PROPERTY(ImageDocument * document READ document WRITE setDocument NOTIFY documentChanged)
     Q_PROPERTY(QSize size READ size WRITE setSize NOTIFY sizeChanged)
     Q_PROPERTY(QPoint position READ position WRITE setPosition NOTIFY positionChanged)
-    Q_PROPERTY(QRect scrollBarRanges READ scrollBarRanges NOTIFY scrollBarRangesChanged)
+    Q_PROPERTY(QRect positionBounds READ positionBounds NOTIFY positionBoundsChanged)
 
 public:
     explicit ImageControl(QObject *parent = 0);
@@ -38,7 +38,7 @@ public:
     QPoint position() const;
     void setPosition(const QPoint &pos);
 
-    QRect scrollBarRanges() const;
+    QRect positionBounds() const;
 
     void paint(QPainter *painter);
     void mousePressEvent(QMouseEvent *event);
@@ -55,7 +55,7 @@ signals:
     void documentChanged();
     void sizeChanged(const QSize &size);
     void positionChanged(const QPoint &pos);
-    void scrollBarRangesChanged(const QRect &rect);
+    void positionBoundsChanged(const QRect &rect);
     void updateRequested();
 
 private slots:

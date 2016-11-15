@@ -36,8 +36,8 @@ void ImageViewPrivate::init()
 
     QObject::connect(control.data(), &ImageControl::positionChanged,
                      q, &ImageView::onPositionChanged);
-    QObject::connect(control.data(), &ImageControl::scrollBarRangesChanged,
-                     q, &ImageView::onViewPortSizeChanged);
+    QObject::connect(control.data(), &ImageControl::positionBoundsChanged,
+                     q, &ImageView::onPositionBoundsChanged);
 
     createActions();
     retranslateUi();
@@ -141,16 +141,16 @@ void ImageView::onPositionChanged(const QPoint &pos)
     verticalScrollBar()->setValue(pos.y());
 }
 
-void ImageView::onViewPortSizeChanged()
+void ImageView::onPositionBoundsChanged()
 {
     Q_D(ImageView);
 
-    const auto ranges = d->control->scrollBarRanges();
-    horizontalScrollBar()->setMinimum(ranges.topLeft().x());
-    horizontalScrollBar()->setMaximum(ranges.bottomRight().x());
+    const auto bounds = d->control->positionBounds();
+    horizontalScrollBar()->setMinimum(bounds.topLeft().x());
+    horizontalScrollBar()->setMaximum(bounds.bottomRight().x());
 
-    verticalScrollBar()->setMinimum(ranges.topLeft().y());
-    verticalScrollBar()->setMaximum(ranges.bottomRight().y());
+    verticalScrollBar()->setMinimum(bounds.topLeft().y());
+    verticalScrollBar()->setMaximum(bounds.bottomRight().y());
 }
 
 void ImageView::paintEvent(QPaintEvent *event)
