@@ -29,7 +29,7 @@ void ImageControlPrivate::setZoomFactor(qreal factor, bool animated)
 {
 //    Q_Q(ImageControl);
 
-    if (zoomFactor == factor)
+    if (qFuzzyCompare(zoomFactor, factor))
         return;
 
     if (!doc)
