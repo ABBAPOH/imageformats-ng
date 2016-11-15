@@ -36,7 +36,7 @@ public:
     void setSize(int width, int height);
 
     QPoint position() const;
-    void setPosition(QPoint pos);
+    void setPosition(const QPoint &pos);
 
     QRect scrollBarRanges() const;
 

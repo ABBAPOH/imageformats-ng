@@ -147,7 +147,7 @@ QPoint ImageControl::position() const
     return d->position;
 }
 
-void ImageControl::setPosition(QPoint pos)
+void ImageControl::setPosition(const QPoint &pos)
 {
     Q_D(ImageControl);
 
@@ -155,13 +155,15 @@ void ImageControl::setPosition(QPoint pos)
         return;
 
     const auto ranges = scrollBarRanges();
-    pos.setX(qBound(ranges.topLeft().x(), pos.x(), ranges.bottomRight().x()));
-    pos.setY(qBound(ranges.topLeft().y(), pos.y(), ranges.bottomRight().y()));
+    const auto topLeft = ranges.topLeft();
+    const auto bottomRight = ranges.bottomRight();
+    const auto adjustedPos = QPoint(qBound(topLeft.x(), pos.x(), bottomRight.x()),
+                                    qBound(topLeft.y(), pos.y(), bottomRight.y()));
 
-    if (d->position == pos)
+    if (d->position == adjustedPos)
         return;
-    d->position = pos;
-    emit positionChanged(pos);
+    d->position = adjustedPos;
+    emit positionChanged(d->position);
     emit updateRequested();
 }
 
