@@ -62,9 +62,33 @@ void ImageControlPrivate::setVisualZoomFactor(qreal factor)
 {
     Q_Q(ImageControl);
     visualZoomFactor = factor;
-    emit q->positionBoundsChanged(q->positionBounds());
+    updatePositionBounds();
     //    updateScrollBars();
     emit q->updateRequested();
+}
+
+QRect ImageControlPrivate::calculatePositionBounds() const
+{
+    const auto image = doc->contents().image(currentIndex, currentLevel);
+    const auto imageSize = image.size() * visualZoomFactor;
+    if (imageSize.isNull())
+        return QRect(QPoint(0, 0), QPoint(0, 0));
+    const auto dw = qMax(0, imageSize.width() - size.width());
+    const auto dh = qMax(0, imageSize.height() - size.height());
+    auto result = QRect(0, 0, dw, dh);
+    result.adjust(0, 0, 2, 2);
+    result.translate(-result.center());
+    return result;
+}
+
+void ImageControlPrivate::updatePositionBounds()
+{
+    Q_Q(ImageControl);
+    const auto bounds = calculatePositionBounds();
+    if (positionBounds == bounds)
+        return;
+    positionBounds = bounds;
+    emit q->positionBoundsChanged(positionBounds);
 }
 
 QPointF ImageControlPrivate::getCenter() const
@@ -115,7 +139,7 @@ void ImageControl::setDocument(ImageDocument *doc)
     }
 
     emit documentChanged();
-    emit positionBoundsChanged(positionBounds());
+    d->updatePositionBounds();
     emit updateRequested();
 }
 
@@ -132,7 +156,7 @@ void ImageControl::setSize(const QSize &size)
         return;
     d->size = size;
     emit sizeChanged(size);
-    emit positionBoundsChanged(positionBounds());
+    d->updatePositionBounds();
     emit updateRequested();
 }
 
@@ -173,16 +197,7 @@ void ImageControl::setPosition(const QPoint &pos)
 QRect ImageControl::positionBounds() const
 {
     Q_D(const ImageControl);
-    const auto image = d->doc->contents().image(d->currentIndex, d->currentLevel);
-    const auto imageSize = image.size() * d->visualZoomFactor;
-    if (imageSize.isNull())
-        return QRect(QPoint(0, 0), QPoint(0, 0));
-    const auto dw = qMax(0, imageSize.width() - d->size.width());
-    const auto dh = qMax(0, imageSize.height() - d->size.height());
-    auto result = QRect(0, 0, dw, dh);
-    result.adjust(0, 0, 2, 2);
-    result.translate(-result.center());
-    return result;
+    return d->positionBounds;
 }
 
 void ImageControl::paint(QPainter *painter)
@@ -267,6 +282,7 @@ void ImageControl::normalSize()
 
 void ImageControl::onContentsChanged()
 {
-    emit positionBoundsChanged(positionBounds());
+    Q_D(ImageControl);
+    d->updatePositionBounds();
     emit updateRequested();
 }

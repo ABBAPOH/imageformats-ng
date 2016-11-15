@@ -33,12 +33,15 @@ public:
     void init();
     void setZoomFactor(qreal factor, bool animated = true);
     void setVisualZoomFactor(qreal factor);
+    QRect calculatePositionBounds() const;
+    void updatePositionBounds();
 
     QPointF getCenter() const;
 
     ImageDocument *doc {Q_NULLPTR};
     QSize size;
     QPoint position;
+    QRect positionBounds { QPoint(0, 0), QPoint(0, 0) };
     QPoint eventPos;
     int currentIndex {0};
     int currentLevel {0};
