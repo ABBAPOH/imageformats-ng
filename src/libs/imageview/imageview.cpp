@@ -34,6 +34,7 @@ void ImageViewPrivate::init()
     QObject::connect(q->verticalScrollBar(), &QAbstractSlider::valueChanged,
                      q, &ImageView::onScrollBarValueChanged);
 
+    QObject::connect(control.data(), &ImageControl::posChanged, q, &ImageView::onPosChanged);
     QObject::connect(control.data(), &ImageControl::scrollBarRangesChanged,
                      q, &ImageView::onViewPortSizeChanged);
 
@@ -131,6 +132,12 @@ void ImageView::onScrollBarValueChanged()
 {
     Q_D(ImageView);
     d->control->setPos(QPoint(horizontalScrollBar()->value(), verticalScrollBar()->value()));
+}
+
+void ImageView::onPosChanged(const QPoint &pos)
+{
+    horizontalScrollBar()->setValue(pos.x());
+    verticalScrollBar()->setValue(pos.y());
 }
 
 void ImageView::onViewPortSizeChanged()

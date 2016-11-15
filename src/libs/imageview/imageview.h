@@ -41,6 +41,7 @@ public slots:
 
 private slots:
     void onScrollBarValueChanged();
+    void onPosChanged(const QPoint &pos);
     void onViewPortSizeChanged();
 
 signals:
