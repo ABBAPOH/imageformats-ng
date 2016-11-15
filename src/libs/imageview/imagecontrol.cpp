@@ -153,6 +153,13 @@ void ImageControl::setPos(QPoint pos)
 
     if (d->pos == pos)
         return;
+
+    const auto ranges = scrollBarRanges();
+    pos.setX(qBound(ranges.topLeft().x(), pos.x(), ranges.bottomRight().x()));
+    pos.setY(qBound(ranges.topLeft().y(), pos.y(), ranges.bottomRight().y()));
+
+    if (d->pos == pos)
+        return;
     d->pos = pos;
     emit posChanged(pos);
     emit updateRequested();
