@@ -31,7 +31,11 @@ int main(int argc, char *argv[])
 
         return app.exec();
     } else {
+        auto args = app.arguments();
         MainWindow w;
+        if (args.size() == 2)
+            w.openDocument(QUrl::fromLocalFile(args.at(1)));
+
         w.show();
 
         return app.exec();

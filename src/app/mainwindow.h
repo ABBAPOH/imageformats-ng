@@ -28,12 +28,10 @@ public slots:
     void open();
     void save();
     void saveAs();
-    void convertToProjection();
-    void showSupportedFormats();
-
-private:
     void openDocument(const QUrl &url);
     void saveDocument(const QUrl &url, const QByteArray &subType, const ImageOptions &options);
+    void convertToProjection();
+    void showSupportedFormats();
 
 private slots:
     void onClicked(const QModelIndex &index);
