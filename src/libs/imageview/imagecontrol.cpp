@@ -62,7 +62,7 @@ void ImageControlPrivate::setVisualZoomFactor(qreal factor)
 {
     Q_Q(ImageControl);
     visualZoomFactor = factor;
-    emit q->viewportSizeChanged(q->viewportSize());
+    emit q->scrollBarRangesChanged(q->scrollBarRanges());
     //    updateScrollBars();
     emit q->updateRequested();
 }
@@ -115,7 +115,7 @@ void ImageControl::setDocument(ImageDocument *doc)
     }
 
     emit documentChanged();
-    emit viewportSizeChanged(viewportSize());
+    emit scrollBarRangesChanged(scrollBarRanges());
     emit updateRequested();
 }
 
@@ -132,6 +132,8 @@ void ImageControl::setSize(const QSize &size)
         return;
     d->size = size;
     emit sizeChanged(size);
+    emit scrollBarRangesChanged(scrollBarRanges());
+    emit updateRequested();
 }
 
 void ImageControl::setSize(int width, int height)
@@ -156,15 +158,23 @@ void ImageControl::setPos(QPoint pos)
     emit updateRequested();
 }
 
-QSize ImageControl::viewportSize() const
+/*!
+    Returns vertical and horizontal scrollbar ranges
+    as QRect(QPoint(minXValue, minYValue), QPoint(maxXValue, maxYValue)).
+*/
+QRect ImageControl::scrollBarRanges() const
 {
     Q_D(const ImageControl);
-    const QImage image = d->doc->contents().image(d->currentIndex, d->currentLevel);
-    const QSize imageSize = image.size() * d->visualZoomFactor;
+    const auto image = d->doc->contents().image(d->currentIndex, d->currentLevel);
+    const auto imageSize = image.size() * d->visualZoomFactor;
     if (imageSize.isNull())
-        return QSize();
-    return QSize(qMax(0, imageSize.width() - d->size.width()),
-                 qMax(0, imageSize.height() - d->size.height())) / 2;
+        return QRect(QPoint(0, 0), QPoint(0, 0));
+    const auto dw = qMax(0, imageSize.width() - d->size.width());
+    const auto dh = qMax(0, imageSize.height() - d->size.height());
+    auto result = QRect(0, 0, dw, dh);
+    result.adjust(0, 0, 2, 2);
+    result.translate(-result.center());
+    return result;
 }
 
 void ImageControl::paint(QPainter *painter)
@@ -174,7 +184,7 @@ void ImageControl::paint(QPainter *painter)
     if (d->size.isEmpty())
         return;
 
-    QRect rect(QPoint(0, 0), d->size);
+    QRectF rect(QPointF(0, 0), d->size);
 
     QColor backgroundColor(Qt::gray);
     painter->fillRect(rect, backgroundColor);
@@ -249,6 +259,6 @@ void ImageControl::normalSize()
 
 void ImageControl::onContentsChanged()
 {
-    emit viewportSizeChanged(viewportSize());
+    emit scrollBarRangesChanged(scrollBarRanges());
     emit updateRequested();
 }

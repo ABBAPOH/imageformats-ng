@@ -4,6 +4,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QPoint>
+#include <QtCore/QRect>
 #include <QtCore/QSize>
 
 class QPainter;
@@ -21,7 +22,7 @@ class IMAGEVIEW_EXPORT ImageControl : public QObject
     Q_PROPERTY(ImageDocument * document READ document WRITE setDocument NOTIFY documentChanged)
     Q_PROPERTY(QSize size READ size WRITE setSize NOTIFY sizeChanged)
     Q_PROPERTY(QPoint pos READ pos WRITE setPos NOTIFY posChanged)
-    Q_PROPERTY(QSize viewportSize READ viewportSize NOTIFY viewportSizeChanged)
+    Q_PROPERTY(QRect scrollBarRanges READ scrollBarRanges NOTIFY scrollBarRangesChanged)
 
 public:
     explicit ImageControl(QObject *parent = 0);
@@ -37,7 +38,7 @@ public:
     QPoint pos() const;
     void setPos(QPoint pos);
 
-    QSize viewportSize() const;
+    QRect scrollBarRanges() const;
 
     void paint(QPainter *painter);
     void mousePressEvent(QMouseEvent *event);
@@ -54,7 +55,7 @@ signals:
     void documentChanged();
     void sizeChanged(const QSize &size);
     void posChanged(const QPoint &pos);
-    void viewportSizeChanged(const QSize &size);
+    void scrollBarRangesChanged(const QRect &rect);
     void updateRequested();
 
 private slots:

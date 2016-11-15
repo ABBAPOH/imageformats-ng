@@ -41,7 +41,7 @@ public slots:
 
 private slots:
     void onScrollBarValueChanged();
-    void onViewPortSizeChanged(const QSize size);
+    void onViewPortSizeChanged();
 
 signals:
     void documentChanged();
