@@ -121,7 +121,6 @@ void ImageControl::setDocument(const ImageDocumentPointer &doc)
     }
 
     d->document = doc;
-    d->setZoomFactor(1.0, false);
 
     if (d->document) {
         connect(d->document.data(), &ImageDocument::contentsChanged,
@@ -272,6 +271,10 @@ void ImageControl::normalSize()
 void ImageControl::onContentsChanged()
 {
     Q_D(ImageControl);
+    d->currentIndex = 0;
+    d->currentLevel = 0;
+    d->position = QPoint();
+    d->setZoomFactor(1.0, false);
     d->updatePositionBounds();
     emit updateRequested();
 }
