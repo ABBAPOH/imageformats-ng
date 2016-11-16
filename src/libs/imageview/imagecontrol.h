@@ -2,6 +2,8 @@
 
 #include "imageview_global.h"
 
+#include <ImageDocument>
+
 #include <QtCore/QObject>
 #include <QtCore/QPoint>
 #include <QtCore/QRect>
@@ -11,15 +13,13 @@ class QPainter;
 class QResizeEvent;
 class QMouseEvent;
 
-class ImageDocument;
-
 class ImageControlPrivate;
 class IMAGEVIEW_EXPORT ImageControl : public QObject
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(ImageControl)
 
-    Q_PROPERTY(ImageDocument * document READ document WRITE setDocument NOTIFY documentChanged)
+    Q_PROPERTY(ImageDocumentPointer document READ document WRITE setDocument NOTIFY documentChanged)
     Q_PROPERTY(QSize size READ size WRITE setSize NOTIFY sizeChanged)
     Q_PROPERTY(QPoint position READ position WRITE setPosition NOTIFY positionChanged)
     Q_PROPERTY(QRect positionBounds READ positionBounds NOTIFY positionBoundsChanged)
@@ -28,8 +28,8 @@ public:
     explicit ImageControl(QObject *parent = 0);
     ~ImageControl();
 
-    ImageDocument *document() const;
-    void setDocument(ImageDocument *doc);
+    ImageDocumentPointer document() const;
+    void setDocument(const ImageDocumentPointer &doc);
 
     QSize size() const;
     void setSize(const QSize &size);

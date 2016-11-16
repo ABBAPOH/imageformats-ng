@@ -10,7 +10,7 @@ ImageViewItem::ImageViewItem()
     control.reset(new ImageControl);
 
 
-    auto doc = new ImageDocument(control.data());
+    auto doc = ImageDocumentPointer(new ImageDocument(control.data()));
     control->setDocument(doc);
 
     connect(this, &QQuickPaintedItem::widthChanged, this, &ImageViewItem::onSizeChanged);

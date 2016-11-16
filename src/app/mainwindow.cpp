@@ -53,8 +53,8 @@ void MainWindowPrivate::init()
     _document.reset(new ImageDocument);
     _view.reset(new ImageView);
 
-    _view->setDocument(_document.data());
-    _model->setDocument(_document.data());
+    _view->setDocument(_document);
+    _model->setDocument(_document);
     q->setCentralWidget(_view.data());
 
     createDockWidget();

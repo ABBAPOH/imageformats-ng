@@ -1,8 +1,6 @@
 #include "imagecontrol.h"
 #include "imagecontrol_p.h"
 
-#include <ImageDocument>
-
 #include <QtGui/QPainter>
 #include <QtGui/QResizeEvent>
 
@@ -105,13 +103,13 @@ ImageControl::~ImageControl()
 
 }
 
-ImageDocument *ImageControl::document() const
+ImageDocumentPointer ImageControl::document() const
 {
     Q_D(const ImageControl);
     return d->doc;
 }
 
-void ImageControl::setDocument(ImageDocument *doc)
+void ImageControl::setDocument(const ImageDocumentPointer &doc)
 {
     Q_D(ImageControl);
 
@@ -119,17 +117,15 @@ void ImageControl::setDocument(ImageDocument *doc)
         return;
 
     if (d->doc) {
-        disconnect(d->doc, 0, this, 0);
-
-        if (d->doc->parent() == this)
-            delete d->doc;
+        disconnect(d->doc.data(), 0, this, 0);
     }
 
     d->doc = doc;
     d->setZoomFactor(1.0, false);
 
     if (d->doc) {
-        connect(d->doc, &ImageDocument::contentsChanged, this, &ImageControl::onContentsChanged);
+        connect(d->doc.data(), &ImageDocument::contentsChanged,
+                this, &ImageControl::onContentsChanged);
     }
 
     emit documentChanged();
@@ -214,10 +210,10 @@ void ImageControl::paint(QPainter *painter)
     QTransform matrix;
     matrix.translate(center.x(), center.y());
     matrix.translate(-d->position.x(), -d->position.y());
+    matrix.scale(d->visualZoomFactor, d->visualZoomFactor);
 
     painter->save();
     painter->setTransform(matrix);
-    painter->scale(d->visualZoomFactor, d->visualZoomFactor);
 
     const QImage image = d->doc->contents().image(d->currentIndex, d->currentLevel);
     QRectF imageRect(QRect(QPoint(0, 0), image.size()));

@@ -1,6 +1,7 @@
 #ifndef THUMBNAILSMODEL_H
 #define THUMBNAILSMODEL_H
 
+#include <ImageDocument>
 #include <QtCore/QAbstractItemModel>
 
 class ImageDocument;
@@ -22,8 +23,8 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    ImageDocument *document() const;
-    void setDocument(ImageDocument *document);
+    ImageDocumentPointer document() const;
+    void setDocument(const ImageDocumentPointer &document);
 
 private:
     class Item;
@@ -37,7 +38,7 @@ private:
 
 private:
     QScopedPointer<Item> _rootItem;
-    ImageDocument *_document { nullptr };
+    ImageDocumentPointer _document { nullptr };
 };
 
 #endif // THUMBNAILSMODEL_H

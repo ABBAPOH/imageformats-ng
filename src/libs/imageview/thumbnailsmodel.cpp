@@ -1,6 +1,5 @@
 #include "thumbnailsmodel.h"
 #include "thumbnailsmodel_p.h"
-#include "imagedocument.h"
 
 ThumbnailsModel::Item::Item(ThumbnailsModel::Item *parent, int row)
 {
@@ -88,24 +87,24 @@ QVariant ThumbnailsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-ImageDocument *ThumbnailsModel::document() const
+ImageDocumentPointer ThumbnailsModel::document() const
 {
     return _document;
 }
 
-void ThumbnailsModel::setDocument(ImageDocument *document)
+void ThumbnailsModel::setDocument(const ImageDocumentPointer &document)
 {
     if (_document == document)
         return;
 
     if (_document) {
-        disconnect(_document, 0, this, 0);
+        disconnect(_document.data(), 0, this, 0);
     }
 
     _document = document;
 
     if (_document) {
-        connect(_document, &ImageDocument::contentsChanged,
+        connect(_document.data(), &ImageDocument::contentsChanged,
                 this, static_cast<void (ThumbnailsModel::*)()>(&ThumbnailsModel::rebuildModel));
     }
     rebuildModel();

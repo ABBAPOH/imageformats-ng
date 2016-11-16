@@ -7,6 +7,7 @@
 #include <ImageOptions>
 
 #include <QtCore/QObject>
+#include <QtCore/QSharedPointer>
 #include <QtCore/QVariant>
 #include <QtGui/QImage>
 
@@ -29,3 +30,6 @@ public:
 signals:
     void contentsChanged();
 };
+
+using ImageDocumentPointer = QSharedPointer<ImageDocument>;
+using ImageDocumentConstPointer = QSharedPointer<const ImageDocument>;

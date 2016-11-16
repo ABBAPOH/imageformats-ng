@@ -93,13 +93,13 @@ QAction *ImageView::action(Action action) const
     return d->actions[action].data();
 }
 
-ImageDocument *ImageView::document() const
+ImageDocumentPointer ImageView::document() const
 {
     Q_D(const ImageView);
     return d->control->document();
 }
 
-void ImageView::setDocument(ImageDocument *doc)
+void ImageView::setDocument(const ImageDocumentPointer &doc)
 {
     Q_D(ImageView);
     d->control->setDocument(doc);

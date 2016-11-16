@@ -30,7 +30,7 @@ public:
 
 public:
     QScopedPointer<ThumbnailsModel> _model;
-    QScopedPointer<ImageDocument> _document;
+    ImageDocumentPointer _document;
     QScopedPointer<ImageView> _view;
     QScopedPointer<ImageInfoDialog> _imageInfoDialog;
     QScopedPointer<QAction> actions[MainWindowPrivate::ActionsCount];

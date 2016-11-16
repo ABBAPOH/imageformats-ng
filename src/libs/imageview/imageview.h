@@ -2,6 +2,7 @@
 
 #include "imageview_global.h"
 
+#include <ImageDocument>
 #include <QtWidgets/QAbstractScrollArea>
 
 class ImageDocument;
@@ -13,7 +14,7 @@ class IMAGEVIEW_EXPORT ImageView : public QAbstractScrollArea
     Q_DECLARE_PRIVATE(ImageView)
     Q_DISABLE_COPY(ImageView)
 
-    Q_PROPERTY(ImageDocument * document READ document WRITE setDocument NOTIFY documentChanged)
+    Q_PROPERTY(ImageDocumentPointer document READ document WRITE setDocument NOTIFY documentChanged)
 public:
     enum Action {
         ZoomIn,
@@ -29,8 +30,8 @@ public:
 
     QAction *action(Action action) const;
 
-    ImageDocument *document() const;
-    void setDocument(ImageDocument *doc);
+    ImageDocumentPointer document() const;
+    void setDocument(const ImageDocumentPointer &doc);
 
 public slots:
     void jumpTo(int index, int level);
