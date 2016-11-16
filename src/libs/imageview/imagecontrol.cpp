@@ -129,8 +129,7 @@ void ImageControl::setDocument(const ImageDocumentPointer &doc)
     }
 
     emit documentChanged();
-    d->updatePositionBounds();
-    emit updateRequested();
+    onContentsChanged();
 }
 
 QSize ImageControl::size() const
