@@ -71,6 +71,7 @@ void MainWindowPrivate::createDockWidget()
     dockWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
     const auto treeView = new QTreeView(dockWidget);
     treeView->header()->hide();
+    treeView->setAttribute(Qt::WA_MacShowFocusRect, 0);
     treeView->setModel(_model.data());
     q->connect(treeView->selectionModel(), &QItemSelectionModel::currentChanged,
                q, &MainWindow::onClicked);
