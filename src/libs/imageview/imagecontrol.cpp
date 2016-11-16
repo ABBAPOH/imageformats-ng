@@ -70,13 +70,12 @@ void ImageControlPrivate::setVisualZoomFactor(qreal factor)
 QRect ImageControlPrivate::calculatePositionBounds() const
 {
     const auto image = doc->contents().image(currentIndex, currentLevel);
-    const auto imageSize = image.size() * visualZoomFactor;
+    const auto imageSize = QSizeF(image.size()) * visualZoomFactor;
     if (imageSize.isNull())
         return QRect(QPoint(0, 0), QPoint(0, 0));
-    const auto dw = qMax(0, imageSize.width() - size.width());
-    const auto dh = qMax(0, imageSize.height() - size.height());
+    const auto dw = qMax(0, int(imageSize.width() - size.width() + 2.5));
+    const auto dh = qMax(0, int(imageSize.height() - size.height() + 2.5));
     auto result = QRect(0, 0, dw, dh);
-    result.adjust(0, 0, 2, 2);
     result.translate(-result.center());
     return result;
 }
