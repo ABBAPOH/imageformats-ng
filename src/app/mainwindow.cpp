@@ -19,6 +19,7 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QDockWidget>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QHeaderView>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QTreeView>
@@ -69,6 +70,7 @@ void MainWindowPrivate::createDockWidget()
     const auto dockWidget = new QDockWidget(q);
     dockWidget->setFeatures(QDockWidget::NoDockWidgetFeatures);
     const auto treeView = new QTreeView(dockWidget);
+    treeView->header()->hide();
     treeView->setModel(_model.data());
     q->connect(treeView->selectionModel(), &QItemSelectionModel::currentChanged,
                q, &MainWindow::onClicked);
