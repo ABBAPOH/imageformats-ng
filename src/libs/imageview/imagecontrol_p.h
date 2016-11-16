@@ -36,7 +36,7 @@ public:
     QRect calculatePositionBounds() const;
     void updatePositionBounds();
 
-    ImageDocumentPointer doc;
+    ImageDocumentPointer document;
     QSize size;
     QPoint position;
     QRect positionBounds { QPoint(0, 0), QPoint(0, 0) };
