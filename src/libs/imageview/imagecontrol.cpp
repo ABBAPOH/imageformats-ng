@@ -40,13 +40,13 @@ void ImageControlPrivate::setZoomFactor(qreal factor, bool animated)
 
     zoomFactor = factor;
 
+    if (zoomAnimation.state() == QVariantAnimation::Running) {
+        zoomAnimation.stop();
+    }
+
     if (!animated) {
         setVisualZoomFactor(factor);
         return;
-    }
-
-    if (zoomAnimation.state() == QVariantAnimation::Running) {
-        zoomAnimation.stop();
     }
 
     zoomAnimation.setStartValue(visualZoomFactor);
