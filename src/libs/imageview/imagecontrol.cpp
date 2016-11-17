@@ -88,6 +88,74 @@ void ImageControlPrivate::updatePositionBounds()
     emit q->positionBoundsChanged(positionBounds);
 }
 
+void ImageControlPrivate::drawImageBackground(QPainter *painter)
+{
+    const auto size = document->contents().image(currentIndex, currentLevel).size();
+    QRectF rect(QPointF(0, 0), size);
+    rect.translate(-rect.center());
+
+    switch (imageBackgroundType) {
+    case ImageControl::ImageBackgroundType::None :
+        break;
+    case ImageControl::ImageBackgroundType::Chess :
+        painter->drawPixmap(rect, chessBoardBackground(size), QRectF(QPointF(0, 0), size));
+        break;
+    case ImageControl::ImageBackgroundType::SolidColor :
+        painter->fillRect(rect, imageBackgroundColor);
+        break;
+    }
+}
+
+static QPixmap generateChessBoardBackground()
+{
+    //cbsSize is the size of each square side
+    static const int cbsSize = 16;
+
+    auto pixmap = QPixmap(cbsSize * 2, cbsSize * 2);
+    QPainter painter(&pixmap);
+    painter.fillRect(pixmap.rect(), QColor(128, 128, 128));
+    const auto lightColor = QColor(192, 192, 192);
+    painter.fillRect(0, 0, cbsSize, cbsSize, lightColor);
+    painter.fillRect(cbsSize, cbsSize, cbsSize, cbsSize, lightColor);
+    painter.end();
+    return pixmap;
+}
+
+static QPixmap generateChessBoardBackground(const QSize &size)
+{
+    const auto w = size.width();
+    const auto h = size.height();
+
+    const auto tile = ::generateChessBoardBackground();
+    QPixmap pixmap(w, h);
+    QPainter painter(&pixmap);
+    painter.translate(w/2.0, h/2.0);
+    painter.drawTiledPixmap(QRect(-8, -8, w/2 + 8, h/2 + 8), tile);
+    painter.rotate(90);
+    painter.drawTiledPixmap(QRect(-8, -8, h/2 + 8, w/2 + 8), tile);
+    painter.rotate(90);
+    painter.drawTiledPixmap(QRect(-8, -8, w/2 + 8, h/2 + 8), tile);
+    painter.rotate(90);
+    painter.drawTiledPixmap(QRect(-8, -8, h/2 + 8, w/2 + 8), tile);
+    painter.end();
+
+    return pixmap;
+}
+
+QPixmap ImageControlPrivate::chessBoardBackground(const QSize &size)
+{
+    if (size.isEmpty())
+        return QPixmap();
+
+    if (size == chessBoardSize)
+        return chessBoardPixmap;
+
+    chessBoardSize = size;
+    chessBoardPixmap = ::generateChessBoardBackground(size);
+
+    return chessBoardPixmap;
+}
+
 /*!
     \class ImageControl
 */
@@ -188,6 +256,39 @@ QRect ImageControl::positionBounds() const
     return d->positionBounds;
 }
 
+ImageControl::ImageBackgroundType ImageControl::imageBackgroundType() const
+{
+    Q_D(const ImageControl);
+    return d->imageBackgroundType;
+}
+
+void ImageControl::setImageBackgroundType(ImageControl::ImageBackgroundType type)
+{
+    Q_D(ImageControl);
+    if (d->imageBackgroundType == type)
+        return;
+    d->imageBackgroundType = type;
+    // reset cache
+    d->chessBoardSize = QSize();
+    d->chessBoardPixmap = QPixmap();
+    emit imageBackgroundTypeChanged(d->imageBackgroundType);
+}
+
+QColor ImageControl::imageBackgroundColor() const
+{
+    Q_D(const ImageControl);
+    return d->imageBackgroundColor;
+}
+
+void ImageControl::setImageBackgroundColor(const QColor &color)
+{
+    Q_D(ImageControl);
+    if (d->imageBackgroundColor == color)
+        return;
+    d->imageBackgroundColor = color;
+    emit imageBackgroundColorChanged(d->imageBackgroundColor);
+}
+
 void ImageControl::paint(QPainter *painter)
 {
     Q_D(ImageControl);
@@ -212,6 +313,8 @@ void ImageControl::paint(QPainter *painter)
 
     painter->save();
     painter->setTransform(matrix);
+
+    d->drawImageBackground(painter);
 
     const QImage image = d->document->contents().image(d->currentIndex, d->currentLevel);
     QRectF imageRect(QRect(QPoint(0, 0), image.size()));

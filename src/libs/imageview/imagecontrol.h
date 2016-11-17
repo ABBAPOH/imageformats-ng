@@ -23,8 +23,16 @@ class IMAGEVIEW_EXPORT ImageControl : public QObject
     Q_PROPERTY(QSize size READ size WRITE setSize NOTIFY sizeChanged)
     Q_PROPERTY(QPoint position READ position WRITE setPosition NOTIFY positionChanged)
     Q_PROPERTY(QRect positionBounds READ positionBounds NOTIFY positionBoundsChanged)
+    Q_PROPERTY(ImageBackgroundType imageBackgroundType READ imageBackgroundType WRITE setImageBackgroundType NOTIFY imageBackgroundTypeChanged)
+    Q_PROPERTY(QColor imageBackgroundColor READ imageBackgroundType WRITE setImageBackgroundColor NOTIFY imageBackgroundColorChanged)
 
 public:
+    enum ImageBackgroundType {
+        None,
+        Chess,
+        SolidColor
+    };
+
     explicit ImageControl(QObject *parent = 0);
     ~ImageControl();
 
@@ -39,6 +47,12 @@ public:
     void setPosition(const QPoint &pos);
 
     QRect positionBounds() const;
+
+    ImageBackgroundType imageBackgroundType() const;
+    void setImageBackgroundType(ImageBackgroundType type);
+
+    QColor imageBackgroundColor() const;
+    void setImageBackgroundColor(const QColor &color);
 
     void paint(QPainter *painter);
     void mousePressEvent(QMouseEvent *event);
@@ -57,6 +71,8 @@ signals:
     void positionChanged(const QPoint &pos);
     void positionBoundsChanged(const QRect &rect);
     void updateRequested();
+    void imageBackgroundTypeChanged(ImageBackgroundType type);
+    void imageBackgroundColorChanged(const QColor &color);
 
 private slots:
     void onContentsChanged();

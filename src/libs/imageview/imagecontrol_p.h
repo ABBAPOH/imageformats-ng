@@ -4,6 +4,7 @@
 
 #include <QtCore/QSize>
 #include <QtCore/QVariantAnimation>
+#include <QtGui/QPixmap>
 
 class ImageControlPrivate;
 
@@ -35,11 +36,17 @@ public:
     void setVisualZoomFactor(qreal factor);
     QRect calculatePositionBounds() const;
     void updatePositionBounds();
+    void drawImageBackground(QPainter *painter);
+    QPixmap chessBoardBackground(const QSize &size);
 
     ImageDocumentPointer document;
     QSize size;
     QPoint position;
     QRect positionBounds { QPoint(0, 0), QPoint(0, 0) };
+    ImageControl::ImageBackgroundType imageBackgroundType { ImageControl::ImageBackgroundType::None };
+    QColor imageBackgroundColor { Qt::white };
+    QSize chessBoardSize;
+    QPixmap chessBoardPixmap;
     QPoint eventPos;
     int currentIndex {0};
     int currentLevel {0};
