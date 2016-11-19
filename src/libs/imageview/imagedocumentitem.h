@@ -14,6 +14,8 @@ public:
     explicit ImageDocumentItem(ImageDocument *document);
     ~ImageDocumentItem();
 
+    ImageDocument *document() const;
+
     QPoint position() const;
     void setPosition(const QPoint &pos);
 

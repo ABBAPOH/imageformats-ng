@@ -27,6 +27,11 @@ ImageDocumentItem::~ImageDocumentItem()
 {
 }
 
+ImageDocument *ImageDocumentItem::document() const
+{
+    return d->document;
+}
+
 QPoint ImageDocumentItem::position() const
 {
     return d->position;
