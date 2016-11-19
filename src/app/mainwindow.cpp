@@ -144,6 +144,7 @@ void MainWindowPrivate::retranslateUi()
     menuFile->setTitle(MainWindow::tr("File"));
     menuView->setTitle(MainWindow::tr("View"));
     menuHelp->setTitle(MainWindow::tr("Help"));
+    menuTools->setTitle(MainWindow::tr("Tools"));
 }
 
 void MainWindowPrivate::createMenuBar()
@@ -169,6 +170,11 @@ void MainWindowPrivate::createMenuBar()
     menuView->addAction(_view->action(ImageView::ZoomOut));
     menuView->addAction(_view->action(ImageView::NormalSize));
     menuBar->addAction(menuView->menuAction());
+
+    menuTools.reset(new QMenu);
+    menuTools->addAction(_view->action(ImageView::RotateLeft));
+    menuTools->addAction(_view->action(ImageView::RotateRight));
+    menuBar->addAction(menuTools->menuAction());
 
     menuHelp.reset(new QMenu);
     menuHelp->addAction(actions[MainWindowPrivate::SupportedFormats].data());

@@ -36,6 +36,7 @@ public:
     QScopedPointer<QAction> actions[MainWindowPrivate::ActionsCount];
     QScopedPointer<QMenu> menuFile;
     QScopedPointer<QMenu> menuView;
+    QScopedPointer<QMenu> menuTools;
     QScopedPointer<QMenu> menuHelp;
     QUrl _url;
 

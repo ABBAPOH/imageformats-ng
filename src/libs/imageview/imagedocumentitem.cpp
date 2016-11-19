@@ -71,6 +71,16 @@ void ImageDocumentItem::setRotation(Qt::Axis axis, qreal rotation)
     d->emitChanged(this);
 }
 
+void ImageDocumentItem::rotateLeft()
+{
+    setRotation(Qt::ZAxis, rotation(Qt::ZAxis) - 90);
+}
+
+void ImageDocumentItem::rotateRight()
+{
+    setRotation(Qt::ZAxis, rotation(Qt::ZAxis) + 90);
+}
+
 QImage ImageDocumentItem::image() const
 {
     return d->image;

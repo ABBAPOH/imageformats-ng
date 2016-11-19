@@ -62,6 +62,18 @@ void ImageViewPrivate::createActions()
     q->addAction(actions[ImageView::NormalSize].data());
     q->connect(actions[ImageView::NormalSize].data(),
             &QAction::triggered, q, &ImageView::normalSize);
+
+    actions[ImageView::RotateLeft].reset(new QAction);
+    actions[ImageView::RotateLeft]->setShortcut(QKeySequence("Ctrl+L"));
+    q->addAction(actions[ImageView::RotateLeft].data());
+    q->connect(actions[ImageView::RotateLeft].data(),
+            &QAction::triggered, q, &ImageView::rotateLeft);
+
+    actions[ImageView::RotateRight].reset(new QAction);
+    actions[ImageView::RotateRight]->setShortcut(QKeySequence("Ctrl+R"));
+    q->addAction(actions[ImageView::RotateRight].data());
+    q->connect(actions[ImageView::RotateRight].data(),
+            &QAction::triggered, q, &ImageView::rotateRight);
 }
 
 void ImageViewPrivate::retranslateUi()
@@ -69,6 +81,8 @@ void ImageViewPrivate::retranslateUi()
     actions[ImageView::ZoomIn]->setText(ImageView::tr("Zoom in"));
     actions[ImageView::ZoomOut]->setText(ImageView::tr("Zoom out"));
     actions[ImageView::NormalSize]->setText(ImageView::tr("Normal size"));
+    actions[ImageView::RotateLeft]->setText(ImageView::tr("Rotate Left"));
+    actions[ImageView::RotateRight]->setText(ImageView::tr("Rotate Right"));
 }
 
 ImageView::ImageView(QWidget *parent) :
@@ -127,6 +141,18 @@ void ImageView::normalSize()
 {
     Q_D(ImageView);
     d->control->normalSize();
+}
+
+void ImageView::rotateLeft()
+{
+    Q_D(ImageView);
+    d->control->rotateLeft();
+}
+
+void ImageView::rotateRight()
+{
+    Q_D(ImageView);
+    d->control->rotateRight();
 }
 
 void ImageView::onScrollBarValueChanged()

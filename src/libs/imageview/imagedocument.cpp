@@ -63,7 +63,13 @@ ImageContents ImageDocument::toContents() const
     for (int index = 0; index < d->imageCount; ++index) {
         for (int level = 0; level < d->mipmapCount; ++level) {
             const auto item = d->items.at(ImageDocumentPrivate::ImageIndex(index, level)).get();
-            result.setImage(item->image(), index, level);
+            const auto image = item->image();
+            QTransform matrix;
+            matrix.rotate(item->rotation(Qt::XAxis), Qt::XAxis);
+            matrix.rotate(item->rotation(Qt::YAxis), Qt::YAxis);
+            matrix.rotate(item->rotation(Qt::ZAxis), Qt::ZAxis);
+            matrix = QImage::trueMatrix(matrix, image.width(), image.height());
+            result.setImage(image.transformed(matrix), index, level);
         }
     }
     return result;

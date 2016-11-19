@@ -20,6 +20,8 @@ public:
         ZoomIn,
         ZoomOut,
         NormalSize,
+        RotateLeft,
+        RotateRight,
 
         ActionsCount
     };
@@ -39,6 +41,8 @@ public slots:
     void zoomIn();
     void zoomOut();
     void normalSize();
+    void rotateLeft();
+    void rotateRight();
 
 private slots:
     void onScrollBarValueChanged();

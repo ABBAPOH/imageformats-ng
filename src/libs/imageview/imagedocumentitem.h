@@ -25,6 +25,9 @@ public:
     qreal rotation(Qt::Axis axis) const;
     void setRotation(Qt::Axis axis, qreal rotation);
 
+    void rotateLeft();
+    void rotateRight();
+
     QImage image() const;
     void setImage(const QImage &image);
 

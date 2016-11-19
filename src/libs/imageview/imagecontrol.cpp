@@ -197,6 +197,8 @@ void ImageControl::setDocument(const ImageDocumentPointer &doc)
     if (d->document) {
         connect(d->document.data(), &ImageDocument::contentsChanged,
                 this, &ImageControl::onContentsChanged);
+        connect(d->document.data(), &ImageDocument::itemChanged,
+                this, &ImageControl::onItemChanged);
     }
 
     emit documentChanged();
@@ -317,6 +319,9 @@ void ImageControl::paint(QPainter *painter)
     matrix.translate(center.x(), center.y());
     matrix.translate(-d->position.x(), -d->position.y());
     matrix.scale(d->visualZoomFactor, d->visualZoomFactor);
+    matrix.rotate(d->item->rotation(Qt::XAxis), Qt::XAxis);
+    matrix.rotate(d->item->rotation(Qt::YAxis), Qt::YAxis);
+    matrix.rotate(d->item->rotation(Qt::ZAxis), Qt::ZAxis);
 
     painter->save();
     painter->setTransform(matrix);
@@ -379,6 +384,22 @@ void ImageControl::normalSize()
     d->setZoomFactor(1.0);
 }
 
+void ImageControl::rotateLeft()
+{
+    Q_D(ImageControl);
+    if (!d->item)
+        return;
+    d->item->rotateLeft();
+}
+
+void ImageControl::rotateRight()
+{
+    Q_D(ImageControl);
+    if (!d->item)
+        return;
+    d->item->rotateRight();
+}
+
 void ImageControl::onContentsChanged()
 {
     Q_D(ImageControl);
@@ -392,4 +413,11 @@ void ImageControl::onContentsChanged()
     d->setZoomFactor(1.0, false);
     d->updatePositionBounds();
     emit updateRequested();
+}
+
+void ImageControl::onItemChanged(ImageDocumentItem *item)
+{
+    Q_D(ImageControl);
+    if (d->item == item)
+        emit updateRequested();
 }

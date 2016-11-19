@@ -12,6 +12,7 @@
 class QPainter;
 class QResizeEvent;
 class QMouseEvent;
+class ImageDocumentItem;
 
 class ImageControlPrivate;
 class IMAGEVIEW_EXPORT ImageControl : public QObject
@@ -64,6 +65,8 @@ public slots:
     void zoomIn();
     void zoomOut();
     void normalSize();
+    void rotateLeft();
+    void rotateRight();
 
 signals:
     void documentChanged();
@@ -76,6 +79,7 @@ signals:
 
 private slots:
     void onContentsChanged();
+    void onItemChanged(ImageDocumentItem *item);
 
 protected:
     QScopedPointer<ImageControlPrivate> d_ptr;
