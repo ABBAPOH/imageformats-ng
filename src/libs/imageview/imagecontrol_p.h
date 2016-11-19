@@ -50,6 +50,7 @@ public:
     QPoint eventPos;
     int currentIndex {0};
     int currentLevel {0};
+    ImageDocumentItem *item { nullptr };
 
     qreal zoomFactor;
     qreal visualZoomFactor;

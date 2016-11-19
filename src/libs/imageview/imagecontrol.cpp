@@ -68,7 +68,6 @@ void ImageControlPrivate::setVisualZoomFactor(qreal factor)
 
 QRect ImageControlPrivate::calculatePositionBounds() const
 {
-    const auto item = document->item(currentIndex, currentLevel);
     if (!item)
         return QRect(QPoint(0, 0), QPoint(0, 0));
     const auto imageSize = QSizeF(item->size()) * visualZoomFactor;
@@ -92,7 +91,6 @@ void ImageControlPrivate::updatePositionBounds()
 
 void ImageControlPrivate::drawImageBackground(QPainter *painter)
 {
-    const auto item = document->item(currentIndex, currentLevel);
     if (!item)
         return;
 
@@ -310,8 +308,7 @@ void ImageControl::paint(QPainter *painter)
     if (!d->document)
         return;
 
-    const auto item = d->document->item(d->currentIndex, d->currentLevel);
-    if (!item)
+    if (!d->item)
         return;
 
     QPointF center = rect.center();
@@ -326,7 +323,7 @@ void ImageControl::paint(QPainter *painter)
 
     d->drawImageBackground(painter);
 
-    const QImage image = item->image();
+    const QImage image = d->item->image();
     QRectF imageRect(QRect(QPoint(0, 0), image.size()));
     imageRect.translate(-imageRect.center());
     painter->drawImage(imageRect, image);
@@ -360,6 +357,7 @@ void ImageControl::jumpTo(int index, int level)
     Q_D(ImageControl);
     d->currentIndex = index;
     d->currentLevel = level;
+    d->item = d->document->item(d->currentIndex, d->currentLevel);
     emit updateRequested();
 }
 
@@ -386,6 +384,10 @@ void ImageControl::onContentsChanged()
     Q_D(ImageControl);
     d->currentIndex = 0;
     d->currentLevel = 0;
+    if (d->document)
+        d->item = d->document->item(0, 0);
+    else
+        d->item = nullptr;
     d->position = QPoint();
     d->setZoomFactor(1.0, false);
     d->updatePositionBounds();
