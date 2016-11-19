@@ -1,5 +1,6 @@
 #include "imagecontrol.h"
 #include "imagecontrol_p.h"
+#include "imagedocumentitem.h"
 
 #include <QtGui/QPainter>
 #include <QtGui/QResizeEvent>
@@ -67,13 +68,14 @@ void ImageControlPrivate::setVisualZoomFactor(qreal factor)
 
 QRect ImageControlPrivate::calculatePositionBounds() const
 {
-    const auto image = document->contents().image(currentIndex, currentLevel);
-    const auto imageSize = QSizeF(image.size()) * visualZoomFactor;
+    const auto item = document->item(currentIndex, currentLevel);
+    if (!item)
+        return QRect(QPoint(0, 0), QPoint(0, 0));
+    const auto imageSize = QSizeF(item->size()) * visualZoomFactor;
     if (imageSize.isNull())
         return QRect(QPoint(0, 0), QPoint(0, 0));
     const auto dw = qMax(0, int(imageSize.width() - size.width() + 2.5));
-    const auto dh = qMax(0, int(imageSize.height() - size.height() + 2.5));
-    auto result = QRect(0, 0, dw, dh);
+    const auto dh = qMax(0, int(imageSize.height() - size.height() + 2.5));    auto result = QRect(0, 0, dw, dh);
     result.translate(-result.center());
     return result;
 }
@@ -90,7 +92,11 @@ void ImageControlPrivate::updatePositionBounds()
 
 void ImageControlPrivate::drawImageBackground(QPainter *painter)
 {
-    const auto size = document->contents().image(currentIndex, currentLevel).size();
+    const auto item = document->item(currentIndex, currentLevel);
+    if (!item)
+        return;
+
+    const auto size = item->size();
     QRectF rect(QPointF(0, 0), size);
     rect.translate(-rect.center());
 
@@ -304,6 +310,10 @@ void ImageControl::paint(QPainter *painter)
     if (!d->document)
         return;
 
+    const auto item = d->document->item(d->currentIndex, d->currentLevel);
+    if (!item)
+        return;
+
     QPointF center = rect.center();
 
     QTransform matrix;
@@ -316,7 +326,7 @@ void ImageControl::paint(QPainter *painter)
 
     d->drawImageBackground(painter);
 
-    const QImage image = d->document->contents().image(d->currentIndex, d->currentLevel);
+    const QImage image = item->image();
     QRectF imageRect(QRect(QPoint(0, 0), image.size()));
     imageRect.translate(-imageRect.center());
     painter->drawImage(imageRect, image);

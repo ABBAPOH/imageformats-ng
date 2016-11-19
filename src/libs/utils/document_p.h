@@ -13,7 +13,7 @@ protected:
 
 public:
     explicit DocumentPrivate(Document *qq) : q_ptr(qq) {}
-    virtual ~DocumentPrivate() {}
+    virtual ~DocumentPrivate();
 
     void init();
 

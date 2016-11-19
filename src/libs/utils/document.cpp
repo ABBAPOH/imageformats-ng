@@ -3,6 +3,10 @@
 
 #include <memory>
 
+DocumentPrivate::~DocumentPrivate()
+{
+}
+
 void DocumentPrivate::init()
 {
     Q_Q(Document);

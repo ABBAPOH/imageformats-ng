@@ -250,7 +250,7 @@ void MainWindow::saveAs()
 void MainWindow::convertToProjection()
 {
     Q_D(MainWindow);
-    const auto projection = d->_document->contents().toProjection();
+    const auto projection = d->_document->toContents().toProjection();
     if (!projection) {
         QMessageBox::warning(this,
                              tr("Convert to projection"),
@@ -337,7 +337,7 @@ void MainWindow::saveDocument(const QUrl &url, const QByteArray &subType, const 
 
     auto watcher = new QFutureWatcher<Result>(this);
     connect(watcher, &QFutureWatcherBase::finished, this, finisher);
-    watcher->setFuture(QtConcurrent::run(worker, url.toLocalFile(), d->_document->contents()));
+    watcher->setFuture(QtConcurrent::run(worker, url.toLocalFile(), d->_document->toContents()));
 }
 
 void MainWindow::onClicked(const QModelIndex &index)
@@ -354,6 +354,6 @@ void MainWindow::showInfo()
     if (!d->_imageInfoDialog)
         d->_imageInfoDialog.reset(new ImageInfoDialog(this));
 
-    d->_imageInfoDialog->setContents(d->_document->contents());
+    d->_imageInfoDialog->setContents(d->_document->toContents());
     d->_imageInfoDialog->show();
 }

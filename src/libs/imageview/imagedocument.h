@@ -11,6 +11,8 @@
 #include <QtCore/QVariant>
 #include <QtGui/QImage>
 
+class ImageDocumentItem;
+
 class ImageDocumentPrivate;
 class IMAGEVIEW_EXPORT ImageDocument : public Document
 {
@@ -18,17 +20,28 @@ class IMAGEVIEW_EXPORT ImageDocument : public Document
     Q_DECLARE_PRIVATE(ImageDocument)
     Q_DISABLE_COPY(ImageDocument)
 
-    Q_PROPERTY(ImageContents contents READ contents WRITE setContents NOTIFY contentsChanged)
+    Q_PROPERTY(int imageCount READ imageCount)
+    Q_PROPERTY(int mipmapCount READ mipmapCount)
 
 public:
     explicit ImageDocument(QObject *parent = 0);
     ~ImageDocument();
 
-    ImageContents contents() const;
-    void setContents(const ImageContents &contents);
+    int imageCount() const;
+    int mipmapCount() const;
+
+    ImageDocumentItem *item(int index, int level) const;
+
+    ImageContents toContents() const;
+    void setContents(const ImageContents &toContents);
+
+    ImageDocumentPrivate *documentHandle() const;
+
+    void clear();
 
 signals:
     void contentsChanged();
+    void itemChanged(ImageDocumentItem *item);
 };
 
 using ImageDocumentPointer = QSharedPointer<ImageDocument>;

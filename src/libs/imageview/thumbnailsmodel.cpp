@@ -127,17 +127,16 @@ void ThumbnailsModel::rebuildModel()
 {
     beginResetModel();
     _rootItem.reset(new Item);
-    if (!_document->contents().isNull())
-        rebuildModel(_rootItem.data());
+    rebuildModel(_rootItem.data());
     endResetModel();
 }
 
 void ThumbnailsModel::rebuildModel(Item *parent)
 {
-    if (_document->contents().mipmapCount() <= 1) {
+    if (_document->mipmapCount() <= 1) {
         rebuildModel(parent, 0);
     } else {
-        for (int i = 0; i < _document->contents().mipmapCount(); ++i) {
+        for (int i = 0; i < _document->mipmapCount(); ++i) {
             auto item = new Item(parent);
             item->text = tr("Mipmap %1").arg(i);
             rebuildModel(item, i);
@@ -147,10 +146,10 @@ void ThumbnailsModel::rebuildModel(Item *parent)
 
 void ThumbnailsModel::rebuildModel(Item *parent, int level)
 {
-    if (_document->contents().imageCount() == 1) {
+    if (_document->imageCount() == 1) {
         rebuildModel(parent, 0, level);
     } else {
-        for (int i = 0; i < _document->contents().imageCount(); i++) {
+        for (int i = 0; i < _document->imageCount(); i++) {
             auto item = new Item(parent);
             item->text = tr("Image %1").arg(i);
             rebuildModel(item, i, level);
