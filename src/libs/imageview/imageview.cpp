@@ -74,6 +74,18 @@ void ImageViewPrivate::createActions()
     q->addAction(actions[ImageView::RotateRight].data());
     q->connect(actions[ImageView::RotateRight].data(),
             &QAction::triggered, q, &ImageView::rotateRight);
+
+    actions[ImageView::FlipHorizontally].reset(new QAction);
+    actions[ImageView::FlipHorizontally]->setShortcut(QKeySequence("Ctrl+Shift+H"));
+    q->addAction(actions[ImageView::FlipHorizontally].data());
+    q->connect(actions[ImageView::FlipHorizontally].data(),
+            &QAction::triggered, q, &ImageView::flipHorizontally);
+
+    actions[ImageView::FlipVertically].reset(new QAction);
+    actions[ImageView::FlipVertically]->setShortcut(QKeySequence("Ctrl+Shift+V"));
+    q->addAction(actions[ImageView::FlipVertically].data());
+    q->connect(actions[ImageView::FlipVertically].data(),
+            &QAction::triggered, q, &ImageView::flipVertically);
 }
 
 void ImageViewPrivate::retranslateUi()
@@ -83,6 +95,8 @@ void ImageViewPrivate::retranslateUi()
     actions[ImageView::NormalSize]->setText(ImageView::tr("Normal size"));
     actions[ImageView::RotateLeft]->setText(ImageView::tr("Rotate Left"));
     actions[ImageView::RotateRight]->setText(ImageView::tr("Rotate Right"));
+    actions[ImageView::FlipHorizontally]->setText(ImageView::tr("Flip horizontally"));
+    actions[ImageView::FlipVertically]->setText(ImageView::tr("Flip vertically"));
 }
 
 ImageView::ImageView(QWidget *parent) :
@@ -153,6 +167,18 @@ void ImageView::rotateRight()
 {
     Q_D(ImageView);
     d->control->rotateRight();
+}
+
+void ImageView::flipHorizontally()
+{
+    Q_D(ImageView);
+    d->control->flipHorizontally();
+}
+
+void ImageView::flipVertically()
+{
+    Q_D(ImageView);
+    d->control->flipVertically();
 }
 
 void ImageView::onScrollBarValueChanged()

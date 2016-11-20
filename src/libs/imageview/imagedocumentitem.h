@@ -31,6 +31,8 @@ public:
     void rotate(Qt::Axis axis, qreal delta);
     void rotateLeft();
     void rotateRight();
+    void flipHorizontally();
+    void flipVertically();
 
     QImage image() const;
     void setImage(const QImage &image);

@@ -174,6 +174,8 @@ void MainWindowPrivate::createMenuBar()
     menuTools.reset(new QMenu);
     menuTools->addAction(_view->action(ImageView::RotateLeft));
     menuTools->addAction(_view->action(ImageView::RotateRight));
+    menuTools->addAction(_view->action(ImageView::FlipHorizontally));
+    menuTools->addAction(_view->action(ImageView::FlipVertically));
     menuBar->addAction(menuTools->menuAction());
 
     menuHelp.reset(new QMenu);

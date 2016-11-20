@@ -129,7 +129,7 @@ void ImageDocumentItem::rotate(Qt::Axis axis, qreal delta)
     }
     d->animationGroup->addAnimation(animation);
     d->animationGroup->start(QAbstractAnimation::DeleteWhenStopped);
-    setRotation(Qt::ZAxis, newRotation);
+    setRotation(axis, newRotation);
 }
 
 void ImageDocumentItem::rotateLeft()
@@ -140,6 +140,16 @@ void ImageDocumentItem::rotateLeft()
 void ImageDocumentItem::rotateRight()
 {
     rotate(Qt::ZAxis, +90);
+}
+
+void ImageDocumentItem::flipHorizontally()
+{
+    rotate(Qt::XAxis, 180);
+}
+
+void ImageDocumentItem::flipVertically()
+{
+    rotate(Qt::YAxis, 180);
 }
 
 QImage ImageDocumentItem::image() const

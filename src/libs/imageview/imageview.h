@@ -22,6 +22,8 @@ public:
         NormalSize,
         RotateLeft,
         RotateRight,
+        FlipHorizontally,
+        FlipVertically,
 
         ActionsCount
     };
@@ -43,6 +45,8 @@ public slots:
     void normalSize();
     void rotateLeft();
     void rotateRight();
+    void flipHorizontally();
+    void flipVertically();
 
 private slots:
     void onScrollBarValueChanged();

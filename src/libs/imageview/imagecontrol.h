@@ -67,6 +67,8 @@ public slots:
     void normalSize();
     void rotateLeft();
     void rotateRight();
+    void flipHorizontally();
+    void flipVertically();
 
 signals:
     void documentChanged();

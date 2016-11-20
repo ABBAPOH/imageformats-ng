@@ -400,6 +400,22 @@ void ImageControl::rotateRight()
     d->item->rotateRight();
 }
 
+void ImageControl::flipHorizontally()
+{
+    Q_D(ImageControl);
+    if (!d->item)
+        return;
+    d->item->flipHorizontally();
+}
+
+void ImageControl::flipVertically()
+{
+    Q_D(ImageControl);
+    if (!d->item)
+        return;
+    d->item->flipVertically();
+}
+
 void ImageControl::onContentsChanged()
 {
     Q_D(ImageControl);
