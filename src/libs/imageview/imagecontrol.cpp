@@ -319,9 +319,9 @@ void ImageControl::paint(QPainter *painter)
     matrix.translate(center.x(), center.y());
     matrix.translate(-d->position.x(), -d->position.y());
     matrix.scale(d->visualZoomFactor, d->visualZoomFactor);
-    matrix.rotate(d->item->rotation(Qt::XAxis), Qt::XAxis);
-    matrix.rotate(d->item->rotation(Qt::YAxis), Qt::YAxis);
-    matrix.rotate(d->item->rotation(Qt::ZAxis), Qt::ZAxis);
+    matrix.rotate(d->item->visualRotation(Qt::XAxis), Qt::XAxis);
+    matrix.rotate(d->item->visualRotation(Qt::YAxis), Qt::YAxis);
+    matrix.rotate(d->item->visualRotation(Qt::ZAxis), Qt::ZAxis);
 
     painter->save();
     painter->setTransform(matrix);

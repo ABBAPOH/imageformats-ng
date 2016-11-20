@@ -25,6 +25,10 @@ public:
     qreal rotation(Qt::Axis axis) const;
     void setRotation(Qt::Axis axis, qreal rotation);
 
+    qreal visualRotation(Qt::Axis axis) const;
+    void setVisualRotation(Qt::Axis axis, qreal rotation);
+
+    void rotate(Qt::Axis axis, qreal delta);
     void rotateLeft();
     void rotateRight();
 

@@ -2,6 +2,34 @@
 #include "imagedocumentitem_p.h"
 #include "imagedocument_p.h"
 
+#include <QtCore/QVariantAnimation>
+#include <QDebug>
+
+class AxisAnimation : public QVariantAnimation
+{
+public:
+    explicit AxisAnimation(ImageDocumentItem *item, Qt::Axis axis, QObject *parent = 0) :
+        QVariantAnimation(parent),
+        m_item(item),
+        m_axis(axis)
+    {
+    }
+
+protected:
+    void updateCurrentValue(const QVariant &value) override
+    {
+        m_item->setVisualRotation(m_axis, value.toReal());
+    }
+
+private:
+    ImageDocumentItem *m_item {nullptr};
+    Qt::Axis m_axis;
+};
+
+ImageDocumentItemPrivate::ImageDocumentItemPrivate()
+{
+}
+
 void ImageDocumentItemPrivate::emitChanged(ImageDocumentItem *q)
 {
     document->documentHandle()->onItemChanged(q);
@@ -71,14 +99,47 @@ void ImageDocumentItem::setRotation(Qt::Axis axis, qreal rotation)
     d->emitChanged(this);
 }
 
+qreal ImageDocumentItem::visualRotation(Qt::Axis axis) const
+{
+    return d->visualRotation[axis];
+}
+
+void ImageDocumentItem::setVisualRotation(Qt::Axis axis, qreal rotation)
+{
+    if (qFuzzyCompare(d->visualRotation[axis], rotation))
+        return;
+    d->visualRotation[axis] = rotation;
+    d->emitChanged(this);
+}
+
+/*!
+    Rotates item with an animation.
+*/
+void ImageDocumentItem::rotate(Qt::Axis axis, qreal delta)
+{
+    const auto oldRotation = rotation(axis);
+    const auto newRotation = oldRotation + delta;
+    const auto animation = new AxisAnimation(this, axis, d->document);
+    animation->setStartValue(oldRotation);
+    animation->setEndValue(newRotation);
+    animation->setDuration(75);
+    animation->setEasingCurve(QEasingCurve::Linear);
+    if (!d->animationGroup) {
+        d->animationGroup = new QSequentialAnimationGroup(d->document);
+    }
+    d->animationGroup->addAnimation(animation);
+    d->animationGroup->start(QAbstractAnimation::DeleteWhenStopped);
+    setRotation(Qt::ZAxis, newRotation);
+}
+
 void ImageDocumentItem::rotateLeft()
 {
-    setRotation(Qt::ZAxis, rotation(Qt::ZAxis) - 90);
+    rotate(Qt::ZAxis, -90);
 }
 
 void ImageDocumentItem::rotateRight()
 {
-    setRotation(Qt::ZAxis, rotation(Qt::ZAxis) + 90);
+    rotate(Qt::ZAxis, +90);
 }
 
 QImage ImageDocumentItem::image() const
