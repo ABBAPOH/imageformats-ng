@@ -35,9 +35,9 @@ public:
     ImageContents toContents() const;
     void setContents(const ImageContents &toContents);
 
-    ImageDocumentPrivate *documentHandle() const;
-
     void clear();
+
+    ImageDocumentPrivate *documentHandle() const;
 
 signals:
     void contentsChanged();

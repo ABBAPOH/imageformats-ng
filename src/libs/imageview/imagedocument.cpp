@@ -104,11 +104,6 @@ void ImageDocument::setContents(const ImageContents &contents)
     emit contentsChanged();
 }
 
-ImageDocumentPrivate *ImageDocument::documentHandle() const
-{
-    return static_cast<ImageDocumentPrivate *>(d_ptr.data());
-}
-
 void ImageDocument::clear()
 {
     Q_D(ImageDocument);
@@ -123,4 +118,9 @@ void ImageDocument::clear()
     d->exifMeta.clear();
     d->items.clear();
     emit contentsChanged();
+}
+
+ImageDocumentPrivate *ImageDocument::documentHandle() const
+{
+    return static_cast<ImageDocumentPrivate *>(d_ptr.data());
 }
