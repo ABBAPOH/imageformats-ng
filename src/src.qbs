@@ -10,5 +10,8 @@ Project {
     SubProject {
         filePath: "plugins/plugins.qbs"
     }
+    SubProject {
+        filePath: "tools/tools.qbs"
+    }
 }
 
