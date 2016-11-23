@@ -1,7 +1,7 @@
 #include "imageinfodialog.h"
 #include "ui_imageinfodialog.h"
 
-#include "imageinfomodel.h"
+#include <ImageInfoModel>
 #include <VariantMapModel>
 
 ImageInfoDialog::ImageInfoDialog(QWidget *parent) :

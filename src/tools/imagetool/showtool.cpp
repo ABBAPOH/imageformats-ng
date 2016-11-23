@@ -1,7 +1,23 @@
 #include "showtool.h"
 
+#include <ImageIO>
+#include <ImageInfoModel>
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
+
+QString modelToText(QAbstractTableModel *model)
+{
+    QStringList result;
+    for (int row = 0, rowCount = model->rowCount(); row < rowCount; ++row) {
+        const auto keyIndex = model->index(row, 0);
+        const auto valueIndex = model->index(row, 1);
+        result.append(QString("%1 %2").
+                      arg(model->data(keyIndex).toString(), -15).
+                      arg(model->data(valueIndex).toString()));
+    }
+    return result.join("\n");
+}
 
 ShowTool::ShowTool() :
     helpOption(parser.addHelpOption())
@@ -26,6 +42,22 @@ int ShowTool::run(const QStringList &arguments)
         printUsage();
         return 0;
     }
+
+    auto positional = parser.positionalArguments();
+    if (positional.empty())
+        return 0;
+
+    auto fileName = positional.front();
+    ImageIO io(fileName);
+    auto contents = io.read();
+    if (!contents) {
+        qWarning() << "Can't read image" << fileName << io.error();
+        return 1;
+    }
+    ImageInfoModel model;
+    model.setImageContents(*contents);
+    printf("%s\n", modelToText(&model).toLocal8Bit().data());
+
     return 0;
 }
 

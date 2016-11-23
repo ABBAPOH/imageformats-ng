@@ -1,9 +1,11 @@
 #pragma once
 
+#include "imageformatsng_global.h"
+
 #include <ImageContents>
 #include <QtCore/QAbstractTableModel>
 
-class ImageInfoModel : public QAbstractTableModel
+class IMAGEFORMATSNG_EXPORT ImageInfoModel : public QAbstractTableModel
 {
 public:
     enum Column {
