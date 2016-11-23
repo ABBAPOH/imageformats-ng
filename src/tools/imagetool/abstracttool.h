@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtCore/QString>
+#include <QtCore/QCommandLineParser>
 
 class AbstractTool
 {
@@ -14,5 +15,8 @@ public:
     virtual QByteArray id() const = 0;
     virtual QString decription() const = 0;
     virtual int run(const QStringList &arguments) = 0;
-    virtual void printHelp() = 0;
+    virtual void printUsage() = 0;
+
+protected:
+    void printUsage(const QCommandLineParser &parser);
 };

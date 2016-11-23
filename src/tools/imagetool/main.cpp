@@ -20,7 +20,6 @@ public:
 
     void parse(const QStringList &arguments);
     void printUsage(const ToolsMap &map);
-    void printUsage(QCommandLineParser &parser, const QString &name);
 
     Modes mode() const { return _mode; }
     inline QString toolName() { return _name; }
@@ -53,7 +52,7 @@ void ArgumentsParser::parse(const QStringList &arguments)
     const auto positional = parser.positionalArguments();
     if (!positional.isEmpty()) {
         _name = positional.first();
-        _arguments = positional.mid(1);
+        _arguments = positional;
         if (_mode == Invalid)
             _mode = Run;
     }
@@ -75,14 +74,6 @@ void ArgumentsParser::printUsage(const ToolsMap &tools)
     lines.append(QString());
     text = lines.join("\n");
     printf("%s", text.toLocal8Bit().data());
-}
-
-void ArgumentsParser::printUsage(QCommandLineParser &parser, const QString &name)
-{
-    const auto text = parser.helpText().replace(qApp->applicationFilePath(),
-                                                QString("%1 %2").arg("imagetool").arg(name));
-    printf("%s", text.toLocal8Bit().data());
-    exit(0);
 }
 
 static ToolsMap CreateTools()
@@ -109,7 +100,7 @@ int main(int argc, char *argv[])
             parser.printUsage(tools);
             return 1;
         } else {
-            it->second->printHelp();
+            it->second->printUsage();
             return 0;
         }
     }

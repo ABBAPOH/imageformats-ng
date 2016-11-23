@@ -5,12 +5,16 @@
 class ShowTool : public AbstractTool
 {
 public:
-    ShowTool() = default;
+    ShowTool();
 
     // AbstractTool interface
 public:
     QByteArray id() const override;
     QString decription() const override;
     int run(const QStringList &arguments) override;
-    void printHelp() override;
+    void printUsage() override;
+
+private:
+    QCommandLineParser parser;
+    QCommandLineOption helpOption;
 };

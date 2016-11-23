@@ -3,6 +3,12 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 
+ShowTool::ShowTool() :
+    helpOption(parser.addHelpOption())
+{
+    parser.addPositionalArgument("file", "Input filename");
+}
+
 QByteArray ShowTool::id() const
 {
     return "show";
@@ -15,11 +21,15 @@ QString ShowTool::decription() const
 
 int ShowTool::run(const QStringList &arguments)
 {
-    qDebug() << "ShowTool::run" << arguments;
+    parser.parse(arguments);
+    if (parser.isSet(helpOption)) {
+        printUsage();
+        return 0;
+    }
     return 0;
 }
 
-void ShowTool::printHelp()
+void ShowTool::printUsage()
 {
-    qDebug() << "ShowTool::printHelp";
+    AbstractTool::printUsage(parser);
 }
