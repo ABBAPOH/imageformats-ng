@@ -1,3 +1,6 @@
+#include "abstracttool.h"
+#include "showtool.h"
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QDebug>
@@ -66,6 +69,15 @@ void ArgumentsParser::parseShow(const QStringList &arguments)
     if (positionalArguments.size() != 1)
         printUsage(parser, "show");
     _options.insert("input", positionalArguments.at(0));
+}
+
+using ToolsMap = std::map<QByteArray, std::unique_ptr<AbstractTool>>;
+static ToolsMap CreateTools()
+{
+    std::unique_ptr<AbstractTool> showTool(new ShowTool);
+    ToolsMap result;
+    result[showTool->id()] = std::move(showTool);
+    return result;
 }
 
 int main(int argc, char *argv[])

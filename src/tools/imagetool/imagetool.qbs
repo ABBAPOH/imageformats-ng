@@ -4,5 +4,6 @@ ConsoleApp {
     files: [
         "*.cpp",
         "abstracttool.h",
+        "showtool.h",
     ]
 }
