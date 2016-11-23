@@ -1,6 +1,7 @@
 #include "showtool.h"
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
 
 QByteArray ShowTool::id() const
 {
@@ -14,5 +15,11 @@ QString ShowTool::decription() const
 
 int ShowTool::run(const QStringList &arguments)
 {
+    qDebug() << "ShowTool::run" << arguments;
     return 0;
+}
+
+void ShowTool::printHelp()
+{
+    qDebug() << "ShowTool::printHelp";
 }

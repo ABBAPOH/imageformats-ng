@@ -59,16 +59,6 @@ void ArgumentsParser::printUsage(QCommandLineParser &parser, const QString &name
 void ArgumentsParser::parseShow(const QStringList &arguments)
 {
     _mode = Mode::Show;
-    QCommandLineParser parser;
-    parser.addHelpOption();
-    parser.addPositionalArgument(QLatin1String("input"), "Input file");
-    parser.parse(arguments);
-    auto positionalArguments = parser.positionalArguments();
-    if (parser.isSet("help"))
-        printUsage(parser, "show");
-    if (positionalArguments.size() != 1)
-        printUsage(parser, "show");
-    _options.insert("input", positionalArguments.at(0));
 }
 
 using ToolsMap = std::map<QByteArray, std::unique_ptr<AbstractTool>>;
@@ -84,9 +74,45 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-    const auto arguments = app.arguments().mid(1);
-    ArgumentsParser parser;
+    const auto tools = CreateTools();
+
+    const auto arguments = app.arguments();
+//    ArgumentsParser parser;
+//    parser.parse(arguments);
+
+    QCommandLineParser parser;
+    parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsPositionalArguments);
+    const auto helpOption = parser.addHelpOption();
+    const auto versionOption = parser.addVersionOption();
     parser.parse(arguments);
+    auto positionalArguments = parser.positionalArguments();
+    auto toolName = positionalArguments.isEmpty() ? QString() : positionalArguments.at(0);
+    const auto it = tools.find(toolName.toLatin1());
+    if (parser.isSet(helpOption)) {
+        if (toolName.isEmpty()) {
+            qDebug() << "usage";
+            return 0;
+        } else {
+            if (it == tools.end()) {
+                qDebug() << "usage";
+                return 0;
+            } else {
+                it->second->printHelp();
+                return 0;
+            }
+        }
+    }
+    if (parser.isSet(versionOption)) {
+        qDebug() << "version 1.0";
+        return 0;
+    }
+
+    if (it == tools.end()) {
+        qDebug() << "usage";
+        return 0;
+    }
+
+    it->second->run(positionalArguments);
 
     return 0;
 }
