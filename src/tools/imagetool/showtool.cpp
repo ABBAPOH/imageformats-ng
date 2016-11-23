@@ -10,7 +10,7 @@ QByteArray ShowTool::id() const
 
 QString ShowTool::decription() const
 {
-    return qApp->tr("ImageTool", "Shows information about image file");
+    return qApp->tr("Shows information about image file", "ImageTool");
 }
 
 int ShowTool::run(const QStringList &arguments)

@@ -8,44 +8,73 @@
 #include <map>
 #include <memory>
 
+using ToolsMap = std::map<QByteArray, std::unique_ptr<AbstractTool>>;
+
 class ArgumentsParser
 {
 public:
-    enum class Mode { Invalid, Help, Show };
+    enum Mode { Invalid = 0x0, Help = 0x1, Version = 0x2, Run = 0x4 };
+    Q_DECLARE_FLAGS(Modes, Mode)
+
+    ArgumentsParser();
+
     void parse(const QStringList &arguments);
-    void printUsage();
+    void printUsage(const ToolsMap &map);
     void printUsage(QCommandLineParser &parser, const QString &name);
 
-    Mode mode() const;
-    QVariantHash options() const;
+    Modes mode() const { return _mode; }
+    inline QString toolName() { return _name; }
+    inline QStringList arguments() const { return _arguments; }
 
 private:
-    void parseShow(const QStringList &arguments);
-
-private:
-    Mode _mode { Mode::Invalid };
-    QVariantHash _options;
+    Modes _mode;
+    QString _name;
+    QStringList _arguments;
+    QCommandLineParser parser;
+    QCommandLineOption helpOption;
+    QCommandLineOption versionOption;
 };
+
+ArgumentsParser::ArgumentsParser() :
+    helpOption(parser.addHelpOption()),
+    versionOption(parser.addVersionOption())
+{
+    parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsPositionalArguments);
+}
 
 void ArgumentsParser::parse(const QStringList &arguments)
 {
-    if (arguments.empty() || arguments.at(0) == QLatin1String("--help")) {
-        printUsage();
-        exit(0);
-    }
+    parser.parse(arguments);
+    if (parser.isSet(helpOption))
+        _mode |= Help;
+    if (parser.isSet(versionOption))
+        _mode |= Version;
 
-    if (arguments[0] == QLatin1String("show")) {
-        parseShow(arguments);
-    } else {
-        qDebug() << "usage: ./imagetool show";
+    const auto positional = parser.positionalArguments();
+    if (!positional.isEmpty()) {
+        _name = positional.first();
+        _arguments = positional.mid(1);
+        if (_mode == Invalid)
+            _mode = Run;
     }
 }
 
-void ArgumentsParser::printUsage()
+void ArgumentsParser::printUsage(const ToolsMap &tools)
 {
-    qDebug() << "usage: ./imagetool [command] [command parameters]";
-    qDebug() << "Commands:";
-    qDebug() << "    show\t Shows the info about the image. This is the default command.";
+    if (!_name.isEmpty())
+        qWarning() << "Unknown command" << _name;
+    auto text = parser.helpText();
+    auto lines = text.split("\n");
+    lines[0] = "Usage: imagetool [options] command";
+    lines.append("Commands:");
+    for (const auto &tool: tools) {
+        lines.append(QString("  %1 %2").
+                    arg(QString::fromLatin1(tool.second->id()), -10).
+                    arg(tool.second->decription()));
+    }
+    lines.append(QString());
+    text = lines.join("\n");
+    printf("%s", text.toLocal8Bit().data());
 }
 
 void ArgumentsParser::printUsage(QCommandLineParser &parser, const QString &name)
@@ -56,12 +85,6 @@ void ArgumentsParser::printUsage(QCommandLineParser &parser, const QString &name
     exit(0);
 }
 
-void ArgumentsParser::parseShow(const QStringList &arguments)
-{
-    _mode = Mode::Show;
-}
-
-using ToolsMap = std::map<QByteArray, std::unique_ptr<AbstractTool>>;
 static ToolsMap CreateTools()
 {
     std::unique_ptr<AbstractTool> showTool(new ShowTool);
@@ -76,43 +99,36 @@ int main(int argc, char *argv[])
 
     const auto tools = CreateTools();
 
-    const auto arguments = app.arguments();
-//    ArgumentsParser parser;
-//    parser.parse(arguments);
+    ArgumentsParser parser;
 
-    QCommandLineParser parser;
-    parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsPositionalArguments);
-    const auto helpOption = parser.addHelpOption();
-    const auto versionOption = parser.addVersionOption();
-    parser.parse(arguments);
-    auto positionalArguments = parser.positionalArguments();
-    auto toolName = positionalArguments.isEmpty() ? QString() : positionalArguments.at(0);
-    const auto it = tools.find(toolName.toLatin1());
-    if (parser.isSet(helpOption)) {
-        if (toolName.isEmpty()) {
-            qDebug() << "usage";
-            return 0;
+    parser.parse(app.arguments());
+    const auto it = tools.find(parser.toolName().toLatin1());
+
+    if (parser.mode() & ArgumentsParser::Help) {
+        if (it == tools.end()) {
+            parser.printUsage(tools);
+            return 1;
         } else {
-            if (it == tools.end()) {
-                qDebug() << "usage";
-                return 0;
-            } else {
-                it->second->printHelp();
-                return 0;
-            }
+            it->second->printHelp();
+            return 0;
         }
     }
-    if (parser.isSet(versionOption)) {
-        qDebug() << "version 1.0";
+
+    if (parser.mode() & ArgumentsParser::Version) {
+        printf("version 1.0\n");
         return 0;
     }
 
-    if (it == tools.end()) {
-        qDebug() << "usage";
-        return 0;
+    if (parser.mode() & ArgumentsParser::Run) {
+        if (it == tools.end()) {
+            parser.printUsage(tools);
+            return 1;
+        }
+
+        return it->second->run(parser.arguments());
     }
 
-    it->second->run(positionalArguments);
+    parser.printUsage(tools);
 
     return 0;
 }
