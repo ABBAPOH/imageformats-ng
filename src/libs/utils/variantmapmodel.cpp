@@ -5,6 +5,12 @@ VariantMapModel::VariantMapModel(QObject *parent) :
 {
 }
 
+VariantMapModel::VariantMapModel(const QVariantMap &map, QObject *parent):
+    QAbstractTableModel(parent)
+{
+    setVariantMap(map);
+}
+
 int VariantMapModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())

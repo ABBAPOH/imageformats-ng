@@ -1,9 +1,11 @@
 #include "abstracttool.h"
 #include "showtool.h"
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QDebug>
+#include <QtGui/QGuiApplication>
+
+#include <ImageIO>
 
 #include <map>
 #include <memory>
@@ -86,7 +88,8 @@ static ToolsMap CreateTools()
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication app(argc, argv);
+    QGuiApplication app(argc, argv);
+    app.addLibraryPath(app.applicationDirPath() + ImageIO::pluginsDirPath());
 
     const auto tools = CreateTools();
 

@@ -2,6 +2,7 @@
 
 #include <ImageIO>
 #include <ImageInfoModel>
+#include <VariantMapModel>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -51,12 +52,16 @@ int ShowTool::run(const QStringList &arguments)
     ImageIO io(fileName);
     auto contents = io.read();
     if (!contents) {
-        qWarning() << "Can't read image" << fileName << io.error();
+        qWarning() << "Can't read image" << fileName << io.error().errorString();
         return 1;
     }
     ImageInfoModel model;
     model.setImageContents(*contents);
     printf("%s\n", modelToText(&model).toLocal8Bit().data());
+
+    printf("==== Exif ====\n");
+    VariantMapModel exifModel(contents->exifMeta().toVariantMap());
+    printf("%s\n", modelToText(&exifModel).toLocal8Bit().data());
 
     return 0;
 }

@@ -9,6 +9,7 @@ class UTILS_EXPORT VariantMapModel : public QAbstractTableModel
 public:
     enum Column { Key, Value };
     explicit VariantMapModel(QObject *parent = nullptr);
+    explicit VariantMapModel(const QVariantMap &map, QObject *parent = nullptr);
 
 public: // QAbstractItemModel interface
     int rowCount(const QModelIndex &parent) const override;
