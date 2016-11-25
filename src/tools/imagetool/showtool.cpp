@@ -1,4 +1,5 @@
 #include "showtool.h"
+#include "exception.h"
 
 #include <ImageIO>
 #include <ImageInfoModel>
@@ -39,6 +40,11 @@ QString ShowTool::decription() const
 int ShowTool::run(const QStringList &arguments)
 {
     parser.parse(arguments);
+
+    const auto unknown = parser.unknownOptionNames();
+    if (!unknown.isEmpty())
+        throw BadOption(unknown);
+
     if (parser.isSet(helpOption)) {
         printUsage();
         return 0;

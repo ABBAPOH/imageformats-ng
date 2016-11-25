@@ -35,6 +35,7 @@ public:
 
     ImageContents();
     explicit ImageContents(const QImage &image);
+    ImageContents(Type type, QSize size, QImage::Format format, int mipmapCount = 1, int imageCount = 1);
     ImageContents(const ImageContents &other);
     ImageContents(ImageContents &&other);
     ~ImageContents();

@@ -1,5 +1,6 @@
 #include "abstracttool.h"
 #include "showtool.h"
+#include "exception.h"
 
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QDebug>
@@ -21,7 +22,7 @@ public:
     ArgumentsParser();
 
     void parse(const QStringList &arguments);
-    void printUsage(const ToolsMap &map);
+    void printUsage(const ToolsMap &map, const QString &commandName = QString());
 
     Modes mode() const { return _mode; }
     inline QString toolName() { return _name; }
@@ -51,6 +52,10 @@ void ArgumentsParser::parse(const QStringList &arguments)
     if (parser.isSet(versionOption))
         _mode |= Version;
 
+    const auto unknown = parser.unknownOptionNames();
+    if (!unknown.isEmpty())
+        throw BadOption(unknown);
+
     const auto positional = parser.positionalArguments();
     if (!positional.isEmpty()) {
         _name = positional.first();
@@ -60,18 +65,18 @@ void ArgumentsParser::parse(const QStringList &arguments)
     }
 }
 
-void ArgumentsParser::printUsage(const ToolsMap &tools)
+void ArgumentsParser::printUsage(const ToolsMap &tools, const QString &commandName)
 {
-    if (!_name.isEmpty())
-        qWarning() << "Unknown command" << _name;
+    if (!commandName.isEmpty())
+        printf("%s\n", qPrintable(QString("Unknown command %1").arg(commandName)));
     auto text = parser.helpText();
     auto lines = text.split("\n");
     lines[0] = "Usage: imagetool [options] command";
     lines.append("Commands:");
     for (const auto &tool: tools) {
         lines.append(QString("  %1 %2").
-                    arg(QString::fromLatin1(tool.second->id()), -10).
-                    arg(tool.second->decription()));
+                     arg(QString::fromLatin1(tool.second->id()), -10).
+                     arg(tool.second->decription()));
     }
     lines.append(QString());
     text = lines.join("\n");
@@ -88,41 +93,66 @@ static ToolsMap CreateTools()
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication app(argc, argv);
-    app.addLibraryPath(app.applicationDirPath() + ImageIO::pluginsDirPath());
+    try {
+        QGuiApplication app(argc, argv);
+        app.addLibraryPath(app.applicationDirPath() + ImageIO::pluginsDirPath());
 
-    const auto tools = CreateTools();
+        const auto tools = CreateTools();
 
-    ArgumentsParser parser;
+        ArgumentsParser parser;
 
-    parser.parse(app.arguments());
-    const auto it = tools.find(parser.toolName().toLatin1());
-
-    if (parser.mode() & ArgumentsParser::Help) {
-        if (it == tools.end()) {
+        try {
+            parser.parse(app.arguments());
+        } catch (const BadOption &ex) {
+            printf("%s\n", qPrintable(ex.message()));
             parser.printUsage(tools);
             return 1;
-        } else {
-            it->second->printUsage();
+        }
+
+        const auto toolName = parser.toolName();
+        const auto it = tools.find(toolName.toLatin1());
+
+        if (parser.mode() & ArgumentsParser::Help) {
+            if (toolName.isEmpty()) {
+                parser.printUsage(tools);
+                return 0;
+            } else if (it == tools.end()) {
+                parser.printUsage(tools, toolName);
+                return 0;
+            } else {
+                it->second->printUsage();
+                return 0;
+            }
+        }
+
+        if (parser.mode() & ArgumentsParser::Version) {
+            printf("version 1.0\n");
             return 0;
         }
-    }
 
-    if (parser.mode() & ArgumentsParser::Version) {
-        printf("version 1.0\n");
-        return 0;
-    }
+        if (parser.mode() & ArgumentsParser::Run) {
+            if (it == tools.end()) {
+                parser.printUsage(tools, toolName);
+                return 1;
+            }
 
-    if (parser.mode() & ArgumentsParser::Run) {
-        if (it == tools.end()) {
-            parser.printUsage(tools);
-            return 1;
+            try {
+                return it->second->run(parser.arguments());
+            } catch (const BadOption &ex) {
+                printf("%s\n", qPrintable(ex.message()));
+                it->second->printUsage();
+                return 1;
+            }
         }
 
-        return it->second->run(parser.arguments());
+        parser.printUsage(tools);
+
+        return 0;
+    } catch (const RuntimeError &ex) {
+        qWarning() << ex.message();
+        return 1;
+    } catch (const std::exception &ex) {
+        qWarning() << ex.what();
     }
-
-    parser.printUsage(tools);
-
-    return 0;
 }
+
