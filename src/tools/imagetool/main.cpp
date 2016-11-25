@@ -118,7 +118,7 @@ int main(int argc, char *argv[])
                 return 0;
             } else if (it == tools.end()) {
                 parser.printUsage(tools, toolName);
-                return 0;
+                return 1;
             } else {
                 it->second->printUsage();
                 return 0;
@@ -153,6 +153,7 @@ int main(int argc, char *argv[])
         return 1;
     } catch (const std::exception &ex) {
         qWarning() << ex.what();
+        return 1;
     }
 }
 
