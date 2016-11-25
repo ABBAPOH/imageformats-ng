@@ -22,7 +22,7 @@ public:
     ArgumentsParser();
 
     void parse(const QStringList &arguments);
-    void printUsage(const ToolsMap &map, const QString &commandName = QString());
+    void printUsage(const ToolsMap &map);
 
     Modes mode() const { return _mode; }
     inline QString toolName() { return _name; }
@@ -47,28 +47,26 @@ ArgumentsParser::ArgumentsParser() :
 void ArgumentsParser::parse(const QStringList &arguments)
 {
     parser.parse(arguments);
-    if (parser.isSet(helpOption))
-        _mode |= Help;
-    if (parser.isSet(versionOption))
-        _mode |= Version;
 
     const auto unknown = parser.unknownOptionNames();
     if (!unknown.isEmpty())
         throw BadOption(unknown);
 
+    if (parser.isSet(helpOption))
+        _mode |= Help;
+    if (parser.isSet(versionOption))
+        _mode |= Version;
+
     const auto positional = parser.positionalArguments();
     if (!positional.isEmpty()) {
         _name = positional.first();
         _arguments = positional;
-        if (_mode == Invalid)
-            _mode = Run;
+        _mode |= Run;
     }
 }
 
-void ArgumentsParser::printUsage(const ToolsMap &tools, const QString &commandName)
+void ArgumentsParser::printUsage(const ToolsMap &tools)
 {
-    if (!commandName.isEmpty())
-        printf("%s\n", qPrintable(QString("Unknown command %1").arg(commandName)));
     auto text = parser.helpText();
     auto lines = text.split("\n");
     lines[0] = "Usage: imagetool [options] command";
@@ -109,43 +107,33 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        const auto toolName = parser.toolName();
-        const auto it = tools.find(toolName.toLatin1());
-
-        if (parser.mode() & ArgumentsParser::Help) {
-            if (toolName.isEmpty()) {
-                parser.printUsage(tools);
-                return 0;
-            } else if (it == tools.end()) {
-                parser.printUsage(tools, toolName);
-                return 1;
-            } else {
-                it->second->printUsage();
-                return 0;
-            }
-        }
-
-        if (parser.mode() & ArgumentsParser::Version) {
+        if (parser.mode() & ArgumentsParser::Version)
             printf("version 1.0\n");
-            return 0;
-        }
 
         if (parser.mode() & ArgumentsParser::Run) {
+            const auto toolName = parser.toolName();
+            const auto it = tools.find(toolName.toLatin1());
             if (it == tools.end()) {
-                parser.printUsage(tools, toolName);
+                printf("%s\n", qPrintable(QString("Unknown command %1").arg(toolName)));
+                parser.printUsage(tools);
                 return 1;
             }
 
-            try {
-                return it->second->run(parser.arguments());
-            } catch (const BadOption &ex) {
-                printf("%s\n", qPrintable(ex.message()));
+            if (parser.mode() & ArgumentsParser::Help) {
                 it->second->printUsage();
-                return 1;
+            } else {
+                try {
+                    return it->second->run(parser.arguments());
+                } catch (const BadOption &ex) {
+                    printf("%s\n", qPrintable(ex.message()));
+                    it->second->printUsage();
+                    return 1;
+                }
             }
         }
 
-        parser.printUsage(tools);
+        if (parser.mode() & ArgumentsParser::Help)
+            parser.printUsage(tools);
 
         return 0;
     } catch (const RuntimeError &ex) {
