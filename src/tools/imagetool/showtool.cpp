@@ -51,16 +51,20 @@ int ShowTool::run(const QStringList &arguments)
     }
 
     auto positional = parser.positionalArguments();
-    if (positional.empty())
-        return 0;
+    if (positional.empty()) {
+        printf("%s\n", qPrintable(QString("File argument missing")));
+        printUsage();
+        return 1;
+    }
 
     auto fileName = positional.front();
     ImageIO io(fileName);
     auto contents = io.read();
     if (!contents) {
-        qWarning() << "Can't read image" << fileName << io.error().errorString();
-        return 1;
+        throw RuntimeError(QString("Can't read image %1: %2").
+                           arg(fileName).arg(io.error().errorString()));
     }
+
     ImageInfoModel model;
     model.setImageContents(*contents);
     printf("%s\n", modelToText(&model).toLocal8Bit().data());
