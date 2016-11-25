@@ -25,24 +25,3 @@ public:
 private:
     QString _message;
 };
-
-class BadOption: public RuntimeError
-{
-public:
-    explicit BadOption(const QString &optionName);
-    explicit BadOption(const QStringList &optionNames);
-    ~BadOption() noexcept override;
-};
-
-class BadTool: public RuntimeError
-{
-public:
-    explicit BadTool(const QString &tool) :
-        RuntimeError(QString("Bad tool %1").arg(tool)), _tool(tool) {}
-
-    const QString &tool () const { return _tool; }
-
-private:
-    QString _tool;
-};
-

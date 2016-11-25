@@ -41,9 +41,15 @@ int ShowTool::run(const QStringList &arguments)
 {
     parser.parse(arguments);
 
-    const auto unknown = parser.unknownOptionNames();
-    if (!unknown.isEmpty())
-        throw BadOption(unknown);
+    const auto optionNames = parser.unknownOptionNames();
+    if (!optionNames.isEmpty()) {
+        const auto message = QString("%1: %2").
+                arg(optionNames.size() > 1 ? "Bad options" : "Bad option")
+                .arg(optionNames.join(", "));
+        printf("%s\n", qPrintable(message));
+        printUsage();
+        return 1;
+    }
 
     if (parser.isSet(helpOption)) {
         printUsage();

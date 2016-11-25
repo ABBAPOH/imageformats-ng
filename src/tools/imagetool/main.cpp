@@ -21,12 +21,14 @@ public:
 
     ArgumentsParser();
 
-    void parse(const QStringList &arguments);
+    bool parse(const QStringList &arguments);
     void printUsage(const ToolsMap &map);
 
     Modes mode() const { return _mode; }
     inline QString toolName() { return _name; }
     inline QStringList arguments() const { return _arguments; }
+
+    QStringList unknownOptionNames() const { return parser.unknownOptionNames(); }
 
 private:
     Modes _mode;
@@ -44,13 +46,13 @@ ArgumentsParser::ArgumentsParser() :
     parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsPositionalArguments);
 }
 
-void ArgumentsParser::parse(const QStringList &arguments)
+bool ArgumentsParser::parse(const QStringList &arguments)
 {
     parser.parse(arguments);
 
     const auto unknown = parser.unknownOptionNames();
     if (!unknown.isEmpty())
-        throw BadOption(unknown);
+        return false;
 
     if (parser.isSet(helpOption))
         _mode |= Help;
@@ -63,6 +65,8 @@ void ArgumentsParser::parse(const QStringList &arguments)
         _arguments = positional;
         _mode |= Run;
     }
+
+    return true;
 }
 
 void ArgumentsParser::printUsage(const ToolsMap &tools)
@@ -99,10 +103,12 @@ int main(int argc, char *argv[])
 
         ArgumentsParser parser;
 
-        try {
-            parser.parse(app.arguments());
-        } catch (const BadOption &ex) {
-            printf("%s\n", qPrintable(ex.message()));
+        if (!parser.parse(app.arguments())) {
+            const auto optionNames = parser.unknownOptionNames();
+            const auto message = QString("%1: %2").
+                    arg(optionNames.size() > 1 ? "Bad options" : "Bad option")
+                    .arg(optionNames.join(", "));
+            printf("%s\n", qPrintable(message));
             parser.printUsage(tools);
             return 1;
         }
@@ -121,14 +127,9 @@ int main(int argc, char *argv[])
 
             if (parser.mode() & ArgumentsParser::Help) {
                 it->second->printUsage();
+                return 0;
             } else {
-                try {
-                    return it->second->run(parser.arguments());
-                } catch (const BadOption &ex) {
-                    printf("%s\n", qPrintable(ex.message()));
-                    it->second->printUsage();
-                    return 1;
-                }
+                return it->second->run(parser.arguments());
             }
         }
 
