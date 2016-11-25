@@ -63,21 +63,7 @@ int ShowTool::run(const QStringList &arguments)
         return 1;
     }
 
-    auto fileName = positional.front();
-    ImageIO io(fileName);
-    auto contents = io.read();
-    if (!contents) {
-        throw RuntimeError(QString("Can't read image %1: %2").
-                           arg(fileName).arg(io.error().errorString()));
-    }
-
-    ImageInfoModel model;
-    model.setImageContents(*contents);
-    printf("%s\n", modelToText(&model).toLocal8Bit().data());
-
-    printf("==== Exif ====\n");
-    VariantMapModel exifModel(contents->exifMeta().toVariantMap());
-    printf("%s\n", modelToText(&exifModel).toLocal8Bit().data());
+    showImageInfo(positional.front());
 
     return 0;
 }
@@ -85,4 +71,26 @@ int ShowTool::run(const QStringList &arguments)
 void ShowTool::printUsage()
 {
     AbstractTool::printUsage(parser);
+}
+
+void ShowTool::showImageInfo(const QString &filePath) const
+{
+    ImageIO io(filePath);
+    auto contents = io.read();
+    if (!contents) {
+        throw RuntimeError(QString("Can't read image %1: %2").
+                           arg(filePath).arg(io.error().errorString()));
+    }
+
+    ImageInfoModel model;
+    model.setImageContents(*contents);
+    printf("%s\n", modelToText(&model).toLocal8Bit().data());
+
+    auto exifMap = contents->exifMeta().toVariantMap();
+    if (!exifMap.isEmpty()) {
+        printf("\n");
+        printf("==== Exif ====\n");
+        VariantMapModel exifModel(exifMap);
+        printf("%s\n", modelToText(&exifModel).toLocal8Bit().data());
+    }
 }

@@ -15,6 +15,9 @@ public:
     void printUsage() override;
 
 private:
+    void showImageInfo(const QString &filePath) const;
+
+private:
     QCommandLineParser parser;
     QCommandLineOption helpOption;
 };
