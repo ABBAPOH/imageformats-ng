@@ -28,6 +28,9 @@ private:
 
 ImageDocumentItemPrivate::ImageDocumentItemPrivate()
 {
+    // fuck you, mvsc2013
+    rotation[0] = rotation[1] = rotation[2] = 0;
+    visualRotation[0] = visualRotation[1] = visualRotation[2] = 0;
 }
 
 void ImageDocumentItemPrivate::emitChanged(ImageDocumentItem *q)

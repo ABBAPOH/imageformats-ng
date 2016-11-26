@@ -1,12 +1,13 @@
 #ifndef THUMBNAILSMODEL_H
 #define THUMBNAILSMODEL_H
 
+#include "imageview_global.h"
 #include <ImageDocument>
 #include <QtCore/QAbstractItemModel>
 
 class ImageDocument;
 
-class ThumbnailsModel : public QAbstractItemModel
+class IMAGEVIEW_EXPORT ThumbnailsModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:

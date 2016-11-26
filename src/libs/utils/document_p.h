@@ -3,7 +3,7 @@
 #include "document.h"
 #include <QtCore/QFile>
 
-class DocumentPrivate
+class UTILS_EXPORT DocumentPrivate
 {
     Q_DECLARE_PUBLIC(Document)
     Q_DISABLE_COPY(DocumentPrivate)

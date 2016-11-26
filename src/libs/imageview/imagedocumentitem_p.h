@@ -15,8 +15,8 @@ public:
     ImageDocument *document { nullptr };
     QPoint position;
     QSize size;
-    qreal rotation[3] = { 0, 0, 0 };
-    qreal visualRotation[3] = { 0, 0, 0 };
+    qreal rotation[3];
+    qreal visualRotation[3];
     QImage image;
     QPointer<QSequentialAnimationGroup> animationGroup;
 };

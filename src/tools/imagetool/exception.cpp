@@ -13,12 +13,12 @@ Exception::Exception() = default;
 /*!
     Destroys the object.
 */
-Exception::~Exception() noexcept = default;
+Exception::~Exception() Q_DECL_NOEXCEPT = default;
 
 /*!
     \reimp
 */
-const char *Exception::what() const noexcept
+const char *Exception::what() const Q_DECL_NOEXCEPT
 {
     return "Exception";
 }
@@ -41,17 +41,17 @@ ExitException::ExitException(int code) :
 /*!
     Destroys the object.
 */
-ExitException::~ExitException() noexcept = default;
+ExitException::~ExitException() Q_DECL_NOEXCEPT = default;
 
 /*!
-    \fn int ExitException::code() const noexcept;
+    \fn int ExitException::code() const Q_DECL_NOEXCEPT;
     Returns the code that should be return from the program.
 */
 
 /*!
     \reimp
 */
-const char *ExitException::what() const noexcept
+const char *ExitException::what() const Q_DECL_NOEXCEPT
 {
     return "ExitException";
 }
@@ -72,7 +72,7 @@ RuntimeError::RuntimeError(const QString &message) :
 /*!
     Move-constructs RuntimeError with the message \a message.
 */
-RuntimeError::RuntimeError(QString &&message) noexcept:
+RuntimeError::RuntimeError(QString &&message) Q_DECL_NOEXCEPT:
     _message(std::move(message))
 {
 }
@@ -80,12 +80,12 @@ RuntimeError::RuntimeError(QString &&message) noexcept:
 /*!
     Destroys the object.
 */
-RuntimeError::~RuntimeError() noexcept = default;
+RuntimeError::~RuntimeError() Q_DECL_NOEXCEPT = default;
 
 /*!
     Returns the message describing the error.
 */
-const QString &RuntimeError::message() const noexcept
+const QString &RuntimeError::message() const Q_DECL_NOEXCEPT
 {
     return _message;
 }
@@ -93,7 +93,7 @@ const QString &RuntimeError::message() const noexcept
 /*!
     \reimp
 */
-const char *RuntimeError::what() const noexcept
+const char *RuntimeError::what() const Q_DECL_NOEXCEPT
 {
     return "RuntimeError";
 }

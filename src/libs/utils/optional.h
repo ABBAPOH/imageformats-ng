@@ -5,11 +5,11 @@
 #include <QtCore/qglobal.h>
 #include <QtCore/QHash>
 
-template<typename T> class UTILS_EXPORT Optional;
+template<typename T> class Optional;
 typedef Optional<void> Nothing;
 
 template<typename T>
-class UTILS_EXPORT Optional
+class Optional
 {
 private:
     typedef bool (Optional::*RestrictedBool)() const;
