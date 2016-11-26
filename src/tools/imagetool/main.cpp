@@ -26,7 +26,7 @@ static ToolsMap CreateTools()
     return result;
 }
 
-MainParser::DescriptionMap getDescriptions(const ToolsMap &map)
+static MainParser::DescriptionMap getDescriptions(const ToolsMap &map)
 {
     MainParser::DescriptionMap result;
     for (const auto &item: map)
