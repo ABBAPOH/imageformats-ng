@@ -58,10 +58,10 @@ int main(int argc, char *argv[])
     } catch (const ExitException &ex) {
         return ex.code();
     } catch (const RuntimeError &ex) {
-        qWarning() << ex.message();
+        MainParser::showError(ex.message());
         return 1;
     } catch (const std::exception &ex) {
-        qWarning() << ex.what();
+        MainParser::showError(QString::fromLatin1(ex.what()));
         return 1;
     }
 }
