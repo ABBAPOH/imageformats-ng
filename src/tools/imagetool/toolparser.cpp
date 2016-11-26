@@ -1,6 +1,8 @@
 #include "toolparser.h"
 #include "exception.h"
 
+#include <QDir>
+
 ToolParser::ToolParser(const QByteArray &toolName) :
     _toolId(toolName),
     helpOption(addHelpOption())
@@ -22,7 +24,7 @@ void ToolParser::process(const QStringList &arguments)
 
 void ToolParser::showHelp(int code)
 {
-    const auto text = helpText().replace(qApp->applicationFilePath(),
+    const auto text = helpText().replace(QDir::toNativeSeparators(qApp->applicationFilePath()),
                                          QString("%1 %2").arg("imagetool").arg(QString::fromLatin1(_toolId)));
     showMessage(text);
     exit(code);
