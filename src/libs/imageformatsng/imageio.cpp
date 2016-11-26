@@ -76,7 +76,7 @@ bool ImageIOPrivate::ensureHandlerCreated(QIODevice::OpenMode mode)
     }
 
     auto db = ImageIOHandlerDatabase::instance();
-    handler = db->create(device, mimeType, subType);
+    handler = db->create(device, mt, subType);
     if (!handler) {
         error = ImageIO::Error::UnsupportedMimeTypeError;
         return false;
