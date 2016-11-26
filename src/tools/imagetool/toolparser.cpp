@@ -13,11 +13,11 @@ void ToolParser::process(const QStringList &arguments)
 {
     if (!parse(arguments)) {
         showError(errorText());
-        showHelp(1);
+        showHelp(EXIT_FAILURE);
     }
 
     if (isSet(helpOption))
-        showHelp();
+        showHelp(EXIT_SUCCESS);
 }
 
 void ToolParser::showHelp(int code)

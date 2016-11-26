@@ -17,7 +17,7 @@ void MainParser::process(const QStringList &arguments)
 {
     if (!parser.parse(arguments)) {
         showError(parser.errorText());
-        showHelp(1);
+        showHelp(EXIT_FAILURE);
     }
 
     if (parser.isSet(versionOption))
@@ -30,7 +30,10 @@ void MainParser::process(const QStringList &arguments)
         if (parser.isSet(helpOption))
             _arguments.insert(1, "--help");
     } else {
-        showHelp();
+        if (parser.isSet(helpOption))
+            showHelp(EXIT_SUCCESS);
+        else
+            showHelp(EXIT_FAILURE);
     }
 }
 
@@ -56,7 +59,7 @@ void MainParser::showVersion()
 {
     showMessage(QCoreApplication::applicationName() + QLatin1Char(' ')
                 + QCoreApplication::applicationVersion());
-    exit(0);
+    exit(EXIT_SUCCESS);
 }
 
 void MainParser::exit(int code)

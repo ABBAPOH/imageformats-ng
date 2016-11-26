@@ -58,7 +58,7 @@ int ShowTool::run(const QStringList &arguments)
     const auto positional = parser.positionalArguments();
     if (positional.empty()) {
         parser.showError(QString("File argument missing"));
-        parser.showHelp();
+        parser.showHelp(EXIT_FAILURE);
     }
 
     showImageInfo(positional.front());

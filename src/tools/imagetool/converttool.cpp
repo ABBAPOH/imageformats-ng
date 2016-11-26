@@ -36,7 +36,7 @@ int ConvertTool::run(const QStringList &arguments)
     const auto positional = parser.positionalArguments();
     if (positional.size() != 2) {
         parser.showError(QString("Incorrect input/output arguments"));
-        parser.showHelp();
+        parser.showHelp(EXIT_FAILURE);
     }
 
     Options options;

@@ -12,7 +12,7 @@ public:
     explicit MainParser(const DescriptionMap &map);
 
     void process(const QStringList &arguments);
-    Q_NORETURN void showHelp(int code = 0);
+    Q_NORETURN void showHelp(int code);
     Q_NORETURN void showVersion();
 
     inline QString toolName() { return _name; }
@@ -29,7 +29,7 @@ public:
     }
 
 private:
-    Q_NORETURN void exit(int code = 0);
+    Q_NORETURN void exit(int code);
 
 private:
     DescriptionMap _map;
