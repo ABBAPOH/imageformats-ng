@@ -9,12 +9,52 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 
+namespace {
+
+static const char toolId[] = "show";
+
+struct Options
+{
+    bool listFormats {false};
+    bool showInfo {false};
+    QString fileName;
+};
+
+Options parseOptions(const QStringList &arguments)
+{
+    ToolParser parser(toolId);
+    QCommandLineOption listFormatsOption("list-formats", "Shows the list of available formats");
+    parser.addOption(listFormatsOption);
+    parser.addPositionalArgument("file", "Input filename", "[file]");
+
+    parser.process(arguments);
+
+    Options result;
+    result.listFormats = parser.isSet(listFormatsOption);
+
+    const auto positional = parser.positionalArguments();
+    if (positional.size() > 1) {
+        parser.showError(QString("Too many file arguments"));
+        parser.showHelp(EXIT_FAILURE);
+    } else if (positional.size() == 0) {
+        if (!result.listFormats) {
+            parser.showError(QString("File argument missing"));
+            parser.showHelp(EXIT_FAILURE);
+        }
+    } else {
+        result.showInfo = true;
+        result.fileName = positional.at(0);
+    }
+
+    return result;
+}
+
 static inline void showMessage(const QString &message)
 {
     ToolParser::showMessage(message);
 }
 
-QString modelToText(QAbstractTableModel *model)
+static QString modelToText(QAbstractTableModel *model)
 {
     QStringList result;
     for (int row = 0, rowCount = model->rowCount(); row < rowCount; ++row) {
@@ -27,46 +67,7 @@ QString modelToText(QAbstractTableModel *model)
     return result.join("\n");
 }
 
-ShowTool::ShowTool()
-{
-}
-
-QByteArray ShowTool::id() const
-{
-    return "show";
-}
-
-QString ShowTool::decription() const
-{
-    return qApp->tr("Shows information about image file", "ImageTool");
-}
-
-int ShowTool::run(const QStringList &arguments)
-{
-    ToolParser parser(id());
-    QCommandLineOption listFormatsOption("list-formats", "Shows the list of available formats");
-    parser.addOption(listFormatsOption);
-    parser.addPositionalArgument("file", "Input filename", "[file]");
-
-    parser.process(arguments);
-
-    if (parser.isSet(listFormatsOption)) {
-        showFormatsList();
-        return 0;
-    }
-
-    const auto positional = parser.positionalArguments();
-    if (positional.empty()) {
-        parser.showError(QString("File argument missing"));
-        parser.showHelp(EXIT_FAILURE);
-    }
-
-    showImageInfo(positional.front());
-
-    return 0;
-}
-
-void ShowTool::showFormatsList() const
+static void showFormatsList()
 {
     for (const auto &formatInfo: ImageIO::supportedImageFormats()) {
         formatInfo.capabilities();
@@ -78,7 +79,7 @@ void ShowTool::showFormatsList() const
     }
 }
 
-void ShowTool::showImageInfo(const QString &filePath) const
+static void showImageInfo(const QString &filePath)
 {
     ImageIO io(filePath);
     const auto contents = io.read();
@@ -98,4 +99,32 @@ void ShowTool::showImageInfo(const QString &filePath) const
         VariantMapModel exifModel(exifMap);
         showMessage(modelToText(&exifModel));
     }
+}
+
+} // namespace
+
+ShowTool::ShowTool()
+{
+}
+
+QByteArray ShowTool::id() const
+{
+    return toolId;
+}
+
+QString ShowTool::decription() const
+{
+    return qApp->tr("Shows information about image file", "ImageTool");
+}
+
+int ShowTool::run(const QStringList &arguments)
+{
+    const auto options = parseOptions(arguments);
+
+    if (options.listFormats)
+        showFormatsList();
+    if (options.showInfo)
+        showImageInfo(options.fileName);
+
+    return 0;
 }
