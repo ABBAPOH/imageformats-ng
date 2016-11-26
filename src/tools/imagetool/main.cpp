@@ -48,10 +48,7 @@ ArgumentsParser::ArgumentsParser() :
 
 bool ArgumentsParser::parse(const QStringList &arguments)
 {
-    parser.parse(arguments);
-
-    const auto unknown = parser.unknownOptionNames();
-    if (!unknown.isEmpty())
+    if (!parser.parse(arguments))
         return false;
 
     if (parser.isSet(helpOption))
