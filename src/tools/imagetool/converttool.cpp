@@ -16,23 +16,36 @@ struct Options
     QString inputMimeType;
     QString outputFile;
     QString outputMimeType;
+    QByteArray subType;
 };
 
 static Options parseOptions(const QStringList &arguments)
 {
     ToolParser parser(toolId);
-    QCommandLineOption inputTypeOption("input-type", "Input mime type (i.e. image/png)", "mime type");
-    QCommandLineOption outputTypeOption("output-type", "Output mime type (i.e. image/png)", "mime type");
+    QCommandLineOption inputTypeOption(QStringLiteral("input-type"),
+                                       ConvertTool::tr("Input mime type (i.e. image/png)"),
+                                       QStringLiteral("mime type"));
+    QCommandLineOption outputTypeOption(QLatin1String("output-type"),
+                                        ConvertTool::tr("Output mime type (i.e. image/png)"),
+                                        QStringLiteral("mime type"));
+    QCommandLineOption subTypeOption(QStringLiteral("subtype"),
+                                     ConvertTool::tr("Output sub type (depends on output format)"),
+                                     QStringLiteral("type"));
     parser.addOption(inputTypeOption);
     parser.addOption(outputTypeOption);
-    parser.addPositionalArgument("input", "Input filename", "input");
-    parser.addPositionalArgument("output", "Output filename", "output");
+    parser.addOption(subTypeOption);
+    parser.addPositionalArgument(QStringLiteral("input"),
+                                 ConvertTool::tr("Input filename"),
+                                 QStringLiteral("input"));
+    parser.addPositionalArgument(QStringLiteral("output"),
+                                 ConvertTool::tr("Output filename"),
+                                 QStringLiteral("output"));
 
     parser.process(arguments);
 
     const auto positional = parser.positionalArguments();
     if (positional.size() != 2) {
-        parser.showError(QString("Incorrect input/output arguments"));
+        parser.showError(ConvertTool::tr("Incorrect input/output arguments"));
         parser.showHelp(EXIT_FAILURE);
     }
 
@@ -41,6 +54,7 @@ static Options parseOptions(const QStringList &arguments)
     options.outputFile = positional.at(1);
     options.inputMimeType = parser.value(inputTypeOption);
     options.outputMimeType = parser.value(outputTypeOption);
+    options.subType = parser.value(subTypeOption).toLocal8Bit();
     return options;
 }
 
@@ -51,16 +65,19 @@ static void convert(const Options &options)
         io.setMimeType(options.inputMimeType);
     const auto contents = io.read();
     if (!contents) {
-        throw RuntimeError(QString("Can't read image %1: %2").
-                           arg(options.inputFile).arg(io.error().errorString()));
+        throw RuntimeError(ConvertTool::tr("Can't read image %1: %2").
+                           arg(options.inputFile).
+                           arg(io.error().errorString()));
     }
 
     if (!options.outputMimeType.isEmpty())
         io.setMimeType(options.outputMimeType);
     io.setFileName(options.outputFile);
+    io.setSubType(options.subType);
     if (!io.write(*contents)) {
-        throw RuntimeError(QString("Can't write image %1: %2").
-                           arg(options.outputFile).arg(io.error().errorString()));
+        throw RuntimeError(ConvertTool::tr("Can't write image %1: %2").
+                           arg(options.outputFile).
+                           arg(io.error().errorString()));
     }
 }
 
@@ -77,7 +94,7 @@ QByteArray ConvertTool::id() const
 
 QString ConvertTool::decription() const
 {
-    return qApp->tr("Converts image files", "ImageTool");
+    return ConvertTool::tr("Converts image files");
 }
 
 int ConvertTool::run(const QStringList &arguments)
