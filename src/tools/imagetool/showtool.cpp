@@ -133,9 +133,7 @@ static void showImageInfo(const QString &filePath)
 
 } // namespace
 
-ShowTool::ShowTool()
-{
-}
+ShowTool::ShowTool() = default;
 
 QByteArray ShowTool::id() const
 {

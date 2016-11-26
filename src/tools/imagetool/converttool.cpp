@@ -83,9 +83,7 @@ static void convert(const Options &options)
 
 } // namespace
 
-ConvertTool::ConvertTool()
-{
-}
+ConvertTool::ConvertTool() = default;
 
 QByteArray ConvertTool::id() const
 {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "abstracttool.h"
+#include <QtCore/QCoreApplication>
 
 class ConvertTool : public AbstractTool
 {
@@ -8,6 +9,7 @@ class ConvertTool : public AbstractTool
 public:
     ConvertTool();
 
+public: // AbstractTool interface
     QByteArray id() const override;
     QString decription() const override;
     int run(const QStringList &arguments) override;

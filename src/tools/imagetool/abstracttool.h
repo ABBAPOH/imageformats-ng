@@ -1,21 +1,16 @@
 #pragma once
 
+#include <QtCore/QByteArray>
 #include <QtCore/QString>
-#include <QtCore/QCommandLineParser>
 
 class AbstractTool
 {
+    Q_DISABLE_COPY(AbstractTool)
 public:
     AbstractTool() = default;
-    AbstractTool(const AbstractTool &other) = delete;
     virtual ~AbstractTool();
-
-    AbstractTool &operator=(const AbstractTool &other) = delete;
 
     virtual QByteArray id() const = 0;
     virtual QString decription() const = 0;
     virtual int run(const QStringList &arguments) = 0;
-
-protected:
-    void printUsage(const QCommandLineParser &parser);
 };
