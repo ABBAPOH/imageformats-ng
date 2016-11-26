@@ -29,7 +29,7 @@ public:
     QScopedPointer<QFile> file;
 
     QIODevice *device {nullptr};
-    QMimeType mimeType;
+    Optional<QMimeType> mimeType;
     QByteArray subType;
 
     ImageIO::Error error {ImageIO::Error::NoError};
@@ -66,9 +66,14 @@ bool ImageIOPrivate::ensureHandlerCreated(QIODevice::OpenMode mode)
     if (handler)
         return true;
 
-    auto mt = mimeType;
-    if (!mt.isValid() && (device->openMode() & QIODevice::ReadOnly))
-        mt = QMimeDatabase().mimeTypeForData(device->peek(256));
+    auto mt = QMimeType();
+    if (!mimeType) {
+        // mimeType is not set, try to guess from file
+        if ((device->openMode() & QIODevice::ReadOnly))
+            mt = QMimeDatabase().mimeTypeForData(device->peek(256));
+    } else {
+        mt = *mimeType;
+    }
 
     if (!mt.isValid()) {
         error = ImageIO::Error::InvalidMimeTypeError;
@@ -174,20 +179,28 @@ void ImageIO::setDevice(QIODevice *device)
 QMimeType ImageIO::mimeType() const
 {
     Q_D(const ImageIO);
-    return d->mimeType;
+    return d->mimeType ? *d->mimeType : QMimeType();
 }
 
 void ImageIO::setMimeType(const QMimeType &mimeType)
 {
     Q_D(ImageIO);
-    d->mimeType = mimeType;
+    if (mimeType.isValid())
+        d->mimeType = mimeType;
+    else
+        d->mimeType.reset();
     d->resetHandler();
 }
 
 void ImageIO::setMimeType(const QString &mimeType)
 {
     Q_D(ImageIO);
-    d->mimeType = QMimeDatabase().mimeTypeForName(mimeType);
+    if (!mimeType.isEmpty())
+        // here we can have optional pointing to an invalid QMimeType,
+        // leads to error in ensureHandlerCreated
+        d->mimeType = QMimeDatabase().mimeTypeForName(mimeType);
+    else
+        d->mimeType.reset();
     d->resetHandler();
 }
 
@@ -235,10 +248,10 @@ bool ImageIO::supportsOption(ImageOptions::Option option, const QByteArray &subT
 {
     Q_D(const ImageIO);
 
-    if (!d->mimeType.isValid())
+    if (!d->mimeType || !d->mimeType->isValid())
         return false;
 
-    const auto info = imageFormat(d->mimeType);
+    const auto info = imageFormat(*d->mimeType);
     if (!info)
         return false;
     return info->supportsOption(option, subType);
