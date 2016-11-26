@@ -6,24 +6,21 @@
 #include <QtCore/QCoreApplication>
 #include <QDebug>
 
-ConvertTool::ConvertTool()
-{
+namespace {
 
-}
+static const char toolId[] = "convert";
 
-QByteArray ConvertTool::id() const
+struct Options
 {
-    return "convert";
-}
+    QString inputFile;
+    QString inputMimeType;
+    QString outputFile;
+    QString outputMimeType;
+};
 
-QString ConvertTool::decription() const
+Options parseOptions(const QStringList &arguments)
 {
-    return qApp->tr("Converts image files", "ImageTool");
-}
-
-int ConvertTool::run(const QStringList &arguments)
-{
-    ToolParser parser(id());
+    ToolParser parser(toolId);
     QCommandLineOption inputTypeOption("input-type", "Input mime type (i.e. image/png)", "mime type");
     QCommandLineOption outputTypeOption("output-type", "Output mime type (i.e. image/png)", "mime type");
     parser.addOption(inputTypeOption);
@@ -44,11 +41,11 @@ int ConvertTool::run(const QStringList &arguments)
     options.outputFile = positional.at(1);
     options.inputMimeType = parser.value(inputTypeOption);
     options.outputMimeType = parser.value(outputTypeOption);
-    convert(options);
-    return 0;
+
+    return options;
 }
 
-void ConvertTool::convert(const Options &options)
+void convert(const Options &options)
 {
     ImageIO io(options.inputFile);
     if (!options.inputMimeType.isEmpty())
@@ -67,3 +64,27 @@ void ConvertTool::convert(const Options &options)
                            arg(options.outputFile).arg(io.error().errorString()));
     }
 }
+
+} // namespace
+
+ConvertTool::ConvertTool()
+{
+}
+
+QByteArray ConvertTool::id() const
+{
+    return toolId;
+}
+
+QString ConvertTool::decription() const
+{
+    return qApp->tr("Converts image files", "ImageTool");
+}
+
+int ConvertTool::run(const QStringList &arguments)
+{
+    const auto options = parseOptions(arguments);
+    convert(options);
+    return 0;
+}
+
