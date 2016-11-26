@@ -15,7 +15,6 @@ public:
     virtual QByteArray id() const = 0;
     virtual QString decription() const = 0;
     virtual int run(const QStringList &arguments) = 0;
-    virtual void printUsage() = 0;
 
 protected:
     void printUsage(const QCommandLineParser &parser);

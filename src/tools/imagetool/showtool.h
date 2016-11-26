@@ -12,7 +12,7 @@ public:
     QByteArray id() const override;
     QString decription() const override;
     int run(const QStringList &arguments) override;
-    void printUsage() override;
+    void printUsage();
 
 private:
     void showImageInfo(const QString &filePath) const;

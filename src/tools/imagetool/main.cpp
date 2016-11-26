@@ -51,8 +51,6 @@ bool ArgumentsParser::parse(const QStringList &arguments)
     if (!parser.parse(arguments))
         return false;
 
-    if (parser.isSet(helpOption))
-        _mode |= Help;
     if (parser.isSet(versionOption))
         _mode |= Version;
 
@@ -61,6 +59,11 @@ bool ArgumentsParser::parse(const QStringList &arguments)
         _name = positional.first();
         _arguments = positional;
         _mode |= Run;
+        if (parser.isSet(helpOption))
+            _arguments.insert(1, "--help");
+    } else {
+        if (parser.isSet(helpOption))
+            _mode |= Help;
     }
 
     return true;
@@ -122,12 +125,7 @@ int main(int argc, char *argv[])
                 return 1;
             }
 
-            if (parser.mode() & ArgumentsParser::Help) {
-                it->second->printUsage();
-                return 0;
-            } else {
-                return it->second->run(parser.arguments());
-            }
+            return it->second->run(parser.arguments());
         }
 
         if (parser.mode() & ArgumentsParser::Help)
