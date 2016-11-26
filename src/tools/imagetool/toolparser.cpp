@@ -24,8 +24,11 @@ void ToolParser::process(const QStringList &arguments)
 
 void ToolParser::showHelp(int code)
 {
-    const auto text = helpText().replace(QDir::toNativeSeparators(qApp->applicationFilePath()),
-                                         QString("%1 %2").arg("imagetool").arg(QString::fromLatin1(_toolId)));
+    const auto filePath = qApp->applicationFilePath();
+    const auto text = helpText().replace(QDir::toNativeSeparators(filePath),
+                                         QString("%1 %2").
+                                         arg(QFileInfo(filePath).fileName()).
+                                         arg(QString::fromLatin1(_toolId)));
     showMessage(text);
     exit(code);
 }

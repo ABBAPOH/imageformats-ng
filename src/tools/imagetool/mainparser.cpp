@@ -1,6 +1,8 @@
 #include "mainparser.h"
 #include "exception.h"
 
+#include <QtCore/QFileInfo>
+
 MainParser::MainParser(const DescriptionMap &map) :
     _map(map),
     helpOption(parser.addHelpOption()),
@@ -41,7 +43,9 @@ void MainParser::showHelp(int code)
 {
     auto text = parser.helpText();
     auto lines = text.split("\n");
-    lines[0] = "Usage: imagetool [options] command [command options]";
+    const auto filePath = qApp->applicationFilePath();
+    lines[0] = QString("Usage: %1 [options] command [command options]")
+            .arg(QFileInfo(filePath).fileName());
     lines.append("Commands:");
     for (const auto &tool: _map) {
         lines.append(QString("  %1 %2").
