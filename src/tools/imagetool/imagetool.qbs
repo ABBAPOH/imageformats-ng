@@ -11,5 +11,6 @@ ConsoleApp {
         "converttool.h",
         "exception.h",
         "showtool.h",
+        "toolparser.h",
     ]
 }

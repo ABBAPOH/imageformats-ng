@@ -1,5 +1,6 @@
 #include "converttool.h"
 #include "exception.h"
+#include "toolparser.h"
 
 #include <ImageIO>
 #include <QtCore/QCoreApplication>
@@ -22,37 +23,20 @@ QString ConvertTool::decription() const
 
 int ConvertTool::run(const QStringList &arguments)
 {
-    QCommandLineParser parser;
-    QCommandLineOption helpOption = parser.addHelpOption();
-    QCommandLineOption inputTypeOption("input-type", "Input mime type (i.e. image/png)", "input-type");
-    QCommandLineOption outputTypeOption("output-type", "Output mime type (i.e. image/png)", "output-type");
+    ToolParser parser(id());
+    QCommandLineOption inputTypeOption("input-type", "Input mime type (i.e. image/png)", "mime type");
+    QCommandLineOption outputTypeOption("output-type", "Output mime type (i.e. image/png)", "mime type");
     parser.addOption(inputTypeOption);
     parser.addOption(outputTypeOption);
     parser.addPositionalArgument("input", "Input filename", "input");
     parser.addPositionalArgument("output", "Output filename", "output");
 
-    if (!parser.parse(arguments)) {
-        const auto optionNames = parser.unknownOptionNames();
-        if (!optionNames.isEmpty()) {
-            const auto message = QString("%1: %2").
-                    arg(optionNames.size() > 1 ? "Bad options" : "Bad option")
-                    .arg(optionNames.join(", "));
-            printf("%s\n", qPrintable(message));
-            printUsage(parser);
-            return 1;
-        }
-    }
-
-    if (parser.isSet(helpOption)) {
-        printUsage(parser);
-        return 0;
-    }
+    parser.process(arguments);
 
     const auto positional = parser.positionalArguments();
     if (positional.size() != 2) {
-        printf("%s\n", qPrintable(QString("Incorrect input/output arguments")));
-        printUsage(parser);
-        return 1;
+        parser.showError(QString("Incorrect input/output arguments"));
+        parser.showHelp();
     }
 
     Options options;

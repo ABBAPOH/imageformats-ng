@@ -1,5 +1,6 @@
 #include "showtool.h"
 #include "exception.h"
+#include "toolparser.h"
 
 #include <ImageIO>
 #include <ImageInfoModel>
@@ -37,49 +38,27 @@ QString ShowTool::decription() const
 
 int ShowTool::run(const QStringList &arguments)
 {
-    QCommandLineParser parser;
-    QCommandLineOption helpOption = parser.addHelpOption();
+    ToolParser parser(id());
     QCommandLineOption listFormatsOption("list-formats", "Shows the list of available formats");
     parser.addOption(listFormatsOption);
     parser.addPositionalArgument("file", "Input filename", "[file]");
 
-    if (!parser.parse(arguments)) {
-        const auto optionNames = parser.unknownOptionNames();
-        if (!optionNames.isEmpty()) {
-            const auto message = QString("%1: %2").
-                    arg(optionNames.size() > 1 ? "Bad options" : "Bad option")
-                    .arg(optionNames.join(", "));
-            printf("%s\n", qPrintable(message));
-            printUsage(parser);
-            return 1;
-        }
-    }
-
-    if (parser.isSet(helpOption)) {
-        printUsage(parser);
-        return 0;
-    }
+    parser.process(arguments);
 
     if (parser.isSet(listFormatsOption)) {
         showFormatsList();
         return 0;
     }
 
-    auto positional = parser.positionalArguments();
+    const auto positional = parser.positionalArguments();
     if (positional.empty()) {
-        printf("%s\n", qPrintable(QString("File argument missing")));
-        printUsage(parser);
-        return 1;
+        parser.showError(QString("File argument missing"));
+        parser.showHelp();
     }
 
     showImageInfo(positional.front());
 
     return 0;
-}
-
-void ShowTool::printUsage(const QCommandLineParser &parser)
-{
-    AbstractTool::printUsage(parser);
 }
 
 void ShowTool::showFormatsList() const

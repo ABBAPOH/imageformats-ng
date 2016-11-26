@@ -1,7 +1,8 @@
 #include "abstracttool.h"
 #include "converttool.h"
-#include "showtool.h"
 #include "exception.h"
+#include "showtool.h"
+#include "toolparser.h"
 
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QDebug>
@@ -14,67 +15,80 @@
 
 using ToolsMap = std::map<QByteArray, std::unique_ptr<AbstractTool>>;
 
+static inline void showMessage(const QString &message)
+{
+    ToolParser::showMessage(message);
+}
+
+static inline void showError(const QString &message)
+{
+    ToolParser::showError(message);
+}
+
 class ArgumentsParser
 {
 public:
-    enum Mode { Invalid = 0x0, Help = 0x1, Version = 0x2, Run = 0x4 };
-    Q_DECLARE_FLAGS(Modes, Mode)
+    explicit ArgumentsParser(const ToolsMap &map);
 
-    ArgumentsParser();
+    void process(const QStringList &arguments);
+    Q_NORETURN void showHelp();
+    Q_NORETURN void showVersion();
 
-    bool parse(const QStringList &arguments);
-    void printUsage(const ToolsMap &map);
-
-    Modes mode() const { return _mode; }
     inline QString toolName() { return _name; }
     inline QStringList arguments() const { return _arguments; }
 
-    QStringList unknownOptionNames() const { return parser.unknownOptionNames(); }
+private:
+    Q_NORETURN void doExit(int code = 0);
 
 private:
-    Modes _mode;
-    QString _name;
-    QStringList _arguments;
+    const ToolsMap &_map;
     QCommandLineParser parser;
     QCommandLineOption helpOption;
     QCommandLineOption versionOption;
+    QString _name;
+    QStringList _arguments;
 };
 
-ArgumentsParser::ArgumentsParser() :
+ArgumentsParser::ArgumentsParser(const ToolsMap &map) :
+    _map(map),
     helpOption(parser.addHelpOption()),
     versionOption(parser.addVersionOption())
 {
     parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsPositionalArguments);
 }
 
-bool ArgumentsParser::parse(const QStringList &arguments)
+/*!
+    Processes options. If an error occured, or help, or version is required, prints help and
+    throws ExitException, which leads to program exit.
+*/
+void ArgumentsParser::process(const QStringList &arguments)
 {
-    if (!parser.parse(arguments))
-        return false;
+    if (!parser.parse(arguments)) {
+        showError(parser.errorText());
+        showHelp();
+    }
 
     if (parser.isSet(versionOption))
-        _mode |= Version;
+        showVersion();
 
     const auto positional = parser.positionalArguments();
     if (!positional.isEmpty()) {
         _name = positional.first();
         _arguments = positional;
-        _mode |= Run;
         if (parser.isSet(helpOption))
             _arguments.insert(1, "--help");
     } else {
         if (parser.isSet(helpOption))
-            _mode |= Help;
+            showHelp();
     }
-
-    return true;
 }
 
-void ArgumentsParser::printUsage(const ToolsMap &tools)
+void ArgumentsParser::showHelp()
 {
+    const ToolsMap &tools = _map;
     auto text = parser.helpText();
     auto lines = text.split("\n");
-    lines[0] = "Usage: imagetool [options] command";
+    lines[0] = "Usage: imagetool [options] command [command options]";
     lines.append("Commands:");
     for (const auto &tool: tools) {
         lines.append(QString("  %1 %2").
@@ -82,8 +96,22 @@ void ArgumentsParser::printUsage(const ToolsMap &tools)
                      arg(tool.second->decription()));
     }
     lines.append(QString());
+    lines.append("Use imagetool command --help to see command options");
     text = lines.join("\n");
-    printf("%s", text.toLocal8Bit().data());
+    showMessage(text);
+    doExit(0);
+}
+
+void ArgumentsParser::showVersion()
+{
+    showMessage(QCoreApplication::applicationName() + QLatin1Char(' ')
+                + QCoreApplication::applicationVersion());
+    doExit(0);
+}
+
+void ArgumentsParser::doExit(int code)
+{
+    throw ExitException(code);
 }
 
 static ToolsMap CreateTools()
@@ -100,41 +128,25 @@ int main(int argc, char *argv[])
 {
     try {
         QGuiApplication app(argc, argv);
+        app.setApplicationName("imagetool");
+        app.setApplicationVersion("1.0");
         app.addLibraryPath(app.applicationDirPath() + ImageIO::pluginsDirPath());
 
         const auto tools = CreateTools();
 
-        ArgumentsParser parser;
+        ArgumentsParser parser(tools);
+        parser.process(app.arguments());
 
-        if (!parser.parse(app.arguments())) {
-            const auto optionNames = parser.unknownOptionNames();
-            const auto message = QString("%1: %2").
-                    arg(optionNames.size() > 1 ? "Bad options" : "Bad option")
-                    .arg(optionNames.join(", "));
-            printf("%s\n", qPrintable(message));
-            parser.printUsage(tools);
-            return 1;
+        const auto toolName = parser.toolName();
+        const auto it = tools.find(toolName.toLatin1());
+        if (it == tools.end()) {
+            showError(QString("Unknown command %1").arg(toolName));
+            parser.showHelp();
         }
 
-        if (parser.mode() & ArgumentsParser::Version)
-            printf("version 1.0\n");
-
-        if (parser.mode() & ArgumentsParser::Run) {
-            const auto toolName = parser.toolName();
-            const auto it = tools.find(toolName.toLatin1());
-            if (it == tools.end()) {
-                printf("%s\n", qPrintable(QString("Unknown command %1").arg(toolName)));
-                parser.printUsage(tools);
-                return 1;
-            }
-
-            return it->second->run(parser.arguments());
-        }
-
-        if (parser.mode() & ArgumentsParser::Help)
-            parser.printUsage(tools);
-
-        return 0;
+        return it->second->run(parser.arguments());
+    } catch (const ExitException &ex) {
+        return ex.code();
     } catch (const RuntimeError &ex) {
         qWarning() << ex.message();
         return 1;
