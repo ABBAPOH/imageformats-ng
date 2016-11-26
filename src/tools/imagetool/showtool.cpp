@@ -75,7 +75,7 @@ static void showFormatInfo(const ImageFormatInfo &formatInfo, const QByteArray &
             arg(QString::fromLatin1(formatInfo.name()), -8).
             arg(formatInfo.mimeType().name(), -12).
             arg(QString::fromLatin1(subType), -8).
-            arg(formatInfo.capabilitiesString(), -8).
+            arg(formatInfo.capabilitiesString(), -12).
             arg(ImageOptions::optionsToString(formatInfo.supportedOptions(subType)));
     showMessage(infoString);
 }
@@ -88,6 +88,14 @@ static void showFormatsList()
     };
     auto formats = ImageIO::supportedImageFormats();
     std::sort(formats.begin(), formats.end(), lessThan);
+
+    const auto headerString = ShowTool::tr("%1 %2 %3 %4 %5").
+            arg(ShowTool::tr("Name"), -8).
+            arg(ShowTool::tr("MimeType"), -12).
+            arg(ShowTool::tr("SubType"), -8).
+            arg(ShowTool::tr("Capabilities"), -12).
+            arg(ShowTool::tr("Options"));
+    showMessage(headerString);
 
     for (const auto &formatInfo: formats) {
         const auto subTypes = formatInfo.supportedSubTypes();
