@@ -12,7 +12,7 @@ ToolParser::ToolParser(const QByteArray &toolName) :
 void ToolParser::process(const QStringList &arguments)
 {
     if (!parse(arguments)) {
-        showMessage(errorText());
+        showError(errorText());
         showHelp(1);
     }
 

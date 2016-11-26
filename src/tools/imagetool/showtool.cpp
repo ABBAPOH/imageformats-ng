@@ -9,6 +9,11 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 
+static inline void showMessage(const QString &message)
+{
+    ToolParser::showMessage(message);
+}
+
 QString modelToText(QAbstractTableModel *model)
 {
     QStringList result;
@@ -65,11 +70,11 @@ void ShowTool::showFormatsList() const
 {
     for (const auto &formatInfo: ImageIO::supportedImageFormats()) {
         formatInfo.capabilities();
-        auto s = QString("%1 %2 %3").
+        const auto infoString = QString("%1 %2 %3").
                 arg(QString::fromLatin1(formatInfo.name()), -8).
                 arg(formatInfo.mimeType().name(), -12).
                 arg(formatInfo.capabilitiesString(), -8);
-        printf("%s\n", qPrintable(s));
+        showMessage(infoString);
     }
 }
 
@@ -84,13 +89,13 @@ void ShowTool::showImageInfo(const QString &filePath) const
 
     ImageInfoModel model;
     model.setImageContents(*contents);
-    printf("%s\n", modelToText(&model).toLocal8Bit().data());
+    ToolParser::showMessage(modelToText(&model));
 
     const auto exifMap = contents->exifMeta().toVariantMap();
     if (!exifMap.isEmpty()) {
-        printf("\n");
-        printf("==== Exif ====\n");
+        showMessage(QString());
+        showMessage("==== Exif ====\n");
         VariantMapModel exifModel(exifMap);
-        printf("%s\n", modelToText(&exifModel).toLocal8Bit().data());
+        showMessage(modelToText(&exifModel));
     }
 }

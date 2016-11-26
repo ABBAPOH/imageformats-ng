@@ -10,6 +10,7 @@ ConsoleApp {
         "abstracttool.h",
         "converttool.h",
         "exception.h",
+        "mainparser.h",
         "showtool.h",
         "toolparser.h",
     ]
