@@ -13,14 +13,6 @@ QStringList subTypesToStringList(const QVector<QByteArray> &subTypes)
     return result;
 }
 
-QString capabilitesToString(ImageFormatInfo::Capabilities caps)
-{
-    const auto index = ImageFormatInfo::staticMetaObject.indexOfEnumerator("Capabilities");
-    Q_ASSERT(index != -1);
-    const auto enumerator = ImageFormatInfo::staticMetaObject.enumerator(index);
-    return enumerator.valueToKeys(caps);
-}
-
 QJsonObject optionsToJson(const ImageFormatInfo &info, const QByteArray &key)
 {
     auto enumerator = QMetaEnum::fromType<ImageOptions::Option>();
@@ -113,7 +105,7 @@ QVariant SupportedFormatsModel::data(const QModelIndex &index, int role) const
         else if (column == ColumnSubTypes)
             return subTypesToStringList(format.supportedSubTypes()).join(", ");
         else if (column == ColumnCapabilities)
-            return capabilitesToString(format.capabilities());
+            return format.capabilitiesString();
         else if (column == ColumnOptions)
             return optionsToString(format);
     }

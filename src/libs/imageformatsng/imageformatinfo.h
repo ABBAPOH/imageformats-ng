@@ -32,6 +32,7 @@ public:
     QMimeType mimeType() const;
 
     Capabilities capabilities() const;
+    QString capabilitiesString() const;
 
     QVector<QByteArray> supportedSubTypes() const;
 

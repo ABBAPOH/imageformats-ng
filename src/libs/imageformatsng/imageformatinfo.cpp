@@ -2,6 +2,7 @@
 #include "imageformatinfo_p.h"
 
 #include <QtCore/QDebug>
+#include <QtCore/QMetaEnum>
 
 /*!
     \class ImageFormatInfo
@@ -89,6 +90,14 @@ QMimeType ImageFormatInfo::mimeType() const
 ImageFormatInfo::Capabilities ImageFormatInfo::capabilities() const
 {
     return d->capabilities;
+}
+
+QString ImageFormatInfo::capabilitiesString() const
+{
+    const auto index = ImageFormatInfo::staticMetaObject.indexOfEnumerator("Capabilities");
+    Q_ASSERT(index != -1);
+    const auto enumerator = ImageFormatInfo::staticMetaObject.enumerator(index);
+    return enumerator.valueToKeys(d->capabilities);
 }
 
 /*!

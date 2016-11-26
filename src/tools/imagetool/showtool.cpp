@@ -21,10 +21,8 @@ QString modelToText(QAbstractTableModel *model)
     return result.join("\n");
 }
 
-ShowTool::ShowTool() :
-    helpOption(parser.addHelpOption())
+ShowTool::ShowTool()
 {
-    parser.addPositionalArgument("file", "Input filename");
 }
 
 QByteArray ShowTool::id() const
@@ -39,27 +37,38 @@ QString ShowTool::decription() const
 
 int ShowTool::run(const QStringList &arguments)
 {
-    parser.parse(arguments);
+    QCommandLineParser parser;
+    QCommandLineOption helpOption = parser.addHelpOption();
+    QCommandLineOption listFormatsOption("list-formats", "Shows the list of available formats");
+    parser.addOption(listFormatsOption);
+    parser.addPositionalArgument("file", "Input filename", "[file]");
 
-    const auto optionNames = parser.unknownOptionNames();
-    if (!optionNames.isEmpty()) {
-        const auto message = QString("%1: %2").
-                arg(optionNames.size() > 1 ? "Bad options" : "Bad option")
-                .arg(optionNames.join(", "));
-        printf("%s\n", qPrintable(message));
-        printUsage();
-        return 1;
+    if (!parser.parse(arguments)) {
+        const auto optionNames = parser.unknownOptionNames();
+        if (!optionNames.isEmpty()) {
+            const auto message = QString("%1: %2").
+                    arg(optionNames.size() > 1 ? "Bad options" : "Bad option")
+                    .arg(optionNames.join(", "));
+            printf("%s\n", qPrintable(message));
+            printUsage(parser);
+            return 1;
+        }
     }
 
     if (parser.isSet(helpOption)) {
-        printUsage();
+        printUsage(parser);
+        return 0;
+    }
+
+    if (parser.isSet(listFormatsOption)) {
+        showFormatsList();
         return 0;
     }
 
     auto positional = parser.positionalArguments();
     if (positional.empty()) {
         printf("%s\n", qPrintable(QString("File argument missing")));
-        printUsage();
+        printUsage(parser);
         return 1;
     }
 
@@ -68,9 +77,21 @@ int ShowTool::run(const QStringList &arguments)
     return 0;
 }
 
-void ShowTool::printUsage()
+void ShowTool::printUsage(const QCommandLineParser &parser)
 {
     AbstractTool::printUsage(parser);
+}
+
+void ShowTool::showFormatsList() const
+{
+    for (const auto &formatInfo: ImageIO::supportedImageFormats()) {
+        formatInfo.capabilities();
+        auto s = QString("%1 %2 %3").
+                arg(QString::fromLatin1(formatInfo.name()), -8).
+                arg(formatInfo.mimeType().name(), -12).
+                arg(formatInfo.capabilitiesString(), -8);
+        printf("%s\n", qPrintable(s));
+    }
 }
 
 void ShowTool::showImageInfo(const QString &filePath) const
