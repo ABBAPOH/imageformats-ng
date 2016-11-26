@@ -1,6 +1,5 @@
 #include "supportedformatsmodel.h"
 
-#include <QtCore/QMetaEnum>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
@@ -15,12 +14,9 @@ QStringList subTypesToStringList(const QVector<QByteArray> &subTypes)
 
 QJsonObject optionsToJson(const ImageFormatInfo &info, const QByteArray &key)
 {
-    auto enumerator = QMetaEnum::fromType<ImageOptions::Option>();
-    QStringList enums;
-    for (auto option : info.supportedOptions(key))
-        enums.append(enumerator.valueToKeys(option));
     QJsonObject result;
-    result.insert(QString::fromLatin1(key), enums.join("|"));
+    result.insert(QString::fromLatin1(key),
+                  ImageOptions::optionsToString(info.supportedOptions(key)));
     return result;
 }
 

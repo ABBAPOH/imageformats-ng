@@ -1,5 +1,7 @@
 #include "imageoptions.h"
 
+#include <QtCore/QMetaEnum>
+
 ImageOptions::ImageOptions()
 {
 }
@@ -87,6 +89,20 @@ int ImageOptions::quality() const
 void ImageOptions::setQuality(int quality)
 {
     _options.insert(Quality, quality);
+}
+
+QString ImageOptions::optionToString(ImageOptions::Option option)
+{
+    const auto enumerator = QMetaEnum::fromType<ImageOptions::Option>();
+    return enumerator.valueToKey(option);
+}
+
+QString ImageOptions::optionsToString(const QVector<ImageOptions::Option> &options)
+{
+    QStringList result;
+    for (auto option : options)
+        result.append(optionToString(option));
+    return result.join("|");
 }
 
 bool operator==(const ImageOptions &lhs, const ImageOptions &rhs)

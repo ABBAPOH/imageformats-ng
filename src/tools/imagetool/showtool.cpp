@@ -67,15 +67,28 @@ static QString modelToText(QAbstractTableModel *model)
     return result.join("\n");
 }
 
+static void showFormatInfo(const ImageFormatInfo &formatInfo, const QByteArray &subType)
+{
+    const auto infoString = QString("%1 %2 %3 %4 %5").
+            arg(QString::fromLatin1(formatInfo.name()), -8).
+            arg(formatInfo.mimeType().name(), -12).
+            arg(QString::fromLatin1(subType), -8).
+            arg(formatInfo.capabilitiesString(), -8).
+            arg(ImageOptions::optionsToString(formatInfo.supportedOptions(subType)));
+    showMessage(infoString);
+}
+
 static void showFormatsList()
 {
     for (const auto &formatInfo: ImageIO::supportedImageFormats()) {
-        formatInfo.capabilities();
-        const auto infoString = QString("%1 %2 %3").
-                arg(QString::fromLatin1(formatInfo.name()), -8).
-                arg(formatInfo.mimeType().name(), -12).
-                arg(formatInfo.capabilitiesString(), -8);
-        showMessage(infoString);
+        const auto subTypes = formatInfo.supportedSubTypes();
+        if (subTypes.isEmpty()) {
+            showFormatInfo(formatInfo, QByteArray());
+        } else {
+            for (auto subType : formatInfo.supportedSubTypes()) {
+                showFormatInfo(formatInfo, subType);
+            }
+        }
     }
 }
 

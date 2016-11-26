@@ -5,6 +5,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QRect>
 #include <QtCore/QVariant>
+#include <QtCore/QVector>
 #include <QtGui/QColor>
 
 class IMAGEFORMATSNG_EXPORT ImageOptions
@@ -55,6 +56,9 @@ public:
     void setQuality(int quality);
 
     inline void swap(ImageOptions &other) { _options.swap(other._options); }
+
+    static QString optionToString(ImageOptions::Option option);
+    static QString optionsToString(const QVector<ImageOptions::Option> &options);
 
 private:
     QHash<Option, QVariant> _options;
