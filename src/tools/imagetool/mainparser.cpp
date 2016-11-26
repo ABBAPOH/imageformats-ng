@@ -62,6 +62,16 @@ void MainParser::showVersion()
     exit(EXIT_SUCCESS);
 }
 
+void MainParser::showMessage(const QString &message)
+{
+    ToolParser::showMessage(message);
+}
+
+void MainParser::showError(const QString &message)
+{
+    ToolParser::showError(message);
+}
+
 void MainParser::exit(int code)
 {
     throw ExitException(code);

@@ -18,15 +18,8 @@ public:
     inline QString toolName() { return _name; }
     inline QStringList arguments() const { return _arguments; }
 
-    static inline void showMessage(const QString &message)
-    {
-        ToolParser::showMessage(message);
-    }
-
-    static inline void showError(const QString &message)
-    {
-        ToolParser::showError(message);
-    }
+    static void showMessage(const QString &message);
+    static void showError(const QString &message);
 
 private:
     Q_NORETURN void exit(int code);
