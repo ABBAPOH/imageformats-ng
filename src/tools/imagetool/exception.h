@@ -8,16 +8,17 @@ class Exception: public std::exception
 {
 public:
     Exception();
-    ~Exception() override;
+    ~Exception() noexcept override;
     const char *what() const noexcept override;
 };
 
 class ExitException: public Exception
 {
 public:
-    ExitException(int code = 0) : _code(code) {}
-    ~ExitException() override = default;
-    int code() const noexcept { return _code; }
+    ExitException(int code = 0);
+    ~ExitException() noexcept override;
+    inline int code() const noexcept { return _code; }
+    const char *what() const noexcept override;
 
 private:
     int _code {0};
@@ -28,7 +29,7 @@ class RuntimeError: public std::exception
 public:
     explicit RuntimeError(const QString &message);
     explicit RuntimeError(QString &&message) noexcept;
-    ~RuntimeError();
+    ~RuntimeError() noexcept override;
 
     const QString &message() const noexcept;
     const char *what() const noexcept override;
