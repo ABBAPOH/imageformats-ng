@@ -38,7 +38,7 @@ public:
     inline QStringList arguments() const { return _arguments; }
 
 private:
-    Q_NORETURN void doExit(int code = 0);
+    Q_NORETURN void exit(int code = 0);
 
 private:
     const ToolsMap &_map;
@@ -99,17 +99,17 @@ void ArgumentsParser::showHelp()
     lines.append("Use imagetool command --help to see command options");
     text = lines.join("\n");
     showMessage(text);
-    doExit(0);
+    exit(0);
 }
 
 void ArgumentsParser::showVersion()
 {
     showMessage(QCoreApplication::applicationName() + QLatin1Char(' ')
                 + QCoreApplication::applicationVersion());
-    doExit(0);
+    exit(0);
 }
 
-void ArgumentsParser::doExit(int code)
+void ArgumentsParser::exit(int code)
 {
     throw ExitException(code);
 }
