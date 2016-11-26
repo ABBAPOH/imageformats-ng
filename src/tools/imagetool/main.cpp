@@ -16,7 +16,7 @@
 using ToolsMap = std::map<QByteArray, std::unique_ptr<AbstractTool>>;
 using DescriptionMap = MainParser::DescriptionMap;
 
-static ToolsMap CreateTools()
+static ToolsMap createTools()
 {
     std::unique_ptr<AbstractTool> showTool(new ShowTool);
     std::unique_ptr<AbstractTool> convertTool(new ConvertTool);
@@ -37,12 +37,12 @@ static MainParser::DescriptionMap getDescriptions(const ToolsMap &map)
 int main(int argc, char *argv[])
 {
     try {
-        QGuiApplication app(argc, argv);
+        QCoreApplication app(argc, argv);
         app.setApplicationName("imagetool");
         app.setApplicationVersion("1.0");
         app.addLibraryPath(app.applicationDirPath() + ImageIO::pluginsDirPath());
 
-        const auto tools = CreateTools();
+        const auto tools = createTools();
 
         MainParser parser(getDescriptions(tools));
         parser.process(app.arguments());
