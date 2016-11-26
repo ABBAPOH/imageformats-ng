@@ -6,7 +6,6 @@
 #include <ImageInfoModel>
 #include <VariantMapModel>
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 
 namespace {
@@ -23,9 +22,12 @@ struct Options
 Options parseOptions(const QStringList &arguments)
 {
     ToolParser parser(toolId);
-    QCommandLineOption listFormatsOption("list-formats", "Shows the list of available formats");
+    QCommandLineOption listFormatsOption(QStringLiteral("list-formats"),
+                                         ShowTool::tr("Shows the list of available formats"));
     parser.addOption(listFormatsOption);
-    parser.addPositionalArgument("file", "Input filename", "[file]");
+    parser.addPositionalArgument(QStringLiteral("file"),
+                                 ShowTool::tr("Input filename"),
+                                 QStringLiteral("[file]"));
 
     parser.process(arguments);
 
@@ -34,11 +36,11 @@ Options parseOptions(const QStringList &arguments)
 
     const auto positional = parser.positionalArguments();
     if (positional.size() > 1) {
-        parser.showError(QString("Too many file arguments"));
+        parser.showError(ShowTool::tr("Too many file arguments"));
         parser.showHelp(EXIT_FAILURE);
     } else if (positional.size() == 0) {
         if (!result.listFormats) {
-            parser.showError(QString("File argument missing"));
+            parser.showError(ShowTool::tr("File argument missing"));
             parser.showHelp(EXIT_FAILURE);
         }
     } else {
@@ -60,7 +62,7 @@ static QString modelToText(QAbstractTableModel *model)
     for (int row = 0, rowCount = model->rowCount(); row < rowCount; ++row) {
         const auto keyIndex = model->index(row, 0);
         const auto valueIndex = model->index(row, 1);
-        result.append(QString("%1 %2").
+        result.append(ShowTool::tr("%1 %2").
                       arg(model->data(keyIndex).toString(), -15).
                       arg(model->data(valueIndex).toString()));
     }
@@ -69,7 +71,7 @@ static QString modelToText(QAbstractTableModel *model)
 
 static void showFormatInfo(const ImageFormatInfo &formatInfo, const QByteArray &subType)
 {
-    const auto infoString = QString("%1 %2 %3 %4 %5").
+    const auto infoString = ShowTool::tr("%1 %2 %3 %4 %5").
             arg(QString::fromLatin1(formatInfo.name()), -8).
             arg(formatInfo.mimeType().name(), -12).
             arg(QString::fromLatin1(subType), -8).
@@ -97,7 +99,7 @@ static void showImageInfo(const QString &filePath)
     ImageIO io(filePath);
     const auto contents = io.read();
     if (!contents) {
-        throw RuntimeError(QString("Can't read image %1: %2").
+        throw RuntimeError(ShowTool::tr("Can't read image %1: %2").
                            arg(filePath).arg(io.error().errorString()));
     }
 
@@ -108,7 +110,7 @@ static void showImageInfo(const QString &filePath)
     const auto exifMap = contents->exifMeta().toVariantMap();
     if (!exifMap.isEmpty()) {
         showMessage(QString());
-        showMessage("==== Exif ====\n");
+        showMessage(ShowTool::tr("==== Exif ===="));
         VariantMapModel exifModel(exifMap);
         showMessage(modelToText(&exifModel));
     }
@@ -127,7 +129,7 @@ QByteArray ShowTool::id() const
 
 QString ShowTool::decription() const
 {
-    return qApp->tr("Shows information about image file", "ImageTool");
+    return ShowTool::tr("Shows information about image file", "ImageTool");
 }
 
 int ShowTool::run(const QStringList &arguments)

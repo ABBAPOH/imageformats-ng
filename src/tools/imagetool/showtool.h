@@ -4,6 +4,7 @@
 
 class ShowTool : public AbstractTool
 {
+    Q_DECLARE_TR_FUNCTIONS(ImageTool)
 public:
     ShowTool();
 
