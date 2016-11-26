@@ -18,7 +18,7 @@ struct Options
     QString outputMimeType;
 };
 
-Options parseOptions(const QStringList &arguments)
+static Options parseOptions(const QStringList &arguments)
 {
     ToolParser parser(toolId);
     QCommandLineOption inputTypeOption("input-type", "Input mime type (i.e. image/png)", "mime type");
@@ -41,11 +41,10 @@ Options parseOptions(const QStringList &arguments)
     options.outputFile = positional.at(1);
     options.inputMimeType = parser.value(inputTypeOption);
     options.outputMimeType = parser.value(outputTypeOption);
-
     return options;
 }
 
-void convert(const Options &options)
+static void convert(const Options &options)
 {
     ImageIO io(options.inputFile);
     if (!options.inputMimeType.isEmpty())
