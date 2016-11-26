@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
         const auto toolName = parser.toolName();
         const auto it = tools.find(toolName.toLatin1());
         if (it == tools.end()) {
-            parser.showError(QString("Unknown command %1").arg(toolName));
+            parser.showError(app.translate("ImageTool", "Unknown command %1").arg(toolName));
             parser.showHelp(EXIT_FAILURE);
         }
 
