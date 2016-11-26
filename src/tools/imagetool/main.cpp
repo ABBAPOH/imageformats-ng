@@ -1,4 +1,5 @@
 #include "abstracttool.h"
+#include "converttool.h"
 #include "showtool.h"
 #include "exception.h"
 
@@ -88,8 +89,10 @@ void ArgumentsParser::printUsage(const ToolsMap &tools)
 static ToolsMap CreateTools()
 {
     std::unique_ptr<AbstractTool> showTool(new ShowTool);
+    std::unique_ptr<AbstractTool> convertTool(new ConvertTool);
     ToolsMap result;
     result[showTool->id()] = std::move(showTool);
+    result[convertTool->id()] = std::move(convertTool);
     return result;
 }
 

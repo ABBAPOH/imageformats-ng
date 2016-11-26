@@ -8,6 +8,7 @@ ConsoleApp {
     files: [
         "*.cpp",
         "abstracttool.h",
+        "converttool.h",
         "exception.h",
         "showtool.h",
     ]
