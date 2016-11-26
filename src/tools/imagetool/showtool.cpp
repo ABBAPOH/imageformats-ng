@@ -82,7 +82,14 @@ static void showFormatInfo(const ImageFormatInfo &formatInfo, const QByteArray &
 
 static void showFormatsList()
 {
-    for (const auto &formatInfo: ImageIO::supportedImageFormats()) {
+    const auto lessThan = [](const ImageFormatInfo &lhs, const ImageFormatInfo &rhs)
+    {
+        return lhs.name() < rhs.name();
+    };
+    auto formats = ImageIO::supportedImageFormats();
+    std::sort(formats.begin(), formats.end(), lessThan);
+
+    for (const auto &formatInfo: formats) {
         const auto subTypes = formatInfo.supportedSubTypes();
         if (subTypes.isEmpty()) {
             showFormatInfo(formatInfo, QByteArray());
