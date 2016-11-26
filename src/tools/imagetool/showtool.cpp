@@ -19,7 +19,7 @@ struct Options
     QString fileName;
 };
 
-Options parseOptions(const QStringList &arguments)
+static Options parseOptions(const QStringList &arguments)
 {
     ToolParser parser(toolId);
     QCommandLineOption listFormatsOption(QStringLiteral("list-formats"),
