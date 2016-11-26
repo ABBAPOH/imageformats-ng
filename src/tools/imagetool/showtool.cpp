@@ -97,7 +97,7 @@ void ShowTool::showFormatsList() const
 void ShowTool::showImageInfo(const QString &filePath) const
 {
     ImageIO io(filePath);
-    auto contents = io.read();
+    const auto contents = io.read();
     if (!contents) {
         throw RuntimeError(QString("Can't read image %1: %2").
                            arg(filePath).arg(io.error().errorString()));
@@ -107,7 +107,7 @@ void ShowTool::showImageInfo(const QString &filePath) const
     model.setImageContents(*contents);
     printf("%s\n", modelToText(&model).toLocal8Bit().data());
 
-    auto exifMap = contents->exifMeta().toVariantMap();
+    const auto exifMap = contents->exifMeta().toVariantMap();
     if (!exifMap.isEmpty()) {
         printf("\n");
         printf("==== Exif ====\n");
