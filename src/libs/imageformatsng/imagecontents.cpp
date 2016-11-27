@@ -106,11 +106,6 @@ ImageContents::ImageContents(const QImage &image):
     setImage(image);
 }
 
-ImageContents::ImageContents(ImageContents::Type type, QSize size, QImage::Format format, int mipmapCount, int imageCount)
-{
-
-}
-
 ImageContents::ImageContents(const ImageContents &other) :
     d(other.d)
 {
