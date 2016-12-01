@@ -22,7 +22,21 @@ static const FaceOffset multipliers[2] = { {4, 3}, {3, 4} };
 class ImageContentsData : public QSharedData
 {
 public:
-    typedef QPair<int, int> ImageIndex;
+    struct ImageIndex
+    {
+        ImageIndex() = default;
+        ImageIndex(int first, int second, int third):
+            first(first),
+            second(second),
+            third(third)
+        {
+        }
+
+        int first {0};
+        int second {0};
+        int third {0};
+    };
+//    typedef QPair<int, int> ImageIndex;
 
     ImageContents::Type type {ImageContents::Invalid};
     QSize size;
@@ -40,7 +54,14 @@ public:
     void setImage(const QImage &image, int side, int index, int level);
 };
 
-QImage ImageContentsData::image(int side, int index, int level) const
+bool operator <(const ImageContentsData::ImageIndex &p1, const ImageContentsData::ImageIndex &p2)
+{
+    return p1.first < p2.first
+            || (!(p2.first < p1.first) && p1.second < p2.second)
+            || (!(!(p2.first < p1.first) && p1.second < p2.second) && p1.third < p2.third);
+}
+
+QImage ImageContentsData::image(int depth, int index, int level) const
 {
     if (index < 0 || index >= imageCount) {
         qWarning() << "Attempt to get image with index = " << index
@@ -55,11 +76,10 @@ QImage ImageContentsData::image(int side, int index, int level) const
         }
     }
 
-    const auto realIndex = index * (type == ImageContents::Cubemap ? 6 : 1) + side;
-    return images.value(ImageContentsData::ImageIndex(realIndex, level));
+    return images.value(ImageContentsData::ImageIndex(depth, index, level));
 }
 
-void ImageContentsData::setImage(const QImage &image, int side, int index, int level)
+void ImageContentsData::setImage(const QImage &image, int depth, int index, int level)
 {
     if (index < 0 || index >= imageCount) {
         qWarning() << "Attempt to get image with index = " << index
@@ -81,8 +101,7 @@ void ImageContentsData::setImage(const QImage &image, int side, int index, int l
     if (image.format() != imageFormat)
         copy = image.convertToFormat(imageFormat);
 
-    const auto realIndex = index * (type == ImageContents::Cubemap ? 6 : 1) + side;
-    images.insert(ImageContentsData::ImageIndex(realIndex, level), copy);
+    images.insert(ImageContentsData::ImageIndex(depth, index, level), copy);
 }
 
 /*!
@@ -245,16 +264,26 @@ void ImageContents::setImage(const QImage &image, int index, int level)
     d->setImage(image, 0, index, level);
 }
 
-QImage ImageContents::image(ImageContents::Side side, int index, int level) const
+QImage ImageContents::side(ImageContents::Side side, int index, int level) const
 {
     Q_ASSERT(side >= PositiveX && side <= NegativeZ);
     return d->image(int(side), index, level);
 }
 
-void ImageContents::setImage(const QImage &image, ImageContents::Side side, int index, int level)
+void ImageContents::setSide(const QImage &image, ImageContents::Side side, int index, int level)
 {
     Q_ASSERT(side >= PositiveX && side <= NegativeZ);
     d->setImage(image, int(side), index, level);
+}
+
+QImage ImageContents::slice(int depth, int index, int level) const
+{
+    return d->image(depth, index, level);
+}
+
+void ImageContents::setSlice(const QImage &image, int depth, int index, int level)
+{
+    d->setImage(image, depth, index, level);
 }
 
 ImageExifMeta ImageContents::exifMeta() const
@@ -296,7 +325,7 @@ Optional<ImageContents> ImageContents::toProjection(ImageContents::Projection pr
             image.fill(0);
 
             for (int side = PositiveX; side <= NegativeZ; side++) {
-                const auto face = this->image(Side(side), index, level);
+                const auto face = this->side(Side(side), index, level);
                 if (face.isNull())
                     continue; // Skip face.
 

@@ -74,9 +74,11 @@ public:
     QImage image(int index = 0, int level = 0) const;
     void setImage(const QImage &image, int index = 0, int level = 0);
 
-    // TODO: add support for arrays of cube textures
-    QImage image(Side side, int index = 0, int level = 0) const;
-    void setImage(const QImage &image, Side side, int index = 0, int level = 0);
+    QImage side(Side side, int index = 0, int level = 0) const;
+    void setSide(const QImage &image, Side side, int index = 0, int level = 0);
+
+    QImage slice(int depth, int index = 0, int level = 0) const;
+    void setSlice(const QImage &image, int depth, int index = 0, int level = 0);
 
     ImageExifMeta exifMeta() const;
     void setExifMeta(const ImageExifMeta &exif);
