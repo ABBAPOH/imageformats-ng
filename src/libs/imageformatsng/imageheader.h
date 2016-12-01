@@ -54,6 +54,9 @@ public:
     void setHasMipmaps(bool yes);
     int mipmapCount() const;
 
+    int frameDelay() const;
+    void setFrameDelay(int msecs);
+
     int loopCount() const;
     void setLoopCount(int count);
 

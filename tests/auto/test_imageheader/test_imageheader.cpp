@@ -9,6 +9,7 @@ private slots:
     void defaultValues();
     void setters();
     void equals();
+    void validate();
 };
 
 void TestImageHeader::defaultValues()
@@ -76,6 +77,52 @@ void TestImageHeader::equals()
     c2.setImageCount(2);
 
     QVERIFY(c1 == c2);
+}
+
+void TestImageHeader::validate()
+{
+    ImageHeader valid;
+    valid.setType(ImageHeader::Image);
+    valid.setImageFormat(QImage::Format_ARGB32);
+    valid.setSize(QSize(64, 64));
+    QString error;
+    QVERIFY2(valid.validate(&error), error.toLocal8Bit().data());
+
+    ImageHeader invalid;
+    QVERIFY(!invalid.validate(&error));
+
+    invalid = valid;
+    invalid.setType(ImageHeader::Invalid);
+    QVERIFY(!invalid.validate(&error));
+
+    invalid = valid;
+    invalid.setImageFormat(QImage::Format_Invalid);
+    QVERIFY(!invalid.validate(&error));
+
+    invalid = valid;
+    invalid.setWidth(-100);
+    QVERIFY(!invalid.validate(&error));
+
+    invalid = valid;
+    invalid.setHeigth(-100);
+    QVERIFY(!invalid.validate(&error));
+
+    invalid = valid;
+    invalid.setType(ImageHeader::VolumeTexture);
+    invalid.setDepth(-100);
+    QVERIFY(!invalid.validate(&error));
+
+    invalid = valid;
+    invalid.setImageCount(-20);
+    QVERIFY(!invalid.validate(&error));
+
+    invalid = valid;
+    invalid.setFrameDelay(-1);
+    QVERIFY(!invalid.validate(&error));
+
+    invalid = valid;
+    invalid.setLoopCount(-2);
+    QVERIFY(!invalid.validate(&error));
 }
 
 QTEST_APPLESS_MAIN(TestImageHeader)

@@ -24,7 +24,7 @@ public:
     QString name;
     int imageCount {1};
     Optional<int> mipmapCount;
-    int imageDelay {0};
+    int frameDelay {0};
     int loopCount {-1};
 
     void setSize3D(int width, int height, int depth);
@@ -44,20 +44,20 @@ Optional<QString> ImageHeaderData::validate() const
 {
     if (type == ImageHeader::Invalid)
         return ImageHeader::tr("Invalid type");
+
     if (width < 0)
         return ImageHeader::tr("Invalid width: %1").arg(width);
     if (height < 0)
         return ImageHeader::tr("Invalid height: %1").arg(height);
-    if (depth < 0)
+    if ((type == ImageHeader::VolumeTexture) && depth < 0)
         return ImageHeader::tr("Invalid depth: %1").arg(depth);
-    if (type == ImageHeader::VolumeTexture && depth < 0)
-        return ImageHeader::tr("Invalid depth: %1").arg(depth);
+
     if (imageFormat == QImage::Format::Format_Invalid)
         return ImageHeader::tr("Invalid image format");
     if (imageCount < 0)
         return ImageHeader::tr("Invalid image count: %1").arg(imageCount);
-    if (imageDelay < 0)
-        return ImageHeader::tr("Invalid image delay: %1").arg(imageDelay);
+    if (frameDelay < 0)
+        return ImageHeader::tr("Invalid image delay: %1").arg(frameDelay);
     if (loopCount < -1)
         return ImageHeader::tr("Invalid loop count: %1").arg(loopCount);
     return Nothing();
@@ -188,6 +188,16 @@ void ImageHeader::setHasMipmaps(bool yes)
 int ImageHeader::mipmapCount() const
 {
     return d->mipmapCount ? *d->mipmapCount : 1;
+}
+
+int ImageHeader::frameDelay() const
+{
+    return d->frameDelay;
+}
+
+void ImageHeader::setFrameDelay(int msecs)
+{
+    d->frameDelay = msecs;
 }
 
 int ImageHeader::loopCount() const
