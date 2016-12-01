@@ -129,8 +129,14 @@ Size3D VolumeTextureMipmaps::size(int level) const
     return _mipmaps.at(level).size();
 }
 
-VolumeTexture VolumeTextureMipmaps::mipmap(int level) const
+int VolumeTextureMipmaps::mipmapCount() const
+{
+    if (!_valid)
+        return 0;
+    return _mipmaps.size();
+}
 
+VolumeTexture VolumeTextureMipmaps::mipmap(int level) const
 {
     if (!_valid)
         return VolumeTexture();

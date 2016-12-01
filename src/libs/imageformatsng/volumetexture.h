@@ -56,6 +56,7 @@ class VolumeTextureMipmaps
 
     bool isValid() const;
     Size3D size(int level = 0) const;
+    int mipmapCount() const;
     VolumeTexture mipmap(int level = 0) const;
     void setMipmaps(const QVector<VolumeTexture> &mipmaps);
 

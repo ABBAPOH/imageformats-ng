@@ -21,12 +21,12 @@ QSize ImageMipmap::size(int level) const
     return _valid ? _images.at(level).size() : QSize();
 }
 
-int ImageMipmap::mipMapCount() const
+int ImageMipmap::mipmapCount() const
 {
     return _valid ? _images.size() : 0;
 }
 
-QImage ImageMipmap::image(int level) const
+QImage ImageMipmap::mipmap(int level) const
 {
     return _valid ? _images[level] : QImage();
 }

@@ -11,8 +11,8 @@ public:
 
     bool isValid() const;
     QSize size(int level = 0) const;
-    int mipMapCount() const;
-    QImage image(int level = 0) const;
+    int mipmapCount() const;
+    QImage mipmap(int level = 0) const;
 
 private:
     bool _valid {false};
