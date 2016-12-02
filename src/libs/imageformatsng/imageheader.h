@@ -23,6 +23,7 @@ public:
 
     ImageHeader();
     ImageHeader(const ImageHeader &);
+    ImageHeader(ImageHeader &&);
     ~ImageHeader();
 
     ImageHeader &operator=(const ImageHeader &);

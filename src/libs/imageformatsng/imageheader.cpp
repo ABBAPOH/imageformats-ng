@@ -95,6 +95,10 @@ ImageHeader::~ImageHeader()
 {
 }
 
+/*!
+    Assigns a shallow copy of the \a other header to this header and returns a reference to this
+    header.
+*/
 ImageHeader &ImageHeader::operator=(const ImageHeader &other)
 {
     if (this != &other)
@@ -102,6 +106,9 @@ ImageHeader &ImageHeader::operator=(const ImageHeader &other)
     return *this;
 }
 
+/*!
+    Move-assigns \a other to this ImageHeader instance.
+*/
 ImageHeader &ImageHeader::operator=(ImageHeader &&other)
 {
     if (this != &other)
