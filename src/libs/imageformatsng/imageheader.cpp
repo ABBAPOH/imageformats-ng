@@ -63,13 +63,35 @@ Optional<QString> ImageHeaderData::validate() const
     return Nothing();
 }
 
+/*!
+    Constructs a null header.
+*/
 ImageHeader::ImageHeader() :
     d(new ImageHeaderData)
 {
 }
 
+/*!
+    Constructs a shallow copy of the given \a other header.
+*/
 ImageHeader::ImageHeader(const ImageHeader &other) :
     d(other.d)
+{
+}
+
+/*!
+    Move-constructs a ImageHeader instance, making it point at the same object that \a other was
+    pointing to.
+*/
+ImageHeader::ImageHeader(ImageHeader &&other) :
+    d(std::move(other.d))
+{
+}
+
+/*!
+    Destroys the ImageHeader object.
+*/
+ImageHeader::~ImageHeader()
 {
 }
 
@@ -80,8 +102,11 @@ ImageHeader &ImageHeader::operator=(const ImageHeader &other)
     return *this;
 }
 
-ImageHeader::~ImageHeader()
+ImageHeader &ImageHeader::operator=(ImageHeader &&other)
 {
+    if (this != &other)
+        d.operator=(std::move(other.d));
+    return *this;
 }
 
 /*!

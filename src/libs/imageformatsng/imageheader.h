@@ -23,8 +23,10 @@ public:
 
     ImageHeader();
     ImageHeader(const ImageHeader &);
-    ImageHeader &operator=(const ImageHeader &);
     ~ImageHeader();
+
+    ImageHeader &operator=(const ImageHeader &);
+    ImageHeader &operator=(ImageHeader &&);
 
     bool isNull() const;
 
