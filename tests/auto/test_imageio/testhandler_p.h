@@ -6,12 +6,12 @@ struct TestImageData
 {
     quint32 magic {0};
     QByteArray subType;
-    ImageContents::Type type {ImageContents::Image};
+    ImageHeader::Type type {ImageHeader::Image};
     QSize size;
     QString name;
     QImage::Format imageFormat {QImage::Format_Invalid};
     int imageCount {0};
-    int mipmapCount {0};
+    bool hasMipmaps {false};
     QVector<QImage> images;
     int loopCount {-1};
 

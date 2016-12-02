@@ -16,45 +16,40 @@ private slots:
 void TestImageContents::defaultValues()
 {
     ImageContents contents;
-    QCOMPARE(contents.type(), ImageContents::Invalid);
-    QCOMPARE(contents.size(), QSize());
-    QCOMPARE(contents.imageFormat(), QImage::Format_Invalid);
-    QCOMPARE(contents.name(), QString());
-    QCOMPARE(contents.imageCount(), 1);
-    QCOMPARE(contents.mipmapCount(), 0);
-    QCOMPARE(contents.loopCount(), -1);
     QCOMPARE(contents.exifMeta(), ImageExifMeta());
     QCOMPARE(contents.image(), QImage());
 }
 
 void TestImageContents::setters()
 {
-    ImageContents contents;
+    ImageHeader header;
 
-    contents.setType(ImageContents::Animation);
-    QCOMPARE(contents.type(), ImageContents::Animation);
+    header.setType(ImageHeader::Image);
+    QCOMPARE(header.type(), ImageHeader::Image);
 
-    contents.setSize(QSize(64, 64));
-    QCOMPARE(contents.size(), QSize(64, 64));
+    header.setSize(QSize(64, 64));
+    QCOMPARE(header.size(), QSize(64, 64));
 
-    contents.setImageFormat(QImage::Format_ARGB32);
-    QCOMPARE(contents.imageFormat(), QImage::Format_ARGB32);
+    header.setImageFormat(QImage::Format_ARGB32);
+    QCOMPARE(header.imageFormat(), QImage::Format_ARGB32);
 
-    contents.setName(QString("name"));
-    QCOMPARE(contents.name(), QString("name"));
+    header.setName(QString("name"));
+    QCOMPARE(header.name(), QString("name"));
 
-    contents.setImageCount(2);
-    QCOMPARE(contents.imageCount(), 2);
+    header.setImageCount(2);
+    QCOMPARE(header.imageCount(), 2);
 
-    contents.setMipmapCount(2);
-    QCOMPARE(contents.mipmapCount(), 2);
+    header.setHasMipmaps(true);
+    QCOMPARE(header.mipmapCount(), 7);
 
-    contents.setLoopCount(10);
-    QCOMPARE(contents.loopCount(), 10);
+    header.setLoopCount(10);
+    QCOMPARE(header.loopCount(), 10);
 
-    for (int i = 0; i < contents.imageCount(); ++i) {
-        for (int j = 0; j < contents.mipmapCount(); ++j) {
-            int size = 1 << (contents.mipmapCount() - j - 1);
+    ImageContents contents(header);
+
+    for (int i = 0; i < header.imageCount(); ++i) {
+        for (int j = 0; j < header.mipmapCount(); ++j) {
+            int size = 1 << (header.mipmapCount() - j - 1);
             QImage image(size, size, QImage::Format_ARGB32);
             image.fill(QColor(255 * i / 2, 255 * j / 2, 255 * (i + j) / 4));
             contents.setImage(image, i, j);
@@ -78,19 +73,18 @@ void TestImageContents::equals()
     QFETCH(QString, name);
     QFETCH(int, imageCount);
 
+    ImageHeader h;
+    h.setSize(size);
+    h.setName(name);
+    h.setImageCount(imageCount);
+
     ImageContents c1;
     ImageContents c2;
 
     QVERIFY(c1 == c2);
 
-    c1.setSize(size);
-    c2.setSize(size);
-
-    c1.setName(name);
-    c2.setName(name);
-
-    c1.setImageCount(imageCount);
-    c2.setImageCount(imageCount);
+    c1 = ImageContents(h);
+    c2 = ImageContents(h);
 
     for (int i = 0; i < imageCount; ++i) {
         QImage image(size, QImage::Format_ARGB32);

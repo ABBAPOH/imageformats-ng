@@ -1382,16 +1382,18 @@ bool DDSHandler::read(ImageContents &contents)
     if (!doScan())
         return false;
 
-    contents.setSize(QSize(m_header.width, m_header.height));
-    contents.setImageFormat(QImage::Format_ARGB32);
-    contents.setMipmapCount(qMax<quint32>(1, m_header.mipMapCount));
+    ImageHeader header;
+    header.setSize(QSize(m_header.width, m_header.height));
+    header.setImageFormat(QImage::Format_ARGB32);
+    header.setHasMipmaps(bool(m_header.mipMapCount));
 
     if (isCubeMap(m_header)) {
-        contents.setType(ImageContents::Cubemap);
-        contents.setImageCount(6);
+        header.setType(ImageHeader::Cubemap);
+//        header.setImageCount(6);
     } else {
-        contents.setType(ImageContents::Image);
+        header.setType(ImageHeader::Image);
     }
+    contents = ImageContents(header);
 
     setSubType(formatName(m_format));
     for (quint32 i = 0; i < qMax<quint32>(1, m_header.mipMapCount); i++) {
@@ -1431,17 +1433,19 @@ bool DDSHandler::write(const ImageContents &contents, const ImageOptions &option
     QDataStream s(device());
     s.setByteOrder(QDataStream::LittleEndian);
 
+    const auto header = contents.header();
+
     DDSHeader dds;
     // Filling header
     dds.magic = ddsMagic;
     dds.size = 124;
     dds.flags = DDSHeader::FlagCaps | DDSHeader::FlagHeight |
                 DDSHeader::FlagWidth | DDSHeader::FlagPixelFormat;
-    dds.height = contents.height();
-    dds.width = contents.width();
+    dds.height = header.height();
+    dds.width = header.width();
     dds.pitchOrLinearSize = 128;
     dds.depth = 0;
-    dds.mipMapCount = contents.mipmapCount();
+    dds.mipMapCount = header.hasMipmaps() ? header.mipmapCount() : 0;
     for (int i = 0; i < DDSHeader::ReservedCount; i++)
         dds.reserved1[i] = 0;
     dds.caps = DDSHeader::CapsTexture;
@@ -1468,12 +1472,12 @@ bool DDSHandler::write(const ImageContents &contents, const ImageOptions &option
 
     s << dds;
 
-    const int mipmapCount = contents.mipmapCount() > 0
-            ? contents.mipmapCount()
+    const int mipmapCount = header.mipmapCount() > 0
+            ? header.mipmapCount()
             : 1;
 
-    if (contents.width() != (1 << (mipmapCount - 1))
-            || contents.height() != (1 << (mipmapCount - 1))) {
+    if (header.width() != (1 << (mipmapCount - 1))
+            || header.height() != (1 << (mipmapCount - 1))) {
         qWarning() << "Writing images with size not equal to power of 2 is not supported";
         return false;
     }

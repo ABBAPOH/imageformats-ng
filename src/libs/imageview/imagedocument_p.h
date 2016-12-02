@@ -25,13 +25,13 @@ public:
 
     void onItemChanged(ImageDocumentItem *item);
 
-    ImageContents::Type type {ImageContents::Type::Invalid};
+    ImageHeader::Type type {ImageHeader::Type::Invalid};
     QSize size;
     QImage::Format imageFormat {QImage::Format::Format_Invalid};
     QString name;
     int imageCount {0};
     int mipmapCount {0};
-    int imageDelay {0};
+    int frameDelay {0};
     int loopCount {-1};
     ImageExifMeta exifMeta;
 

@@ -1037,10 +1037,7 @@ bool QPngHandler::read(ImageContents &contents)
     QImage image;
     bool ok = d->readPngImage(&image);
     if (ok) {
-        contents.setType(ImageContents::Image);
-        contents.setSize(image.size());
-        contents.setImageFormat(image.format());
-        contents.setImage(image);
+        contents = ImageContents(image);
     }
     return ok;
 }

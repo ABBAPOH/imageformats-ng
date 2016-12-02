@@ -30,9 +30,15 @@ bool DefaultHandler::read(ImageContents &contents)
 {
     QImageReader reader(device(), mimeTypeToFormat(mimeType()));
 
+    ImageHeader header;
+    header.setType(ImageHeader::Image);
+    header.setSize(reader.size());
+    header.setImageFormat(reader.imageFormat());
+
     int count = reader.imageCount();
     if (reader.supportsOption(QImageIOHandler::Animation)) {
-        contents.setImageCount(count);
+        header.setImageCount(count);
+        contents = ImageContents(header);
         for (int i = 0; i < count; i++) {
             QImage image;
             const bool ok = reader.read(&image);
@@ -42,7 +48,8 @@ bool DefaultHandler::read(ImageContents &contents)
             contents.setImage(image, i);
         }
     } else if (count > 0) {
-        contents.setMipmapCount(count);
+        header.setHasMipmaps(true);
+        contents = ImageContents(header);
         for (int i = 0; i < count; i++) {
             QImage image;
             reader.jumpToImage(i);
@@ -58,7 +65,7 @@ bool DefaultHandler::read(ImageContents &contents)
         if (!ok)
             return false;
 
-        contents.setImage(image);
+        contents = ImageContents(image);
     }
 
     return true;

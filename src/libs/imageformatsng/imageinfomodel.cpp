@@ -2,17 +2,15 @@
 
 namespace {
 
-QString typeToString(const ImageContents::Type type)
+QString typeToString(const ImageHeader::Type type)
 {
     // As we can't use QMetaEnum for QImage, use manual switch here.
     // At least, we can translate types.
     switch (type) {
-    case ImageContents::Invalid : return ImageInfoModel::tr("Invalid");
-    case ImageContents::Image : return ImageInfoModel::tr("Image");
-    case ImageContents::Animation : return ImageInfoModel::tr("Animation");
-    case ImageContents::ImageArray : return ImageInfoModel::tr("Image array");
-    case ImageContents::Cubemap : return ImageInfoModel::tr("Cubemap");
-    case ImageContents::VolumeTexture : return ImageInfoModel::tr("Volume texture");
+    case ImageHeader::Invalid : return ImageInfoModel::tr("Invalid");
+    case ImageHeader::Image : return ImageInfoModel::tr("Image");
+    case ImageHeader::Cubemap : return ImageInfoModel::tr("Cubemap");
+    case ImageHeader::VolumeTexture : return ImageInfoModel::tr("Volume texture");
     default: return ImageInfoModel::tr("Unknown");
     }
     Q_UNREACHABLE();
@@ -122,7 +120,7 @@ QVariant ImageInfoModel::data(const QModelIndex &index, int role) const
             case RowName: return tr("Name");
             case RowImageCount: return tr("Image count");
             case RowMipmapCount: return tr("Mipmap count");
-            case RowImageDelay: return tr("Image delay");
+            case RowImageDelay: return tr("Frame delay");
             case RowLoopCount: return tr("Loop count");
             default:
                 break;
@@ -131,14 +129,14 @@ QVariant ImageInfoModel::data(const QModelIndex &index, int role) const
             if (_contents.isNull())
                 return QString();
             switch (index.row()) {
-            case RowType: return typeToString(_contents.type());
-            case RowSize: return sizeToString(_contents.size());
-            case RowImageFormat: return imageFormatToString(_contents.imageFormat());
-            case RowName: return _contents.name();
-            case RowImageCount: return _contents.imageCount();
-            case RowMipmapCount: return _contents.mipmapCount();
-            case RowImageDelay: return _contents.imageDelay();
-            case RowLoopCount: return _contents.loopCount();
+            case RowType: return typeToString(_contents.header().type());
+            case RowSize: return sizeToString(_contents.header().size());
+            case RowImageFormat: return imageFormatToString(_contents.header().imageFormat());
+            case RowName: return _contents.header().name();
+            case RowImageCount: return _contents.header().imageCount();
+            case RowMipmapCount: return _contents.header().mipmapCount();
+            case RowImageDelay: return _contents.header().frameDelay();
+            case RowLoopCount: return _contents.header().loopCount();
             default:
                 break;
             }

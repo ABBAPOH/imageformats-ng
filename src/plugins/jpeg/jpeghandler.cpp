@@ -861,22 +861,24 @@ bool JpegHandlerPrivate::readJpegHeader(QIODevice *device, ImageContents &conten
         jpeg_create_decompress(&info);
         info.src = iod_src;
 
+        ImageHeader header;
         if (!setjmp(err.setjmp_buffer)) {
             jpeg_save_markers(&info, JPEG_COM, 0xFFFF);
             jpeg_save_markers(&info, JPEG_APP0+1, 0xFFFF); // Exif uses APP1 marker
 
-            contents.setType(ImageContents::Image);
+            header.setType(ImageHeader::Image);
 
             (void) jpeg_read_header(&info, TRUE);
 
             int width = 0;
             int height = 0;
             read_jpeg_size(width, height, &info);
-            contents.setSize(QSize(width, height));
+            header.setSize(QSize(width, height));
 
             auto format = QImage::Format_Invalid;
             read_jpeg_format(format, &info);
-            contents.setImageFormat(format);
+            header.setImageFormat(format);
+            contents = ImageContents(header);
 
             QByteArray exifData;
 

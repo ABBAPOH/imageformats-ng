@@ -38,15 +38,7 @@ public:
     };
 //    typedef QPair<int, int> ImageIndex;
 
-    ImageContents::Type type {ImageContents::Invalid};
-    QSize size;
-    QImage::Format imageFormat {QImage::Format_Invalid};
-    QString name;
-    int imageCount {1};
-    int mipmapCount {1};
-    int imageDelay {0};
-    int loopCount {-1};
-
+    ImageHeader header;
     QMap<ImageIndex, QImage> images;
     ImageExifMeta exif;
 
@@ -63,15 +55,15 @@ bool operator <(const ImageContentsData::ImageIndex &p1, const ImageContentsData
 
 QImage ImageContentsData::image(int depth, int index, int level) const
 {
-    if (index < 0 || index >= imageCount) {
+    if (index < 0 || index >= header.imageCount()) {
         qWarning() << "Attempt to get image with index = " << index
-                   << "which is out of bounds" << 0 << imageCount;
+                   << "which is out of bounds" << 0 << header.imageCount();
         return QImage();
     }
-    if (mipmapCount > 0) {
-        if (level < 0 || level >= mipmapCount) {
+    if (header.hasMipmaps()) {
+        if (level < 0 || level >= header.mipmapCount()) {
             qWarning() << "Attempt to get image with level = " << level
-                       << "which is out of bounds" << 0 << mipmapCount;
+                       << "which is out of bounds" << 0 << header.mipmapCount();
             return QImage();
         }
     }
@@ -81,25 +73,22 @@ QImage ImageContentsData::image(int depth, int index, int level) const
 
 void ImageContentsData::setImage(const QImage &image, int depth, int index, int level)
 {
-    if (index < 0 || index >= imageCount) {
+    if (index < 0 || index >= header.imageCount()) {
         qWarning() << "Attempt to get image with index = " << index
-                   << "which is out of bounds" << 0 << imageCount;
+                   << "which is out of bounds" << 0 << header.imageCount();
         return;
     }
-    if (mipmapCount > 0) {
-        if (level < 0 || level >= mipmapCount) {
+    if (header.hasMipmaps()) {
+        if (level < 0 || level >= header.mipmapCount()) {
             qWarning() << "Attempt to get image with level = " << level
-                       << "which is out of bounds" << 0 << mipmapCount;
+                       << "which is out of bounds" << 0 << header.mipmapCount();
             return;
         }
     }
 
-    if (imageFormat == QImage::Format_Invalid) {
-        imageFormat = image.format();
-    }
     QImage copy(image);
-    if (image.format() != imageFormat)
-        copy = image.convertToFormat(imageFormat);
+    if (image.format() != header.imageFormat())
+        copy = image.convertToFormat(header.imageFormat());
 
     images.insert(ImageContentsData::ImageIndex(depth, index, level), copy);
 }
@@ -119,10 +108,17 @@ ImageContents::ImageContents(const QImage &image):
 {
     if (image.isNull())
         return;
-    d->type = ImageContents::Image;
-    d->size = image.size();
-    d->imageFormat = image.format();
+    ImageHeader header;
+    header.setType(ImageHeader::Image);
+    header.setSize(image.size());
+    header.setImageFormat(image.format());
     setImage(image);
+}
+
+ImageContents::ImageContents(const ImageHeader &header) :
+    d(new ImageContentsData)
+{
+    d->header = header;
 }
 
 ImageContents::ImageContents(const ImageContents &other) :
@@ -160,98 +156,9 @@ bool ImageContents::isNull() const
     return *this == ImageContents();
 }
 
-ImageContents::Type ImageContents::type() const
+ImageHeader ImageContents::header() const
 {
-    return d->type;
-}
-
-void ImageContents::setType(ImageContents::Type t)
-{
-    d->type = t;
-}
-
-QSize ImageContents::size() const
-{
-    return d->size;
-}
-
-void ImageContents::setSize(QSize size)
-{
-    d->size = size;
-}
-
-int ImageContents::width() const
-{
-    return d->size.width();
-}
-
-int ImageContents::height() const
-{
-    return d->size.height();
-}
-
-QImage::Format ImageContents::imageFormat() const
-{
-    return d->imageFormat;
-}
-
-void ImageContents::setImageFormat(QImage::Format format)
-{
-    d->imageFormat = format;
-}
-
-QString ImageContents::name() const
-{
-    return d->name;
-}
-
-void ImageContents::setName(const QString &name)
-{
-    d->name = name;
-}
-
-int ImageContents::imageCount() const
-{
-    return d->imageCount;
-}
-
-void ImageContents::setImageCount(int count)
-{
-    if (count < 1)
-        return;
-    d->imageCount = count;
-}
-
-int ImageContents::mipmapCount() const
-{
-    return d->mipmapCount;
-}
-
-void ImageContents::setMipmapCount(int count)
-{
-    if (count < 1)
-        return;
-    d->mipmapCount = count;
-}
-
-int ImageContents::imageDelay() const
-{
-    return d->imageDelay;
-}
-
-void ImageContents::setImageDelay(int delay)
-{
-    d->imageDelay = delay;
-}
-
-int ImageContents::loopCount() const
-{
-    return d->loopCount;
-}
-
-void ImageContents::setLoopCount(int count)
-{
-    d->loopCount = count;
+    return d->header;
 }
 
 QImage ImageContents::image(int index, int level) const
@@ -304,23 +211,23 @@ void ImageContents::clear()
 
 Optional<ImageContents> ImageContents::toProjection(ImageContents::Projection projection) const
 {
-    if (d->type != ImageContents::Cubemap)
+    if (d->header.type() != ImageHeader::Cubemap)
         return Nothing();
 
-    if (d->size.width() != d->size.height()) {
-        qWarning() << "Invalid size for cube texture" << d->size;
+    if (d->header.width() != d->header.height()) {
+        qWarning() << "Invalid size for cube texture" << d->header.size();
         return Nothing();
     }
 
     ImageContents result;
 
-    const auto size = d->size.width();
+    const auto size = d->header.width();
 
-    for (int level = 0; level < d->mipmapCount; ++level) {
-        for (int index = 0; index < d->imageCount; ++index) {
+    for (int level = 0; level < d->header.mipmapCount(); ++level) {
+        for (int index = 0; index < d->header.imageCount(); ++index) {
             QImage image(multipliers[projection].x * size,
                          multipliers[projection].y * size,
-                         d->imageFormat);
+                         d->header.imageFormat());
 
             image.fill(0);
 
@@ -350,13 +257,7 @@ Optional<ImageContents> ImageContents::toProjection(ImageContents::Projection pr
 bool operator==(const ImageContents &lhs, const ImageContents &rhs)
 {
     return lhs.d == rhs.d ||
-            (lhs.d->type == rhs.d->type
-             && lhs.d->size == rhs.d->size
-             && lhs.d->imageFormat == rhs.d->imageFormat
-             && lhs.d->name == rhs.d->name
-             && lhs.d->imageCount == rhs.d->imageCount
-             && lhs.d->mipmapCount == rhs.d->mipmapCount
-             && lhs.d->loopCount == rhs.d->loopCount
+            (lhs.d->header == rhs.d->header
              && lhs.d->images == rhs.d->images
              && lhs.d->exif == rhs.d->exif);
 }

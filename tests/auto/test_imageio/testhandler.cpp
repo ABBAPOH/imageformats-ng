@@ -12,7 +12,7 @@ QDataStream &operator <<(QDataStream &stream, const TestImageData &data)
     stream << data.name;
     stream << quint32(data.imageFormat);
     stream << data.imageCount;
-    stream << data.mipmapCount;
+    stream << data.hasMipmaps;
     stream << data.loopCount;
     stream << data.images;
 
@@ -36,13 +36,13 @@ QDataStream &operator >>(QDataStream &stream, TestImageData &data)
     data.magic = magic;
     stream >> data.subType;
     stream >> value;
-    data.type = ImageContents::Type(value);
+    data.type = ImageHeader::Type(value);
     stream >> data.size;
     stream >> data.name;
     stream >> value;
     data.imageFormat = QImage::Format(value);
     stream >> data.imageCount;
-    stream >> data.mipmapCount;
+    stream >> data.hasMipmaps;
     stream >> data.loopCount;
     stream >> data.images;
 
@@ -67,16 +67,18 @@ bool TestHandler::read(ImageContents &contents)
 
     setSubType(_data.subType);
 
-    contents.setType(_data.type);
-    contents.setSize(_data.size);
-    contents.setName(_data.name);
-    contents.setImageFormat(_data.imageFormat);
-    contents.setImageCount(_data.imageCount);
-    contents.setMipmapCount(_data.mipmapCount);
-    contents.setLoopCount(_data.loopCount);
+    ImageHeader header;
+    header.setType(_data.type);
+    header.setSize(_data.size);
+    header.setName(_data.name);
+    header.setImageFormat(_data.imageFormat);
+    header.setImageCount(_data.imageCount);
+    header.setHasMipmaps(_data.hasMipmaps);
+    header.setLoopCount(_data.loopCount);
+    contents = ImageContents(header);
 
-    for (int level = 0, i = 0; level < _data.mipmapCount; ++level) {
-        for (int index = 0; index < _data.imageCount; ++index, i++) {
+    for (int level = 0, i = 0; level < header.mipmapCount(); ++level) {
+        for (int index = 0; index < header.imageCount(); ++index, i++) {
             contents.setImage(_data.images[i], index, level);
         }
     }
@@ -91,17 +93,18 @@ bool TestHandler::write(const ImageContents &contents, const ImageOptions &optio
 
     _data = TestImageData();
 
-    _data.type = contents.type();
-    _data.size = contents.size();
-    _data.name = contents.name();
-    _data.imageFormat = contents.imageFormat();
-    _data.imageCount = contents.imageCount();
-    _data.mipmapCount = contents.mipmapCount();
-    _data.loopCount = contents.loopCount();
+    const auto header = contents.header();
+    _data.type = header.type();
+    _data.size = header.size();
+    _data.name = header.name();
+    _data.imageFormat = header.imageFormat();
+    _data.imageCount = header.imageCount();
+    _data.hasMipmaps = header.hasMipmaps();
+    _data.loopCount = header.loopCount();
 
-    _data.images.resize(_data.mipmapCount * _data.imageCount);
+    _data.images.resize(header.mipmapCount() * header.imageCount());
 
-    for (int level = 0, i = 0; level < _data.mipmapCount; ++level) {
+    for (int level = 0, i = 0; level < header.mipmapCount(); ++level) {
         for (int index = 0; index < _data.imageCount; ++index, i++) {
             _data.images[i] = contents.image(index, level);
         }

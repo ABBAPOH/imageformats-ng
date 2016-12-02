@@ -51,15 +51,16 @@ ImageDocumentItem *ImageDocument::item(int index, int level) const
 ImageContents ImageDocument::toContents() const
 {
     Q_D(const ImageDocument);
-    ImageContents result;
-    result.setType(d->type);
-    result.setSize(d->size);
-    result.setImageFormat(d->imageFormat);
-    result.setName(d->name);
-    result.setImageCount(d->imageCount);
-    result.setMipmapCount(d->mipmapCount);
-    result.setImageDelay(d->imageDelay);
-    result.setLoopCount(d->loopCount);
+    ImageHeader header;
+    header.setType(d->type);
+    header.setSize(d->size);
+    header.setImageFormat(d->imageFormat);
+    header.setName(d->name);
+    header.setImageCount(d->imageCount);
+    header.setHasMipmaps(d->mipmapCount > 1);
+    header.setFrameDelay(d->frameDelay);
+    header.setLoopCount(d->loopCount);
+    ImageContents result(header);
     for (int index = 0; index < d->imageCount; ++index) {
         for (int level = 0; level < d->mipmapCount; ++level) {
             const auto item = d->items.at(ImageDocumentPrivate::ImageIndex(index, level)).get();
@@ -84,13 +85,14 @@ void ImageDocument::setContents(const ImageContents &contents)
         return;
     }
 
-    d->type = contents.type();
-    d->size = contents.size();
-    d->imageFormat = contents.imageFormat();
-    d->imageCount = contents.imageCount();
-    d->mipmapCount = contents.mipmapCount();
-    d->imageDelay = contents.imageDelay();
-    d->loopCount = contents.loopCount();
+    const auto header = contents.header();
+    d->type = header.type();
+    d->size = header.size();
+    d->imageFormat = header.imageFormat();
+    d->imageCount = header.imageCount();
+    d->mipmapCount = header.mipmapCount();
+    d->frameDelay = header.frameDelay();
+    d->loopCount = header.loopCount();
     for (int index = 0; index < d->imageCount; ++index) {
         for (int level = 0; level < d->mipmapCount; ++level) {
             auto image = contents.image(index, level);
@@ -107,13 +109,13 @@ void ImageDocument::setContents(const ImageContents &contents)
 void ImageDocument::clear()
 {
     Q_D(ImageDocument);
-    d->type = ImageContents::Type::Invalid;
+    d->type = ImageHeader::Type::Invalid;
     d->size = QSize();
     d->imageFormat = QImage::Format::Format_Invalid;
     d->name.clear();
     d->imageCount = 0;
     d->mipmapCount = 0;
-    d->imageDelay = 0;
+    d->frameDelay = 0;
     d->loopCount = -1;
     d->exifMeta.clear();
     d->items.clear();
