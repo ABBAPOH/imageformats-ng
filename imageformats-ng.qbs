@@ -59,5 +59,12 @@ Project {
     SubProject {
         filePath: "tests/tests.qbs"
     }
+
+    // Special hack to show includes in Qt Creator (both in source tree
+    // and git commit editor (otherwise untracked includes are not present)
+    Product {
+        name: "include"
+        files: [ path + "/include/*" ]
+    }
 }
 
