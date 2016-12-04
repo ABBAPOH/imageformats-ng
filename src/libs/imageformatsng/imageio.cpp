@@ -152,7 +152,7 @@ QString ImageIO::fileName() const
     return d->fileName;
 }
 
-void ImageIO::setFileName(QString fileName)
+void ImageIO::setFileName(const QString &fileName)
 {
     Q_D(ImageIO);
 

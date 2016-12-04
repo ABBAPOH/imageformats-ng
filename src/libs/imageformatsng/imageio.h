@@ -29,7 +29,7 @@ public:
     ~ImageIO();
 
     QString fileName() const;
-    void setFileName(QString fileName);
+    void setFileName(const QString &fileName);
 
     QIODevice *device() const;
     void setDevice(QIODevice *device);
