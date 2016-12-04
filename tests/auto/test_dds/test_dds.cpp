@@ -157,7 +157,7 @@ void TestDds::testMipmaps_data()
 {
     QTest::addColumn<QString>("fileName");
     QTest::addColumn<QSize>("size");
-    QTest::addColumn<int>("imageCount");
+    QTest::addColumn<int>("mipmapCount");
 
     QTest::newRow("1") << QString("mipmaps") << QSize(64, 64) << 7;
 }
@@ -166,14 +166,14 @@ void TestDds::testMipmaps()
 {
     QFETCH(QString, fileName);
     QFETCH(QSize, size);
-    QFETCH(int, imageCount);
+    QFETCH(int, mipmapCount);
 
     const QString path = QStringLiteral(":/data/") + fileName + QStringLiteral(".dds");
     ImageIO reader(path);
 //    QVERIFY(reader.canRead());
-//    QCOMPARE(reader.imageCount(), imageCount);
     const auto header = reader.readHeader();
     QVERIFY2(header, qPrintable(reader.error().errorString()));
+    QCOMPARE(header->mipmapCount(), mipmapCount);
     const auto contents = reader.read();
     QVERIFY2(contents, qPrintable(reader.error().errorString()));
 
