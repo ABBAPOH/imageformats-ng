@@ -29,6 +29,11 @@ bool DefaultHandler::readHeader(ImageHeader &header)
 {
     _reader.reset(new QImageReader(device(), mimeTypeToFormat(mimeType())));
 
+    if (!_reader->supportsOption(QImageIOHandler::Size)
+            || !_reader->supportsOption(QImageIOHandler::ImageFormat)) {
+        return false;
+    }
+
     header.setType(ImageHeader::Image);
     header.setSize(_reader->size());
     header.setImageFormat(_reader->imageFormat());
