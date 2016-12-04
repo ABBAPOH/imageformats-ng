@@ -2,6 +2,7 @@ import qbs.base 1.0
 
 Project {
     references: [
+        "test_dds/test_dds.qbs",
         "test_document/test_document.qbs",
         "test_imagecontents/test_imagecontents.qbs",
         "test_imageexifmeta/test_imageexifmeta.qbs",

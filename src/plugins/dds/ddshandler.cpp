@@ -1474,20 +1474,10 @@ bool DDSHandler::write(const ImageContents &contents, const ImageOptions &option
 
     s << dds;
 
-    const int mipmapCount = header.mipmapCount() > 0
-            ? header.mipmapCount()
-            : 1;
-
-    if (header.width() != (1 << (mipmapCount - 1))
-            || header.height() != (1 << (mipmapCount - 1))) {
-        qWarning() << "Writing images with size not equal to power of 2 is not supported";
-        return false;
-    }
-
-    for (int level = 0; level < mipmapCount; ++level) {
+    for (int level = 0; level < header.mipmapCount(); ++level) {
         // TODO: use min power of 2 that's greater or equal to width/height
-        const auto imageWidth = (1 << (mipmapCount - 1)) >> level;
-        const auto imageHeigth = (1 << (mipmapCount - 1)) >> level;
+        const auto imageWidth = std::max(1, header.width() >> level);
+        const auto imageHeigth = std::max(1, header.height() >> level);
 
         auto outImage = contents.image(0, level);
         const QImage image = outImage.convertToFormat(QImage::Format_ARGB32);
