@@ -43,7 +43,7 @@ public:
     int width() const;
     void setWidth(int width);
     int height() const;
-    void setHeigth(int height);
+    void setHeight(int height);
     int depth() const;
     void setDepth(int depth);
 

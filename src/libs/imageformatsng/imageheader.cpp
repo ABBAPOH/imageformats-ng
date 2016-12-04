@@ -45,11 +45,11 @@ Optional<QString> ImageHeaderData::validate() const
     if (type == ImageHeader::Invalid)
         return ImageHeader::tr("Invalid type");
 
-    if (width < 0)
+    if (width <= 0)
         return ImageHeader::tr("Invalid width: %1").arg(width);
-    if (height < 0)
+    if (height <= 0)
         return ImageHeader::tr("Invalid height: %1").arg(height);
-    if ((type == ImageHeader::VolumeTexture) && depth < 0)
+    if ((type == ImageHeader::VolumeTexture) && depth <= 0)
         return ImageHeader::tr("Invalid depth: %1").arg(depth);
 
     if (imageFormat == QImage::Format::Format_Invalid)
@@ -169,7 +169,7 @@ int ImageHeader::height() const
     return d->height;
 }
 
-void ImageHeader::setHeigth(int height)
+void ImageHeader::setHeight(int height)
 {
     d->setSize3D(d->width, height, d->depth);
 }
