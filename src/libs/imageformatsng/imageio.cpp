@@ -27,7 +27,7 @@ public:
     std::unique_ptr<ImageIOHandler> handler;
 
     QString fileName;
-    QScopedPointer<QFile> file;
+    std::unique_ptr<QFile> file;
 
     QIODevice *device {nullptr};
     Optional<QMimeType> mimeType;
@@ -165,7 +165,7 @@ void ImageIO::setFileName(QString fileName)
         return;
 
     d->file.reset(new QFile(fileName));
-    d->device = d->file.data();
+    d->device = d->file.get();
     d->mimeType = QMimeDatabase().mimeTypeForFile(fileName);
     d->fileName = fileName;
     d->resetHandler();
