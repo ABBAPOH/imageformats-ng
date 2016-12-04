@@ -1029,6 +1029,8 @@ bool QPngHandler::readHeader(ImageHeader &header)
     header.setImageCount(d->readImageFormat());
     header.setWidth(int(png_get_image_width(d->png_ptr, d->info_ptr)));
     header.setHeight(int(png_get_image_height(d->png_ptr, d->info_ptr)));
+
+    return true;
 }
 
 bool QPngHandler::read(ImageContents &contents)
