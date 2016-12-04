@@ -14,7 +14,7 @@
 class QIODevice;
 
 class ImageIOPrivate;
-class IMAGEFORMATSNG_EXPORT  ImageIO
+class IMAGEFORMATSNG_EXPORT ImageIO
 {
     Q_DISABLE_COPY(ImageIO)
     Q_DECLARE_PRIVATE(ImageIO)
