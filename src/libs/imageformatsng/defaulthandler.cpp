@@ -59,6 +59,8 @@ bool DefaultHandler::read(ImageContents &contents)
             contents.setImage(image, i);
         }
     } else if (count > 0) {
+        if (count != contents.header().mipmapCount())
+            return false;
         for (int i = 0; i < count; i++) {
             QImage image;
             _reader->jumpToImage(i);
