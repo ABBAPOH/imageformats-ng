@@ -23,6 +23,7 @@ public:
 
     virtual bool canRead() = 0;
     // TODO: use Optional?
+    virtual bool readHeader(ImageHeader &header) = 0;
     virtual bool read(ImageContents &contents) = 0;
     virtual bool write(const ImageContents &contents, const ImageOptions &options) = 0;
 

@@ -736,7 +736,7 @@ public:
         }
     }
 
-    bool readJpegHeader(QIODevice*, ImageContents &contents);
+    bool readJpegHeader(QIODevice*, ImageHeader &header);
     bool read(QImage *image);
     void applyExifOrientation(QImage *image);
 
@@ -847,7 +847,7 @@ static int getExifOrientation(QByteArray &exifData)
 /*!
     \internal
 */
-bool JpegHandlerPrivate::readJpegHeader(QIODevice *device, ImageContents &contents)
+bool JpegHandlerPrivate::readJpegHeader(QIODevice *device, ImageHeader &header)
 {
     if(state == Ready)
     {
@@ -861,7 +861,6 @@ bool JpegHandlerPrivate::readJpegHeader(QIODevice *device, ImageContents &conten
         jpeg_create_decompress(&info);
         info.src = iod_src;
 
-        ImageHeader header;
         if (!setjmp(err.setjmp_buffer)) {
             jpeg_save_markers(&info, JPEG_COM, 0xFFFF);
             jpeg_save_markers(&info, JPEG_APP0+1, 0xFFFF); // Exif uses APP1 marker
@@ -878,7 +877,6 @@ bool JpegHandlerPrivate::readJpegHeader(QIODevice *device, ImageContents &conten
             auto format = QImage::Format_Invalid;
             read_jpeg_format(format, &info);
             header.setImageFormat(format);
-            contents = ImageContents(header);
 
             QByteArray exifData;
 
@@ -1008,6 +1006,24 @@ bool JpegHandler::canRead()
     return canRead(device());
 }
 
+bool JpegHandler::readHeader(ImageHeader &header)
+{
+    if(d->state == JpegHandlerPrivate::Ready && !canRead(device()))
+        return false;
+
+//    if (d->state != JpegHandlerPrivate::Error) {
+//        setFormat("jpeg");
+//        return true;
+//    }
+
+    if (d->state == JpegHandlerPrivate::Ready) {
+        if (!d->readJpegHeader(device(), header))
+            return false;
+    }
+
+    return true;
+}
+
 bool JpegHandler::canRead(QIODevice *device)
 {
     if (!device) {
@@ -1023,18 +1039,8 @@ bool JpegHandler::canRead(QIODevice *device)
 
 bool JpegHandler::read(ImageContents &contents)
 {
-    if(d->state == JpegHandlerPrivate::Ready && !canRead(device()))
+    if(d->state != JpegHandlerPrivate::ReadHeader)
         return false;
-
-//    if (d->state != JpegHandlerPrivate::Error) {
-//        setFormat("jpeg");
-//        return true;
-//    }
-
-    if (d->state == JpegHandlerPrivate::Ready) {
-        if (!d->readJpegHeader(device(), contents))
-            return false;
-    }
 
     QImage image;
     bool ok = d->read(&image);

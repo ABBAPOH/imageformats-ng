@@ -11,7 +11,7 @@ private slots:
     void readImage_data();
     void readImage();
     void testHeader_data();
-//    void testHeader();
+    void testHeader();
 };
 
 void TestJpeg::initTestCase()
@@ -37,7 +37,7 @@ void TestJpeg::readImage()
     ImageIO io(fileName);
     auto maybeImage = io.read();
     auto ok = io.error();
-    QVERIFY2(ok == ImageIO::Error(ImageIO::Error::NoError), ok.errorString().toUtf8().constData());
+    QVERIFY2(ok == success, ok.errorString().toUtf8().constData());
 }
 
 void TestJpeg::testHeader_data()
@@ -50,20 +50,19 @@ void TestJpeg::testHeader_data()
     QTest::newRow("qtbug13653") << QString(":/qtbug13653-no_eoi.jpg") << QSize(240, 180) << int(QImage::Format_RGB32);
 }
 
-//void TestJpeg::testHeader()
-//{
-//    QFETCH(QString, fileName);
-//    QFETCH(QSize, size);
-//    QFETCH(int, format);
+void TestJpeg::testHeader()
+{
+    QFETCH(QString, fileName);
+    QFETCH(QSize, size);
+    QFETCH(int, format);
 
-//    ImageDocument doc(fileName);
-//    auto ok = doc.openHeader();
-//    QVERIFY2(ok, ok.errorString().toUtf8().constData());
+    ImageIO io(fileName);
+    const auto header = io.readHeader();
+    QVERIFY2(header, io.error().errorString().toUtf8().constData());
 
-//    QCOMPARE(doc.contents().size(), size);
-//    QCOMPARE(int(doc.contents().imageFormat()), format);
-//    QVERIFY(doc.contents().image().isNull());
-//}
+    QCOMPARE(header->size(), size);
+    QCOMPARE(int(header->imageFormat()), format);
+}
 
 QTEST_MAIN(TestJpeg)
 

@@ -14,6 +14,7 @@ class ImageIOPrivate
 public:
     enum class State {
         NoState,
+        HeaderRead,
         DataRead
     };
 
@@ -34,6 +35,9 @@ public:
 
     ImageIO::Error error {ImageIO::Error::NoError};
     State state {State::NoState};
+
+    Optional<ImageHeader> header {Nothing()};
+    Optional<ImageContents> contents {Nothing()};
 };
 
 bool ImageIOPrivate::ensureDeviceOpened(QIODevice::OpenMode mode)
@@ -216,19 +220,53 @@ void ImageIO::setSubType(const QByteArray &subType)
     d->subType = subType;
 }
 
-Optional<ImageContents> ImageIO::read()
+Optional<ImageHeader> ImageIO::readHeader()
 {
     Q_D(ImageIO);
+
+    if (d->state == ImageIOPrivate::State::HeaderRead
+            || d->state == ImageIOPrivate::State::DataRead) {
+        return d->header;
+    }
 
     if (!d->ensureHandlerCreated(QIODevice::ReadOnly))
         return Nothing();
 
-    ImageContents result;
-    if (!d->handler->read(result)) {
+    ImageHeader header;
+    if (d->handler->readHeader(header)) {
+        if (header.isNull() || !header.validate()) {
+            d->error = Error::IOError;
+        } else {
+            d->header = header;
+        }
+    } else {
         d->error = Error::IOError;
     }
+    d->state = ImageIOPrivate::State::HeaderRead;
+    return d->header;
+}
 
-    return result;
+Optional<ImageContents> ImageIO::read()
+{
+    Q_D(ImageIO);
+
+    if (d->state == ImageIOPrivate::State::DataRead)
+        return d->contents;
+
+    const auto header = readHeader();
+    if (!header)
+        return Nothing();
+
+    ImageContents result(*header);
+    if (!d->handler->read(result)) {
+        d->error = Error::IOError;
+    } else {
+        d->contents = result;
+    }
+
+    d->state = ImageIOPrivate::State::DataRead;
+
+    return d->contents;
 }
 
 bool ImageIO::write(const ImageContents &contents, const ImageOptions &options)

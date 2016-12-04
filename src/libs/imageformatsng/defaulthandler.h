@@ -2,14 +2,21 @@
 
 #include "imageiohandler.h"
 
+#include <QImageReader>
+
 class DefaultHandler : public ImageIOHandler
 {
 public:
     DefaultHandler();
 
+public: // ImageIOHandler interface
     bool canRead() override { return true; }
+    bool readHeader(ImageHeader &header) override;
     bool read(ImageContents &contents) override;
     bool write(const ImageContents &contents, const ImageOptions &options) override;
+
+private:
+    std::unique_ptr<QImageReader> _reader;
 };
 
 class DefaultHandlerPlugin : public ImageIOHandlerPlugin

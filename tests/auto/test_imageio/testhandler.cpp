@@ -58,7 +58,7 @@ bool TestHandler::canRead()
     return true;
 }
 
-bool TestHandler::read(ImageContents &contents)
+bool TestHandler::readHeader(ImageHeader &header)
 {
     QDataStream s(device());
     s >> _data;
@@ -67,7 +67,6 @@ bool TestHandler::read(ImageContents &contents)
 
     setSubType(_data.subType);
 
-    ImageHeader header;
     header.setType(_data.type);
     header.setSize(_data.size);
     header.setName(_data.name);
@@ -75,10 +74,14 @@ bool TestHandler::read(ImageContents &contents)
     header.setImageCount(_data.imageCount);
     header.setHasMipmaps(_data.hasMipmaps);
     header.setLoopCount(_data.loopCount);
-    contents = ImageContents(header);
 
-    for (int level = 0, i = 0; level < header.mipmapCount(); ++level) {
-        for (int index = 0; index < header.imageCount(); ++index, i++) {
+    return true;
+}
+
+bool TestHandler::read(ImageContents &contents)
+{
+    for (int level = 0, i = 0; level < contents.header().mipmapCount(); ++level) {
+        for (int index = 0; index < contents.header().imageCount(); ++index, i++) {
             contents.setImage(_data.images[i], index, level);
         }
     }

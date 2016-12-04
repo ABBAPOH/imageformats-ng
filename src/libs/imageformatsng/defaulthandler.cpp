@@ -1,6 +1,5 @@
 #include "defaulthandler.h"
 
-#include <QImageReader>
 #include <QImageWriter>
 
 static QByteArray mimeTypeToFormat(const QMimeType &mimeType)
@@ -26,34 +25,38 @@ DefaultHandler::DefaultHandler()
 
 }
 
+bool DefaultHandler::readHeader(ImageHeader &header)
+{
+    _reader.reset(new QImageReader(device(), mimeTypeToFormat(mimeType())));
+
+    header.setType(ImageHeader::Image);
+    header.setSize(_reader->size());
+    header.setImageFormat(_reader->imageFormat());
+    int count = _reader->imageCount();
+    if (_reader->supportsOption(QImageIOHandler::Animation)) {
+        header.setImageCount(count);
+    } else if (count > 0) {
+        header.setHasMipmaps(true);
+    }
+}
+
 bool DefaultHandler::read(ImageContents &contents)
 {
-    QImageReader reader(device(), mimeTypeToFormat(mimeType()));
-
-    ImageHeader header;
-    header.setType(ImageHeader::Image);
-    header.setSize(reader.size());
-    header.setImageFormat(reader.imageFormat());
-
-    int count = reader.imageCount();
-    if (reader.supportsOption(QImageIOHandler::Animation)) {
-        header.setImageCount(count);
-        contents = ImageContents(header);
+    int count = _reader->imageCount();
+    if (_reader->supportsOption(QImageIOHandler::Animation)) {
         for (int i = 0; i < count; i++) {
             QImage image;
-            const bool ok = reader.read(&image);
+            const bool ok = _reader->read(&image);
             if (!ok)
                 return false;
 
             contents.setImage(image, i);
         }
     } else if (count > 0) {
-        header.setHasMipmaps(true);
-        contents = ImageContents(header);
         for (int i = 0; i < count; i++) {
             QImage image;
-            reader.jumpToImage(i);
-            const bool ok = reader.read(&image);
+            _reader->jumpToImage(i);
+            const bool ok = _reader->read(&image);
             if (!ok)
                 return false;
 
@@ -61,11 +64,11 @@ bool DefaultHandler::read(ImageContents &contents)
         }
     } else {
         QImage image;
-        const bool ok = reader.read(&image);
+        const bool ok = _reader->read(&image);
         if (!ok)
             return false;
 
-        contents = ImageContents(image);
+        contents.setImage(image);
     }
 
     return true;

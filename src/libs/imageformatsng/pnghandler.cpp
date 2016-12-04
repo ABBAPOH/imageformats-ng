@@ -1020,14 +1020,15 @@ bool QPngHandler::canRead()
     return false;
 }
 
-bool QPngHandler::canRead(QIODevice *device)
+bool QPngHandler::readHeader(ImageHeader &header)
 {
-    if (!device) {
-        qWarning("QPngHandler::canRead() called with no device");
+    if (!d->readPngHeader())
         return false;
-    }
 
-    return device->peek(8) == "\x89\x50\x4E\x47\x0D\x0A\x1A\x0A";
+    header.setType(ImageHeader::Image);
+    header.setImageCount(d->readImageFormat());
+    header.setWidth(int(png_get_image_width(d->png_ptr, d->info_ptr)));
+    header.setHeigth(int(png_get_image_height(d->png_ptr, d->info_ptr)));
 }
 
 bool QPngHandler::read(ImageContents &contents)
@@ -1046,6 +1047,16 @@ bool QPngHandler::write(const ImageContents &contents, const ImageOptions &optio
 {
     Q_UNUSED(options);
     return write_png_image(contents.image(), device(), d->quality, d->gamma, d->description);
+}
+
+bool QPngHandler::canRead(QIODevice *device)
+{
+    if (!device) {
+        qWarning("QPngHandler::canRead() called with no device");
+        return false;
+    }
+
+    return device->peek(8) == "\x89\x50\x4E\x47\x0D\x0A\x1A\x0A";
 }
 
 //bool QPngHandler::supportsOption(ImageOption option) const
