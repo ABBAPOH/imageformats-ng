@@ -53,14 +53,10 @@ Project {
 
     name: "Image Formats NG"
 
-    SubProject {
-        filePath: "include/include.qbs"
-    }
-    SubProject {
-        filePath: "src/src.qbs"
-    }
-    SubProject {
-        filePath: "tests/tests.qbs"
-    }
+    references: [
+        "include/include.qbs",
+        "src/src.qbs",
+         "tests/tests.qbs",
+    ]
 }
 

@@ -7,3 +7,4 @@ Product {
     files: ["*"]
     excludeFiles: ["*.qbs"]
 }
+
