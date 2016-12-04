@@ -54,7 +54,7 @@ Optional<QString> ImageHeaderData::validate() const
 
     if (imageFormat == QImage::Format::Format_Invalid)
         return ImageHeader::tr("Invalid image format");
-    if (imageCount < 0)
+    if (imageCount <= 0)
         return ImageHeader::tr("Invalid image count: %1").arg(imageCount);
     if (frameDelay < 0)
         return ImageHeader::tr("Invalid image delay: %1").arg(frameDelay);

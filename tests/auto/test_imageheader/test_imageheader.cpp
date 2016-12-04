@@ -61,6 +61,9 @@ void TestImageHeader::setters()
     QVERIFY(header.hasMipmaps());
     QCOMPARE(header.mipmapCount(), 7);
 
+    header.setFrameDelay(10);
+    QCOMPARE(header.frameDelay(), 10);
+
     header.setLoopCount(10);
     QCOMPARE(header.loopCount(), 10);
 }
@@ -96,16 +99,22 @@ void TestImageHeader::validate_data()
     QTest::addColumn<int>("width");
     QTest::addColumn<int>("heigth");
     QTest::addColumn<int>("depth");
+    QTest::addColumn<int>("imageCount");
+    QTest::addColumn<int>("frameDelay");
+    QTest::addColumn<int>("loopCount");
     QTest::addColumn<bool>("valid");
 
-    QTest::newRow("valid 1") << ImageHeader::Image << QImage::Format_ARGB32 << 1 << 1 << 1 << true;
-    QTest::newRow("valid 2") << ImageHeader::Image << QImage::Format_ARGB32 << 1 << 1 << -1 << true;
-    QTest::newRow("valid 3") << ImageHeader::VolumeTexture << QImage::Format_ARGB32 << 1 << 1 << 1 << true;
-    QTest::newRow("invalid type") << ImageHeader::Invalid << QImage::Format_ARGB32 << 1 << 1 << 1 << false;
-    QTest::newRow("invalid format") << ImageHeader::Image << QImage::Format_Invalid << 1 << 1 << 1 << false;
-    QTest::newRow("invalid width") << ImageHeader::Image << QImage::Format_ARGB32 << 0 << 1 << 1 << false;
-    QTest::newRow("invalid heigth") << ImageHeader::Image << QImage::Format_ARGB32 << 1 << 0 << 1 << false;
-    QTest::newRow("invalid depth") << ImageHeader::VolumeTexture << QImage::Format_ARGB32 << 1 << 1 << 0 << false;
+    QTest::newRow("valid 1") << ImageHeader::Image << QImage::Format_ARGB32 << 1 << 1 << 1 << 1 << 0 << -1 << true;
+    QTest::newRow("valid 2") << ImageHeader::Image << QImage::Format_ARGB32 << 1 << 1 << -1 << 1 << 0 << -1 << true;
+    QTest::newRow("valid 3") << ImageHeader::VolumeTexture << QImage::Format_ARGB32 << 1 << 1 << 1 << 1 << 0 << -1 << true;
+    QTest::newRow("invalid type") << ImageHeader::Invalid << QImage::Format_ARGB32 << 1 << 1 << 1 << 1 << 0 << -1 << false;
+    QTest::newRow("invalid format") << ImageHeader::Image << QImage::Format_Invalid << 1 << 1 << 1 << 1 << 0 << -1 << false;
+    QTest::newRow("invalid width") << ImageHeader::Image << QImage::Format_ARGB32 << 0 << 1 << 1 << 1 << 0 << -1 << false;
+    QTest::newRow("invalid heigth") << ImageHeader::Image << QImage::Format_ARGB32 << 1 << 0 << 1 << 1 << 0 << -1 << false;
+    QTest::newRow("invalid depth") << ImageHeader::VolumeTexture << QImage::Format_ARGB32 << 1 << 1 << 0 << 1 << 0 << -1 << false;
+    QTest::newRow("invalid image count") << ImageHeader::VolumeTexture << QImage::Format_ARGB32 << 1 << 1 << 1 << 0 << 0 << -1 << false;
+    QTest::newRow("invalid frame delay") << ImageHeader::VolumeTexture << QImage::Format_ARGB32 << 1 << 1 << 1 << 1 << -1 << -1 << false;
+    QTest::newRow("invalid loop count") << ImageHeader::VolumeTexture << QImage::Format_ARGB32 << 1 << 1 << 1 << 1 << 0 << -2 << false;
 }
 
 void TestImageHeader::validate()
@@ -115,6 +124,9 @@ void TestImageHeader::validate()
     QFETCH(int, width);
     QFETCH(int, heigth);
     QFETCH(int, depth);
+    QFETCH(int, imageCount);
+    QFETCH(int, frameDelay);
+    QFETCH(int, loopCount);
     QFETCH(bool, valid);
 
     ImageHeader header;
@@ -123,6 +135,9 @@ void TestImageHeader::validate()
     header.setWidth(width);
     header.setHeight(heigth);
     header.setDepth(depth);
+    header.setImageCount(imageCount);
+    header.setFrameDelay(frameDelay);
+    header.setLoopCount(loopCount);
 
     QString error;
     QVERIFY2(valid == header.validate(&error), qPrintable(error));
