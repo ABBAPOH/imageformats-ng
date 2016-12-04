@@ -12,6 +12,20 @@ class IMAGEFORMATSNG_EXPORT ImageHeader
 {
     Q_GADGET
     Q_DECLARE_TR_FUNCTIONS(ImageHeader)
+
+    Q_PROPERTY(bool isNull READ isNull)
+    Q_PROPERTY(Type type READ type WRITE setType)
+    Q_PROPERTY(QImage::Format imageFormat READ imageFormat WRITE setImageFormat)
+    Q_PROPERTY(QSize size READ size WRITE setSize)
+    Q_PROPERTY(int width READ width WRITE setWidth)
+    Q_PROPERTY(int height READ height WRITE setHeight)
+    Q_PROPERTY(int depth READ depth WRITE setDepth)
+    Q_PROPERTY(QString name READ name WRITE setName)
+    Q_PROPERTY(int imageCount READ imageCount WRITE setImageCount)
+    Q_PROPERTY(bool hasMipmaps READ hasMipmaps WRITE setHasMipmaps)
+    Q_PROPERTY(int mipmapCount READ mipmapCount)
+    Q_PROPERTY(int frameDelay READ frameDelay WRITE setFrameDelay)
+    Q_PROPERTY(int loopCount READ loopCount WRITE setLoopCount)
 public:
     enum Type {
         Invalid,
