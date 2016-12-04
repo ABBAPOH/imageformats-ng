@@ -97,12 +97,19 @@ void ImageContentsData::setImage(const QImage &image, int depth, int index, int 
     \class ImageContents
 */
 
+/*!
+    Constructs a null ImageContents.
+*/
 ImageContents::ImageContents() :
     d(new ImageContentsData)
 {
 
 }
 
+/*!
+    Constructs an ImageContents from the given \a image.
+    Fills the header and the data with the image.
+*/
 ImageContents::ImageContents(const QImage &image):
     d(new ImageContentsData)
 {
@@ -114,28 +121,44 @@ ImageContents::ImageContents(const QImage &image):
     setImage(image);
 }
 
+/*!
+    Constructs an ImageContents with the given \a header.
+*/
 ImageContents::ImageContents(const ImageHeader &header) :
     d(new ImageContentsData)
 {
     d->header = header;
 }
 
+/*!
+    Constructs a shallow copy of the given \a other contents.
+*/
 ImageContents::ImageContents(const ImageContents &other) :
     d(other.d)
 {
 
 }
 
+/*!
+    Move-constructs an ImageContents instance, making it point at the same object that \a other was
+    pointing to.
+*/
 ImageContents::ImageContents(ImageContents &&other) :
     d(qMove(other.d))
 {
 }
 
+/*!
+    Destroys the ImageContents object.
+*/
 ImageContents::~ImageContents()
 {
-
 }
 
+/*!
+    Assigns a shallow copy of the \a other contents to this contents and returns a reference to this
+    contents.
+*/
 ImageContents &ImageContents::operator=(const ImageContents &other)
 {
     if (this != &other)
@@ -143,6 +166,9 @@ ImageContents &ImageContents::operator=(const ImageContents &other)
     return *this;
 }
 
+/*!
+    Move-assigns \a other to this ImageContents instance.
+*/
 ImageContents &ImageContents::operator=(ImageContents &&other)
 {
     if (this != &other)
@@ -150,6 +176,9 @@ ImageContents &ImageContents::operator=(ImageContents &&other)
     return *this;
 }
 
+/*!
+    Returns true if all fields have default values.
+*/
 bool ImageContents::isNull() const
 {
     return *this == ImageContents();
