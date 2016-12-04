@@ -126,6 +126,13 @@ ImageIO::ImageIO(const QString &fileName, const QMimeType &mimeType) :
     setMimeType(mimeType);
 }
 
+ImageIO::ImageIO(const QString &fileName, const QString &mimeType) :
+    d_ptr(new ImageIOPrivate(this))
+{
+    setFileName(fileName);
+    setMimeType(mimeType);
+}
+
 ImageIO::ImageIO(QIODevice *device) :
     d_ptr(new ImageIOPrivate(this))
 {
@@ -279,6 +286,8 @@ bool ImageIO::write(const ImageContents &contents, const ImageOptions &options)
         d->error = Error::IOError;
         return false;
     }
+    if (d->file)
+        d->file->flush();
     return true;
 }
 

@@ -24,6 +24,7 @@ public:
     ImageIO();
     explicit ImageIO(const QString &fileName);
     ImageIO(const QString &fileName, const QMimeType &mimeType);
+    ImageIO(const QString &fileName, const QString &mimeType);
     explicit ImageIO(QIODevice *device);
     ImageIO(QIODevice *device, const QMimeType &mimeType);
     ~ImageIO();
