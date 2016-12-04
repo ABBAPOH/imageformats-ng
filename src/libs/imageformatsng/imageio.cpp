@@ -320,12 +320,6 @@ QVector<ImageFormatInfo> ImageIO::supportedImageFormats(ImageFormatInfo::Capabil
     const auto end = std::remove_if(formats.begin(), formats.end(), predicate);
     formats.resize(int(end - formats.begin()));
     return formats;
-//    QVector<ImageFormatInfo> result;
-//    for (auto format : formats) {
-//        if (format.capabilities() & caps)
-//            result.push_back(format);
-//    }
-//    return result;
 }
 
 Optional<ImageFormatInfo> ImageIO::imageFormat(const QMimeType &mimeType)
