@@ -108,10 +108,9 @@ ImageContents::ImageContents(const QImage &image):
 {
     if (image.isNull())
         return;
-    ImageHeader header;
-    header.setType(ImageHeader::Image);
-    header.setSize(image.size());
-    header.setImageFormat(image.format());
+    d->header.setType(ImageHeader::Image);
+    d->header.setSize(image.size());
+    d->header.setImageFormat(image.format());
     setImage(image);
 }
 
