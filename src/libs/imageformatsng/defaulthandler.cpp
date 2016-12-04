@@ -38,6 +38,7 @@ bool DefaultHandler::readHeader(ImageHeader &header)
     } else if (count > 0) {
         header.setHasMipmaps(true);
     }
+    return true;
 }
 
 bool DefaultHandler::read(ImageContents &contents)
