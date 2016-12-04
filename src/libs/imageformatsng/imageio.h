@@ -22,11 +22,10 @@ public:
     class Error;
 
     ImageIO();
-    explicit ImageIO(const QString &fileName);
-    ImageIO(const QString &fileName, const QMimeType &mimeType);
+    explicit ImageIO(const QString &fileName, const QMimeType &mimeType = QMimeType());
+    explicit ImageIO(QIODevice *device, const QMimeType &mimeType = QMimeType());
     ImageIO(const QString &fileName, const QString &mimeType);
-    explicit ImageIO(QIODevice *device);
-    ImageIO(QIODevice *device, const QMimeType &mimeType);
+    ImageIO(QIODevice *device, const QString &mimeType);
     ~ImageIO();
 
     QString fileName() const;
