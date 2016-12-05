@@ -330,7 +330,7 @@ Optional<ImageFormatInfo> ImageIO::imageFormat(const QString &mimeTypeName)
 QString ImageIO::pluginsDirPath()
 {
 #if defined(Q_OS_LINUX)
-    return QStringLiteral("/../lib/imageviewer/plugins/");
+    return QStringLiteral("/../lib/imageviewer-ng/plugins/");
 #elif defined(Q_OS_MAC)
     return QStringLiteral("/../PlugIns/");
 #elif defined(Q_OS_WIN)
