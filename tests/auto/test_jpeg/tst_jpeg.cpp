@@ -37,7 +37,7 @@ void TestJpeg::readImage()
     ImageIO io(fileName);
     auto maybeImage = io.read();
     auto ok = io.error();
-    QVERIFY2(ok == success, ok.errorString().toUtf8().constData());
+    QVERIFY2(ok == success, qPrintable(ok.errorString()));
 }
 
 void TestJpeg::testHeader_data()
