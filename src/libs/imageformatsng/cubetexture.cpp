@@ -116,34 +116,3 @@ QImage CubeTexture::toProjection(CubeTexture::Projection projection) const
 
     return QImage();
 }
-
-CubeTextureMipmaps::CubeTextureMipmaps()
-{
-}
-
-CubeTextureMipmaps::CubeTextureMipmaps(const QVector<CubeTexture> &mipmaps)
-{
-    _mipmaps = mipmaps;
-    _valid = true;
-}
-
-bool CubeTextureMipmaps::isValid() const
-{
-    return _valid;
-}
-
-Size3D CubeTextureMipmaps::size(int level) const
-{
-    return _valid ? _mipmaps.at(level).size() : Size3D();
-}
-
-CubeTexture CubeTextureMipmaps::mipmap(int level) const
-{
-    return _valid ? _mipmaps.at(level) : CubeTexture();
-}
-
-void CubeTextureMipmaps::setMipmaps(const QVector<CubeTexture> &mipmaps)
-{
-    _mipmaps = mipmaps;
-    _valid = true;
-}

@@ -45,19 +45,4 @@ private:
     QVector<QImage> _images;
 };
 
-class CubeTextureMipmaps
-{
-    CubeTextureMipmaps();
-    CubeTextureMipmaps(const QVector<CubeTexture> &mipmaps);
-
-    bool isValid() const;
-    Size3D size(int level = 0) const;
-    CubeTexture mipmap(int level = 0) const;
-    void setMipmaps(const QVector<CubeTexture> &mipmaps);
-
-private:
-    bool _valid { false };
-    QVector<CubeTexture> _mipmaps;
-};
-
 #endif // CUBETEXTURE_H

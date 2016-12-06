@@ -49,20 +49,4 @@ private:
     QVector<QImage> _images;
 };
 
-class VolumeTextureMipmaps
-{
-    VolumeTextureMipmaps();
-    VolumeTextureMipmaps(const QVector<VolumeTexture> &mipmaps);
-
-    bool isValid() const;
-    Size3D size(int level = 0) const;
-    int mipmapCount() const;
-    VolumeTexture mipmap(int level = 0) const;
-    void setMipmaps(const QVector<VolumeTexture> &mipmaps);
-
-private:
-    bool _valid { false };
-    QVector<VolumeTexture> _mipmaps;
-};
-
 #endif // VOLUMETEXTURE_H
