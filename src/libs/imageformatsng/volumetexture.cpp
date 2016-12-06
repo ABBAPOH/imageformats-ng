@@ -23,9 +23,9 @@ VolumeTexture::VolumeTexture(const QVector<QImage> &slices)
     _valid = true;
 }
 
-bool VolumeTexture::isValid() const
+bool VolumeTexture::isNull() const
 {
-    return _valid;
+    return !_valid;
 }
 
 int VolumeTexture::width() const
@@ -40,7 +40,7 @@ int VolumeTexture::height() const
 
 int VolumeTexture::depth() const
 {
-    return _images.size();
+    return _valid ? _images.size() : -1;
 }
 
 QImage::Format VolumeTexture::format() const

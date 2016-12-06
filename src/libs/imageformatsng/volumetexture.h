@@ -21,7 +21,7 @@ public:
     VolumeTexture(int width, int heigth, int depth = 1, QImage::Format format = QImage::Format_ARGB32);
     VolumeTexture(const QVector<QImage> &slices);
 
-    bool isValid() const;
+    bool isNull() const;
 
     int width() const;
     int height() const;

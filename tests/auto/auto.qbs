@@ -8,6 +8,7 @@ Project {
         "test_imageexifmeta/test_imageexifmeta.qbs",
         "test_imageheader/test_imageheader.qbs",
         "test_imageio/test_imageio.qbs",
-        "test_jpeg/test_jpeg.qbs"
+        "test_jpeg/test_jpeg.qbs",
+        "test_volumetexture/test_volumetexture.qbs"
     ]
 }
