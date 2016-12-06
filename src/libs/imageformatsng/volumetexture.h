@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QtCore/QSharedDataPointer>
 #include <QtGui/QImage>
 
 class Size3D
@@ -13,20 +14,27 @@ public:
     int depth {0};
 };
 
+class VolumeTextureData;
 class VolumeTexture
 {
 public:
-    VolumeTexture();
+    VolumeTexture() Q_DECL_NOEXCEPT;
+    VolumeTexture(const VolumeTexture &);
+    VolumeTexture(VolumeTexture &&) Q_DECL_NOEXCEPT;
     VolumeTexture(int width, int heigth, int depth = 1, QImage::Format format = QImage::Format_ARGB32);
     VolumeTexture(const QVector<QImage> &slices);
+    ~VolumeTexture();
 
-    bool isNull() const;
+    VolumeTexture &operator=(const VolumeTexture &);
+    VolumeTexture &operator=(VolumeTexture &&) Q_DECL_NOEXCEPT;
 
-    int width() const;
-    int height() const;
-    int depth() const;
+    bool isNull() const Q_DECL_NOEXCEPT;
 
-    QImage::Format format() const;
+    int width() const Q_DECL_NOEXCEPT;
+    int height() const Q_DECL_NOEXCEPT;
+    int depth() const Q_DECL_NOEXCEPT;
+
+    QImage::Format format() const Q_DECL_NOEXCEPT;
 
     Size3D size() const;
 
@@ -42,8 +50,5 @@ public:
     // VolumeTexture transformed(const QTransform &matrix, Qt::TransformationMode mode = Qt::FastTransformation) const
 
 private:
-    bool _valid {false};
-    QImage::Format _format;
-    QSize _size;
-    QVector<QImage> _images;
+    QSharedDataPointer<VolumeTextureData> d;
 };
