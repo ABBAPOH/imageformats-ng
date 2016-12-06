@@ -1,5 +1,4 @@
-#ifndef CUBETEXTURE_H
-#define CUBETEXTURE_H
+#pragma once
 
 #include <QtGui/QImage>
 #include "volumetexture.h"
@@ -44,5 +43,3 @@ private:
     QImage::Format _format {QImage::Format_Invalid};
     QVector<QImage> _images;
 };
-
-#endif // CUBETEXTURE_H

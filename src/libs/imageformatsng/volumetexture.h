@@ -1,5 +1,4 @@
-#ifndef VOLUMETEXTURE_H
-#define VOLUMETEXTURE_H
+#pragma once
 
 #include <QtGui/QImage>
 
@@ -48,5 +47,3 @@ private:
     QSize _size;
     QVector<QImage> _images;
 };
-
-#endif // VOLUMETEXTURE_H
