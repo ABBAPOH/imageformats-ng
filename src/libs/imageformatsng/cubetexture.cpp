@@ -50,11 +50,6 @@ int CubeTexture::depth() const
     return _extent;
 }
 
-Size3D CubeTexture::size() const
-{
-    return Size3D(_extent, _extent, _extent);
-}
-
 QImage CubeTexture::side(CubeTexture::Side side)
 {
     if (side <= 0 || side > 6)

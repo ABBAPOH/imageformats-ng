@@ -22,8 +22,6 @@ public:
     int heigth() const;
     int depth() const;
 
-    Size3D size() const;
-
     QImage::Format format() const;
 
     QImage side(Side side);
