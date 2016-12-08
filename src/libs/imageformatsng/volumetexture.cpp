@@ -10,6 +10,30 @@ public:
     QVector<QImage> images;
 };
 
+static VolumeTextureData *construct(const QVector<QImage> &slices, bool check = true)
+{
+    if (slices.isEmpty())
+        return nullptr;
+
+    const auto size = slices.first().size();
+    const auto format = slices.first().format();
+    if (check) {
+        for (const auto &slice : slices) {
+            if (slice.isNull())
+                return nullptr;
+            if (slice.size() != size)
+                return nullptr;
+            if (slice.format() != format)
+                return nullptr;
+        }
+    }
+
+    std::unique_ptr<VolumeTextureData> d(new VolumeTextureData());
+    d->size = size;
+    d->format = format;
+    d->images = slices;
+    return d.release();
+}
 
 VolumeTexture::VolumeTexture() Q_DECL_NOEXCEPT
 {
@@ -39,26 +63,9 @@ VolumeTexture::VolumeTexture(int width, int height, int depth, QImage::Format fo
     }
 }
 
-VolumeTexture::VolumeTexture(const QVector<QImage> &slices)
+VolumeTexture::VolumeTexture(const QVector<QImage> &slices) :
+    VolumeTexture(construct(slices))
 {
-    if (slices.isEmpty())
-        return;
-
-    const auto size = slices.first().size();
-    const auto format = slices.first().format();
-    for (const auto &slice : slices) {
-        if (slice.isNull())
-            return;
-        if (slice.size() != size)
-            return;
-        if (slice.format() != format)
-            return;
-    }
-
-    d = new VolumeTextureData();
-    d->size = size;
-    d->format = format;
-    d->images = slices;
 }
 
 VolumeTexture::~VolumeTexture() Q_DECL_NOEXCEPT
@@ -138,7 +145,7 @@ void VolumeTexture::fill(uint value)
     }
 }
 
-QImage VolumeTexture::slice(int index)
+QImage VolumeTexture::slice(int index) const
 {
     if (!d || index < 0 || index >= depth()) {
         qWarning("VolumeTexture::slice: index (%d) out of range", index);
@@ -162,4 +169,22 @@ void VolumeTexture::setSlice(int index, const QImage &image)
     }
 
     d->images[index] = image;
+}
+
+VolumeTexture VolumeTexture::convertToFormat(QImage::Format format,
+                                             Qt::ImageConversionFlags flags) const
+{
+    if (!d)
+        return VolumeTexture();
+
+    QVector<QImage> slices;
+    for (int z = 0; z < depth(); ++z) {
+        slices.append(slice(z).convertToFormat(format, flags));
+    }
+    return VolumeTexture(construct(slices, false));
+}
+
+VolumeTexture::VolumeTexture(VolumeTextureData *dd) Q_DECL_NOEXCEPT :
+    d(dd)
+{
 }

@@ -41,12 +41,16 @@ public:
 
     void fill(uint value);
 
-    QImage slice(int slice);
+    QImage slice(int slice) const;
     void setSlice(int index, const QImage &image);
+
+    VolumeTexture convertToFormat(QImage::Format format,
+                                  Qt::ImageConversionFlags flags = Qt::AutoColor) const;
 
     // VolumeTexture scaled(int width, int height, int depth);
     // VolumeTexture transformed(const QTransform &matrix, Qt::TransformationMode mode = Qt::FastTransformation) const
 
 private:
+    VolumeTexture(VolumeTextureData *dd) Q_DECL_NOEXCEPT;
     QSharedDataPointer<VolumeTextureData> d;
 };
