@@ -36,8 +36,6 @@ public:
 
     QImage::Format format() const Q_DECL_NOEXCEPT;
 
-    Size3D size() const;
-
     QRgb pixel(int x, int y, int z);
     void setPixel(int x, int y, int z, uint index_or_rgb);
 

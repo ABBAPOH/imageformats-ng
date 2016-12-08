@@ -86,11 +86,6 @@ QImage::Format VolumeTexture::format() const Q_DECL_NOEXCEPT
     return d ? d->format : QImage::Format_Invalid;
 }
 
-Size3D VolumeTexture::size() const
-{
-    return Size3D(width(), height(), depth());
-}
-
 QRgb VolumeTexture::pixel(int x, int y, int z)
 {
     if (!d || x < 0 || x >= d->size.width()
