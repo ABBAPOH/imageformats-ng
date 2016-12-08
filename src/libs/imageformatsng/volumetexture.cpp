@@ -5,12 +5,31 @@
 class VolumeTextureData : public QSharedData
 {
 public:
+    static VolumeTextureData *create(int width, int height, int depth, QImage::Format format);
+    static VolumeTextureData *create(const QVector<QImage> &slices, bool check = true);
+
+public:
     QImage::Format format;
     QSize size;
     QVector<QImage> images;
 };
 
-static VolumeTextureData *construct(const QVector<QImage> &slices, bool check = true)
+VolumeTextureData *VolumeTextureData::create(int width, int height, int depth, QImage::Format format)
+{
+    if (width <= 0 || height <= 0 || depth <= 0 || format == QImage::Format_Invalid)
+        return nullptr;
+
+    std::unique_ptr<VolumeTextureData> d(new VolumeTextureData());
+    d->size = QSize(width, height);
+    d->format = format;
+    d->images.reserve(depth);
+    for (int z = 0; z < depth; ++z) {
+        d->images.append(QImage(width, height, format));
+    }
+    return d.release();
+}
+
+VolumeTextureData *VolumeTextureData::create(const QVector<QImage> &slices, bool check)
 {
     if (slices.isEmpty())
         return nullptr;
@@ -49,22 +68,13 @@ VolumeTexture::VolumeTexture(VolumeTexture &&other) Q_DECL_NOEXCEPT :
 {
 }
 
-VolumeTexture::VolumeTexture(int width, int height, int depth, QImage::Format format)
+VolumeTexture::VolumeTexture(int width, int height, int depth, QImage::Format format) :
+    VolumeTexture(VolumeTextureData::create(width, height, depth, format))
 {
-    if (width <= 0 || height <= 0 || depth <= 0 || format == QImage::Format_Invalid)
-        return;
-
-    d = new VolumeTextureData();
-    d->size = QSize(width, height);
-    d->format = format;
-    d->images.reserve(depth);
-    for (int z = 0; z < depth; ++z) {
-        d->images.append(QImage(width, height, format));
-    }
 }
 
 VolumeTexture::VolumeTexture(const QVector<QImage> &slices) :
-    VolumeTexture(construct(slices))
+    VolumeTexture(VolumeTextureData::create(slices))
 {
 }
 
@@ -181,7 +191,7 @@ VolumeTexture VolumeTexture::convertToFormat(QImage::Format format,
     for (int z = 0; z < depth(); ++z) {
         slices.append(slice(z).convertToFormat(format, flags));
     }
-    return VolumeTexture(construct(slices, false));
+    return VolumeTexture(VolumeTextureData::create(slices, false));
 }
 
 VolumeTexture::VolumeTexture(VolumeTextureData *dd) Q_DECL_NOEXCEPT :
