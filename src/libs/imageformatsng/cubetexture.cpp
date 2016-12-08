@@ -1,5 +1,28 @@
 #include "cubetexture.h"
 
+class CubeTextureData : public QSharedData
+{
+public:
+    static CubeTextureData *create(int extent, QImage::Format format);
+    inline QSize size() const { return QSize(extent, extent); }
+
+public:
+    int extent {0};
+    QImage::Format format {QImage::Format_Invalid};
+    QVector<QImage> images;
+};
+
+CubeTextureData *CubeTextureData::create(int extent, QImage::Format format)
+{
+    if (extent <= 0 || format == QImage::Format_Invalid)
+        return nullptr;
+
+    std::unique_ptr<CubeTextureData> d(new CubeTextureData());
+    d->extent = extent;
+    d->images.resize(6);
+    return d.release();
+}
+
 struct FaceOffset
 {
     int x, y;
@@ -7,107 +30,140 @@ struct FaceOffset
 
 static const FaceOffset faceOffsets[6] = { {2, 1}, {0, 1}, {1, 0}, {1, 2}, {1, 1}, {3, 1} };
 
-static int sideToIndex(CubeTexture::Side side)
+static constexpr inline int sideToIndex(CubeTexture::Side side)
 {
-    switch (side) {
-    case CubeTexture::PositiveX: return 0;
-    case CubeTexture::NegativeX: return 1;
-    case CubeTexture::PositiveY: return 2;
-    case CubeTexture::NegativeY: return 3;
-    case CubeTexture::PositiveZ: return 4;
-    case CubeTexture::NegativeZ: return 5;
-    }
-    return -1;
+    return static_cast<std::underlying_type<CubeTexture::Side>::type>(side);
 }
 
-CubeTexture::CubeTexture() :
-    _extent(0)
+CubeTexture::CubeTexture() Q_DECL_NOEXCEPT
 {
-    _images.resize(6);
 }
 
-CubeTexture::CubeTexture(int extent, QImage::Format format)
+CubeTexture::CubeTexture(const CubeTexture &other) :
+    d(other.d)
 {
-    if (extent <= 0 || format == QImage::Format_Invalid)
-        return;
-
-    _extent = extent;
-    _images.resize(6);
 }
 
-int CubeTexture::width() const
+CubeTexture::CubeTexture(int extent, QImage::Format format) :
+    CubeTexture(CubeTextureData::create(extent, format))
 {
-    return _extent;
 }
 
-int CubeTexture::heigth() const
+CubeTexture::~CubeTexture()
 {
-    return _extent;
 }
 
-int CubeTexture::depth() const
+CubeTexture &CubeTexture::operator=(const CubeTexture &other)
 {
-    return _extent;
+    if (this != &other)
+        d.operator=(other.d);
+    return *this;
+}
+
+bool CubeTexture::isNull() const Q_DECL_NOEXCEPT
+{
+    return !d;
+}
+
+int CubeTexture::width() const Q_DECL_NOEXCEPT
+{
+    return d ? d->extent : -1;
+}
+
+int CubeTexture::heigth() const Q_DECL_NOEXCEPT
+{
+    return d ? d->extent : -1;
+}
+
+int CubeTexture::depth() const Q_DECL_NOEXCEPT
+{
+    return d ? d->extent : -1;
+}
+
+QImage::Format CubeTexture::format() const Q_DECL_NOEXCEPT
+{
+    return d ? d->format : QImage::Format_Invalid;
 }
 
 QImage CubeTexture::side(CubeTexture::Side side)
 {
-    if (side <= 0 || side > 6)
+    if (!d) {
+        qWarning("CubeTexture::side is called on a null texture");
         return QImage();
-    return _images.at(int(side));
+    }
+
+    return d->images.at(sideToIndex(side));
 }
 
 void CubeTexture::setSide(CubeTexture::Side side, const QImage &image)
 {
-    if (side <= 0 || side > 6)
+    if (!d) {
+        qWarning("CubeTexture::setSide is called on a null texture");
         return;
+    }
 
-    if (_extent == 0)
-        _extent = qMin(image.width(), image.height());
+    if (image.format() != d->format) {
+        qWarning("VolumeTexture::setSlice: wrong image format: %d",
+                 image.format());
+        return;
+    }
 
-    if (_format == QImage::Format_Invalid)
-        _format = image.format();
+    if (image.size() != d->size()) {
+        qWarning("VolumeTexture::setSlice: wrong image size: (%d,%d)",
+                 image.size().width(), image.size().height());
+        return;
+    }
 
-    auto scaled = image.scaled(_extent, _extent);
-    scaled = image.convertToFormat(_format);
-
-    _images[sideToIndex(side)] = scaled;
+    d->images[sideToIndex(side)] = image;
 }
 
 CubeTexture CubeTexture::scaled(int size)
 {
+    if (!d)
+        return CubeTexture();
+
     CubeTexture result;
 
-    for (int i = PositiveX; i <= NegativeZ; i++) {
-        result.setSide(Side(i), _images[i].scaled(size, size));
+    for (int i = sideToIndex(Side::PositiveX); i <= sideToIndex(Side::NegativeZ); i++) {
+        result.setSide(Side(i), d->images[i].scaled(size, size));
     }
     return result;
 }
 
 QImage CubeTexture::toProjection(CubeTexture::Projection projection) const
 {
+    if (!d)
+        return QImage();
+
+    const auto extent = d->extent;
+
     if (projection == HorizonalCross) {
-        QImage image(4 * _extent, 3 * _extent, _format);
+        QImage image(4 * d->extent, 3 * extent, d->format);
 
         image.fill(0);
 
-        for (int i = PositiveX; i <= NegativeZ; i++) {
-            auto face = _images[i];
+        for (int i = sideToIndex(Side::PositiveX); i <= sideToIndex(Side::NegativeZ); i++) {
+            auto face = d->images[i];
             if (face.isNull())
                 continue; // Skip face.
 
             // Compute face offsets.
-            int offset_x = faceOffsets[i].x * _extent;
-            int offset_y = faceOffsets[i].y * _extent;
+            int offset_x = faceOffsets[i].x * extent;
+            int offset_y = faceOffsets[i].y * extent;
 
             // Copy face on the image.
-            for (int y = 0; y < _extent; y++) {
+            for (int y = 0; y < extent; y++) {
                 const QRgb *src = reinterpret_cast<const QRgb *>(face.scanLine(y));
                 QRgb *dst = reinterpret_cast<QRgb *>(image.scanLine(y + offset_y)) + offset_x;
-                memcpy(dst, src, sizeof(QRgb) * _extent);
+                memcpy(dst, src, sizeof(QRgb) * extent);
             }
         }
     }
 
     return QImage();
+}
+
+CubeTexture::CubeTexture(CubeTextureData *dd) Q_DECL_NOEXCEPT :
+    d(dd)
+{
 }

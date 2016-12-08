@@ -1,28 +1,38 @@
 #pragma once
 
+#include <QtCore/QSharedDataPointer>
 #include <QtGui/QImage>
 #include "volumetexture.h"
 
+class CubeTextureData;
 class CubeTexture
 {
+    Q_GADGET
 public:
-    CubeTexture();
+    CubeTexture() Q_DECL_NOEXCEPT;
+    CubeTexture(const CubeTexture &other);
     CubeTexture(int extent, QImage::Format format = QImage::Format_ARGB32);
+    ~CubeTexture();
 
-    enum Side {
-        PositiveX = 0x1,
-        NegativeX = 0x2,
-        PositiveY = 0x3,
-        NegativeY = 0x4,
-        PositiveZ = 0x5,
-        NegativeZ = 0x6,
+    CubeTexture &operator=(const CubeTexture &other);
+
+    enum class Side {
+        PositiveX,
+        NegativeX,
+        PositiveY,
+        NegativeY,
+        PositiveZ,
+        NegativeZ,
     };
+    Q_ENUMS(Side)
 
-    int width() const;
-    int heigth() const;
-    int depth() const;
+    bool isNull() const Q_DECL_NOEXCEPT;
 
-    QImage::Format format() const;
+    int width() const Q_DECL_NOEXCEPT;
+    int heigth() const Q_DECL_NOEXCEPT;
+    int depth() const Q_DECL_NOEXCEPT;
+
+    QImage::Format format() const Q_DECL_NOEXCEPT;
 
     QImage side(Side side);
     void setSide(Side side, const QImage &image);
@@ -37,7 +47,8 @@ public:
 //    static CubeTexture fromProjection(const QImage &image, Projection projection);
 
 private:
-    int _extent {0};
-    QImage::Format _format {QImage::Format_Invalid};
-    QVector<QImage> _images;
+    explicit CubeTexture(CubeTextureData *dd) Q_DECL_NOEXCEPT;
+
+private:
+    QSharedDataPointer<CubeTextureData> d;
 };
