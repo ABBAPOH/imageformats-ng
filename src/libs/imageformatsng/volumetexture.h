@@ -21,9 +21,9 @@ public:
     VolumeTexture() Q_DECL_NOEXCEPT;
     VolumeTexture(const VolumeTexture &);
     VolumeTexture(VolumeTexture &&) Q_DECL_NOEXCEPT;
-    VolumeTexture(int width, int heigth, int depth = 1, QImage::Format format = QImage::Format_ARGB32);
+    VolumeTexture(int width, int height, int depth = 1, QImage::Format format = QImage::Format_ARGB32);
     VolumeTexture(const QVector<QImage> &slices);
-    ~VolumeTexture();
+    ~VolumeTexture() Q_DECL_NOEXCEPT;
 
     VolumeTexture &operator=(const VolumeTexture &);
     VolumeTexture &operator=(VolumeTexture &&) Q_DECL_NOEXCEPT;

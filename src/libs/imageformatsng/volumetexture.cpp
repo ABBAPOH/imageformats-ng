@@ -25,13 +25,18 @@ VolumeTexture::VolumeTexture(VolumeTexture &&other) Q_DECL_NOEXCEPT :
 {
 }
 
-VolumeTexture::VolumeTexture(int width, int heigth, int depth, QImage::Format format)
+VolumeTexture::VolumeTexture(int width, int height, int depth, QImage::Format format)
 {
-    if (width <= 0 || heigth <= 0 || depth <= 0 || format == QImage::Format_Invalid)
+    if (width <= 0 || height <= 0 || depth <= 0 || format == QImage::Format_Invalid)
         return;
 
-    d = new VolumeTextureData;
-    d->images.resize(depth);
+    d = new VolumeTextureData();
+    d->size = QSize(width, height);
+    d->format = format;
+    d->images.reserve(depth);
+    for (int z = 0; z < depth; ++z) {
+        d->images.append(QImage(width, height, format));
+    }
 }
 
 VolumeTexture::VolumeTexture(const QVector<QImage> &slices)
@@ -39,11 +44,24 @@ VolumeTexture::VolumeTexture(const QVector<QImage> &slices)
     if (slices.isEmpty())
         return;
 
-    d = new VolumeTextureData;
+    const auto size = slices.first().size();
+    const auto format = slices.first().format();
+    for (const auto &slice : slices) {
+        if (slice.isNull())
+            return;
+        if (slice.size() != size)
+            return;
+        if (slice.format() != format)
+            return;
+    }
+
+    d = new VolumeTextureData();
+    d->size = size;
+    d->format = format;
     d->images = slices;
 }
 
-VolumeTexture::~VolumeTexture()
+VolumeTexture::~VolumeTexture() Q_DECL_NOEXCEPT
 {
 }
 
