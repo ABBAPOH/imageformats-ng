@@ -3,6 +3,7 @@
 #include "imageiohandler.h"
 
 #include <QImageReader>
+#include <memory>
 
 class DefaultHandler : public ImageIOHandler
 {
