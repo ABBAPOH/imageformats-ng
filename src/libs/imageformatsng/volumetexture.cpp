@@ -2,6 +2,8 @@
 
 #include <QtCore/QSharedData>
 
+#include <memory>
+
 class VolumeTextureData : public QSharedData
 {
 public:

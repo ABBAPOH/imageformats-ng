@@ -1,5 +1,7 @@
 #include "cubetexture.h"
 
+#include <memory>
+
 class CubeTextureData : public QSharedData
 {
 public:
