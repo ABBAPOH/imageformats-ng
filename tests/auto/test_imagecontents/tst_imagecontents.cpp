@@ -51,7 +51,11 @@ void TestImageContents::setters()
         for (int j = 0; j < header.mipmapCount(); ++j) {
             int size = 1 << (header.mipmapCount() - j - 1);
             QImage image(size, size, QImage::Format_ARGB32);
-            image.fill(QColor(255 * i / 2, 255 * j / 2, 255 * (i + j) / 4));
+            const int red = 255 * i / (header.imageCount() - 1);
+            const int green = 255 * j / (header.mipmapCount() - 1);
+            const int blue = 255 * (i + j)
+                    / (header.imageCount() + header.mipmapCount() - 2);
+            image.fill(QColor(red, green, blue));
             contents.setImage(image, i, j);
             QCOMPARE(contents.image(i, j), image);
         }
