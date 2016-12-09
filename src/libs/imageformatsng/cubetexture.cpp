@@ -2,6 +2,28 @@
 
 #include <memory>
 
+namespace {
+
+struct FaceOffset
+{
+    int x, y;
+};
+
+static const FaceOffset faceOffsets[2][6] =  {
+    { {2, 1}, {0, 1}, {1, 0}, {1, 2}, {1, 1}, {3, 1} },
+    // TODO: fix vertical offsets
+    { {2, 1}, {0, 1}, {1, 0}, {1, 2}, {1, 1}, {1, 3} }
+};
+
+static const FaceOffset multipliers[2] = { {4, 3}, {3, 4} };
+
+static constexpr inline int sideToIndex(CubeTexture::Side side)
+{
+    return static_cast<std::underlying_type<CubeTexture::Side>::type>(side);
+}
+
+} // namespace
+
 class CubeTextureData : public QSharedData
 {
 public:
@@ -23,24 +45,6 @@ CubeTextureData *CubeTextureData::create(int extent, QImage::Format format)
     d->extent = extent;
     d->images.resize(6);
     return d.release();
-}
-
-struct FaceOffset
-{
-    int x, y;
-};
-
-static const FaceOffset faceOffsets[2][6] =  {
-    { {2, 1}, {0, 1}, {1, 0}, {1, 2}, {1, 1}, {3, 1} },
-    // TODO: fix vertical offsets
-    { {2, 1}, {0, 1}, {1, 0}, {1, 2}, {1, 1}, {1, 3} }
-};
-
-static const FaceOffset multipliers[2] = { {4, 3}, {3, 4} };
-
-static constexpr inline int sideToIndex(CubeTexture::Side side)
-{
-    return static_cast<std::underlying_type<CubeTexture::Side>::type>(side);
 }
 
 CubeTexture::CubeTexture() Q_DECL_NOEXCEPT
