@@ -26,7 +26,7 @@ private:
     int _code {0};
 };
 
-class RuntimeError: public std::exception
+class RuntimeError: public Exception
 {
 public:
     explicit RuntimeError(const QString &message);
