@@ -3,6 +3,16 @@
 
 #include <QtCore/QFileInfo>
 
+/*!
+    \class MainParser
+    This is the parser for the arguments passed to main().
+    Checks that input arguments has format ./imagetool [common options] <tool> [options] and
+    that <tool> is valid tool.
+*/
+
+/*!
+    Constructs MainParser object with the given DescriptionMap \a map.
+*/
 MainParser::MainParser(const DescriptionMap &map) :
     _map(map),
     helpOption(parser.addHelpOption()),
@@ -39,6 +49,9 @@ void MainParser::process(const QStringList &arguments)
     }
 }
 
+/*!
+    Prints help and throws ExitException with the given \a code.
+*/
 void MainParser::showHelp(int code)
 {
     auto text = parser.helpText();
@@ -59,6 +72,9 @@ void MainParser::showHelp(int code)
     exit(code);
 }
 
+/*!
+    Prints program version and throws ExitException with zero code.
+*/
 void MainParser::showVersion()
 {
     showMessage(QCoreApplication::applicationName() + QLatin1Char(' ')
@@ -66,16 +82,26 @@ void MainParser::showVersion()
     exit(EXIT_SUCCESS);
 }
 
+/*!
+    Prints the given \a message to the sdtout stream.
+*/
 void MainParser::showMessage(const QString &message)
 {
     ToolParser::showMessage(message);
 }
 
+/*!
+    Prints the given \a message to the sdterr stream.
+*/
 void MainParser::showError(const QString &message)
 {
     ToolParser::showError(message);
 }
 
+/*!
+    \internal
+    Throws ExitException with then given \a code.
+*/
 void MainParser::exit(int code)
 {
     throw ExitException(code);

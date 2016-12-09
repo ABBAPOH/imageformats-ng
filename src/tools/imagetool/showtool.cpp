@@ -133,18 +133,35 @@ static void showImageInfo(const QString &filePath)
 
 } // namespace
 
+/*!
+    \class ShowTool
+    This is class implements image showing tool.
+*/
+
+/*!
+    Constructs a ShowTool instance.
+*/
 ShowTool::ShowTool() = default;
 
+/*!
+    \reimp
+*/
 QByteArray ShowTool::id() const
 {
     return toolId;
 }
 
+/*!
+    \reimp
+*/
 QString ShowTool::decription() const
 {
     return ShowTool::tr("Shows information about image file", "ImageTool");
 }
 
+/*!
+    \reimp
+*/
 int ShowTool::run(const QStringList &arguments)
 {
     const auto options = parseOptions(arguments);

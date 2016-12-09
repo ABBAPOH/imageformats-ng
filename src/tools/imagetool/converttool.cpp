@@ -83,18 +83,35 @@ static void convert(const Options &options)
 
 } // namespace
 
+/*!
+    \class ConvertTool
+    This is class implements image converting tool.
+*/
+
+/*!
+    Constructs a ConvertTool instance.
+*/
 ConvertTool::ConvertTool() = default;
 
+/*!
+    \reimp
+*/
 QByteArray ConvertTool::id() const
 {
     return toolId;
 }
 
+/*!
+    \reimp
+*/
 QString ConvertTool::decription() const
 {
     return ConvertTool::tr("Converts image files");
 }
 
+/*!
+    \reimp
+*/
 int ConvertTool::run(const QStringList &arguments)
 {
     const auto options = parseOptions(arguments);
