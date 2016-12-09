@@ -2,6 +2,8 @@
 
 #include <QtCore/QCoreApplication>
 
+namespace ImageTool {
+
 /*!
     \class AbstractTool
     This is the base class for image tools.
@@ -37,3 +39,5 @@ AbstractTool::~AbstractTool() = default;
     to the tool. Tool should return 0 in case of success or non-zero in case of an error.
     Also, it can throw an exception that is caught by the main program.
 */
+
+} // namespace ImageTool

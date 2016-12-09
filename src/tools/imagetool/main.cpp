@@ -13,6 +13,7 @@
 #include <map>
 #include <memory>
 
+using namespace ImageTool;
 using ToolsMap = std::map<QByteArray, std::unique_ptr<AbstractTool>>;
 using DescriptionMap = MainParser::DescriptionMap;
 

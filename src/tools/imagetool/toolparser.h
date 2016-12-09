@@ -2,6 +2,8 @@
 
 #include <QtCore/QCommandLineParser>
 
+namespace ImageTool {
+
 class ToolParser : public QCommandLineParser
 {
 public:
@@ -20,3 +22,5 @@ private:
     QByteArray _toolId;
     QCommandLineOption helpOption;
 };
+
+} // namespace ImageTool

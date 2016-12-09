@@ -1,5 +1,7 @@
 #include "exception.h"
 
+namespace ImageTool {
+
 /*!
     \class Exception
     Base class for ImageTool's exceptions
@@ -97,3 +99,5 @@ const char *RuntimeError::what() const Q_DECL_NOEXCEPT
 {
     return "RuntimeError";
 }
+
+} // namespace ImageTool

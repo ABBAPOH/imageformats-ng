@@ -3,6 +3,8 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 
+namespace ImageTool {
+
 class AbstractTool
 {
     Q_DISABLE_COPY(AbstractTool)
@@ -14,3 +16,5 @@ public:
     virtual QString decription() const = 0;
     virtual int run(const QStringList &arguments) = 0;
 };
+
+} // namespace ImageTool

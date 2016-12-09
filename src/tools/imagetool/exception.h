@@ -4,6 +4,8 @@
 #include <exception>
 #include <QException>
 
+namespace ImageTool {
+
 class Exception: public std::exception
 {
 public:
@@ -37,3 +39,5 @@ public:
 private:
     QString _message;
 };
+
+} // namespace ImageTool

@@ -4,6 +4,8 @@
 #include <QtCore/QCommandLineParser>
 #include <QtCore/QMap>
 
+namespace ImageTool {
+
 class MainParser
 {
 public:
@@ -32,3 +34,5 @@ private:
     QString _name;
     QStringList _arguments;
 };
+
+} // namespace ImageTool

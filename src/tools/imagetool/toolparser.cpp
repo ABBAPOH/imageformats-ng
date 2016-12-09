@@ -3,6 +3,8 @@
 
 #include <QDir>
 
+namespace ImageTool {
+
 /*!
     \class ToolParser
     This is helper class that simplifies usage of the QCommandLineParser.
@@ -73,3 +75,5 @@ void ToolParser::exit(int code)
 {
     throw ExitException(code);
 }
+
+} // namespace ImageTool

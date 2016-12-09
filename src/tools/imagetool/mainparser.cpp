@@ -3,6 +3,8 @@
 
 #include <QtCore/QFileInfo>
 
+namespace ImageTool {
+
 /*!
     \class MainParser
     This is the parser for the arguments passed to main().
@@ -106,3 +108,5 @@ void MainParser::exit(int code)
 {
     throw ExitException(code);
 }
+
+} // namespace ImageTool

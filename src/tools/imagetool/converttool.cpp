@@ -6,6 +6,8 @@
 #include <QtCore/QCoreApplication>
 #include <QDebug>
 
+namespace ImageTool {
+
 namespace {
 
 static const char toolId[] = "convert";
@@ -119,3 +121,4 @@ int ConvertTool::run(const QStringList &arguments)
     return 0;
 }
 
+} // namespace ImageTool

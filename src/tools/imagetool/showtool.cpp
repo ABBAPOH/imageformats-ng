@@ -8,6 +8,8 @@
 
 #include <QtCore/QDebug>
 
+namespace ImageTool {
+
 namespace {
 
 static const char toolId[] = "show";
@@ -173,3 +175,5 @@ int ShowTool::run(const QStringList &arguments)
 
     return 0;
 }
+
+} // namespace ImageTool
