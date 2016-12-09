@@ -30,7 +30,13 @@ struct FaceOffset
     int x, y;
 };
 
-static const FaceOffset faceOffsets[6] = { {2, 1}, {0, 1}, {1, 0}, {1, 2}, {1, 1}, {3, 1} };
+static const FaceOffset faceOffsets[2][6] =  {
+    { {2, 1}, {0, 1}, {1, 0}, {1, 2}, {1, 1}, {3, 1} },
+    // TODO: fix vertical offsets
+    { {2, 1}, {0, 1}, {1, 0}, {1, 2}, {1, 1}, {1, 3} }
+};
+
+static const FaceOffset multipliers[2] = { {4, 3}, {3, 4} };
 
 static constexpr inline int sideToIndex(CubeTexture::Side side)
 {
@@ -139,30 +145,25 @@ QImage CubeTexture::toProjection(CubeTexture::Projection projection) const
 
     const auto extent = d->extent;
 
-    if (projection == HorizonalCross) {
-        QImage image(4 * d->extent, 3 * extent, d->format);
+    QImage image(multipliers[projection].x * extent, multipliers[projection].y * extent, d->format);
+    image.fill(0);
 
-        image.fill(0);
+    for (int side = sideToIndex(Side::PositiveX); side <= sideToIndex(Side::NegativeZ); side++) {
+        const auto face = d->images[side];
 
-        for (int i = sideToIndex(Side::PositiveX); i <= sideToIndex(Side::NegativeZ); i++) {
-            auto face = d->images[i];
-            if (face.isNull())
-                continue; // Skip face.
+        // Compute face offsets.
+        const int offset_x = faceOffsets[projection][side].x * extent;
+        const int offset_y = faceOffsets[projection][side].y * extent;
 
-            // Compute face offsets.
-            int offset_x = faceOffsets[i].x * extent;
-            int offset_y = faceOffsets[i].y * extent;
-
-            // Copy face on the image.
-            for (int y = 0; y < extent; y++) {
-                const QRgb *src = reinterpret_cast<const QRgb *>(face.scanLine(y));
-                QRgb *dst = reinterpret_cast<QRgb *>(image.scanLine(y + offset_y)) + offset_x;
-                memcpy(dst, src, sizeof(QRgb) * extent);
-            }
+        // Copy face on the image.
+        for (int y = 0; y < extent; y++) {
+            const QRgb *src = reinterpret_cast<const QRgb *>(face.scanLine(y));
+            QRgb *dst = reinterpret_cast<QRgb *>(image.scanLine(y + offset_y)) + offset_x;
+            memcpy(dst, src, sizeof(QRgb) * unsigned(extent));
         }
     }
 
-    return QImage();
+    return image;
 }
 
 CubeTexture::CubeTexture(CubeTextureData *dd) Q_DECL_NOEXCEPT :
