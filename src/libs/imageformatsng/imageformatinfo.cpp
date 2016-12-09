@@ -11,9 +11,9 @@
 */
 
 /*!
-    \internal
+    Constructs an default ImageFormatInfo object.
+    Default ImageFormatInfo object has no name, mimetype or capabilities.
 */
-// TODO: remove this ctor
 ImageFormatInfo::ImageFormatInfo() :
     d(new ImageFormatInfoData())
 {
@@ -33,12 +33,6 @@ ImageFormatInfo::ImageFormatInfo(const ImageFormatInfo &other) :
 ImageFormatInfo::ImageFormatInfo(ImageFormatInfo &&other) :
     d(qMove(other.d))
 {
-}
-
-ImageFormatInfo::ImageFormatInfo(const ImageFormatInfoData &data) :
-    d(new ImageFormatInfoData(data))
-{
-
 }
 
 /*!
@@ -92,6 +86,9 @@ ImageFormatInfo::Capabilities ImageFormatInfo::capabilities() const
     return d->capabilities;
 }
 
+/*!
+    Returns the capabilities supported by the image format as a QString object.
+*/
 QString ImageFormatInfo::capabilitiesString() const
 {
     const auto index = ImageFormatInfo::staticMetaObject.indexOfEnumerator("Capabilities");
@@ -132,4 +129,12 @@ QVector<ImageOptions::Option> ImageFormatInfo::supportedOptions(const QByteArray
 bool ImageFormatInfo::supportsOption(ImageOptions::Option option, const QByteArray &subType) const
 {
     return supportedOptions(subType).contains(option);
+}
+
+/*!
+    \internal
+*/
+ImageFormatInfo::ImageFormatInfo(const ImageFormatInfoData &data) :
+    d(new ImageFormatInfoData(data))
+{
 }
