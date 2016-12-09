@@ -95,12 +95,18 @@ void Document::setModified(bool modified)
     emit modificationChanged(modified);
 }
 
+/*!
+    Undoes the last operation.
+*/
 void Document::undo()
 {
     Q_D(Document);
     d->undoStack->undo();
 }
 
+/*!
+    Redoes the current operation.
+*/
 void Document::redo()
 {
     Q_D(Document);
