@@ -134,16 +134,16 @@ Optional<ImageFormatInfo> ImageIOHandlerDatabase::imageFormat(const QMimeType &m
 
 ImageFormatInfo ImageIOHandlerDatabase::getInfo(const QMimeType &mt,  ImageIOHandlerPlugin *plugin)
 {
-    ImageFormatInfoData data;
-    data.name = plugin->name();
-    data.mimeType = mt;
-    data.capabilities = plugin->capabilities(nullptr, mt);
-    data.subTypes = plugin->supportedSubTypes(mt);
-    data.options[""] = plugin->supportedOptions(mt, QByteArray());
-    for (const auto subType : data.subTypes) {
-        data.options[subType] = plugin->supportedOptions(mt, subType);
+    std::unique_ptr<ImageFormatInfoData> data(new ImageFormatInfoData());
+    data->name = plugin->name();
+    data->mimeType = mt;
+    data->capabilities = plugin->capabilities(nullptr, mt);
+    data->subTypes = plugin->supportedSubTypes(mt);
+    data->options[""] = plugin->supportedOptions(mt, QByteArray());
+    for (const auto &subType : data->subTypes) {
+        data->options[subType] = plugin->supportedOptions(mt, subType);
     }
-    return ImageFormatInfo(data);
+    return ImageFormatInfo(data.release());
 }
 
 Q_GLOBAL_STATIC(ImageIOHandlerDatabase, static_instance)

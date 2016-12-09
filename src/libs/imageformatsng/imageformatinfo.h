@@ -42,7 +42,7 @@ public:
     inline void swap(ImageFormatInfo &other) { qSwap(d, other.d); }
 
 private:
-    explicit ImageFormatInfo(const ImageFormatInfoData &data);
+    explicit ImageFormatInfo(ImageFormatInfoData *dd);
 
 private:
     QSharedDataPointer<ImageFormatInfoData> d;

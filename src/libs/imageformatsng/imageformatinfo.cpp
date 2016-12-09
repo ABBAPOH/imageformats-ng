@@ -134,7 +134,7 @@ bool ImageFormatInfo::supportsOption(ImageOptions::Option option, const QByteArr
 /*!
     \internal
 */
-ImageFormatInfo::ImageFormatInfo(const ImageFormatInfoData &data) :
-    d(new ImageFormatInfoData(data))
+ImageFormatInfo::ImageFormatInfo(ImageFormatInfoData *dd) :
+    d(dd)
 {
 }
