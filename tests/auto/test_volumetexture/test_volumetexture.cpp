@@ -20,9 +20,9 @@ void TestVolumeTexture::defaultValues()
 {
     VolumeTexture tex;
     QCOMPARE(tex.isNull(), true);
-    QCOMPARE(tex.width(), -1);
-    QCOMPARE(tex.height(), -1);
-    QCOMPARE(tex.depth(), -1);
+    QCOMPARE(tex.width(), 0);
+    QCOMPARE(tex.height(), 0);
+    QCOMPARE(tex.depth(), 0);
     QCOMPARE(tex.format(), QImage::Format_Invalid);
 }
 

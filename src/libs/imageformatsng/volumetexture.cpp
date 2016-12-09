@@ -153,7 +153,7 @@ bool VolumeTexture::isNull() const Q_DECL_NOEXCEPT
 */
 int VolumeTexture::width() const Q_DECL_NOEXCEPT
 {
-    return d ? d->size.width() : -1;
+    return d ? d->size.width() : 0;
 }
 
 /*!
@@ -161,7 +161,7 @@ int VolumeTexture::width() const Q_DECL_NOEXCEPT
 */
 int VolumeTexture::height() const Q_DECL_NOEXCEPT
 {
-    return d ? d->size.height() : -1;
+    return d ? d->size.height() : 0;
 }
 
 /*!
@@ -169,7 +169,7 @@ int VolumeTexture::height() const Q_DECL_NOEXCEPT
 */
 int VolumeTexture::depth() const Q_DECL_NOEXCEPT
 {
-    return d ? d->images.size() : -1;
+    return d ? d->images.size() : 0;
 }
 
 /*!
