@@ -40,11 +40,16 @@ public:
     void setPixel(int x, int y, int z, uint index_or_rgb);
 
     void fill(uint value);
+    void fill(const QColor &color);
+    void fill(Qt::GlobalColor color);
 
     QImage slice(int slice) const;
     void setSlice(int index, const QImage &image);
 
     VolumeTexture convertToFormat(QImage::Format format,
+                                  Qt::ImageConversionFlags flags = Qt::AutoColor) const;
+    VolumeTexture convertToFormat(QImage::Format format,
+                                  const QVector<QRgb> &colorTable,
                                   Qt::ImageConversionFlags flags = Qt::AutoColor) const;
 
     // VolumeTexture scaled(int width, int height, int depth);

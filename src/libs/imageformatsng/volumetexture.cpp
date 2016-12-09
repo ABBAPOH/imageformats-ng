@@ -56,34 +56,71 @@ VolumeTextureData *VolumeTextureData::create(const QVector<QImage> &slices, bool
     return d.release();
 }
 
+/*!
+    \class VolumeTexture
+
+    VolumeTexture class represents a 3D dimentional image.
+*/
+
+/*!
+    Constructs a null texture.
+
+    \sa VolumeTexture::isNull()
+*/
 VolumeTexture::VolumeTexture() Q_DECL_NOEXCEPT
 {
 }
 
+/*!
+    Constructs a shallow copy of the given \a other texture.
+*/
 VolumeTexture::VolumeTexture(const VolumeTexture &other) :
     d(other.d)
 {
 }
 
+/*!
+    Move-constructs a VolumeTexture instance, making it point at the same object that \a other
+    was pointing to.
+*/
 VolumeTexture::VolumeTexture(VolumeTexture &&other) Q_DECL_NOEXCEPT :
     d(std::move(other.d))
 {
 }
 
+/*!
+    Constructs a texture with the given \a width, \a height, \a depth and \a format.
+    A null texture will be created if parameters are not valid.
+*/
 VolumeTexture::VolumeTexture(int width, int height, int depth, QImage::Format format) :
     VolumeTexture(VolumeTextureData::create(width, height, depth, format))
 {
 }
+
+/*!
+    Constructs a texture from the given \a slices array of images.
+
+    All images in the aray must have the same size and format, otherwise null texture is
+    constructed. The width, height and format of the texture will be equal to the width and heigth
+    of the images in the array. The depth of the texture will be equal to the size of the array.
+*/
 
 VolumeTexture::VolumeTexture(const QVector<QImage> &slices) :
     VolumeTexture(VolumeTextureData::create(slices))
 {
 }
 
+/*!
+    Destroys the texture.
+*/
 VolumeTexture::~VolumeTexture() Q_DECL_NOEXCEPT
 {
 }
 
+/*!
+    Assigns a shallow copy of the given \a other texture to this texture and returns a
+    reference to this texture.
+*/
 VolumeTexture &VolumeTexture::operator=(const VolumeTexture &other)
 {
     if (this != &other)
@@ -91,6 +128,9 @@ VolumeTexture &VolumeTexture::operator=(const VolumeTexture &other)
     return *this;
 }
 
+/*!
+    Move-assigns \a other to this texture.
+*/
 VolumeTexture &VolumeTexture::operator=(VolumeTexture &&other) Q_DECL_NOEXCEPT
 {
     if (this != &other)
@@ -98,31 +138,53 @@ VolumeTexture &VolumeTexture::operator=(VolumeTexture &&other) Q_DECL_NOEXCEPT
     return *this;
 }
 
+/*!
+    Returns true if it is a null texture, otherwise returns false.
+
+    A null texture has all parameters set to zero and no allocated data.
+*/
 bool VolumeTexture::isNull() const Q_DECL_NOEXCEPT
 {
     return !d;
 }
 
+/*!
+    Returns the width of the texture.
+*/
 int VolumeTexture::width() const Q_DECL_NOEXCEPT
 {
     return d ? d->size.width() : -1;
 }
 
+/*!
+    Returns the height of the texture.
+*/
 int VolumeTexture::height() const Q_DECL_NOEXCEPT
 {
     return d ? d->size.height() : -1;
 }
 
+/*!
+    Returns the depth of the texture.
+*/
 int VolumeTexture::depth() const Q_DECL_NOEXCEPT
 {
     return d ? d->images.size() : -1;
 }
 
+/*!
+    Returns the format of the texture.
+*/
 QImage::Format VolumeTexture::format() const Q_DECL_NOEXCEPT
 {
     return d ? d->format : QImage::Format_Invalid;
 }
 
+/*!
+    Returns the color of the pixel at coordinates (x, y, z).
+
+    \sa VolumeTexture::setPixel();
+*/
 QRgb VolumeTexture::pixel(int x, int y, int z)
 {
     if (!d || x < 0 || x >= d->size.width()
@@ -135,6 +197,9 @@ QRgb VolumeTexture::pixel(int x, int y, int z)
     return d->images.at(z).pixel(x, y);
 }
 
+/*!
+    Sets the pixel index or color at (x, y, x) to \a index_or_rgb.
+*/
 void VolumeTexture::setPixel(int x, int y, int z, uint index_or_rgb)
 {
     if (!d || x < 0 || x >= d->size.width()
@@ -147,6 +212,9 @@ void VolumeTexture::setPixel(int x, int y, int z, uint index_or_rgb)
     d->images[z].setPixel(x, y, index_or_rgb);
 }
 
+/*!
+    Fills the entire image with the given \a value.
+*/
 void VolumeTexture::fill(uint value)
 {
     if (!d)
@@ -157,6 +225,35 @@ void VolumeTexture::fill(uint value)
     }
 }
 
+/*!
+    Fills the entire texture with the given \a color.
+*/
+void VolumeTexture::fill(const QColor &color)
+{
+    if (!d)
+        return;
+
+    for (QImage &image: d->images) {
+        image.fill(color);
+    }
+}
+
+/*!
+    Fills the texture with the given \a color, described as a standard global color.
+*/
+void VolumeTexture::fill(Qt::GlobalColor color)
+{
+    if (!d)
+        return;
+
+    for (QImage &image: d->images) {
+        image.fill(color);
+    }
+}
+
+/*!
+    Returns the image containing data at the given \a index z coordinate.
+*/
 QImage VolumeTexture::slice(int index) const
 {
     if (!d || index < 0 || index >= depth()) {
@@ -167,6 +264,10 @@ QImage VolumeTexture::slice(int index) const
     return d->images[index];
 }
 
+/*!
+    Fills the data at the given \a index z coordinate from the \a image.
+    Image must have same format, width and heigth as this texture.
+*/
 void VolumeTexture::setSlice(int index, const QImage &image)
 {
     if (!d || index < 0 || index >= depth()) {
@@ -183,6 +284,11 @@ void VolumeTexture::setSlice(int index, const QImage &image)
     d->images[index] = image;
 }
 
+/*!
+    Returns a copy of the texture in the given \a format.
+    The specified image conversion \a flags control how the texture data is handled during
+    the conversion process.
+*/
 VolumeTexture VolumeTexture::convertToFormat(QImage::Format format,
                                              Qt::ImageConversionFlags flags) const
 {
@@ -196,6 +302,27 @@ VolumeTexture VolumeTexture::convertToFormat(QImage::Format format,
     return VolumeTexture(VolumeTextureData::create(slices, false));
 }
 
+/*!
+    Returns a copy of the texture converted to the given \a format, using the specified
+    \a colorTable.
+*/
+VolumeTexture VolumeTexture::convertToFormat(QImage::Format format,
+                                             const QVector<QRgb> &colorTable,
+                                             Qt::ImageConversionFlags flags) const
+{
+    if (!d)
+        return VolumeTexture();
+
+    QVector<QImage> slices;
+    for (int z = 0; z < depth(); ++z) {
+        slices.append(slice(z).convertToFormat(format, colorTable, flags));
+    }
+    return VolumeTexture(VolumeTextureData::create(slices, false));
+}
+
+/*!
+    \internal
+*/
 VolumeTexture::VolumeTexture(VolumeTextureData *dd) Q_DECL_NOEXCEPT :
     d(dd)
 {
