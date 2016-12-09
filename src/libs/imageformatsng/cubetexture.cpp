@@ -17,7 +17,7 @@ static const FaceOffset faceOffsets[2][6] =  {
 
 static const FaceOffset multipliers[2] = { {4, 3}, {3, 4} };
 
-static constexpr inline int sideToIndex(CubeTexture::Side side)
+static constexpr inline int sideToIndex(CubeTexture::Side side) Q_DECL_NOEXCEPT
 {
     return static_cast<std::underlying_type<CubeTexture::Side>::type>(side);
 }
