@@ -22,7 +22,7 @@ public:
     VolumeTexture(const VolumeTexture &);
     VolumeTexture(VolumeTexture &&) Q_DECL_NOEXCEPT;
     VolumeTexture(int width, int height, int depth = 1, QImage::Format format = QImage::Format_ARGB32);
-    VolumeTexture(const QVector<QImage> &slices);
+    explicit VolumeTexture(const QVector<QImage> &slices);
     ~VolumeTexture() Q_DECL_NOEXCEPT;
 
     VolumeTexture &operator=(const VolumeTexture &);
@@ -56,6 +56,8 @@ public:
     // VolumeTexture transformed(const QTransform &matrix, Qt::TransformationMode mode = Qt::FastTransformation) const
 
 private:
-    VolumeTexture(VolumeTextureData *dd) Q_DECL_NOEXCEPT;
+    explicit VolumeTexture(VolumeTextureData *dd) Q_DECL_NOEXCEPT;
+
+private:
     QSharedDataPointer<VolumeTextureData> d;
 };
