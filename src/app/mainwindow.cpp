@@ -184,14 +184,6 @@ void MainWindowPrivate::createMenuBar()
     q->setMenuBar(menuBar);
 }
 
-/*!
-    \class MainWindow
-    Implementation of the main application window.
-*/
-
-/*!
-    Constructs MainWindow with the given \a parent.
-*/
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     d_ptr(new MainWindowPrivate(this))
