@@ -37,7 +37,7 @@ public:
     bool isNull() const Q_DECL_NOEXCEPT;
 
     int width() const Q_DECL_NOEXCEPT;
-    int heigth() const Q_DECL_NOEXCEPT;
+    int height() const Q_DECL_NOEXCEPT;
     int depth() const Q_DECL_NOEXCEPT;
 
     QImage::Format format() const Q_DECL_NOEXCEPT;

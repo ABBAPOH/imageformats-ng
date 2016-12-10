@@ -178,7 +178,7 @@ int CubeTexture::width() const Q_DECL_NOEXCEPT
 /*!
     Returns the height of the texture.
 */
-int CubeTexture::heigth() const Q_DECL_NOEXCEPT
+int CubeTexture::height() const Q_DECL_NOEXCEPT
 {
     return d ? d->extent : 0;
 }
