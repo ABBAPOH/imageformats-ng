@@ -4,7 +4,6 @@
 
 #include <QtCore/QSharedDataPointer>
 #include <QtGui/QImage>
-#include "volumetexture.h"
 
 class CubeTextureData;
 class IMAGEFORMATSNG_EXPORT CubeTexture
