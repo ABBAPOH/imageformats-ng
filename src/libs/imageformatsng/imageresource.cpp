@@ -2,85 +2,164 @@
 
 #include <QtCore/QMap>
 
-class ImageResourceData : public QSharedData
+ImageResource::ImageResource() Q_DECL_NOEXCEPT :
+    _type(Type::Invalid)
 {
-public:
-
-    ImageResource::Type type;
-    QImage image;
-    CubeTexture cubeTexture;
-    VolumeTexture volumeTexture;
-};
-
-ImageResource::ImageResource(Type type) :
-    d(new ImageResourceData)
-{
-    d->type = type;
 }
 
 ImageResource::ImageResource(const QImage &image) :
-    d(new ImageResourceData)
-{
-    d->type = Image;
-    d->image = image;
-}
-
-ImageResource::ImageResource(const ImageResource &other) :
-    d(other.d)
+    _type(Type::Image),
+    _image(image)
 {
 }
 
-ImageResource &ImageResource::operator=(const ImageResource &other)
+ImageResource::ImageResource(const CubeTexture &texture) :
+    _type(Type::CubeTexture),
+    _cubeTexture(texture)
 {
-    if (this != &other)
-        d.operator=(other.d);
-    return *this;
+}
+
+ImageResource::ImageResource(const VolumeTexture &texture) :
+    _type(Type::VolumeTexture),
+    _volumeTexture(texture)
+{
+}
+
+ImageResource::ImageResource(const ImageResource &other)
+{
+    assign(other);
+}
+
+ImageResource::ImageResource(ImageResource &&other)
+{
+    assign(std::move(other));
 }
 
 ImageResource::~ImageResource()
 {
+    destroy();
 }
 
-ImageResource::Type ImageResource::type() const
+ImageResource &ImageResource::operator=(const ImageResource &other)
 {
-    return d->type;
+    if (this != &other) {
+        destroy();
+        assign(other);
+    }
+    return *this;
+}
+
+ImageResource &ImageResource::operator=(ImageResource &&other)
+{
+    if (this != &other) {
+        destroy();
+        assign(std::move(other));
+    }
+    return *this;
+}
+
+void ImageResource::destroy()
+{
+    switch (_type) {
+    case Type::Image:
+        _image.~QImage();
+        break;
+    case Type::CubeTexture:
+        _cubeTexture.~CubeTexture();
+        break;
+    case Type::VolumeTexture:
+        _volumeTexture.~VolumeTexture();
+        break;
+    default:
+        break;
+    }
+    _type = Type::Invalid;
+}
+
+bool ImageResource::isNull() const Q_DECL_NOEXCEPT
+{
+    return _type == Type::Invalid;
+}
+
+ImageResource::Type ImageResource::type() const Q_DECL_NOEXCEPT
+{
+    return _type;
 }
 
 QImage ImageResource::image() const
 {
-    return d->image;
+    if (_type != Type::Image)
+        return QImage();
+    return _image;
 }
 
 void ImageResource::setImage(const QImage &image)
 {
-    d->type = Image;
-    d->image = image;
-    d->cubeTexture = CubeTexture();
-    d->volumeTexture = VolumeTexture();
+    destroy();
+    _image = image;
+    _type = Type::Image;
 }
 
 CubeTexture ImageResource::cubeTexture() const
 {
-    return d->cubeTexture;
+    if (_type != Type::CubeTexture)
+        return CubeTexture();
+    return _cubeTexture;
 }
 
 void ImageResource::setCubeTexture(const CubeTexture &texture)
 {
-    d->type = Cubemap;
-    d->image = QImage();
-    d->cubeTexture = texture;
-    d->volumeTexture = VolumeTexture();
+    destroy();
+    _cubeTexture = texture;
+    _type = Type::CubeTexture;
 }
 
 VolumeTexture ImageResource::volumeTexture() const
 {
-    return d->volumeTexture;
+    if (_type != Type::VolumeTexture)
+        return VolumeTexture();
+    return _volumeTexture;
 }
 
 void ImageResource::setVolumeTexture(const VolumeTexture &texture)
 {
-    d->type = Volumemap;
-    d->image = QImage();
-    d->cubeTexture = CubeTexture();
-    d->volumeTexture = texture;
+    destroy();
+    _volumeTexture = texture;
+    _type = Type::CubeTexture;
+}
+
+void ImageResource::assign(const ImageResource &other)
+{
+    switch (other.type()) {
+    case Type::Image:
+        _image = other._image;
+        break;
+    case Type::CubeTexture:
+        _cubeTexture = other._cubeTexture;
+        break;
+    case Type::VolumeTexture:
+        _volumeTexture = other._volumeTexture;
+        break;
+    default:
+        break;
+    }
+    _type = other._type;
+}
+
+void ImageResource::assign(ImageResource &&other)
+{
+    switch (other.type()) {
+    case Type::Image:
+        _image = std::move(other._image);
+        break;
+    case Type::CubeTexture:
+        _cubeTexture = std::move(other._cubeTexture);
+        break;
+    case Type::VolumeTexture:
+        _volumeTexture = std::move(other._volumeTexture);
+        break;
+    default:
+        break;
+    }
+    _type = other._type;
 }

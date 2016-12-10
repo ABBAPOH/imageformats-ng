@@ -12,15 +12,22 @@ class ImageResourceData;
 class ImageResource
 {
 public:
-    enum Type { Image, Cubemap, Volumemap };
+    enum class Type { Invalid, Image, CubeTexture, VolumeTexture };
 
-    explicit ImageResource(Type type = Image);
+    ImageResource() Q_DECL_NOEXCEPT;
     ImageResource(const QImage &image);
+    ImageResource(const CubeTexture &texture);
+    ImageResource(const VolumeTexture &texture);
     ImageResource(const ImageResource &other);
-    ImageResource &operator=(const ImageResource &other);
+    ImageResource(ImageResource &&other);
     ~ImageResource();
 
-    Type type() const;
+    ImageResource &operator=(const ImageResource &other);
+    ImageResource &operator=(ImageResource &&other);
+
+    bool isNull() const Q_DECL_NOEXCEPT;
+
+    Type type() const Q_DECL_NOEXCEPT;
 
     QImage image() const;
     void setImage(const QImage &image);
@@ -32,7 +39,18 @@ public:
     void setVolumeTexture(const VolumeTexture &texture);
 
 private:
-    QSharedDataPointer<ImageResourceData> d;
+    void assign(const ImageResource &other);
+    void assign(ImageResource &&other);
+    void destroy();
+
+private:
+    Type _type;
+    // TODO: use std::variant
+    union {
+        QImage _image;
+        CubeTexture _cubeTexture;
+        VolumeTexture _volumeTexture;
+    };
 };
 
 #endif // IMAGERESOURCE_H
