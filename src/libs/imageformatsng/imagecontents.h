@@ -25,15 +25,15 @@ public:
     };
     Q_ENUM(Side)
 
-    ImageContents();
+    ImageContents() Q_DECL_NOEXCEPT;
     explicit ImageContents(const QImage &image);
     explicit ImageContents(const ImageHeader &header);
     ImageContents(const ImageContents &other);
-    ImageContents(ImageContents &&other);
+    ImageContents(ImageContents &&other) Q_DECL_NOEXCEPT;
     ~ImageContents();
 
     ImageContents &operator=(const ImageContents &other);
-    ImageContents &operator=(ImageContents &&other);
+    ImageContents &operator=(ImageContents &&other) Q_DECL_NOEXCEPT;
 
     bool isNull() const;
 

@@ -75,10 +75,8 @@ void ImageContentsData::setResource(const ImageResource &resource, int index, in
 /*!
     Constructs a null ImageContents.
 */
-ImageContents::ImageContents() :
-    d(new ImageContentsData)
+ImageContents::ImageContents() Q_DECL_NOEXCEPT
 {
-
 }
 
 /*!
@@ -111,14 +109,13 @@ ImageContents::ImageContents(const ImageHeader &header) :
 ImageContents::ImageContents(const ImageContents &other) :
     d(other.d)
 {
-
 }
 
 /*!
     Move-constructs an ImageContents instance, making it point at the same object that \a other was
     pointing to.
 */
-ImageContents::ImageContents(ImageContents &&other) :
+ImageContents::ImageContents(ImageContents &&other) Q_DECL_NOEXCEPT :
     d(qMove(other.d))
 {
 }
@@ -144,7 +141,7 @@ ImageContents &ImageContents::operator=(const ImageContents &other)
 /*!
     Move-assigns \a other to this ImageContents instance.
 */
-ImageContents &ImageContents::operator=(ImageContents &&other)
+ImageContents &ImageContents::operator=(ImageContents &&other) Q_DECL_NOEXCEPT
 {
     if (this != &other)
         d.operator=(qMove(other.d));
@@ -152,46 +149,49 @@ ImageContents &ImageContents::operator=(ImageContents &&other)
 }
 
 /*!
-    Returns true if all fields have default values.
+    Returns true if this contents has no data.
 */
 bool ImageContents::isNull() const
 {
-    return *this == ImageContents();
+    return !d;
 }
 
 ImageHeader ImageContents::header() const
 {
-    return d->header;
+    return d ? d->header : ImageHeader();
 }
 
 QImage ImageContents::image(int index, int level) const
 {
-    return d->resource(index, level).image();
+    return d ? d->resource(index, level).image() : QImage();
 }
 
 void ImageContents::setImage(const QImage &image, int index, int level)
 {
-    d->setResource(image, index, level);
+    if (d)
+        d->setResource(image, index, level);
 }
 
 ImageResource ImageContents::resource(int index, int level) const
 {
-    return d->resource(index, level);
+    return d ? d->resource(index, level) : ImageResource();
 }
 
 void ImageContents::setResource(const ImageResource &resource, int index, int level)
 {
-    d->setResource(resource, index, level);
+    if (d)
+        d->setResource(resource, index, level);
 }
 
 ImageExifMeta ImageContents::exifMeta() const
 {
-    return d->exif;
+    return d ? d->exif : ImageExifMeta();
 }
 
 void ImageContents::setExifMeta(const ImageExifMeta &exif)
 {
-    d->exif = exif;
+    if (d)
+        d->exif = exif;
 }
 
 void ImageContents::clear()
