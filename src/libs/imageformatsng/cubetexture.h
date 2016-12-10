@@ -55,4 +55,10 @@ private:
 
 private:
     QSharedDataPointer<CubeTextureData> d;
+
+    friend bool IMAGEFORMATSNG_EXPORT operator==(const CubeTexture &lhs, const CubeTexture &rhs);
+    friend bool IMAGEFORMATSNG_EXPORT operator!=(const CubeTexture &lhs, const CubeTexture &rhs);
 };
+
+bool IMAGEFORMATSNG_EXPORT operator==(const CubeTexture &lhs, const CubeTexture &rhs);
+bool IMAGEFORMATSNG_EXPORT operator!=(const CubeTexture &lhs, const CubeTexture &rhs);

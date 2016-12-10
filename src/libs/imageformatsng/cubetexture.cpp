@@ -296,3 +296,25 @@ CubeTexture::CubeTexture(CubeTextureData *dd) Q_DECL_NOEXCEPT :
     d(dd)
 {
 }
+
+/*!
+    Returns true if the \a lhs texture and the \a rhs texture have the same contents; otherwise
+    returns false.
+*/
+bool operator==(const CubeTexture &lhs, const CubeTexture &rhs)
+{
+    return lhs.d == rhs.d
+            || (lhs.format() == rhs.format()
+                && lhs.d->extent == rhs.d->extent
+                && lhs.d->images == rhs.d->images);
+}
+
+/*!
+    Returns true if the \a lhs texture and the \a rhs texture have different contents; otherwise
+    returns false.
+*/
+bool operator!=(const CubeTexture &lhs, const CubeTexture &rhs)
+{
+    return !(lhs == rhs);
+}
+
