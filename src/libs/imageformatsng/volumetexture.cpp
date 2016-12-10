@@ -327,3 +327,26 @@ VolumeTexture::VolumeTexture(VolumeTextureData *dd) Q_DECL_NOEXCEPT :
     d(dd)
 {
 }
+
+/*!
+    Returns true if the \a lhs texture and the \a rhs texture have the same contents; otherwise
+    returns false.
+*/
+bool operator==(const VolumeTexture &lhs, const VolumeTexture &rhs)
+{
+    return lhs.d == rhs.d
+            || (lhs.format() == rhs.format()
+                && lhs.width() == rhs.width()
+                && lhs.height() == rhs.height()
+                && lhs.depth() == rhs.depth()
+                && lhs.d->images == rhs.d->images);
+}
+
+/*!
+    Returns true if the \a lhs texture and the \a rhs texture have different contents; otherwise
+    returns false.
+*/
+bool operator!=(const VolumeTexture &lhs, const VolumeTexture &rhs)
+{
+    return !(lhs == rhs);
+}

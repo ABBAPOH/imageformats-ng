@@ -1,5 +1,7 @@
 #pragma once
 
+#include "imageformatsng_global.h"
+
 #include <QtCore/QSharedDataPointer>
 #include <QtGui/QImage>
 
@@ -15,7 +17,7 @@ public:
 };
 
 class VolumeTextureData;
-class VolumeTexture
+class IMAGEFORMATSNG_EXPORT VolumeTexture
 {
 public:
     VolumeTexture() Q_DECL_NOEXCEPT;
@@ -60,4 +62,10 @@ private:
 
 private:
     QSharedDataPointer<VolumeTextureData> d;
+
+    friend bool IMAGEFORMATSNG_EXPORT operator==(const VolumeTexture &lhs, const VolumeTexture &rhs);
+    friend bool IMAGEFORMATSNG_EXPORT operator!=(const VolumeTexture &lhs, const VolumeTexture &rhs);
 };
+
+bool IMAGEFORMATSNG_EXPORT operator==(const VolumeTexture &lhs, const VolumeTexture &rhs);
+bool IMAGEFORMATSNG_EXPORT operator!=(const VolumeTexture &lhs, const VolumeTexture &rhs);
