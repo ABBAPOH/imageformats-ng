@@ -3,6 +3,7 @@
 #include "imageformatsng_global.h"
 
 #include <ImageHeader>
+#include <ImageResource>
 #include <ImageExifMeta>
 
 #include <QtCore/QSharedDataPointer>
@@ -41,25 +42,14 @@ public:
     QImage image(int index = 0, int level = 0) const;
     void setImage(const QImage &image, int index = 0, int level = 0);
 
-    QImage side(Side side, int index = 0, int level = 0) const;
-    void setSide(const QImage &image, Side side, int index = 0, int level = 0);
-
-    QImage slice(int depth, int index = 0, int level = 0) const;
-    void setSlice(const QImage &image, int depth, int index = 0, int level = 0);
+    ImageResource resource(int index = 0, int level = 0) const;
+    void setResource(const ImageResource &resource, int index = 0, int level = 0);
 
     ImageExifMeta exifMeta() const;
     void setExifMeta(const ImageExifMeta &exif);
 
     void clear();
     inline void swap(ImageContents &other) { qSwap(d, other.d); }
-
-    enum Projection {
-        HorizonalCross,
-        VerticalCross
-    };
-
-    Optional<ImageContents> toProjection(Projection projection = HorizonalCross) const;
-//    static ImageContents fromProjection(const QImage &image, Projection projection);
 
 private:
     QSharedDataPointer<ImageContentsData> d;

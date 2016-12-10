@@ -22,38 +22,17 @@ static const FaceOffset multipliers[2] = { {4, 3}, {3, 4} };
 class ImageContentsData : public QSharedData
 {
 public:
-    struct ImageIndex
-    {
-        ImageIndex() = default;
-        ImageIndex(int first, int second, int third):
-            first(first),
-            second(second),
-            third(third)
-        {
-        }
-
-        int first {0};
-        int second {0};
-        int third {0};
-    };
-//    typedef QPair<int, int> ImageIndex;
+    using ImageIndex = std::pair<int /*index*/, int /*level*/>;
 
     ImageHeader header;
-    QMap<ImageIndex, QImage> images;
+    QMap<ImageIndex, ImageResource> resources;
     ImageExifMeta exif;
 
-    QImage image(int side, int index, int level) const;
-    void setImage(const QImage &image, int side, int index, int level);
+    ImageResource resource(int index, int level) const;
+    void setResource(const ImageResource &resource, int index, int level);
 };
 
-bool operator <(const ImageContentsData::ImageIndex &p1, const ImageContentsData::ImageIndex &p2)
-{
-    return p1.first < p2.first
-            || (!(p2.first < p1.first) && p1.second < p2.second)
-            || (!(!(p2.first < p1.first) && p1.second < p2.second) && p1.third < p2.third);
-}
-
-QImage ImageContentsData::image(int depth, int index, int level) const
+ImageResource ImageContentsData::resource(int index, int level) const
 {
     if (index < 0 || index >= header.imageCount()) {
         qWarning() << "Attempt to get image with index = " << index
@@ -68,10 +47,10 @@ QImage ImageContentsData::image(int depth, int index, int level) const
         }
     }
 
-    return images.value(ImageContentsData::ImageIndex(depth, index, level));
+    return resources.value(ImageContentsData::ImageIndex(index, level));
 }
 
-void ImageContentsData::setImage(const QImage &image, int depth, int index, int level)
+void ImageContentsData::setResource(const ImageResource &resource, int index, int level)
 {
     if (index < 0 || index >= header.imageCount()) {
         qWarning() << "Attempt to get image with index = " << index
@@ -86,11 +65,7 @@ void ImageContentsData::setImage(const QImage &image, int depth, int index, int 
         }
     }
 
-    QImage copy(image);
-    if (image.format() != header.imageFormat())
-        copy = image.convertToFormat(header.imageFormat());
-
-    images.insert(ImageContentsData::ImageIndex(depth, index, level), copy);
+    resources[ImageContentsData::ImageIndex(index, level)] = resource;
 }
 
 /*!
@@ -191,34 +166,22 @@ ImageHeader ImageContents::header() const
 
 QImage ImageContents::image(int index, int level) const
 {
-    return d->image(0, index, level);
+    return d->resource(index, level).image();
 }
 
 void ImageContents::setImage(const QImage &image, int index, int level)
 {
-    d->setImage(image, 0, index, level);
+    d->setResource(image, index, level);
 }
 
-QImage ImageContents::side(ImageContents::Side side, int index, int level) const
+ImageResource ImageContents::resource(int index, int level) const
 {
-    Q_ASSERT(side >= PositiveX && side <= NegativeZ);
-    return d->image(int(side), index, level);
+    return d->resource(index, level);
 }
 
-void ImageContents::setSide(const QImage &image, ImageContents::Side side, int index, int level)
+void ImageContents::setResource(const ImageResource &resource, int index, int level)
 {
-    Q_ASSERT(side >= PositiveX && side <= NegativeZ);
-    d->setImage(image, int(side), index, level);
-}
-
-QImage ImageContents::slice(int depth, int index, int level) const
-{
-    return d->image(depth, index, level);
-}
-
-void ImageContents::setSlice(const QImage &image, int depth, int index, int level)
-{
-    d->setImage(image, depth, index, level);
+    d->setResource(resource, index, level);
 }
 
 ImageExifMeta ImageContents::exifMeta() const
@@ -237,56 +200,11 @@ void ImageContents::clear()
     swap(c);
 }
 
-Optional<ImageContents> ImageContents::toProjection(ImageContents::Projection projection) const
-{
-    if (d->header.type() != ImageHeader::Type::Cubemap)
-        return Nothing();
-
-    if (d->header.width() != d->header.height()) {
-        qWarning() << "Invalid size for cube texture" << d->header.size();
-        return Nothing();
-    }
-
-    ImageContents result;
-
-    const auto size = d->header.width();
-
-    for (int level = 0; level < d->header.mipmapCount(); ++level) {
-        for (int index = 0; index < d->header.imageCount(); ++index) {
-            QImage image(multipliers[projection].x * size,
-                         multipliers[projection].y * size,
-                         d->header.imageFormat());
-
-            image.fill(0);
-
-            for (int side = PositiveX; side <= NegativeZ; side++) {
-                const auto face = this->side(Side(side), index, level);
-                if (face.isNull())
-                    continue; // Skip face.
-
-                // Compute face offsets.
-                const int offset_x = faceOffsets[projection][side].x * size;
-                const int offset_y = faceOffsets[projection][side].y * size;
-
-                // Copy face on the image.
-                for (int y = 0; y < size; y++) {
-                    const QRgb *src = reinterpret_cast<const QRgb *>(face.scanLine(y));
-                    QRgb *dst = reinterpret_cast<QRgb *>(image.scanLine(y + offset_y)) + offset_x;
-                    memcpy(dst, src, sizeof(QRgb) * unsigned(size));
-                }
-            }
-            result.setImage(image, index, level);
-        }
-    }
-
-    return QImage();
-}
-
 bool operator==(const ImageContents &lhs, const ImageContents &rhs)
 {
     return lhs.d == rhs.d ||
             (lhs.d->header == rhs.d->header
-             && lhs.d->images == rhs.d->images
+             && lhs.d->resources == rhs.d->resources
              && lhs.d->exif == rhs.d->exif);
 }
 

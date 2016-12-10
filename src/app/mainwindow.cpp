@@ -250,13 +250,36 @@ void MainWindow::saveAs()
 void MainWindow::convertToProjection()
 {
     Q_D(MainWindow);
-    const auto projection = d->_document->toContents().toProjection();
-    if (!projection) {
+    const auto contents = d->_document->toContents();
+    if (contents.header().type() != ImageHeader::Type::Cubemap) {
         QMessageBox::warning(this,
                              tr("Convert to projection"),
-                             tr("Can't convert file"));
+                             tr("Can't convert to projection, not a cube texture"));
     }
-    d->_document->setContents(*projection);
+
+    QVector<QImage> images;
+    images.reserve(contents.header().imageCount() * contents.header().mipmapCount());
+    for (int index = 0; index < contents.header().imageCount(); ++index) {
+        for (int level = 0; level < contents.header().mipmapCount(); ++level) {
+            auto texture = contents.resource(index, level).cubeTexture();
+            auto image = texture.toProjection(CubeTexture::Projection::HorizonalCross);
+            images.append(image);
+        }
+    }
+    if (images.empty())
+        return;
+    ImageHeader header(contents.header());
+    header.setType(ImageHeader::Type::Image);
+    header.setSize(images.at(0).size());
+    ImageContents newContents(header);
+    auto it = images.begin();
+    for (int index = 0; index < contents.header().imageCount(); ++index) {
+        for (int level = 0; level < contents.header().mipmapCount(); ++level) {
+            newContents.setResource(*it++);
+        }
+    }
+
+    d->_document->setContents(newContents);
 }
 
 void MainWindow::showSupportedFormats()
