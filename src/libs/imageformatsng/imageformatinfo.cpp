@@ -11,8 +11,29 @@
 */
 
 /*!
+    \enum ImageFormatInfo::Capability
+
+    This enum holds possible capabilities of the image format.
+
+    \var ImageFormatInfo::CanRead
+    Whether image format supports reading.
+
+    \var ImageFormatInfo::CanWrite
+    Whether image format supports writing.
+
+    \var ImageFormatInfo::ReadWrite
+    Whether image format supports reading and writing.
+
+    \var ImageFormatInfo::Capabilities
+    Capability flags.
+*/
+
+/*!
+    \internal
     Constructs an default ImageFormatInfo object.
     Default ImageFormatInfo object has no name, mimetype or capabilities.
+
+    Normally, you should not use this constructor, it exists only because QVector requires it.
 */
 ImageFormatInfo::ImageFormatInfo() :
     d(new ImageFormatInfoData())
@@ -130,6 +151,11 @@ bool ImageFormatInfo::supportsOption(ImageOptions::Option option, const QByteArr
 {
     return supportedOptions(subType).contains(option);
 }
+
+/*!
+    \fn inline void ImageFormatInfo::swap(ImageFormatInfo &other)
+    Swaps \a other info with this info. This operation is very fast and never fails.
+*/
 
 /*!
     \internal

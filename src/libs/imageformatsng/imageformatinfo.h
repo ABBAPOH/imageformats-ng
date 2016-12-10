@@ -17,7 +17,7 @@ public:
         CanWrite = 0x2,
         ReadWrite = CanRead | CanWrite
     };
-    Q_DECLARE_FLAGS(Capabilities, Capability)
+    using Capabilities = QFlags<Capability>;
     Q_FLAG(Capabilities)
 
     ImageFormatInfo();
