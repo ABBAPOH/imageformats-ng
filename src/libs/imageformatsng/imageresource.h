@@ -51,6 +51,12 @@ private:
         CubeTexture _cubeTexture;
         VolumeTexture _volumeTexture;
     };
+
+    friend bool IMAGEFORMATSNG_EXPORT operator==(const ImageResource &lhs, const ImageResource &rhs);
+    friend bool IMAGEFORMATSNG_EXPORT operator!=(const ImageResource &lhs, const ImageResource &rhs);
 };
+
+bool IMAGEFORMATSNG_EXPORT operator==(const ImageResource &lhs, const ImageResource &rhs);
+bool IMAGEFORMATSNG_EXPORT operator!=(const ImageResource &lhs, const ImageResource &rhs);
 
 #endif // IMAGERESOURCE_H

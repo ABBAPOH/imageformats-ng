@@ -163,3 +163,25 @@ void ImageResource::assign(ImageResource &&other)
     }
     _type = other._type;
 }
+
+bool operator==(const ImageResource &lhs, const ImageResource &rhs)
+{
+    if (lhs.type() != rhs.type())
+        return false;
+    switch (lhs.type()) {
+    case ImageResource::Type::Image:
+        return lhs._image == rhs._image;
+    case ImageResource::Type::CubeTexture:
+        return lhs._cubeTexture == rhs._cubeTexture;
+    case ImageResource::Type::VolumeTexture:
+        return lhs._volumeTexture == rhs._volumeTexture;
+    default:
+        break;
+    }
+    return true;
+}
+
+bool operator!=(const ImageResource &lhs, const ImageResource &rhs)
+{
+    return !(lhs == rhs);
+}
