@@ -142,7 +142,7 @@ bool ImageIOHandler::write(const ImageContents &contents, const ImageOptions &op
 */
 
 /*!
-    \fn ImageIOHandlerPlugin::Capabilities ImageIOHandlerPlugin::capabilities(QIODevice *device, const QMimeType &mimeType)
+    \fn ImageFormatInfo::Capabilities ImageIOHandlerPlugin::capabilities(QIODevice *device, const QMimeType &mimeType)
 
     Returns the capabilities of the plugin, based on the data in the \a device
     and the mime type \a mimeType. If device is 0, it should simply report
