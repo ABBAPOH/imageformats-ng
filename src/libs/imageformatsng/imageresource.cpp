@@ -54,7 +54,7 @@ ImageResource &ImageResource::operator=(ImageResource &&other)
 {
     if (this != &other) {
         destroy();
-
+        construct(std::move(other));
     }
     return *this;
 }
