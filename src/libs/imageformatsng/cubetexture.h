@@ -11,10 +11,12 @@ class CubeTexture
 public:
     CubeTexture() Q_DECL_NOEXCEPT;
     CubeTexture(const CubeTexture &other);
+    CubeTexture(CubeTexture &&other);
     CubeTexture(int extent, QImage::Format format = QImage::Format_ARGB32);
     ~CubeTexture();
 
     CubeTexture &operator=(const CubeTexture &other);
+    CubeTexture &operator=(CubeTexture &&other);
 
     enum class Side {
         PositiveX,
@@ -23,6 +25,12 @@ public:
         NegativeY,
         PositiveZ,
         NegativeZ,
+    };
+    Q_ENUMS(Side)
+
+    enum class Projection {
+        HorizonalCross,
+        VerticalCross
     };
     Q_ENUMS(Side)
 
@@ -38,10 +46,6 @@ public:
     void setSide(Side side, const QImage &image);
 
     CubeTexture scaled(int width);
-
-    enum Projection {
-        HorizonalCross
-    };
 
     QImage toProjection(Projection projection) const;
 //    static CubeTexture fromProjection(const QImage &image, Projection projection);

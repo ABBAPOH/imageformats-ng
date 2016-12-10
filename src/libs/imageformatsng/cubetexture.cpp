@@ -22,6 +22,11 @@ static constexpr inline int sideToIndex(CubeTexture::Side side) Q_DECL_NOEXCEPT
     return static_cast<std::underlying_type<CubeTexture::Side>::type>(side);
 }
 
+static constexpr inline int projectionToIndex(CubeTexture::Projection side) Q_DECL_NOEXCEPT
+{
+    return static_cast<std::underlying_type<CubeTexture::Projection>::type>(side);
+}
+
 } // namespace
 
 class CubeTextureData : public QSharedData
@@ -47,24 +52,85 @@ CubeTextureData *CubeTextureData::create(int extent, QImage::Format format)
     return d.release();
 }
 
+/*!
+    \class CubeTexture
+
+    CubeTexture class represents a 6 sided cubic texture.
+*/
+
+/*!
+    \enum CubeTexture::Side
+    This enum describes possible sides of the cube.
+    \value CubeTexture::Side::PositiveX Positive x side
+
+    \value CubeTexture::Side::NegativeX Negative x side
+
+    \value CubeTexture::Side::PositiveY Positive y side
+
+    \value CubeTexture::Side::NegativeY Negative y side
+
+    \value CubeTexture::Side::PositiveZ Positive z side
+
+    \value CubeTexture::Side::NegativeZ Negative z side
+*/
+
+
+/*!
+    \enum CubeTexture::Projection
+    This enum describes possible projections.
+
+    \value CubeTexture::Projection::HorizonalCross
+
+    \value CubeTexture::Projection::VerticalCross
+*/
+
+/*!
+    Constructs a null texture.
+
+    \sa CubeTexture::isNull()
+*/
 CubeTexture::CubeTexture() Q_DECL_NOEXCEPT
 {
 }
 
+/*!
+    Constructs a shallow copy of the given \a other texture.
+*/
 CubeTexture::CubeTexture(const CubeTexture &other) :
     d(other.d)
 {
 }
 
+/*!
+    Move-constructs a CubeTexture instance, making it point at the same object that \a other
+    was pointing to.
+*/
+CubeTexture::CubeTexture(CubeTexture &&other) :
+    d(std::move(other.d))
+{
+}
+
+/*!
+    Constructs a texture with the given \a extent and \a format.
+    Extent is th leght of the side of the cube, i.e. is widht = heigth = depth = extent.
+    A null texture will be created if parameters are not valid.
+*/
 CubeTexture::CubeTexture(int extent, QImage::Format format) :
     CubeTexture(CubeTextureData::create(extent, format))
 {
 }
 
+/*!
+    Destroys the texture.
+*/
 CubeTexture::~CubeTexture()
 {
 }
 
+/*!
+    Assigns a shallow copy of the given \a other texture to this texture and returns a
+    reference to this texture.
+*/
 CubeTexture &CubeTexture::operator=(const CubeTexture &other)
 {
     if (this != &other)
@@ -72,31 +138,61 @@ CubeTexture &CubeTexture::operator=(const CubeTexture &other)
     return *this;
 }
 
+/*!
+    Move-assigns \a other to this texture.
+*/
+CubeTexture &CubeTexture::operator=(CubeTexture &&other)
+{
+    if (this != &other)
+        d.operator=(std::move(other.d));
+    return *this;
+}
+
+/*!
+    Returns true if it is a null texture, otherwise returns false.
+
+    A null texture has all parameters set to zero and no allocated data.
+*/
 bool CubeTexture::isNull() const Q_DECL_NOEXCEPT
 {
     return !d;
 }
 
+/*!
+    Returns the width of the texture.
+*/
 int CubeTexture::width() const Q_DECL_NOEXCEPT
 {
-    return d ? d->extent : -1;
+    return d ? d->extent : 0;
 }
 
+/*!
+    Returns the height of the texture.
+*/
 int CubeTexture::heigth() const Q_DECL_NOEXCEPT
 {
-    return d ? d->extent : -1;
+    return d ? d->extent : 0;
 }
 
+/*!
+    Returns the depth of the texture.
+*/
 int CubeTexture::depth() const Q_DECL_NOEXCEPT
 {
-    return d ? d->extent : -1;
+    return d ? d->extent : 0;
 }
 
+/*!
+    Returns the format of the texture.
+*/
 QImage::Format CubeTexture::format() const Q_DECL_NOEXCEPT
 {
     return d ? d->format : QImage::Format_Invalid;
 }
 
+/*!
+    Returns the image containing data of the given \a side of the cube.
+*/
 QImage CubeTexture::side(CubeTexture::Side side)
 {
     if (!d) {
@@ -107,6 +203,10 @@ QImage CubeTexture::side(CubeTexture::Side side)
     return d->images.at(sideToIndex(side));
 }
 
+/*!
+    Fills the data of the given \a side of the cube from the \a image.
+    Image must have same format, width and heigth as this texture.
+*/
 void CubeTexture::setSide(CubeTexture::Side side, const QImage &image)
 {
     if (!d) {
@@ -129,35 +229,45 @@ void CubeTexture::setSide(CubeTexture::Side side, const QImage &image)
     d->images[sideToIndex(side)] = image;
 }
 
-CubeTexture CubeTexture::scaled(int size)
+/*!
+    Returns a copy of the texture scaled to a given \a extent.
+*/
+CubeTexture CubeTexture::scaled(int extent)
 {
     if (!d)
         return CubeTexture();
 
-    CubeTexture result;
+    CubeTexture result(extent, d->format);
 
     for (int i = sideToIndex(Side::PositiveX); i <= sideToIndex(Side::NegativeZ); i++) {
-        result.setSide(Side(i), d->images[i].scaled(size, size));
+        result.setSide(Side(i), d->images[i].scaled(extent, extent));
     }
     return result;
 }
 
+/*!
+    Converts this texture to a plain image with all sides placed on it.
+    How side are placed is determined by \a projection parameter.
+
+    \sa CubeTexture::Projection
+*/
 QImage CubeTexture::toProjection(CubeTexture::Projection projection) const
 {
     if (!d)
         return QImage();
 
     const auto extent = d->extent;
+    const auto index = projectionToIndex(projection);
 
-    QImage image(multipliers[projection].x * extent, multipliers[projection].y * extent, d->format);
+    QImage image(multipliers[index].x * extent, multipliers[index].y * extent, d->format);
     image.fill(0);
 
     for (int side = sideToIndex(Side::PositiveX); side <= sideToIndex(Side::NegativeZ); side++) {
         const auto face = d->images[side];
 
         // Compute face offsets.
-        const int offset_x = faceOffsets[projection][side].x * extent;
-        const int offset_y = faceOffsets[projection][side].y * extent;
+        const int offset_x = faceOffsets[index][side].x * extent;
+        const int offset_y = faceOffsets[index][side].y * extent;
 
         // Copy face on the image.
         for (int y = 0; y < extent; y++) {
@@ -170,6 +280,9 @@ QImage CubeTexture::toProjection(CubeTexture::Projection projection) const
     return image;
 }
 
+/*!
+    \internal
+*/
 CubeTexture::CubeTexture(CubeTextureData *dd) Q_DECL_NOEXCEPT :
     d(dd)
 {
