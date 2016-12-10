@@ -155,7 +155,7 @@ ImageContents &ImageContents::operator=(ImageContents &&other) Q_DECL_NOEXCEPT
 /*!
     Returns true if it is a null contents, otherwise returns false.
 */
-bool ImageContents::isNull() const
+bool ImageContents::isNull() const Q_DECL_NOEXCEPT
 {
     return !d;
 }

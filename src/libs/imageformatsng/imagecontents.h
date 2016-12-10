@@ -35,7 +35,7 @@ public:
     ImageContents &operator=(const ImageContents &other);
     ImageContents &operator=(ImageContents &&other) Q_DECL_NOEXCEPT;
 
-    bool isNull() const;
+    bool isNull() const Q_DECL_NOEXCEPT;
 
     ImageHeader header() const;
 
