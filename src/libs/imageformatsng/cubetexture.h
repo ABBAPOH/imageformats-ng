@@ -1,11 +1,13 @@
 #pragma once
 
+#include "imageformatsng_global.h"
+
 #include <QtCore/QSharedDataPointer>
 #include <QtGui/QImage>
 #include "volumetexture.h"
 
 class CubeTextureData;
-class CubeTexture
+class IMAGEFORMATSNG_EXPORT CubeTexture
 {
     Q_GADGET
 public:
