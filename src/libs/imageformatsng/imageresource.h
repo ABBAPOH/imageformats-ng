@@ -39,8 +39,8 @@ public:
     void setVolumeTexture(const VolumeTexture &texture);
 
 private:
-    void assign(const ImageResource &other);
-    void assign(ImageResource &&other);
+    void construct(const ImageResource &other);
+    void construct(ImageResource &&other);
     void destroy();
 
 private:

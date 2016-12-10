@@ -27,12 +27,12 @@ ImageResource::ImageResource(const VolumeTexture &texture) :
 
 ImageResource::ImageResource(const ImageResource &other)
 {
-    assign(other);
+    construct(other);
 }
 
 ImageResource::ImageResource(ImageResource &&other)
 {
-    assign(std::move(other));
+    construct(std::move(other));
 }
 
 ImageResource::~ImageResource()
@@ -44,7 +44,8 @@ ImageResource &ImageResource::operator=(const ImageResource &other)
 {
     if (this != &other) {
         destroy();
-        assign(other);
+        construct(other);
+        _type = other._type;
     }
     return *this;
 }
@@ -53,27 +54,9 @@ ImageResource &ImageResource::operator=(ImageResource &&other)
 {
     if (this != &other) {
         destroy();
-        assign(std::move(other));
+
     }
     return *this;
-}
-
-void ImageResource::destroy()
-{
-    switch (_type) {
-    case Type::Image:
-        _image.~QImage();
-        break;
-    case Type::CubeTexture:
-        _cubeTexture.~CubeTexture();
-        break;
-    case Type::VolumeTexture:
-        _volumeTexture.~VolumeTexture();
-        break;
-    default:
-        break;
-    }
-    _type = Type::Invalid;
 }
 
 bool ImageResource::isNull() const Q_DECL_NOEXCEPT
@@ -128,17 +111,17 @@ void ImageResource::setVolumeTexture(const VolumeTexture &texture)
     _type = Type::CubeTexture;
 }
 
-void ImageResource::assign(const ImageResource &other)
+void ImageResource::construct(const ImageResource &other)
 {
     switch (other.type()) {
     case Type::Image:
-        _image = other._image;
+        new (&_image) QImage(other._image);
         break;
     case Type::CubeTexture:
-        _cubeTexture = other._cubeTexture;
+        new (&_cubeTexture) CubeTexture(other._cubeTexture);
         break;
     case Type::VolumeTexture:
-        _volumeTexture = other._volumeTexture;
+        new (&_volumeTexture) VolumeTexture(other._volumeTexture);
         break;
     default:
         break;
@@ -146,22 +129,40 @@ void ImageResource::assign(const ImageResource &other)
     _type = other._type;
 }
 
-void ImageResource::assign(ImageResource &&other)
+void ImageResource::construct(ImageResource &&other)
 {
     switch (other.type()) {
     case Type::Image:
-        _image = std::move(other._image);
+        new (&_image) QImage(std::move(other._image));
         break;
     case Type::CubeTexture:
-        _cubeTexture = std::move(other._cubeTexture);
+        new (&_cubeTexture) CubeTexture(std::move(other._cubeTexture));
         break;
     case Type::VolumeTexture:
-        _volumeTexture = std::move(other._volumeTexture);
+        new (&_volumeTexture) VolumeTexture(std::move(other._volumeTexture));
         break;
     default:
         break;
     }
     _type = other._type;
+}
+
+void ImageResource::destroy()
+{
+    switch (_type) {
+    case Type::Image:
+        _image.~QImage();
+        break;
+    case Type::CubeTexture:
+        _cubeTexture.~CubeTexture();
+        break;
+    case Type::VolumeTexture:
+        _volumeTexture.~VolumeTexture();
+        break;
+    default:
+        break;
+    }
+    _type = Type::Invalid;
 }
 
 bool operator==(const ImageResource &lhs, const ImageResource &rhs)
