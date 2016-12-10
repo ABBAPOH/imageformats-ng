@@ -71,13 +71,17 @@ Optional<QString> ImageHeaderData::validate() const
 /*!
     \enum ImageHeader::Type
 
-    \value ImageHeader::Type::Invalid Invalid image.
+    \var ImageHeader::Invalid
+    Invalid image.
 
-    \value ImageHeader::Type::Image Usual 2D image.
+    \var ImageHeader::Image
+    Usual 2D image.
 
-    \value ImageHeader::Type::Cubemap Cube texture.
+    \var ImageHeader::Cubemap
+    Cube texture.
 
-    \value ImageHeader::Type::VolumeTexture Volume texture.
+    \var ImageHeader::VolumeTexture
+    Volume texture.
 */
 
 /*!

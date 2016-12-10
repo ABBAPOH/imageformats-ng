@@ -1007,7 +1007,7 @@ QPngHandler::~QPngHandler()
     delete d;
 }
 
-bool QPngHandler::canRead()
+bool QPngHandler::canRead() const
 {
     if (d->state == QPngHandlerPrivate::Ready && !canRead(device()))
         return false;

@@ -53,7 +53,7 @@ public:
     QPngHandler();
     ~QPngHandler();
 
-    bool canRead() override;
+    bool canRead() const override;
     bool readHeader(ImageHeader &header) override;
     bool read(ImageContents &contents) override;
     bool write(const ImageContents &contents, const ImageOptions &options) override;

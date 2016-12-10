@@ -8,10 +8,13 @@
 
 /*!
     \enum VariantMapModel::Column
+    This enum represents possible VariantMapModel columns.
 
-    \value VariantMapModel::Column::Key Index of the key column.
+    \var VariantMapModel::Key
+    Index of the key column.
 
-    \value VariantMapModel::Column::Value Index of the value column.
+    \var VariantMapModel::Value
+    Index of the value column.
 */
 
 /*!
@@ -32,7 +35,7 @@ VariantMapModel::VariantMapModel(const QVariantMap &map, QObject *parent):
 }
 
 /*!
-    \reimp
+    \overload
 */
 int VariantMapModel::rowCount(const QModelIndex &parent) const
 {
@@ -43,7 +46,7 @@ int VariantMapModel::rowCount(const QModelIndex &parent) const
 }
 
 /*!
-    \reimp
+    \overload
 */
 int VariantMapModel::columnCount(const QModelIndex &parent) const
 {
@@ -52,7 +55,7 @@ int VariantMapModel::columnCount(const QModelIndex &parent) const
 }
 
 /*!
-    \reimp
+    \overload
 */
 QVariant VariantMapModel::data(const QModelIndex &index, int role) const
 {

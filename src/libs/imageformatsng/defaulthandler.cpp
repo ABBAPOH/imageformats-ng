@@ -20,6 +20,13 @@ static QByteArray mimeTypeToFormat(const QMimeType &mimeType)
     return QByteArray();
 }
 
+/*!
+    \class DefaultHandler
+*/
+
+/*!
+    Constructs the DefaultHandler object.
+*/
 DefaultHandler::DefaultHandler()
 {
 

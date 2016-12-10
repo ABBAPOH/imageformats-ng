@@ -1001,7 +1001,7 @@ JpegHandler::~JpegHandler()
     delete d;
 }
 
-bool JpegHandler::canRead()
+bool JpegHandler::canRead() const
 {
     return canRead(device());
 }

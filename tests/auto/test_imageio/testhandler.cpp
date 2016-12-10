@@ -53,7 +53,7 @@ QDataStream &operator >>(QDataStream &stream, TestImageData &data)
     return stream;
 }
 
-bool TestHandler::canRead()
+bool TestHandler::canRead() const
 {
     return true;
 }

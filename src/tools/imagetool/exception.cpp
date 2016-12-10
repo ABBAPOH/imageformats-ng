@@ -18,7 +18,7 @@ Exception::Exception() = default;
 Exception::~Exception() Q_DECL_NOEXCEPT = default;
 
 /*!
-    \reimp
+    \overload
 */
 const char *Exception::what() const Q_DECL_NOEXCEPT
 {
@@ -51,7 +51,7 @@ ExitException::~ExitException() Q_DECL_NOEXCEPT = default;
 */
 
 /*!
-    \reimp
+    \overload
 */
 const char *ExitException::what() const Q_DECL_NOEXCEPT
 {
@@ -93,7 +93,7 @@ const QString &RuntimeError::message() const Q_DECL_NOEXCEPT
 }
 
 /*!
-    \reimp
+    \overload
 */
 const char *RuntimeError::what() const Q_DECL_NOEXCEPT
 {

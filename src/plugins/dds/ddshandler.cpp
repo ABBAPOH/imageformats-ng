@@ -1369,7 +1369,7 @@ QByteArray DDSHandler::name() const
     return QByteArrayLiteral("dds");
 }
 
-bool DDSHandler::canRead()
+bool DDSHandler::canRead() const
 {
     return canRead(device());
 }

@@ -21,11 +21,10 @@ public:
     QByteArray subType() const;
     void setSubType(const QByteArray &subType);
 
-    virtual bool canRead() = 0;
-    // TODO: use Optional?
+    virtual bool canRead() const = 0;
     virtual bool readHeader(ImageHeader &header) = 0;
     virtual bool read(ImageContents &contents) = 0;
-    virtual bool write(const ImageContents &contents, const ImageOptions &options) = 0;
+    virtual bool write(const ImageContents &contents, const ImageOptions &options);
 
 private:
     enum State { NoState, HeaderReadState, DataReadState, ErrorState } state;

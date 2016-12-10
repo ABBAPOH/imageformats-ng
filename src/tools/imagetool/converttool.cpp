@@ -96,7 +96,7 @@ static void convert(const Options &options)
 ConvertTool::ConvertTool() = default;
 
 /*!
-    \reimp
+    \overload
 */
 QByteArray ConvertTool::id() const
 {
@@ -104,7 +104,7 @@ QByteArray ConvertTool::id() const
 }
 
 /*!
-    \reimp
+    \overload
 */
 QString ConvertTool::decription() const
 {
@@ -112,7 +112,7 @@ QString ConvertTool::decription() const
 }
 
 /*!
-    \reimp
+    \overload
 */
 int ConvertTool::run(const QStringList &arguments)
 {

@@ -61,17 +61,24 @@ CubeTextureData *CubeTextureData::create(int extent, QImage::Format format)
 /*!
     \enum CubeTexture::Side
     This enum describes possible sides of the cube.
-    \value CubeTexture::Side::PositiveX Positive x side
 
-    \value CubeTexture::Side::NegativeX Negative x side
+    \var CubeTexture::PositiveX
+    Positive x side
 
-    \value CubeTexture::Side::PositiveY Positive y side
+    \var CubeTexture::NegativeX
+    Negative x side
 
-    \value CubeTexture::Side::NegativeY Negative y side
+    \var CubeTexture::PositiveY
+    Positive y side
 
-    \value CubeTexture::Side::PositiveZ Positive z side
+    \var CubeTexture::NegativeY
+    Negative y side
 
-    \value CubeTexture::Side::NegativeZ Negative z side
+    \var CubeTexture::PositiveZ
+    Positive z side
+
+    \var CubeTexture::NegativeZ
+    Negative z side
 */
 
 
@@ -79,9 +86,11 @@ CubeTextureData *CubeTextureData::create(int extent, QImage::Format format)
     \enum CubeTexture::Projection
     This enum describes possible projections.
 
-    \value CubeTexture::Projection::HorizonalCross
+    \var CubeTexture::HorizonalCross
+    Horizonal cross projection
 
-    \value CubeTexture::Projection::VerticalCross
+    \var CubeTexture::VerticalCross
+    Vertical cross projection
 */
 
 /*!

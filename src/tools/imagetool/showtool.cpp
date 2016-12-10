@@ -146,7 +146,7 @@ static void showImageInfo(const QString &filePath)
 ShowTool::ShowTool() = default;
 
 /*!
-    \reimp
+    \overload
 */
 QByteArray ShowTool::id() const
 {
@@ -154,7 +154,7 @@ QByteArray ShowTool::id() const
 }
 
 /*!
-    \reimp
+    \overload
 */
 QString ShowTool::decription() const
 {
@@ -162,7 +162,7 @@ QString ShowTool::decription() const
 }
 
 /*!
-    \reimp
+    \overload
 */
 int ShowTool::run(const QStringList &arguments)
 {

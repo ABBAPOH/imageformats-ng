@@ -11,7 +11,7 @@ public:
     DefaultHandler();
 
 public: // ImageIOHandler interface
-    bool canRead() override { return true; }
+    bool canRead() const override { return true; }
     bool readHeader(ImageHeader &header) override;
     bool read(ImageContents &contents) override;
     bool write(const ImageContents &contents, const ImageOptions &options) override;
