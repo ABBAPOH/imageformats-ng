@@ -70,6 +70,10 @@ void ImageContentsData::setResource(const ImageResource &resource, int index, in
 
 /*!
     \class ImageContents
+
+    This class represents data contained in an image file.
+    It consists of the ImageContents::header, 2D array of ImageResources and
+    ImageContents::exifMeta.
 */
 
 /*!
@@ -149,13 +153,17 @@ ImageContents &ImageContents::operator=(ImageContents &&other) Q_DECL_NOEXCEPT
 }
 
 /*!
-    Returns true if this contents has no data.
+    Returns true if it is a null contents, otherwise returns false.
 */
 bool ImageContents::isNull() const
 {
     return !d;
 }
 
+/*!
+    \property ImageContents::header
+    This property holds the header of the contents.
+*/
 ImageHeader ImageContents::header() const
 {
     return d ? d->header : ImageHeader();
@@ -172,17 +180,27 @@ void ImageContents::setImage(const QImage &image, int index, int level)
         d->setResource(image, index, level);
 }
 
+/*!
+    Returns the resource located at the given \a index and \a level.
+*/
 ImageResource ImageContents::resource(int index, int level) const
 {
     return d ? d->resource(index, level) : ImageResource();
 }
 
+/*!
+    Assigns the resource located at the given \a index and \a level to the given \a resource.
+*/
 void ImageContents::setResource(const ImageResource &resource, int index, int level)
 {
     if (d)
         d->setResource(resource, index, level);
 }
 
+/*!
+    \property ImageContents::exifMeta
+    This property holds exif meta information.
+*/
 ImageExifMeta ImageContents::exifMeta() const
 {
     return d ? d->exif : ImageExifMeta();
@@ -194,12 +212,19 @@ void ImageContents::setExifMeta(const ImageExifMeta &exif)
         d->exif = exif;
 }
 
+/*!
+    Makes this contents null.
+*/
 void ImageContents::clear()
 {
     ImageContents c;
     swap(c);
 }
 
+/*!
+    Returns true if \a lhs contents and the given \a rhs contents have the same data; otherwise
+    returns false.
+*/
 bool operator==(const ImageContents &lhs, const ImageContents &rhs)
 {
     return lhs.d == rhs.d ||
@@ -208,6 +233,10 @@ bool operator==(const ImageContents &lhs, const ImageContents &rhs)
              && lhs.d->exif == rhs.d->exif);
 }
 
+/*!
+    Returns true if \a lhs contents and the given \a rhs contents have different data; otherwise
+    returns false.
+*/
 bool operator!=(const ImageContents &lhs, const ImageContents &rhs)
 {
     return !(lhs == rhs);
