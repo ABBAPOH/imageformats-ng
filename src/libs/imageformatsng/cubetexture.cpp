@@ -48,6 +48,7 @@ CubeTextureData *CubeTextureData::create(int extent, QImage::Format format)
 
     std::unique_ptr<CubeTextureData> d(new CubeTextureData());
     d->extent = extent;
+    d->format = format;
     d->images.resize(6);
     return d.release();
 }
@@ -224,13 +225,13 @@ void CubeTexture::setSide(CubeTexture::Side side, const QImage &image)
     }
 
     if (image.format() != d->format) {
-        qWarning("VolumeTexture::setSlice: wrong image format: %d",
+        qWarning("VolumeTexture::setSide: wrong image format: %d",
                  image.format());
         return;
     }
 
     if (image.size() != d->size()) {
-        qWarning("VolumeTexture::setSlice: wrong image size: (%d,%d)",
+        qWarning("VolumeTexture::setSide: wrong image size: (%d,%d)",
                  image.size().width(), image.size().height());
         return;
     }
