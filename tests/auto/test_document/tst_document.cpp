@@ -34,7 +34,7 @@ void SimpleDocument::save(const QUrl &url)
     QVERIFY(file.open(QIODevice::WriteOnly));
 
     auto data = _text.toUtf8();
-    const bool ok = file.write(data) == data.length();
+    QVERIFY(file.write(data) == data.length());
 }
 
 class TestDocument : public QObject
