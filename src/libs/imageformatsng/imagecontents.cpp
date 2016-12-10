@@ -115,7 +115,7 @@ ImageContents::ImageContents(const QImage &image):
 {
     if (image.isNull())
         return;
-    d->header.setType(ImageHeader::Image);
+    d->header.setType(ImageHeader::Type::Image);
     d->header.setSize(image.size());
     d->header.setImageFormat(image.format());
     setImage(image);
@@ -239,7 +239,7 @@ void ImageContents::clear()
 
 Optional<ImageContents> ImageContents::toProjection(ImageContents::Projection projection) const
 {
-    if (d->header.type() != ImageHeader::Cubemap)
+    if (d->header.type() != ImageHeader::Type::Cubemap)
         return Nothing();
 
     if (d->header.width() != d->header.height()) {

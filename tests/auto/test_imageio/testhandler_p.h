@@ -6,7 +6,7 @@ struct TestImageData
 {
     quint32 magic {0};
     QByteArray subType;
-    ImageHeader::Type type {ImageHeader::Image};
+    ImageHeader::Type type {ImageHeader::Type::Image};
     QSize size;
     QString name;
     QImage::Format imageFormat {QImage::Format_Invalid};

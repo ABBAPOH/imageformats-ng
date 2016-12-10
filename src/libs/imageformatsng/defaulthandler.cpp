@@ -34,7 +34,7 @@ bool DefaultHandler::readHeader(ImageHeader &header)
         return false;
     }
 
-    header.setType(ImageHeader::Image);
+    header.setType(ImageHeader::Type::Image);
     header.setSize(_reader->size());
     header.setImageFormat(_reader->imageFormat());
     int count = _reader->imageCount();

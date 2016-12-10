@@ -27,7 +27,7 @@ class IMAGEFORMATSNG_EXPORT ImageHeader
     Q_PROPERTY(int frameDelay READ frameDelay WRITE setFrameDelay)
     Q_PROPERTY(int loopCount READ loopCount WRITE setLoopCount)
 public:
-    enum Type {
+    enum class Type {
         Invalid,
         Image,
         Cubemap,

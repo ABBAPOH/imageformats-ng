@@ -75,18 +75,18 @@ void TestImageDocument::read_data()
     QTest::addColumn<int>("loopCount");
 
 //    QTest::newRow("0x0, AGRB32, 1x1, -1") << int(ImageHeader::Image) << QSize() << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
-    QTest::newRow("1x1, AGRB32, 1x1, -1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
-    QTest::newRow("64x64, AGRB32, 1x1, -1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
-    QTest::newRow("64x64, GRB32, 1x1, -1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_RGB32) << QString() << 1 << 1 << -1;
+    QTest::newRow("1x1, AGRB32, 1x1, -1") << int(ImageHeader::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
+    QTest::newRow("64x64, AGRB32, 1x1, -1") << int(ImageHeader::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
+    QTest::newRow("64x64, GRB32, 1x1, -1") << int(ImageHeader::Type::Image) << QSize(1, 1) << int(QImage::Format_RGB32) << QString() << 1 << 1 << -1;
 //    QTest::newRow("64x64, invalid, 1x1, -1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_Invalid) << QString() << 1 << 1 << -1;
-    QTest::newRow("image1x1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
-    QTest::newRow("image1x2") << int(ImageHeader::Image) << QSize(2, 2) << int(QImage::Format_ARGB32) << QString() << 1 << 2 << -1;
-    QTest::newRow("image1x4") << int(ImageHeader::Image) << QSize(8, 8) << int(QImage::Format_ARGB32) << QString() << 1 << 4 << -1;
-    QTest::newRow("image2x1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 2 << 1 << -1;
-    QTest::newRow("image4x1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 4 << 1 << -1;
-    QTest::newRow("image4x4") << int(ImageHeader::Image) << QSize(8, 8) << int(QImage::Format_ARGB32) << QString() << 4 << 4 << -1;
-    QTest::newRow("named image1x1") << int(ImageHeader::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString("name") << 1 << 1 << -1;
-    QTest::newRow("image1x1 loop count = 1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << 1;
+    QTest::newRow("image1x1") << int(ImageHeader::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
+    QTest::newRow("image1x2") << int(ImageHeader::Type::Image) << QSize(2, 2) << int(QImage::Format_ARGB32) << QString() << 1 << 2 << -1;
+    QTest::newRow("image1x4") << int(ImageHeader::Type::Image) << QSize(8, 8) << int(QImage::Format_ARGB32) << QString() << 1 << 4 << -1;
+    QTest::newRow("image2x1") << int(ImageHeader::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 2 << 1 << -1;
+    QTest::newRow("image4x1") << int(ImageHeader::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 4 << 1 << -1;
+    QTest::newRow("image4x4") << int(ImageHeader::Type::Image) << QSize(8, 8) << int(QImage::Format_ARGB32) << QString() << 4 << 4 << -1;
+    QTest::newRow("named image1x1") << int(ImageHeader::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString("name") << 1 << 1 << -1;
+    QTest::newRow("image1x1 loop count = 1") << int(ImageHeader::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << 1;
 }
 
 static QVector<QImage> generateImages(QSize size, int imageCount, int mipmapCount, QImage::Format format)
@@ -189,18 +189,18 @@ void TestImageDocument::write_data()
     QTest::addColumn<int>("mipmapCount");
     QTest::addColumn<int>("loopCount");
 
-    QTest::newRow("1x1, AGRB32, 1x1, -1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
-    QTest::newRow("64x64, AGRB32, 1x1, -1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
-    QTest::newRow("64x64, GRB32, 1x1, -1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_RGB32) << QString() << 1 << 1 << -1;
+    QTest::newRow("1x1, AGRB32, 1x1, -1") << int(ImageHeader::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
+    QTest::newRow("64x64, AGRB32, 1x1, -1") << int(ImageHeader::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
+    QTest::newRow("64x64, GRB32, 1x1, -1") << int(ImageHeader::Type::Image) << QSize(1, 1) << int(QImage::Format_RGB32) << QString() << 1 << 1 << -1;
 //    QTest::newRow("64x64, invalid, 1x1, -1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_Invalid) << QString() << 1 << 1 << -1;
-    QTest::newRow("image1x1") << int(ImageHeader::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
-    QTest::newRow("image1x2") << int(ImageHeader::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 1 << 2 << -1;
-    QTest::newRow("image1x4") << int(ImageHeader::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 1 << 4 << -1;
-    QTest::newRow("image2x1") << int(ImageHeader::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 2 << 1 << -1;
-    QTest::newRow("image4x1") << int(ImageHeader::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 4 << 1 << -1;
-    QTest::newRow("image4x4") << int(ImageHeader::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 4 << 4 << -1;
-    QTest::newRow("named image1x1") << int(ImageHeader::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString("name") << 1 << 1 << -1;
-    QTest::newRow("image1x1 loop count = 1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << 1;
+    QTest::newRow("image1x1") << int(ImageHeader::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
+    QTest::newRow("image1x2") << int(ImageHeader::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 1 << 2 << -1;
+    QTest::newRow("image1x4") << int(ImageHeader::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 1 << 4 << -1;
+    QTest::newRow("image2x1") << int(ImageHeader::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 2 << 1 << -1;
+    QTest::newRow("image4x1") << int(ImageHeader::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 4 << 1 << -1;
+    QTest::newRow("image4x4") << int(ImageHeader::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 4 << 4 << -1;
+    QTest::newRow("named image1x1") << int(ImageHeader::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString("name") << 1 << 1 << -1;
+    QTest::newRow("image1x1 loop count = 1") << int(ImageHeader::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << 1;
 }
 
 void TestImageDocument::write()
@@ -291,7 +291,7 @@ void TestImageDocument::writeOptions()
     const QImage::Format imageFormat(QImage::Format_ARGB32);
 
     ImageHeader header;
-    header.setType(ImageHeader::Image);
+    header.setType(ImageHeader::Type::Image);
     header.setSize(size);
     ImageContents contents;
 
