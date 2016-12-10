@@ -59,7 +59,8 @@ ImageResource::ImageResource(const VolumeTexture &texture) :
 /*!
     Copy-constructs resource from the given \a other resource.
 */
-ImageResource::ImageResource(const ImageResource &other)
+ImageResource::ImageResource(const ImageResource &other) :
+    _type(Type::Invalid)
 {
     construct(other);
 }
@@ -67,7 +68,8 @@ ImageResource::ImageResource(const ImageResource &other)
 /*!
     Move-constructs resource from the given \a other resource.
 */
-ImageResource::ImageResource(ImageResource &&other)
+ImageResource::ImageResource(ImageResource &&other) :
+    _type(Type::Invalid)
 {
     construct(std::move(other));
 }
@@ -223,7 +225,8 @@ void ImageResource::construct(ImageResource &&other)
     default:
         break;
     }
-    _type = other._type;
+    using std::swap;
+    swap(_type, other._type);
 }
 
 /*!
