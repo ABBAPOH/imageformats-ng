@@ -12,6 +12,7 @@
 #include <QCoreApplication>
 
 class QIODevice;
+class ImageIOError;
 
 class ImageIOPrivate;
 class IMAGEFORMATSNG_EXPORT ImageIO
@@ -19,7 +20,6 @@ class IMAGEFORMATSNG_EXPORT ImageIO
     Q_DISABLE_COPY(ImageIO)
     Q_DECLARE_PRIVATE(ImageIO)
 public:
-    class Error;
 
     ImageIO();
     explicit ImageIO(const QString &fileName, const QMimeType &mimeType = QMimeType());
@@ -47,7 +47,7 @@ public:
 
     bool supportsOption(ImageOptions::Option option, const QByteArray &subType = QByteArray()) const;
 
-    Error error() const;
+    ImageIOError error() const;
 
     static QVector<ImageFormatInfo> supportedImageFormats(ImageFormatInfo::Capabilities caps = ImageFormatInfo::ReadWrite);
     static Optional<ImageFormatInfo> imageFormat(const QMimeType &mimeType);
@@ -59,7 +59,7 @@ private:
     QScopedPointer<ImageIOPrivate> d_ptr;
 };
 
-class IMAGEFORMATSNG_EXPORT ImageIO::Error
+class IMAGEFORMATSNG_EXPORT ImageIOError
 {
     Q_DECLARE_TR_FUNCTIONS(Error)
 public:
@@ -73,7 +73,7 @@ public:
         IOError,
     };
 
-    inline Error(ErrorCode errorCode = NoError) : _error(errorCode) {}
+    inline ImageIOError(ErrorCode errorCode = NoError) : _error(errorCode) {}
     inline ErrorCode errorCode() const { return _error; }
     QString errorString() const;
 
@@ -83,7 +83,12 @@ private:
     ErrorCode _error;
 };
 
-inline bool operator==(const ImageIO::Error &lhs, const ImageIO::Error &rhs)
+inline bool operator==(const ImageIOError &lhs, const ImageIOError &rhs)
 {
     return lhs.errorCode() == rhs.errorCode();
+}
+
+inline bool operator!=(const ImageIOError &lhs, const ImageIOError &rhs)
+{
+    return lhs.errorCode() != rhs.errorCode();
 }
