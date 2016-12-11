@@ -2,23 +2,6 @@
 
 #include <QtCore/QDebug>
 
-namespace {
-
-struct FaceOffset
-{
-    int x, y;
-};
-
-static const FaceOffset faceOffsets[2][6] =  {
-    { {2, 1}, {0, 1}, {1, 0}, {1, 2}, {1, 1}, {3, 1} },
-    // TODO: fix vertical offsets
-    { {2, 1}, {0, 1}, {1, 0}, {1, 2}, {1, 1}, {1, 3} }
-};
-
-static const FaceOffset multipliers[2] = { {4, 3}, {3, 4} };
-
-} // namespace
-
 class ImageContentsData : public QSharedData
 {
 public:
