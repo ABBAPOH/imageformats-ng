@@ -25,7 +25,7 @@ public:
 
     void onItemChanged(ImageDocumentItem *item);
 
-    ImageHeader::Type type {ImageHeader::Type::Invalid};
+    ImageResource::Type type {ImageResource::Type::Invalid};
     QSize size;
     QImage::Format imageFormat {QImage::Format::Format_Invalid};
     QString name;

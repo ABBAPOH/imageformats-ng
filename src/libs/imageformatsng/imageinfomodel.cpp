@@ -2,15 +2,15 @@
 
 namespace {
 
-QString typeToString(const ImageHeader::Type type)
+QString typeToString(const ImageResource::Type type)
 {
     // As we can't use QMetaEnum for QImage, use manual switch here.
     // At least, we can translate types.
     switch (type) {
-    case ImageHeader::Type::Invalid : return ImageInfoModel::tr("Invalid");
-    case ImageHeader::Type::Image : return ImageInfoModel::tr("Image");
-    case ImageHeader::Type::CubeTexture : return ImageInfoModel::tr("Cubemap");
-    case ImageHeader::Type::VolumeTexture : return ImageInfoModel::tr("Volume texture");
+    case ImageResource::Type::Invalid : return ImageInfoModel::tr("Invalid");
+    case ImageResource::Type::Image : return ImageInfoModel::tr("Image");
+    case ImageResource::Type::CubeTexture : return ImageInfoModel::tr("Cubemap");
+    case ImageResource::Type::VolumeTexture : return ImageInfoModel::tr("Volume texture");
     default: return ImageInfoModel::tr("Unknown");
     }
     Q_UNREACHABLE();

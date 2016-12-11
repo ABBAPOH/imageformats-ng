@@ -2,6 +2,7 @@
 
 #include "imageformatsng_global.h"
 
+#include <ImageResource>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QSharedDataPointer>
 #include <QtGui/QImage>
@@ -14,7 +15,7 @@ class IMAGEFORMATSNG_EXPORT ImageHeader
     Q_DECLARE_TR_FUNCTIONS(ImageHeader)
 
     Q_PROPERTY(bool isNull READ isNull)
-    Q_PROPERTY(Type type READ type WRITE setType)
+    Q_PROPERTY(ImageResource::Type type READ type WRITE setType)
     Q_PROPERTY(QImage::Format imageFormat READ imageFormat WRITE setImageFormat)
     Q_PROPERTY(QSize size READ size WRITE setSize)
     Q_PROPERTY(int width READ width WRITE setWidth)
@@ -27,14 +28,6 @@ class IMAGEFORMATSNG_EXPORT ImageHeader
     Q_PROPERTY(int frameDelay READ frameDelay WRITE setFrameDelay)
     Q_PROPERTY(int loopCount READ loopCount WRITE setLoopCount)
 public:
-    enum class Type {
-        Invalid,
-        Image,
-        CubeTexture,
-        VolumeTexture
-    };
-    Q_ENUMS(Type)
-
     ImageHeader();
     ImageHeader(const ImageHeader &);
     ImageHeader(ImageHeader &&);
@@ -45,8 +38,8 @@ public:
 
     bool isNull() const;
 
-    Type type() const;
-    void setType(Type t);
+    ImageResource::Type type() const;
+    void setType(ImageResource::Type type);
 
     QImage::Format imageFormat() const;
     void setImageFormat(QImage::Format format);

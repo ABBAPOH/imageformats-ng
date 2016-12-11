@@ -16,7 +16,7 @@ static int getMipmapCount(int width, int heigth, int depth)
 class ImageHeaderData : public QSharedData
 {
 public:
-    ImageHeader::Type type {ImageHeader::Type::Invalid};
+    ImageResource::Type type {ImageResource::Type::Invalid};
     int width {-1};
     int height {-1};
     int depth {-1};
@@ -42,14 +42,14 @@ void ImageHeaderData::setSize3D(int width, int height, int depth)
 
 Optional<QString> ImageHeaderData::validate() const
 {
-    if (type == ImageHeader::Type::Invalid)
+    if (type == ImageResource::Type::Invalid)
         return ImageHeader::tr("Invalid type");
 
     if (width <= 0)
         return ImageHeader::tr("Invalid width: %1").arg(width);
     if (height <= 0)
         return ImageHeader::tr("Invalid height: %1").arg(height);
-    if ((type == ImageHeader::Type::VolumeTexture) && depth <= 0)
+    if ((type == ImageResource::Type::VolumeTexture) && depth <= 0)
         return ImageHeader::tr("Invalid depth: %1").arg(depth);
 
     if (imageFormat == QImage::Format::Format_Invalid)
@@ -66,22 +66,6 @@ Optional<QString> ImageHeaderData::validate() const
 /*!
     \class ImageHeader
     ImageHeader class contains common properties for all images.
-*/
-
-/*!
-    \enum ImageHeader::Type
-
-    \var ImageHeader::Invalid
-    Invalid image.
-
-    \var ImageHeader::Image
-    Usual 2D image.
-
-    \var ImageHeader::Cubemap
-    Cube texture.
-
-    \var ImageHeader::VolumeTexture
-    Volume texture.
 */
 
 /*!
@@ -146,20 +130,20 @@ bool ImageHeader::isNull() const
 }
 
 /*!
-    \property ImageHeader::type
+    \property ImageHeader::Type
     This property holds the type of an image (i.e. image, cube texture or volume texture).
 
     \sa ImageHeader::Type
 */
 
-ImageHeader::Type ImageHeader::type() const
+ImageResource::Type ImageHeader::type() const
 {
     return d->type;
 }
 
-void ImageHeader::setType(ImageHeader::Type t)
+void ImageHeader::setType(ImageResource::Type type)
 {
-    d->type = t;
+    d->type = type;
 }
 
 /*!

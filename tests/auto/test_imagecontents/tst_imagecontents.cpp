@@ -24,8 +24,8 @@ void TestImageContents::setters()
 {
     ImageHeader header;
 
-    header.setType(ImageHeader::Type::Image);
-    QCOMPARE(header.type(), ImageHeader::Type::Image);
+    header.setType(ImageResource::Type::Image);
+    QCOMPARE(header.type(), ImageResource::Type::Image);
 
     header.setSize(QSize(64, 64));
     QCOMPARE(header.size(), QSize(64, 64));

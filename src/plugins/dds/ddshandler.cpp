@@ -1387,9 +1387,9 @@ bool DDSHandler::readHeader(ImageHeader &header)
     header.setHasMipmaps(bool(m_header.mipMapCount));
 
     if (isCubeMap(m_header)) {
-        header.setType(ImageHeader::Type::CubeTexture);
+        header.setType(ImageResource::Type::CubeTexture);
     } else {
-        header.setType(ImageHeader::Type::Image);
+        header.setType(ImageResource::Type::Image);
     }
 
     return true;

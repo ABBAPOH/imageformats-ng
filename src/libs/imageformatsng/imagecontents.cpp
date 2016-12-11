@@ -76,7 +76,7 @@ ImageContents::ImageContents(const QImage &image)
         return;
 
     d = new ImageContentsData();
-    d->header.setType(ImageHeader::Type::Image);
+    d->header.setType(ImageResource::Type::Image);
     d->header.setSize(image.size());
     d->header.setImageFormat(image.format());
     setImage(image);
@@ -97,7 +97,7 @@ ImageContents::ImageContents(const QVector<CubeTexture> &frames)
     // TODO: validate frames
 
     d = new ImageContentsData();
-    d->header.setType(ImageHeader::Type::CubeTexture);
+    d->header.setType(ImageResource::Type::CubeTexture);
     d->header.setWidth(extent);
     d->header.setHeight(extent);
     d->header.setDepth(extent);
@@ -125,7 +125,7 @@ ImageContents::ImageContents(const QVector<VolumeTexture> &frames)
     // TODO: validate frames
 
     d = new ImageContentsData();
-    d->header.setType(ImageHeader::Type::VolumeTexture);
+    d->header.setType(ImageResource::Type::VolumeTexture);
     d->header.setWidth(width);
     d->header.setHeight(height);
     d->header.setDepth(depth);

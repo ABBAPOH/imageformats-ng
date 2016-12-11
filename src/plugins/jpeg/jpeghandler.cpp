@@ -865,7 +865,7 @@ bool JpegHandlerPrivate::readJpegHeader(QIODevice *device, ImageHeader &header)
             jpeg_save_markers(&info, JPEG_COM, 0xFFFF);
             jpeg_save_markers(&info, JPEG_APP0+1, 0xFFFF); // Exif uses APP1 marker
 
-            header.setType(ImageHeader::Type::Image);
+            header.setType(ImageResource::Type::Image);
 
             (void) jpeg_read_header(&info, TRUE);
 

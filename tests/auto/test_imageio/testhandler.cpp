@@ -36,7 +36,7 @@ QDataStream &operator >>(QDataStream &stream, TestImageData &data)
     data.magic = magic;
     stream >> data.subType;
     stream >> value;
-    data.type = ImageHeader::Type(value);
+    data.type = ImageResource::Type(value);
     stream >> data.size;
     stream >> data.name;
     stream >> value;

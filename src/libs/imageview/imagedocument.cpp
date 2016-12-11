@@ -109,7 +109,7 @@ void ImageDocument::setContents(const ImageContents &contents)
 void ImageDocument::clear()
 {
     Q_D(ImageDocument);
-    d->type = ImageHeader::Type::Invalid;
+    d->type = ImageResource::Type::Invalid;
     d->size = QSize();
     d->imageFormat = QImage::Format::Format_Invalid;
     d->name.clear();
