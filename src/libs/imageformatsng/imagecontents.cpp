@@ -139,9 +139,11 @@ ImageContents::ImageContents(const QVector<VolumeTexture> &frames)
 /*!
     Constructs an ImageContents with the given \a header.
 */
-ImageContents::ImageContents(const ImageHeader &header) :
-    d(new ImageContentsData)
+ImageContents::ImageContents(const ImageHeader &header)
 {
+    if (!header.validate())
+        return;
+    d = new ImageContentsData;
     d->header = header;
 }
 

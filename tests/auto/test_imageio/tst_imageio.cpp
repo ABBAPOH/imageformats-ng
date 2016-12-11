@@ -95,8 +95,9 @@ static QVector<QImage> generateImages(QSize size, int imageCount, int mipmapCoun
         format = QImage::Format_ARGB32;
     const auto generateImage = [=](int index, int level) {
 
-        const int divisor = 1 << level;
-        QSize mipmapSize = QSize(size.width() / divisor, size.height() / divisor);
+//        const int divisor = 1 << level;
+//        QSize mipmapSize = QSize(size.width() / divisor, size.height() / divisor);
+        QSize mipmapSize = QSize(std::max(1, size.width() >> level), std::max(1, size.height() >> level));
         QImage result(mipmapSize, format);
 
         const auto generatePixel = [=](int x, int y) {
@@ -192,14 +193,14 @@ void TestImageDocument::write_data()
     QTest::newRow("1x1, AGRB32, 1x1, -1") << int(ImageResource::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
     QTest::newRow("64x64, AGRB32, 1x1, -1") << int(ImageResource::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
     QTest::newRow("64x64, GRB32, 1x1, -1") << int(ImageResource::Type::Image) << QSize(1, 1) << int(QImage::Format_RGB32) << QString() << 1 << 1 << -1;
-//    QTest::newRow("64x64, invalid, 1x1, -1") << int(ImageHeader::Image) << QSize(1, 1) << int(QImage::Format_Invalid) << QString() << 1 << 1 << -1;
-    QTest::newRow("image1x1") << int(ImageResource::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
-    QTest::newRow("image1x2") << int(ImageResource::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 1 << 2 << -1;
-    QTest::newRow("image1x4") << int(ImageResource::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 1 << 4 << -1;
-    QTest::newRow("image2x1") << int(ImageResource::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 2 << 1 << -1;
-    QTest::newRow("image4x1") << int(ImageResource::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 4 << 1 << -1;
-    QTest::newRow("image4x4") << int(ImageResource::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString() << 4 << 4 << -1;
-    QTest::newRow("named image1x1") << int(ImageResource::Type::Image) << QSize(64, 64) << int(QImage::Format_ARGB32) << QString("name") << 1 << 1 << -1;
+//    QTest::newRow("64x64, invalid, 1x1, -1") << int(ImageResource::Type::Image) << QSize(1, 1) << int(QImage::Format_Invalid) << QString() << 1 << 1 << -1;
+    QTest::newRow("image1x1") << int(ImageResource::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << -1;
+    QTest::newRow("image1x2") << int(ImageResource::Type::Image) << QSize(2, 2) << int(QImage::Format_ARGB32) << QString() << 1 << 2 << -1;
+    QTest::newRow("image1x4") << int(ImageResource::Type::Image) << QSize(8, 8) << int(QImage::Format_ARGB32) << QString() << 1 << 4 << -1;
+    QTest::newRow("image2x1") << int(ImageResource::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 2 << 1 << -1;
+    QTest::newRow("image4x1") << int(ImageResource::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 4 << 1 << -1;
+    QTest::newRow("image4x4") << int(ImageResource::Type::Image) << QSize(8, 8) << int(QImage::Format_ARGB32) << QString() << 4 << 4 << -1;
+    QTest::newRow("named image1x1") << int(ImageResource::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString("name") << 1 << 1 << -1;
     QTest::newRow("image1x1 loop count = 1") << int(ImageResource::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << 1;
 }
 
@@ -226,14 +227,17 @@ void TestImageDocument::write()
     header.setName(name);
     header.setImageCount(imageCount);
     header.setHasMipmaps(mipmapCount > 1);
+    QCOMPARE(header.mipmapCount(), mipmapCount);
     header.setLoopCount(loopCount);
     ImageContents contents(header);
+    QVERIFY(!contents.isNull());
 
     auto images = generateImages(size, imageCount, mipmapCount, QImage::Format(imageFormat));
 
     for (int level = 0, i = 0; level < mipmapCount; ++level) {
         for (int index = 0; index < imageCount; ++index, i++) {
             contents.setImage(images[i], index, level);
+            QCOMPARE(contents.image(index, level), images[i]);
         }
     }
 

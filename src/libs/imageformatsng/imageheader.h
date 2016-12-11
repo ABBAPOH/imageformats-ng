@@ -72,7 +72,7 @@ public:
 
     inline void swap(ImageHeader &other) Q_DECL_NOEXCEPT { qSwap(d, other.d); }
 
-    bool validate(QString *error = nullptr);
+    bool validate(QString *error = nullptr) const;
 
 private:
     QSharedDataPointer<ImageHeaderData> d;

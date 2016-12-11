@@ -335,7 +335,7 @@ void ImageHeader::setLoopCount(int count)
     This method checks that parameters passed to the header are valid. The message describing what's
     wrong is written to the given \a error variable.
 */
-bool ImageHeader::validate(QString *error)
+bool ImageHeader::validate(QString *error) const
 {
     const auto result = d->validate();
     if (error)
