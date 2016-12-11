@@ -2,4 +2,45 @@
     \mainpage Image Formats NG
 
     Image Formats NG project is the Next Generation of the Qt Image Formats.
+
+    # Problematic
+    There are some problems with current image formats:
+    - It is not possible to read a image that contains multiple frames and mipmaps, only
+      one-dimention arrays are supported.
+    - It is not possible to write an animation or a mipmapped image.
+    - It is not possible to check what options are supported in case when image can contain
+      different subtypes (for example, dds can contain jpeg inside, which supports different
+      compression levels, or plain data without compression)
+    - Extending image formats framework is hard because of huge usage of virtual functions (it is
+      not  possible to add new virtual functions without breaking BC)
+
+    # Basic reading
+    Basically, you used QImageReader to read an image from the file.
+
+    \snippet mainpage.cpp 0
+
+    Now, you should use an ImageIO class instead.
+
+    \snippet mainpage.cpp 1
+
+    # Basic writing
+    Simple writing is done almost the same way as with QImageWriter.
+
+    \snippet mainpage.cpp 2
+
+    # Reading image meta data
+    It is possible to read image meta data without reading the whole contents of the file.
+
+    \snippet mainpage.cpp 3
+
+    # Complex reading
+    Image Formats NG supports rather complex data structures. First, there can be one of three
+    types of images - a simple 1d/2d image, represented by a QImage, a 6-sided cubemap, represented
+    by CubeTexture and a 3d texture, represented by VolumeTexture. Second, there can be
+    multiple 'frames' (for example, GIF file is an array of images). Third, each frame can
+    have prescaled images of different sizes, i.e. mipmaps (for example, icns is a single image
+    with mipmaps).
+
+    The most complex file can be read as follows.
+    \snippet mainpage.cpp 4
 */
