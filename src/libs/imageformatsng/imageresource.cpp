@@ -11,10 +11,13 @@
     \enum ImageResource::Type
     This enum describes type stored in a resource.
 
+    \var ImageResource::Invalid
+    Resource contains no data.
+
     \var ImageResource::Image
     Resource contains a QImage.
 
-    \var ImageResource::Cubetexture
+    \var ImageResource::CubeTexture
     Resource contains a CubeTexture.
 
     \var ImageResource::VolumeTexture
