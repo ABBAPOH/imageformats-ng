@@ -9,7 +9,7 @@ QString typeToString(const ImageHeader::Type type)
     switch (type) {
     case ImageHeader::Type::Invalid : return ImageInfoModel::tr("Invalid");
     case ImageHeader::Type::Image : return ImageInfoModel::tr("Image");
-    case ImageHeader::Type::Cubemap : return ImageInfoModel::tr("Cubemap");
+    case ImageHeader::Type::CubeTexture : return ImageInfoModel::tr("Cubemap");
     case ImageHeader::Type::VolumeTexture : return ImageInfoModel::tr("Volume texture");
     default: return ImageInfoModel::tr("Unknown");
     }

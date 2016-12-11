@@ -30,7 +30,7 @@ public:
     enum class Type {
         Invalid,
         Image,
-        Cubemap,
+        CubeTexture,
         VolumeTexture
     };
     Q_ENUMS(Type)

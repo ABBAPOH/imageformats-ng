@@ -97,7 +97,7 @@ ImageContents::ImageContents(const QVector<CubeTexture> &frames)
     // TODO: validate frames
 
     d = new ImageContentsData();
-    d->header.setType(ImageHeader::Type::Cubemap);
+    d->header.setType(ImageHeader::Type::CubeTexture);
     d->header.setWidth(extent);
     d->header.setHeight(extent);
     d->header.setDepth(extent);

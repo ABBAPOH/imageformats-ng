@@ -251,7 +251,7 @@ void MainWindow::convertToProjection()
 {
     Q_D(MainWindow);
     const auto contents = d->_document->toContents();
-    if (contents.header().type() != ImageHeader::Type::Cubemap) {
+    if (contents.header().type() != ImageHeader::Type::CubeTexture) {
         QMessageBox::warning(this,
                              tr("Convert to projection"),
                              tr("Can't convert to projection, not a cube texture"));
