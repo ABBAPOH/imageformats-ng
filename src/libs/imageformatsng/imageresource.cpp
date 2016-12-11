@@ -124,13 +124,12 @@ ImageResource::Type ImageResource::type() const Q_DECL_NOEXCEPT
 }
 
 /*!
-    Returns an image contained in the resource if it's type is Type::Image, otherwise null QImage is
-    returned.
+    Returns an image contained in the resource if it's type is Type::Image, otherwise assert is
+    triggered.
 */
-QImage ImageResource::image() const
+const QImage & ImageResource::image() const
 {
-    if (_type != Type::Image)
-        return QImage();
+    Q_ASSERT_X(_type == Type::Image, "ImageResource::image", "Type is not Image");
     return _image;
 }
 
@@ -146,12 +145,11 @@ void ImageResource::setImage(const QImage &image)
 
 /*!
     Returns a CubeTexture contained in the resource if it's type is Type::CubeTexture, otherwise
-    null CubeTexture is returned.
+    assert is triggered.
 */
-CubeTexture ImageResource::cubeTexture() const
+const CubeTexture &ImageResource::cubeTexture() const
 {
-    if (_type != Type::CubeTexture)
-        return CubeTexture();
+    Q_ASSERT_X(_type == Type::CubeTexture, "ImageResource::cubeTexture", "Type is not CubeTexture");
     return _cubeTexture;
 }
 
@@ -169,10 +167,11 @@ void ImageResource::setCubeTexture(const CubeTexture &texture)
     Returns a VolumeTexture contained in the resource if it's type is Type::VolumeTexture, otherwise
     null VolumeTexture is returned.
 */
-VolumeTexture ImageResource::volumeTexture() const
+const VolumeTexture &ImageResource::volumeTexture() const
 {
-    if (_type != Type::VolumeTexture)
-        return VolumeTexture();
+    Q_ASSERT_X(_type == Type::VolumeTexture,
+               "ImageResource::volumeTexture",
+               "Type is not VolumeTexture");
     return _volumeTexture;
 }
 

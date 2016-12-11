@@ -29,13 +29,13 @@ public:
 
     Type type() const Q_DECL_NOEXCEPT;
 
-    QImage image() const;
+    const QImage &image() const;
     void setImage(const QImage &image);
 
-    CubeTexture cubeTexture() const;
+    const CubeTexture &cubeTexture() const;
     void setCubeTexture(const CubeTexture &texture);
 
-    VolumeTexture volumeTexture() const;
+    const VolumeTexture &volumeTexture() const;
     void setVolumeTexture(const VolumeTexture &texture);
 
 private:
