@@ -18,9 +18,6 @@ void TestImageResource::defaultConstructed()
     ImageResource res;
     QVERIFY(res.isNull());
     QCOMPARE(res.type(), ImageResource::Type::Invalid);
-    QVERIFY(res.image().isNull());
-    QVERIFY(res.cubeTexture().isNull());
-    QVERIFY(res.volumeTexture().isNull());
 }
 
 void TestImageResource::image()
@@ -32,8 +29,6 @@ void TestImageResource::image()
     QVERIFY(!res.isNull());
     QCOMPARE(res.type(), ImageResource::Type::Image);
     QCOMPARE(res.image(), image);
-    QVERIFY(res.cubeTexture().isNull());
-    QVERIFY(res.volumeTexture().isNull());
 }
 
 void TestImageResource::cubeTexture()
@@ -52,9 +47,7 @@ void TestImageResource::cubeTexture()
     ImageResource res(tex);
     QVERIFY(!res.isNull());
     QCOMPARE(res.type(), ImageResource::Type::CubeTexture);
-    QVERIFY(res.image().isNull());
     QCOMPARE(res.cubeTexture(), tex);
-    QVERIFY(res.volumeTexture().isNull());
 }
 
 void TestImageResource::volumeTexture()
@@ -71,8 +64,6 @@ void TestImageResource::volumeTexture()
     ImageResource res(tex);
     QVERIFY(!res.isNull());
     QCOMPARE(res.type(), ImageResource::Type::VolumeTexture);
-    QVERIFY(res.image().isNull());
-    QVERIFY(res.cubeTexture().isNull());
     QCOMPARE(res.volumeTexture(), tex);
 }
 
@@ -87,16 +78,11 @@ void TestImageResource::copyConstruct()
     ImageResource copy1(res1);
     QVERIFY(copy1.isNull());
     QCOMPARE(copy1.type(), ImageResource::Type::Invalid);
-    QVERIFY(copy1.image().isNull());
-    QVERIFY(copy1.cubeTexture().isNull());
-    QVERIFY(copy1.volumeTexture().isNull());
 
     ImageResource copy2(res2);
     QVERIFY(!copy2.isNull());
     QCOMPARE(copy2.type(), ImageResource::Type::Image);
     QCOMPARE(copy2.image(), image);
-    QVERIFY(copy2.cubeTexture().isNull());
-    QVERIFY(copy2.volumeTexture().isNull());
 }
 
 void TestImageResource::moveConstruct()
@@ -110,22 +96,14 @@ void TestImageResource::moveConstruct()
     ImageResource copy1(std::move(res1));
     QVERIFY(copy1.isNull());
     QCOMPARE(copy1.type(), ImageResource::Type::Invalid);
-    QVERIFY(copy1.image().isNull());
-    QVERIFY(copy1.cubeTexture().isNull());
-    QVERIFY(copy1.volumeTexture().isNull());
 
     ImageResource copy2(std::move(res2));
     QVERIFY(!copy2.isNull());
     QCOMPARE(copy2.type(), ImageResource::Type::Image);
     QCOMPARE(copy2.image(), image);
-    QVERIFY(copy2.cubeTexture().isNull());
-    QVERIFY(copy2.volumeTexture().isNull());
 
     QVERIFY(res2.isNull());
     QCOMPARE(res2.type(), ImageResource::Type::Invalid);
-    QVERIFY(res2.image().isNull());
-    QVERIFY(res2.cubeTexture().isNull());
-    QVERIFY(res2.volumeTexture().isNull());
 }
 
 QTEST_MAIN(TestImageResource)
