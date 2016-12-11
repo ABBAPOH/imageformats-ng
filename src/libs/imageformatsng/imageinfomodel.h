@@ -16,7 +16,9 @@ public:
 
     enum Row {
         RowType,
-        RowSize,
+        RowWidth,
+        RowHeight,
+        RowDepth,
         RowImageFormat,
         RowName,
         RowImageCount,

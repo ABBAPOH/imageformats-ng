@@ -51,11 +51,6 @@ QString imageFormatToString(const QImage::Format format)
     return QString();
 }
 
-QString sizeToString(const QSize &size)
-{
-    return ImageInfoModel::tr("%1 x %2").arg(size.width()).arg(size.height());
-}
-
 } // namespace
 
 ImageInfoModel::ImageInfoModel(QObject *parent) :
@@ -115,7 +110,9 @@ QVariant ImageInfoModel::data(const QModelIndex &index, int role) const
         if (index.column() == ColumnName) {
             switch (index.row()) {
             case RowType: return tr("Type");
-            case RowSize: return tr("Size");
+            case RowWidth: return tr("Width");
+            case RowHeight: return tr("Height");
+            case RowDepth: return tr("Depth");
             case RowImageFormat: return tr("Image format");
             case RowName: return tr("Name");
             case RowImageCount: return tr("Image count");
@@ -130,7 +127,9 @@ QVariant ImageInfoModel::data(const QModelIndex &index, int role) const
                 return QString();
             switch (index.row()) {
             case RowType: return typeToString(_contents.header().type());
-            case RowSize: return sizeToString(_contents.header().size());
+            case RowWidth: return _contents.header().width();
+            case RowHeight: return _contents.header().height();
+            case RowDepth: return _contents.header().depth();
             case RowImageFormat: return imageFormatToString(_contents.header().imageFormat());
             case RowName: return _contents.header().name();
             case RowImageCount: return _contents.header().imageCount();
