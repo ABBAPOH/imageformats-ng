@@ -78,6 +78,8 @@ void TestImageContents::equals()
     QFETCH(int, imageCount);
 
     ImageHeader h;
+    h.setType(ImageResource::Type::Image);
+    h.setImageFormat(QImage::Format_ARGB32);
     h.setSize(size);
     h.setName(name);
     h.setImageCount(imageCount);
@@ -89,6 +91,8 @@ void TestImageContents::equals()
 
     c1 = ImageContents(h);
     c2 = ImageContents(h);
+    QVERIFY(!c1.isNull());
+    QVERIFY(!c2.isNull());
 
     for (int i = 0; i < imageCount; ++i) {
         QImage image(size, QImage::Format_ARGB32);
