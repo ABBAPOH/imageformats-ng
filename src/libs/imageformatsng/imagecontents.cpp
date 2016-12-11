@@ -70,15 +70,42 @@ ImageContents::ImageContents() Q_DECL_NOEXCEPT
     Constructs an ImageContents from the given \a image.
     Fills the header and the data with the image.
 */
-ImageContents::ImageContents(const QImage &image):
-    d(new ImageContentsData)
+ImageContents::ImageContents(const QImage &image)
 {
     if (image.isNull())
         return;
+
+    d = new ImageContentsData();
     d->header.setType(ImageHeader::Type::Image);
     d->header.setSize(image.size());
     d->header.setImageFormat(image.format());
     setImage(image);
+}
+
+/*!
+    Constructs an ImageContents from the given \a frames array of CubeTextures.
+
+    The header is filled with the data from the array. Each element in the array must have the same
+    size and format, otherwise an invalid contents is contructed.
+*/
+ImageContents::ImageContents(const QVector<CubeTexture> &frames)
+{
+    if (frames.isEmpty())
+        return;
+    const auto extent = frames.first().depth();
+    const auto format = frames.first().format();
+    // TODO: validate frames
+
+    d = new ImageContentsData();
+    d->header.setType(ImageHeader::Type::Cubemap);
+    d->header.setWidth(extent);
+    d->header.setHeight(extent);
+    d->header.setDepth(extent);
+    d->header.setImageFormat(format);
+    d->header.setImageCount(frames.count());
+    for (int i = 0; i < frames.count(); ++i) {
+        setResource(frames.at(i));
+    }
 }
 
 /*!
