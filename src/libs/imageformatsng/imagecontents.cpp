@@ -267,10 +267,13 @@ void ImageContents::clear()
 */
 bool operator==(const ImageContents &lhs, const ImageContents &rhs)
 {
-    return lhs.d == rhs.d ||
-            (lhs.d->header == rhs.d->header
-             && lhs.d->resources == rhs.d->resources
-             && lhs.d->exif == rhs.d->exif);
+    if (lhs.d == rhs.d)
+        return true;
+    if ((!lhs.d && rhs.d) || (lhs.d && !rhs.d))
+        return false;
+    return lhs.d->header == rhs.d->header
+            && lhs.d->resources == rhs.d->resources
+            && lhs.d->exif == rhs.d->exif;
 }
 
 /*!
