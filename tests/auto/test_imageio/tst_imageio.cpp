@@ -8,7 +8,7 @@
 
 #include <QtCore/QMimeType>
 
-class TestImageDocument : public QObject
+class TestImageIO : public QObject
 {
     Q_OBJECT
 private slots:
@@ -23,11 +23,11 @@ private slots:
     void writeOptions();
 };
 
-void TestImageDocument::initTestCase()
+void TestImageIO::initTestCase()
 {
 }
 
-void TestImageDocument::defaultValues()
+void TestImageIO::defaultValues()
 {
     ImageIO io;
 
@@ -37,7 +37,7 @@ void TestImageDocument::defaultValues()
     QCOMPARE(io2.fileName(), QStringLiteral("image.png"));
 }
 
-void TestImageDocument::setters()
+void TestImageIO::setters()
 {
     QFile file("file.txt");
     file.remove();
@@ -64,7 +64,7 @@ void TestImageDocument::setters()
     QCOMPARE(io.subType(), QByteArray("subType"));
 }
 
-void TestImageDocument::read_data()
+void TestImageIO::read_data()
 {
     QTest::addColumn<int>("type");
     QTest::addColumn<QSize>("size");
@@ -127,7 +127,7 @@ static QVector<QImage> generateImages(QSize size, int imageCount, int mipmapCoun
     return images;
 }
 
-void TestImageDocument::read()
+void TestImageIO::read()
 {
     QFETCH(int, type);
     QFETCH(QSize, size);
@@ -180,7 +180,7 @@ void TestImageDocument::read()
     }
 }
 
-void TestImageDocument::write_data()
+void TestImageIO::write_data()
 {
     QTest::addColumn<int>("type");
     QTest::addColumn<QSize>("size");
@@ -204,7 +204,7 @@ void TestImageDocument::write_data()
     QTest::newRow("image1x1 loop count = 1") << int(ImageResource::Type::Image) << QSize(1, 1) << int(QImage::Format_ARGB32) << QString() << 1 << 1 << 1;
 }
 
-void TestImageDocument::write()
+void TestImageIO::write()
 {
     QFETCH(int, type);
     QFETCH(QSize, size);
@@ -269,7 +269,7 @@ void TestImageDocument::write()
     }
 }
 
-void TestImageDocument::writeOptions_data()
+void TestImageIO::writeOptions_data()
 {
     QTest::addColumn<int>("compression");
     QTest::addColumn<int>("gamma");
@@ -283,7 +283,7 @@ void TestImageDocument::writeOptions_data()
     QTest::newRow("all-half") << 50 << 50 << 50;
 }
 
-void TestImageDocument::writeOptions()
+void TestImageIO::writeOptions()
 {
     QFETCH(int, compression);
     QFETCH(int, gamma);
@@ -338,6 +338,6 @@ void TestImageDocument::writeOptions()
         QCOMPARE(data.quality, quality);
 }
 
-QTEST_APPLESS_MAIN(TestImageDocument)
+QTEST_APPLESS_MAIN(TestImageIO)
 
 #include "tst_imageio.moc"
