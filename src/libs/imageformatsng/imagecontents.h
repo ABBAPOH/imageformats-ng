@@ -28,6 +28,7 @@ public:
     ImageContents() Q_DECL_NOEXCEPT;
     explicit ImageContents(const QImage &image);
     explicit ImageContents(const QVector<CubeTexture> &frames);
+    explicit ImageContents(const QVector<VolumeTexture> &frames);
     explicit ImageContents(const ImageHeader &header);
     ImageContents(const ImageContents &other);
     ImageContents(ImageContents &&other) Q_DECL_NOEXCEPT;
