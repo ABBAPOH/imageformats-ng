@@ -296,6 +296,11 @@ static inline bool isCubeMap(const DDSHeader &dds)
     return (dds.caps2 & DDSHeader::Caps2CubeMap) != 0;
 }
 
+static inline bool isVolumeMap(const DDSHeader &dds)
+{
+    return (dds.caps2 & DDSHeader::Caps2Volume) != 0;
+}
+
 static inline QRgb yuv2rgb(quint8 Y, quint8 U, quint8 V)
 {
     return qRgb(quint8(Y + 1.13983 * (V - 128)),
@@ -1343,6 +1348,22 @@ static bool readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, Ima
     return true;
 }
 
+static bool readVolumeMap(QDataStream &s, const DDSHeader &dds, const int fmt, ImageContents &contents, int level)
+{
+    const int width = std::max<quint32>(1, dds.width / (1 << level));
+    const int height = std::max<quint32>(1, dds.height / (1 << level));
+    const int depth = std::max<quint32>(1, dds.depth / (1 << level));
+
+    VolumeTexture tex(width, height, depth, QImage::Format_ARGB32);
+    for (quint32 i = 0; i < depth; i++) {
+        const QImage face = readLayer(s, dds, fmt, width, height);
+        tex.setSlice(i, face);
+    }
+    contents.setResource(tex, 0, level);
+
+    return true;
+}
+
 static QByteArray formatName(int format)
 {
     for (size_t i = 0; i < formatNamesSize; ++i) {
@@ -1387,12 +1408,16 @@ bool DDSHandler::readHeader(ImageHeader &header)
     if (!doScan())
         return false;
 
-    header.setSize(QSize(m_header.width, m_header.height));
+    header.setWidth(int(m_header.width));
+    header.setHeight(int(m_header.height));
     header.setImageFormat(QImage::Format_ARGB32);
     header.setHasMipmaps(bool(m_header.mipMapCount));
 
     if (isCubeMap(m_header)) {
         header.setType(ImageResource::Type::CubeTexture);
+    } else if (isVolumeMap(m_header)) {
+        header.setType(ImageResource::Type::VolumeTexture);
+        header.setDepth(int(m_header.depth));
     } else {
         header.setType(ImageResource::Type::Image);
     }
@@ -1412,6 +1437,8 @@ bool DDSHandler::read(ImageContents &contents)
 
         if (isCubeMap(m_header)) {
             readCubeMap(s, m_header, m_format, contents, i);
+        } else if (isVolumeMap(m_header)) {
+            readVolumeMap(s, m_header, m_format, contents, i);
         } else {
             readTexture(s, m_header, m_format, contents, i);
         }
