@@ -6,13 +6,13 @@
 #include <ImageContents>
 #include <ImageFormatInfo>
 #include <ImageOptions>
+#include <ImageIOResult>
 #include <QtCore/QString>
 #include <QtCore/QScopedPointer>
 #include <QtCore/QMimeType>
-#include <QCoreApplication>
 
 class QIODevice;
-class ImageIOError;
+class ImageIOResult;
 
 class ImageIOPrivate;
 class IMAGEFORMATSNG_EXPORT ImageIO
@@ -47,7 +47,7 @@ public:
 
     bool supportsOption(ImageOptions::Option option, const QByteArray &subType = QByteArray()) const;
 
-    ImageIOError error() const;
+    ImageIOResult error() const;
 
     static QVector<ImageFormatInfo> supportedImageFormats(ImageFormatInfo::Capabilities caps = ImageFormatInfo::ReadWrite);
     static Optional<ImageFormatInfo> imageFormat(const QMimeType &mimeType);
@@ -58,37 +58,3 @@ public:
 private:
     QScopedPointer<ImageIOPrivate> d_ptr;
 };
-
-class IMAGEFORMATSNG_EXPORT ImageIOError
-{
-    Q_DECLARE_TR_FUNCTIONS(Error)
-public:
-    enum ErrorCode
-    {
-        NoError,
-        InvalidMimeTypeError,
-        FileNotFoundError,
-        DeviceError,
-        UnsupportedMimeTypeError,
-        IOError,
-    };
-
-    inline ImageIOError(ErrorCode errorCode = NoError) : _error(errorCode) {}
-    inline ErrorCode errorCode() const { return _error; }
-    QString errorString() const;
-
-    operator bool() const { return _error == NoError; }
-
-private:
-    ErrorCode _error;
-};
-
-inline bool operator==(const ImageIOError &lhs, const ImageIOError &rhs)
-{
-    return lhs.errorCode() == rhs.errorCode();
-}
-
-inline bool operator!=(const ImageIOError &lhs, const ImageIOError &rhs)
-{
-    return lhs.errorCode() != rhs.errorCode();
-}

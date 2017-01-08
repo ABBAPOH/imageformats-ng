@@ -146,10 +146,10 @@ void TestDds::readImage()
     ImageIO reader(path);
 //    QVERIFY(reader.canRead());
     const auto header = reader.readHeader();
-    QVERIFY2(header, qPrintable(reader.error().errorString()));
+    QVERIFY2(header, qPrintable(reader.error().toString()));
     QCOMPARE(header->size(), size);
     const auto contents = reader.read();
-    QVERIFY2(contents, qPrintable(reader.error().errorString()));
+    QVERIFY2(contents, qPrintable(reader.error().toString()));
     QVERIFY(compareImages(contents->image(), QImage(sourcePath)) == true);
 }
 
@@ -172,10 +172,10 @@ void TestDds::testMipmaps()
     ImageIO reader(path);
 //    QVERIFY(reader.canRead());
     const auto header = reader.readHeader();
-    QVERIFY2(header, qPrintable(reader.error().errorString()));
+    QVERIFY2(header, qPrintable(reader.error().toString()));
     QCOMPARE(header->mipmapCount(), mipmapCount);
     const auto contents = reader.read();
-    QVERIFY2(contents, qPrintable(reader.error().errorString()));
+    QVERIFY2(contents, qPrintable(reader.error().toString()));
 
     for (int i = 0; i < header->mipmapCount(); ++i) {
         QImage image = contents->image(0, i);
@@ -210,16 +210,16 @@ void TestDds::testWriteImage()
     //    QVERIFY2(writer.canWrite(), qPrintable(writer.errorString()));
     writer.setSubType(fileName.toLatin1());
     ImageContents contents(image);
-    QVERIFY2(writer.write(contents), qPrintable(writer.error().errorString()));
+    QVERIFY2(writer.write(contents), qPrintable(writer.error().toString()));
 
     ImageIO reader(path);
 //    QVERIFY(reader.canRead());
 //    QCOMPARE(reader.imageCount(), imageCount);
     const auto header = reader.readHeader();
-    QVERIFY2(header, qPrintable(reader.error().errorString()));
+    QVERIFY2(header, qPrintable(reader.error().toString()));
     QCOMPARE(header->size(), size);
     const auto newContents = reader.read();
-    QVERIFY2(newContents, qPrintable(reader.error().errorString()));
+    QVERIFY2(newContents, qPrintable(reader.error().toString()));
     QVERIFY(image == newContents->image());
 }
 

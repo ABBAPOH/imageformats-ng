@@ -69,7 +69,7 @@ static void convert(const Options &options)
     if (!contents) {
         throw RuntimeError(ConvertTool::tr("Can't read image %1: %2").
                            arg(options.inputFile).
-                           arg(io.error().errorString()));
+                           arg(io.error().toString()));
     }
 
     if (!options.outputMimeType.isEmpty())
@@ -79,7 +79,7 @@ static void convert(const Options &options)
     if (!io.write(*contents)) {
         throw RuntimeError(ConvertTool::tr("Can't write image %1: %2").
                            arg(options.outputFile).
-                           arg(io.error().errorString()));
+                           arg(io.error().toString()));
     }
 }
 

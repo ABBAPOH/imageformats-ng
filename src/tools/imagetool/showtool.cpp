@@ -117,7 +117,7 @@ static void showImageInfo(const QString &filePath)
     const auto contents = io.read();
     if (!contents) {
         throw RuntimeError(ShowTool::tr("Can't read image %1: %2").
-                           arg(filePath).arg(io.error().errorString()));
+                           arg(filePath).arg(io.error().toString()));
     }
 
     ImageInfoModel model;

@@ -33,7 +33,7 @@ public:
     Optional<QMimeType> mimeType;
     QByteArray subType;
 
-    ImageIOError error {ImageIOError::NoError};
+    ImageIOResult error {ImageIOResult::Status::Ok};
     State state {State::NoState};
 
     Optional<ImageHeader> header {Nothing()};
@@ -43,18 +43,18 @@ public:
 bool ImageIOPrivate::ensureDeviceOpened(QIODevice::OpenMode mode)
 {
     if (!device) {
-        error = ImageIOError::DeviceError;
+        error = ImageIOResult::Status::DeviceError;
         return false;
     }
 
     if ((mode & QIODevice::ReadOnly) && file && !file->exists()) {
-        error = ImageIOError::FileNotFoundError;
+        error = ImageIOResult::Status::FileNotFound;
         return false;
     }
 
     if (!(device->openMode() & mode)) {
         if (!device->open(mode | device->openMode())) {
-            error = ImageIOError::DeviceError;
+            error = ImageIOResult::Status::DeviceError;
             return false;
         }
     }
@@ -80,14 +80,14 @@ bool ImageIOPrivate::ensureHandlerCreated(QIODevice::OpenMode mode)
     }
 
     if (!mt.isValid()) {
-        error = ImageIOError::InvalidMimeTypeError;
+        error = ImageIOResult::Status::InvalidMimeType;
         return false;
     }
 
     auto db = ImageIOHandlerDatabase::instance();
     handler = db->create(device, mt, subType);
     if (!handler) {
-        error = ImageIOError::UnsupportedMimeTypeError;
+        error = ImageIOResult::Status::UnsupportedMimeType;
         return false;
     }
 
@@ -97,7 +97,7 @@ bool ImageIOPrivate::ensureHandlerCreated(QIODevice::OpenMode mode)
 void ImageIOPrivate::resetHandler()
 {
     handler.reset();
-    error = ImageIOError::NoError;
+    error = ImageIOResult::Status::Ok;
     state = State::NoState;
 }
 
@@ -287,12 +287,12 @@ Optional<ImageHeader> ImageIO::readHeader()
     ImageHeader header;
     if (d->handler->readHeader(header)) {
         if (header.isNull() || !header.validate()) {
-            d->error = ImageIOError::IOError;
+            d->error = ImageIOResult::Status::IOError;
         } else {
             d->header = header;
         }
     } else {
-        d->error = ImageIOError::IOError;
+        d->error = ImageIOResult::Status::IOError;
     }
     d->state = ImageIOPrivate::State::HeaderRead;
     return d->header;
@@ -316,7 +316,7 @@ Optional<ImageContents> ImageIO::read()
 
     ImageContents result(*header);
     if (!d->handler->read(result)) {
-        d->error = ImageIOError::IOError;
+        d->error = ImageIOResult::Status::IOError;
     } else {
         d->contents = result;
     }
@@ -339,7 +339,7 @@ bool ImageIO::write(const ImageContents &contents, const ImageOptions &options)
         return false;
 
     if (!d->handler->write(contents, options)) {
-        d->error = ImageIOError::IOError;
+        d->error = ImageIOResult::Status::IOError;
         return false;
     }
     if (d->file)
@@ -367,7 +367,7 @@ bool ImageIO::supportsOption(ImageOptions::Option option, const QByteArray &subT
 /*!
     Returns last occured error.
 */
-ImageIOError ImageIO::error() const
+ImageIOResult ImageIO::error() const
 {
     Q_D(const ImageIO);
     return d->error;
@@ -416,81 +416,3 @@ QString ImageIO::pluginsDirPath()
     return QString();
 #endif
 }
-
-/*!
-    \class ImageIOError
-    This is a helper class that wraps error code.
-*/
-
-/*!
-    \enum ImageIOError::ErrorCode
-    This enum describes the different types of errors that can occur when reading image files.
-
-    \var ImageIOError::NoError
-    No error occured.
-
-    \var ImageIOError::InvalidMimeTypeError
-    ImageIO was used with an invalid mime type.
-
-    \var ImageIOError::FileNotFoundError
-    ImageIO was used with a file name, but not file was found with that name.
-
-    \var ImageIOError::DeviceError
-    ImageIO encountered a device error when reading the image.
-    You can consult your particular device for more details on what went wrong.
-
-    \var ImageIOError::UnsupportedMimeTypeError
-    ImageIO does not support the requested mime type.
-
-    \var ImageIOError::IOError
-    Error occured within an undelying ImageIOHandler.
-*/
-
-/*!
-    \fn ImageIOError::ImageIOError(ErrorCode errorCode = NoError)
-    Constructs Error with the given \a errorCode.
-*/
-
-/*!
-    \fn ImageIOError::ErrorCode ImageIOError::errorCode() const
-    Returns error code.
-*/
-
-/*!
-    Returns the human-readable message of the an error.
-*/
-QString ImageIOError::errorString() const
-{
-    switch (_error) {
-    case ImageIOError::NoError:
-        return ImageIOError::tr("No error");
-    case ImageIOError::InvalidMimeTypeError:
-        return ImageIOError::tr("Invalid mimetype");
-    case ImageIOError::FileNotFoundError:
-        return ImageIOError::tr("File not found");
-    case ImageIOError::DeviceError:
-        return ImageIOError::tr("Device error");
-    case ImageIOError::UnsupportedMimeTypeError:
-        return ImageIOError::tr("Unsupported format");
-    case ImageIOError::IOError:
-        return ImageIOError::tr("Handler error");
-    }
-    return QString();
-}
-
-/*!
-    \fn ImageIOError::operator bool() const
-    Returns true if errorCode is equal to ImageIOError::NoError.
-*/
-
-/*!
-    \fn inline bool operator==(const ImageIOError &lhs, const ImageIOError &rhs)
-    \related ImageIOError
-    Returns true if \lhs errorCode() is equal to the \a rhs errorCode().
-*/
-
-/*!
-    \fn inline bool operator!=(const ImageIOError &lhs, const ImageIOError &rhs)
-    \related ImageIOError
-    Returns true if \lhs errorCode() is not equal to the \a rhs errorCode().
-*/
