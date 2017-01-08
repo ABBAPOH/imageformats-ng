@@ -13,15 +13,14 @@ class ImageIOPrivate
 
 public:
     enum class State {
-        NoState,
+        Idle,
         HeaderRead,
-        DataRead
     };
 
     explicit ImageIOPrivate(ImageIO *qq) : q_ptr(qq) {}
 
-    bool ensureDeviceOpened(QIODevice::OpenMode mode);
-    bool ensureHandlerCreated(QIODevice::OpenMode mode);
+    ImageIOResult ensureDeviceOpened(QIODevice::OpenMode mode);
+    ImageIOResult ensureHandlerCreated(QIODevice::OpenMode mode);
     void resetHandler();
 
     std::unique_ptr<ImageIOHandler> handler;
@@ -33,42 +32,33 @@ public:
     Optional<QMimeType> mimeType;
     QByteArray subType;
 
-    ImageIOResult error {ImageIOResult::Status::Ok};
-    State state {State::NoState};
-
-    ImageHeader header;
-    ImageContents contents;
+    State state {State::Idle};
 };
 
-bool ImageIOPrivate::ensureDeviceOpened(QIODevice::OpenMode mode)
+ImageIOResult ImageIOPrivate::ensureDeviceOpened(QIODevice::OpenMode mode)
 {
-    if (!device) {
-        error = ImageIOResult::Status::DeviceError;
-        return false;
-    }
+    if (!device)
+        return ImageIOResult::Status::DeviceError;
 
-    if ((mode & QIODevice::ReadOnly) && file && !file->exists()) {
-        error = ImageIOResult::Status::FileNotFound;
-        return false;
-    }
+    if ((mode & QIODevice::ReadOnly) && file && !file->exists())
+        return ImageIOResult::Status::FileNotFound;
 
     if (!(device->openMode() & mode)) {
-        if (!device->open(mode | device->openMode())) {
-            error = ImageIOResult::Status::DeviceError;
-            return false;
-        }
+        if (!device->open(mode | device->openMode()))
+            return ImageIOResult::Status::DeviceError;
     }
 
-    return true;
+    return ImageIOResult::Status::Ok;
 }
 
-bool ImageIOPrivate::ensureHandlerCreated(QIODevice::OpenMode mode)
+ImageIOResult ImageIOPrivate::ensureHandlerCreated(QIODevice::OpenMode mode)
 {
-    if (!ensureDeviceOpened(mode))
-        return false;
+    const auto ok = ensureDeviceOpened(mode);
+    if (!ok)
+        return ok;
 
     if (handler)
-        return true;
+        return ImageIOResult::Status::Ok;
 
     auto mt = QMimeType();
     if (!mimeType) {
@@ -79,26 +69,21 @@ bool ImageIOPrivate::ensureHandlerCreated(QIODevice::OpenMode mode)
         mt = *mimeType;
     }
 
-    if (!mt.isValid()) {
-        error = ImageIOResult::Status::InvalidMimeType;
-        return false;
-    }
+    if (!mt.isValid())
+        return ImageIOResult::Status::InvalidMimeType;
 
     auto db = ImageIOHandlerDatabase::instance();
     handler = db->create(device, mt, subType);
-    if (!handler) {
-        error = ImageIOResult::Status::UnsupportedMimeType;
-        return false;
-    }
+    if (!handler)
+        return ImageIOResult::Status::UnsupportedMimeType;
 
-    return true;
+    return ImageIOResult::Status::Ok;
 }
 
 void ImageIOPrivate::resetHandler()
 {
     handler.reset();
-    error = ImageIOResult::Status::Ok;
-    state = State::NoState;
+    state = State::Idle;
 }
 
 /*!
@@ -276,26 +261,49 @@ std::pair<ImageIOResult, ImageHeader> ImageIO::readHeader()
 {
     Q_D(ImageIO);
 
-    if (d->state == ImageIOPrivate::State::HeaderRead
-            || d->state == ImageIOPrivate::State::DataRead) {
-        return std::make_pair(ImageIOResult(), d->header);
-    }
+    Q_ASSERT_X(d->state == ImageIOPrivate::State::Idle,
+               "ImageIO::readHeader",
+               "ImageIO::readHeader should be called before readData()");
+
+    if (d->state != ImageIOPrivate::State::Idle)
+        return {ImageIOResult::Status::IOError, ImageHeader()};
 
     ImageHeader header;
-    if (!d->ensureHandlerCreated(QIODevice::ReadOnly))
-        return {d->error, header};
+    auto ok = d->ensureHandlerCreated(QIODevice::ReadOnly);
+    if (!ok)
+        return {ok, header};
 
     if (d->handler->readHeader(header)) {
-        if (header.isNull() || !header.validate()) {
-            d->error = ImageIOResult::Status::IOError;
-        } else {
-            d->header = header;
-        }
+        if (header.isNull() || !header.validate())
+            ok = ImageIOResult::Status::IOError;
+        else
+            ok = ImageIOResult::Status::Ok;
     } else {
-        d->error = ImageIOResult::Status::IOError;
+        ok = ImageIOResult::Status::IOError;
     }
     d->state = ImageIOPrivate::State::HeaderRead;
-    return {d->error, header};
+
+    return {ok, ok ? header : ImageHeader()};
+}
+
+std::pair<ImageIOResult, ImageContents> ImageIO::readData(const ImageHeader& header)
+{
+    Q_D(ImageIO);
+
+    Q_ASSERT_X(d->state == ImageIOPrivate::State::HeaderRead,
+               "ImageIO::readData",
+               "ImageIO::readHeader should be called first");
+
+    if (d->state != ImageIOPrivate::State::HeaderRead)
+        return {ImageIOResult::Status::IOError, ImageContents()};
+
+    ImageContents contents(header);
+    ImageIOResult ok;
+    if (!d->handler->read(contents))
+        ok = ImageIOResult::Status::IOError;
+
+    d->state = ImageIOPrivate::State::Idle;
+    return {ok, ok ? contents : ImageContents()};
 }
 
 /*!
@@ -305,25 +313,11 @@ std::pair<ImageIOResult, ImageHeader> ImageIO::readHeader()
 */
 std::pair<ImageIOResult, ImageContents> ImageIO::read()
 {
-    Q_D(ImageIO);
-
-    if (d->state == ImageIOPrivate::State::DataRead)
-        return {d->error, d->contents};
-
-    const auto pair = readHeader();
-    if (!pair.first)
-        return {pair.first, ImageContents()};
-
-    ImageContents result(pair.second);
-    if (!d->handler->read(result)) {
-        d->error = ImageIOResult::Status::IOError;
-    } else {
-        d->contents = result;
-    }
-
-    d->state = ImageIOPrivate::State::DataRead;
-
-    return {d->error, d->contents};
+    auto result = readHeader();
+    const auto ok = result.first;
+    if (!ok)
+        return {ok, ImageContents()};
+    return readData(result.second);
 }
 
 /*!
@@ -335,13 +329,13 @@ std::pair<ImageIOResult, ImageContents> ImageIO::read()
 ImageIOResult ImageIO::write(const ImageContents &contents, const ImageOptions &options)
 {
     Q_D(ImageIO);
-    if (!d->ensureHandlerCreated(QIODevice::WriteOnly))
-        return d->error;
+    auto ok = d->ensureHandlerCreated(QIODevice::WriteOnly);
+    if (!ok)
+        return ok;
 
-    if (!d->handler->write(contents, options)) {
-        d->error = ImageIOResult::Status::IOError;
-        return d->error;
-    }
+    if (!d->handler->write(contents, options))
+        return ImageIOResult::Status::IOError;
+
     if (d->file)
         d->file->flush();
     return ImageIOResult::Status::Ok;
