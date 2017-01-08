@@ -16,7 +16,7 @@ BaseProduct {
         fileTagsFilter: ["application"]
         qbs.install: true
         qbs.installDir: bundle.isBundle
-                        ? FileInfo.joinPaths(install_app_path, FileInfo.path(bundle.executablePath))
-                        : install_app_path
+                        ? FileInfo.joinPaths(project.install_app_path, FileInfo.path(bundle.executablePath))
+                        : project.install_app_path
     }
 }
