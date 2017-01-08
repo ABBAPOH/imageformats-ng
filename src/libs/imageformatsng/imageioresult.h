@@ -18,29 +18,31 @@ public:
         IOError,
     };
 
-    inline ImageIOResult(Status status = Status::Ok) : _status(status) {}
-    inline ImageIOResult(const ImageIOResult &lhs) : _status(lhs._status) {}
-    ~ImageIOResult() = default;
+    inline ImageIOResult(Status status = Status::Ok) Q_DECL_NOEXCEPT
+        : _status(status) {}
+    inline ImageIOResult(const ImageIOResult &lhs) Q_DECL_NOEXCEPT
+        : _status(lhs._status) {}
+    ~ImageIOResult() Q_DECL_NOEXCEPT = default;
 
-    ImageIOResult &operator=(const ImageIOResult &other);
+    ImageIOResult &operator=(const ImageIOResult &other) Q_DECL_NOEXCEPT;
 
-    inline Status status() const { return _status; }
+    inline Status status() const Q_DECL_NOEXCEPT { return _status; }
     QString toString() const;
-    inline bool toBool() const { return _status == Status::Ok; }
+    inline bool toBool() const Q_DECL_NOEXCEPT { return _status == Status::Ok; }
 
-    inline operator bool() const { return toBool(); }
-    inline bool operator !() const { return !toBool(); }
+    inline operator bool() const Q_DECL_NOEXCEPT { return toBool(); }
+    inline bool operator !() const Q_DECL_NOEXCEPT { return !toBool(); }
 
 private:
     Status _status;
 };
 
-inline bool operator==(const ImageIOResult &lhs, const ImageIOResult &rhs)
+inline bool operator==(const ImageIOResult &lhs, const ImageIOResult &rhs) Q_DECL_NOEXCEPT
 {
     return lhs.status() == rhs.status();
 }
 
-inline bool operator!=(const ImageIOResult &lhs, const ImageIOResult &rhs)
+inline bool operator!=(const ImageIOResult &lhs, const ImageIOResult &rhs) Q_DECL_NOEXCEPT
 {
     return lhs.status() != rhs.status();
 }

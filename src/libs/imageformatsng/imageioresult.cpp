@@ -42,7 +42,7 @@
 /*!
     Assigns \a other ImageIOResult to this result.
 */
-ImageIOResult &ImageIOResult::operator=(const ImageIOResult& other)
+ImageIOResult &ImageIOResult::operator=(const ImageIOResult& other) Q_DECL_NOEXCEPT
 {
     if (this == &other)
         return *this;
