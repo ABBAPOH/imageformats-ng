@@ -26,8 +26,10 @@ public:
 
     inline Status status() const { return _status; }
     QString toString() const;
+    inline bool toBool() const { return _status == Status::Ok; }
 
-    operator bool() const { return _status == Status::Ok; }
+    inline operator bool() const { return toBool(); }
+    inline bool operator !() const { return !toBool(); }
 
 private:
     Status _status;
