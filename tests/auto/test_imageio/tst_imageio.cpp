@@ -156,12 +156,11 @@ void TestImageIO::read()
     ImageIO io;
     io.setDevice(&buffer);
     io.setMimeType("application/octet-stream");
-    const auto maybeContents = io.read();
-    QVERIFY(maybeContents);
-    auto ok = io.error();
-    QVERIFY2(ok, ok.toString().toUtf8().constData());
+    const auto result = io.read();
+    const auto ok = result.first;
+    QVERIFY2(ok, qPrintable(ok.toString()));
 
-    const auto contents = *maybeContents;
+    const auto contents = result.second;
     const auto header = contents.header();
     QCOMPARE(header.size(), size);
     if (imageFormat != QImage::Format_Invalid)
@@ -242,7 +241,7 @@ void TestImageIO::write()
     }
 
     const auto ok = io.write(contents);
-    QVERIFY2(ok, io.error().toString().toUtf8().constData());
+    QVERIFY2(ok, qPrintable(ok.toString()));
 
     TestImageData data;
     buffer.close();
@@ -323,7 +322,7 @@ void TestImageIO::writeOptions()
         options.setQuality(quality);
 
     const auto ok = io.write(contents, options);
-    QVERIFY2(ok, io.error().toString().toUtf8().constData());
+    QVERIFY2(ok, qPrintable(ok.toString()));
 
     TestImageData data;
     buffer.seek(0);

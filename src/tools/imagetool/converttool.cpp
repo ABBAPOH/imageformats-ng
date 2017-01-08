@@ -65,21 +65,24 @@ static void convert(const Options &options)
     ImageIO io(options.inputFile);
     if (!options.inputMimeType.isEmpty())
         io.setMimeType(options.inputMimeType);
-    const auto contents = io.read();
-    if (!contents) {
+    const auto result = io.read();
+    const auto &status = result.first;
+    const auto &contents = result.second;
+    if (!status) {
         throw RuntimeError(ConvertTool::tr("Can't read image %1: %2").
                            arg(options.inputFile).
-                           arg(io.error().toString()));
+                           arg(status.toString()));
     }
 
     if (!options.outputMimeType.isEmpty())
         io.setMimeType(options.outputMimeType);
     io.setFileName(options.outputFile);
     io.setSubType(options.subType);
-    if (!io.write(*contents)) {
+    const auto ok = io.write(contents);
+    if (!ok) {
         throw RuntimeError(ConvertTool::tr("Can't write image %1: %2").
                            arg(options.outputFile).
-                           arg(io.error().toString()));
+                           arg(ok.toString()));
     }
 }
 

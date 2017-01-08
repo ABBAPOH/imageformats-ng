@@ -41,13 +41,11 @@ public:
     QByteArray subType() const;
     void setSubType(const QByteArray &subType);
 
-    Optional<ImageHeader> readHeader();
-    Optional<ImageContents> read();
-    bool write(const ImageContents &contents, const ImageOptions &options = ImageOptions());
+    std::pair<ImageIOResult, ImageHeader> readHeader();
+    std::pair<ImageIOResult, ImageContents> read();
+    ImageIOResult write(const ImageContents &contents, const ImageOptions &options = ImageOptions());
 
     bool supportsOption(ImageOptions::Option option, const QByteArray &subType = QByteArray()) const;
-
-    ImageIOResult error() const;
 
     static QVector<ImageFormatInfo> supportedImageFormats(ImageFormatInfo::Capabilities caps = ImageFormatInfo::ReadWrite);
     static Optional<ImageFormatInfo> imageFormat(const QMimeType &mimeType);

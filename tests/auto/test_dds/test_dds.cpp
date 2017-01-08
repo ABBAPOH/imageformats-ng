@@ -145,12 +145,14 @@ void TestDds::readImage()
     const QString sourcePath = QStringLiteral(":/data/") + fileName + QStringLiteral(".png");
     ImageIO reader(path);
 //    QVERIFY(reader.canRead());
-    const auto header = reader.readHeader();
-    QVERIFY2(header, qPrintable(reader.error().toString()));
-    QCOMPARE(header->size(), size);
-    const auto contents = reader.read();
-    QVERIFY2(contents, qPrintable(reader.error().toString()));
-    QVERIFY(compareImages(contents->image(), QImage(sourcePath)) == true);
+    const auto result = reader.read();
+    const auto &status = result.first;
+    const auto &contents = result.second;
+    const auto header = contents.header();
+    QVERIFY2(status, qPrintable(status.toString()));
+    QCOMPARE(header.size(), size);
+    QVERIFY2(status, qPrintable(status.toString()));
+    QVERIFY(compareImages(contents.image(), QImage(sourcePath)) == true);
 }
 
 void TestDds::testMipmaps_data()
@@ -171,14 +173,15 @@ void TestDds::testMipmaps()
     const QString path = QStringLiteral(":/data/") + fileName + QStringLiteral(".dds");
     ImageIO reader(path);
 //    QVERIFY(reader.canRead());
-    const auto header = reader.readHeader();
-    QVERIFY2(header, qPrintable(reader.error().toString()));
-    QCOMPARE(header->mipmapCount(), mipmapCount);
-    const auto contents = reader.read();
-    QVERIFY2(contents, qPrintable(reader.error().toString()));
+    const auto result = reader.read();
+    const auto &status = result.first;
+    const auto &contents = result.second;
+    const auto header = contents.header();
+    QVERIFY2(status, qPrintable(status.toString()));
+    QCOMPARE(header.mipmapCount(), mipmapCount);
 
-    for (int i = 0; i < header->mipmapCount(); ++i) {
-        QImage image = contents->image(0, i);
+    for (int i = 0; i < header.mipmapCount(); ++i) {
+        QImage image = contents.image(0, i);
         QVERIFY(!image.isNull());
         QCOMPARE(image.size(), size / (1 << i));
         QString sourcePath = QString(":/data/%1 %2.png").arg(fileName).arg(i);
@@ -210,17 +213,17 @@ void TestDds::testWriteImage()
     //    QVERIFY2(writer.canWrite(), qPrintable(writer.errorString()));
     writer.setSubType(fileName.toLatin1());
     ImageContents contents(image);
-    QVERIFY2(writer.write(contents), qPrintable(writer.error().toString()));
+    const auto ok = writer.write(contents);
+    QVERIFY2(ok, qPrintable(ok.toString()));
 
     ImageIO reader(path);
 //    QVERIFY(reader.canRead());
-//    QCOMPARE(reader.imageCount(), imageCount);
-    const auto header = reader.readHeader();
-    QVERIFY2(header, qPrintable(reader.error().toString()));
-    QCOMPARE(header->size(), size);
-    const auto newContents = reader.read();
-    QVERIFY2(newContents, qPrintable(reader.error().toString()));
-    QVERIFY(image == newContents->image());
+    const auto result = reader.read();
+    const auto &status = result.first;
+    const auto &newContents = result.second;
+    QVERIFY2(status, qPrintable(status.toString()));
+    QCOMPARE(newContents.header().size(), size);
+    QVERIFY(image == newContents.image());
 }
 
 QTEST_MAIN(TestDds)

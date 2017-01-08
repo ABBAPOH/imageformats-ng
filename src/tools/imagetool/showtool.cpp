@@ -114,17 +114,18 @@ static void showFormatsList()
 static void showImageInfo(const QString &filePath)
 {
     ImageIO io(filePath);
-    const auto contents = io.read();
-    if (!contents) {
+    const auto result = io.read();
+    if (!result.first) {
         throw RuntimeError(ShowTool::tr("Can't read image %1: %2").
-                           arg(filePath).arg(io.error().toString()));
+                           arg(filePath).arg(result.first.toString()));
     }
 
+    const auto &contents = result.second;
     ImageInfoModel model;
-    model.setImageContents(*contents);
+    model.setImageContents(contents);
     ToolParser::showMessage(modelToText(&model));
 
-    const auto exifMap = contents->exifMeta().toVariantMap();
+    const auto exifMap = contents.exifMeta().toVariantMap();
     if (!exifMap.isEmpty()) {
         showMessage(QString());
         showMessage(ShowTool::tr("==== Exif ===="));

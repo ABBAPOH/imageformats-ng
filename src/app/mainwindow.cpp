@@ -298,7 +298,7 @@ void MainWindow::openDocument(const QUrl &url)
 
     d->_url = url;
 
-    using Result = Optional<ImageContents>;
+    using Result = std::pair<ImageIOResult, ImageContents>;
 
     auto worker = [](const QString &path)
     {
@@ -310,9 +310,11 @@ void MainWindow::openDocument(const QUrl &url)
     {
         const auto watcher = static_cast<QFutureWatcher<Result> *>(sender());
         const auto result = watcher->future().result();
+        const auto &status = result.first;
+        const auto &contents = result.second;
         watcher->deleteLater();
-        if (result) {
-            d->_document->setContents(*result);
+        if (status) {
+            d->_document->setContents(contents);
         } else {
             QMessageBox::warning(this,
                                  tr("Open"),
@@ -336,7 +338,7 @@ void MainWindow::saveDocument(const QUrl &url, const QByteArray &subType, const 
 
     const auto workerSubType = subType;
     const auto workerOptions = options;
-    using Result = bool;
+    using Result = ImageIOResult;
 
     auto worker = [workerSubType, workerOptions](const QString &path, const ImageContents &contents)
     {

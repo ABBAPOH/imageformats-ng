@@ -17,10 +17,10 @@ ImageViewItem::ImageViewItem()
     connect(this, &QQuickPaintedItem::heightChanged, this, &ImageViewItem::onSizeChanged);
 
     ImageIO io("/Users/arch/images/cubemap.dds");
-    auto contents = io.read();
-    if (!contents)
+    auto result = io.read();
+    if (!result.first)
         return;
-    doc->setContents(*contents);
+    doc->setContents(result.second);
 
     setAcceptedMouseButtons(Qt::LeftButton);
 }

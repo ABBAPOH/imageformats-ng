@@ -36,8 +36,8 @@ public:
     ImageIOResult error {ImageIOResult::Status::Ok};
     State state {State::NoState};
 
-    Optional<ImageHeader> header {Nothing()};
-    Optional<ImageContents> contents {Nothing()};
+    ImageHeader header;
+    ImageContents contents;
 };
 
 bool ImageIOPrivate::ensureDeviceOpened(QIODevice::OpenMode mode)
@@ -272,19 +272,19 @@ void ImageIO::setSubType(const QByteArray &subType)
 
     Empty optional is returned in case of en error. Use error() to retrive error code and message.
 */
-Optional<ImageHeader> ImageIO::readHeader()
+std::pair<ImageIOResult, ImageHeader> ImageIO::readHeader()
 {
     Q_D(ImageIO);
 
     if (d->state == ImageIOPrivate::State::HeaderRead
             || d->state == ImageIOPrivate::State::DataRead) {
-        return d->header;
+        return std::make_pair(ImageIOResult(), d->header);
     }
 
-    if (!d->ensureHandlerCreated(QIODevice::ReadOnly))
-        return Nothing();
-
     ImageHeader header;
+    if (!d->ensureHandlerCreated(QIODevice::ReadOnly))
+        return {d->error, header};
+
     if (d->handler->readHeader(header)) {
         if (header.isNull() || !header.validate()) {
             d->error = ImageIOResult::Status::IOError;
@@ -295,7 +295,7 @@ Optional<ImageHeader> ImageIO::readHeader()
         d->error = ImageIOResult::Status::IOError;
     }
     d->state = ImageIOPrivate::State::HeaderRead;
-    return d->header;
+    return {d->error, header};
 }
 
 /*!
@@ -303,18 +303,18 @@ Optional<ImageHeader> ImageIO::readHeader()
 
     Empty optional is returned in case of en error. Use error() to retrive error code and message.
 */
-Optional<ImageContents> ImageIO::read()
+std::pair<ImageIOResult, ImageContents> ImageIO::read()
 {
     Q_D(ImageIO);
 
     if (d->state == ImageIOPrivate::State::DataRead)
-        return d->contents;
+        return {d->error, d->contents};
 
-    const auto header = readHeader();
-    if (!header)
-        return Nothing();
+    const auto pair = readHeader();
+    if (!pair.first)
+        return {pair.first, ImageContents()};
 
-    ImageContents result(*header);
+    ImageContents result(pair.second);
     if (!d->handler->read(result)) {
         d->error = ImageIOResult::Status::IOError;
     } else {
@@ -323,7 +323,7 @@ Optional<ImageContents> ImageIO::read()
 
     d->state = ImageIOPrivate::State::DataRead;
 
-    return d->contents;
+    return {d->error, d->contents};
 }
 
 /*!
@@ -332,19 +332,19 @@ Optional<ImageContents> ImageIO::read()
     Returns true in case of success, otherwise returns false. Use error() to retrive error code
     and message.
 */
-bool ImageIO::write(const ImageContents &contents, const ImageOptions &options)
+ImageIOResult ImageIO::write(const ImageContents &contents, const ImageOptions &options)
 {
     Q_D(ImageIO);
     if (!d->ensureHandlerCreated(QIODevice::WriteOnly))
-        return false;
+        return d->error;
 
     if (!d->handler->write(contents, options)) {
         d->error = ImageIOResult::Status::IOError;
-        return false;
+        return d->error;
     }
     if (d->file)
         d->file->flush();
-    return true;
+    return ImageIOResult::Status::Ok;
 }
 
 /*!
@@ -362,15 +362,6 @@ bool ImageIO::supportsOption(ImageOptions::Option option, const QByteArray &subT
     if (!info)
         return false;
     return info->supportsOption(option, subType);
-}
-
-/*!
-    Returns last occured error.
-*/
-ImageIOResult ImageIO::error() const
-{
-    Q_D(const ImageIO);
-    return d->error;
 }
 
 /*!

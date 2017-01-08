@@ -35,8 +35,8 @@ void TestJpeg::readImage()
     QFETCH(bool, success);
 
     ImageIO io(fileName);
-    auto maybeImage = io.read();
-    auto ok = io.error();
+    const auto result = io.read();
+    const auto &ok = result.first;
     QVERIFY2(ok == success, qPrintable(ok.toString()));
 }
 
@@ -57,11 +57,13 @@ void TestJpeg::testHeader()
     QFETCH(int, format);
 
     ImageIO io(fileName);
-    const auto header = io.readHeader();
-    QVERIFY2(header, io.error().toString().toUtf8().constData());
+    const auto result = io.readHeader();
+    const auto &status = result.first;
+    const auto &header = result.second;
+    QVERIFY2(status, qPrintable(status.toString()));
 
-    QCOMPARE(header->size(), size);
-    QCOMPARE(int(header->imageFormat()), format);
+    QCOMPARE(header.size(), size);
+    QCOMPARE(int(header.imageFormat()), format);
 }
 
 QTEST_MAIN(TestJpeg)
