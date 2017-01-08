@@ -21,6 +21,7 @@ void TestImageIOResult::defaultConstruction()
     QCOMPARE(result.status(), ImageIOResult::Status::Ok);
     QVERIFY(result.toBool());
     QVERIFY(bool(result));
+    QCOMPARE(!result, false);
 }
 
 void TestImageIOResult::construction_data()
@@ -45,6 +46,7 @@ void TestImageIOResult::construction()
     QCOMPARE(result.status(), status);
     QCOMPARE(result.toBool(), ok);
     QCOMPARE(bool(result), ok);
+    QCOMPARE(!result, !ok);
 }
 
 void TestImageIOResult::copy()
@@ -55,6 +57,7 @@ void TestImageIOResult::copy()
     QCOMPARE(r1.status(), r2.status());
     QCOMPARE(r1.toBool(), r2.toBool());
     QCOMPARE(bool(r1), bool(r2));
+    QCOMPARE(!r1, !r2);
     QVERIFY(r1 == r2);
     QVERIFY(!(r1 != r2));
 }
@@ -72,6 +75,7 @@ void TestImageIOResult::assign()
     QCOMPARE(r1.status(), r2.status());
     QCOMPARE(r1.toBool(), r2.toBool());
     QCOMPARE(bool(r1), bool(r2));
+    QCOMPARE(!r1, !r2);
     QVERIFY((r1 == r2));
     QVERIFY(!(r1 != r2));
 }
