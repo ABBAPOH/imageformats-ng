@@ -1,5 +1,6 @@
 #include "abstracttool.h"
 #include "converttool.h"
+#include "extracttool.h"
 #include "exception.h"
 #include "mainparser.h"
 #include "showtool.h"
@@ -21,9 +22,11 @@ static ToolsMap createTools()
 {
     std::unique_ptr<AbstractTool> showTool(new ShowTool);
     std::unique_ptr<AbstractTool> convertTool(new ConvertTool);
+    std::unique_ptr<AbstractTool> extractTool(new ExtractTool);
     ToolsMap result;
     result[showTool->id()] = std::move(showTool);
     result[convertTool->id()] = std::move(convertTool);
+    result[extractTool->id()] = std::move(extractTool);
     return result;
 }
 

@@ -11,8 +11,10 @@ class ImageResourceData;
 
 class ImageResource
 {
+    Q_GADGET
 public:
     enum class Type { Invalid, Image, CubeTexture, VolumeTexture };
+    Q_ENUMS(Type)
 
     ImageResource() Q_DECL_NOEXCEPT;
     ImageResource(const QImage &image);
@@ -37,6 +39,9 @@ public:
 
     const VolumeTexture &volumeTexture() const;
     void setVolumeTexture(const VolumeTexture &texture);
+
+    static QString typeToString(Type type);
+    static Type typeFromString(const QString &string);
 
 private:
     void construct(const ImageResource &other);

@@ -43,7 +43,7 @@ public:
 
     QImage::Format format() const Q_DECL_NOEXCEPT;
 
-    QImage side(Side side);
+    QImage side(Side side) const;
     void setSide(Side side, const QImage &image);
 
     CubeTexture scaled(int width);

@@ -1,6 +1,8 @@
 #include "imageresource.h"
 
 #include <QtCore/QMap>
+#include <QtCore/QMetaEnum>
+#include <QtCore/QMetaObject>
 
 /*!
     \class ImageResource
@@ -186,6 +188,20 @@ void ImageResource::setVolumeTexture(const VolumeTexture &texture)
     destroy();
     _volumeTexture = texture;
     _type = Type::CubeTexture;
+}
+
+QString ImageResource::typeToString(ImageResource::Type type)
+{
+    const auto &mo = ImageResource::staticMetaObject;
+    const auto enumerator = mo.enumerator(mo.indexOfEnumerator("Type"));
+    return enumerator.valueToKey(std::underlying_type<ImageResource::Type>::type(type));
+}
+
+ImageResource::Type ImageResource::typeFromString(const QString& string)
+{
+    const auto &mo = ImageResource::staticMetaObject;
+    const auto enumerator = mo.enumerator(mo.indexOfEnumerator("Type"));
+    return ImageResource::Type(enumerator.keyToValue(string.toLatin1().data()));
 }
 
 /*!

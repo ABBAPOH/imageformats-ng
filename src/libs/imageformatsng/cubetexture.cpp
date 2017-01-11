@@ -203,7 +203,7 @@ QImage::Format CubeTexture::format() const Q_DECL_NOEXCEPT
 /*!
     Returns the image containing data of the given \a side of the cube.
 */
-QImage CubeTexture::side(CubeTexture::Side side)
+QImage CubeTexture::side(CubeTexture::Side side) const
 {
     if (!d) {
         qWarning("CubeTexture::side is called on a null texture");

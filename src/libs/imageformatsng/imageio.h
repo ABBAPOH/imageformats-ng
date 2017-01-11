@@ -43,6 +43,7 @@ public:
 
     std::pair<ImageIOResult, ImageHeader> readHeader();
     std::pair<ImageIOResult, ImageContents> readData(const ImageHeader &header);
+
     std::pair<ImageIOResult, ImageContents> read();
     ImageIOResult write(const ImageContents &contents, const ImageOptions &options = ImageOptions());
 
