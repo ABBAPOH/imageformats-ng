@@ -273,7 +273,6 @@ static void extract(const Options &options)
     QDir outDir(options.outputFolder);
     const auto entries = outDir.entryList(filters);
     if (!entries.isEmpty()) {
-        qDebug() << entries;
         if (options.force) {
             for (auto entry: entries)
                 removePath(outDir.absoluteFilePath(entry));
