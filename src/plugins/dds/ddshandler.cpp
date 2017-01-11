@@ -1327,13 +1327,18 @@ static qint64 mipmapOffset(const DDSHeader &dds, const int format, const int lev
 
 static bool readCubeMap(QDataStream &s, const DDSHeader &dds, const int fmt, ImageContents &contents, int level)
 {
+    const quint32 width = dds.width / (1 << level);
+    const quint32 height = dds.height / (1 << level);
+
+    CubeTexture texture(static_cast<int>(width));
     for (int i = 0; i < 6; i++) {
         if (!(dds.caps2 & faceFlags[i]))
             continue; // Skip face.
 
-        const QImage face = readLayer(s, dds, fmt, dds.width, dds.height);
-        contents.setImage(face, i, level);
+        const QImage face = readLayer(s, dds, fmt, width, height);
+        texture.setSide(CubeTexture::Side(i), face);
     }
+    contents.setResource(texture, 0, level);
 
     return true;
 }
