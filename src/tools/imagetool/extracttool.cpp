@@ -293,9 +293,7 @@ static void extract(const Options &options)
     dir.mkpath(info.baseName());
     extractHeader(header, info.absoluteFilePath());
     extractData(contents,
-                info.absoluteFilePath()
-                    + "/"
-                    + QFileInfo(options.inputFile).baseName(),
+                info.absoluteFilePath() + QStringLiteral("/data"),
                 mt.name());
 }
 
