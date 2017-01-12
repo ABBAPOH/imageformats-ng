@@ -68,7 +68,7 @@ QString ImageIOResult::toString() const
 {
     switch (_status) {
     case ImageIOResult::Status::Ok:
-        return ImageIOResult::tr("No error");
+        return ImageIOResult::tr("Ok");
     case ImageIOResult::Status::InvalidMimeType:
         return ImageIOResult::tr("Invalid mimetype");
     case ImageIOResult::Status::FileNotFound:
