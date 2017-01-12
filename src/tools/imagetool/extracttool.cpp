@@ -246,6 +246,21 @@ static void extractData(const ImageContents &contents,
     }
 }
 
+/*!
+    This function returns output mimetype or input mimetype or detects it from
+    the input file.
+*/
+static QMimeType detectMimeType(const Options &options)
+{
+    QMimeDatabase db;
+    const auto mimeTypeName = !options.outputMimeType.isEmpty()
+            ? options.outputMimeType
+            : options.inputMimeType;
+    return !mimeTypeName.isEmpty()
+            ? db.mimeTypeForName(mimeTypeName)
+            : QMimeDatabase().mimeTypeForFile(options.inputFile);
+}
+
 static void extract(const Options &options)
 {
     ImageIO io(options.inputFile);
@@ -279,17 +294,14 @@ static void extract(const Options &options)
         }
     }
 
-    QMimeDatabase db;
-    const auto mt = !options.outputMimeType.isEmpty()
-            ? db.mimeTypeForName(options.outputMimeType)
-            : QMimeDatabase().mimeTypeForFile(options.inputFile);
+    const auto mimeType = detectMimeType(options);
 
     QDir dir(info.absolutePath());
     dir.mkpath(info.baseName());
     extractHeader(header, info.absoluteFilePath());
     extractData(contents,
                 info.absoluteFilePath() + QStringLiteral("/data"),
-                mt);
+                mimeType);
 }
 
 } // namespace
