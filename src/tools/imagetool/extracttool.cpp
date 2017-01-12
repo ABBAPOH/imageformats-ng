@@ -133,7 +133,8 @@ static void extractHeader(const ImageHeader &header, const QString &path)
 
 static void extractData(const QImage &image,
                         const QString &path,
-                        const QMimeType &mimeType)
+                        const QMimeType &mimeType,
+                        const QByteArray &subType)
 {
     const auto suffix = !mimeType.suffixes().empty()
             ? QStringLiteral(".") + mimeType.suffixes().first()
@@ -141,7 +142,7 @@ static void extractData(const QImage &image,
     QDir dir(QFileInfo(path).absolutePath());
     dir.mkpath(".");
     ImageIO io(path + suffix, mimeType);
-//    io.setSubType(subType);
+    io.setSubType(subType);
     const auto ok = io.write(ImageContents(image));
     if (!ok) {
         throw RuntimeError(ExtractTool::tr("Can't write image %1: %2").
@@ -152,55 +153,65 @@ static void extractData(const QImage &image,
 
 static void extractData(const CubeTexture &image,
                         const QString &path,
-                        const QMimeType &mimeType)
+                        const QMimeType &mimeType,
+                        const QByteArray &subType)
 {
     extractData(image.side(CubeTexture::Side::NegativeX),
                 path + QStringLiteral("/NegativeX"),
-                mimeType);
+                mimeType,
+                subType);
     extractData(image.side(CubeTexture::Side::PositiveX)
                 , path + QStringLiteral("/PositiveX"),
-                mimeType);
+                mimeType,
+                subType);
     extractData(image.side(CubeTexture::Side::NegativeY),
                 path + QStringLiteral("/NegativeY"),
-                mimeType);
+                mimeType,
+                subType);
     extractData(image.side(CubeTexture::Side::PositiveY),
                 path + QStringLiteral("/PositiveY"),
-                mimeType);
+                mimeType,
+                subType);
     extractData(image.side(CubeTexture::Side::NegativeZ),
                 path + QStringLiteral("/NegativeZ"),
-                mimeType);
+                mimeType,
+                subType);
     extractData(image.side(CubeTexture::Side::PositiveZ),
                 path + QStringLiteral("/PositiveZ"),
-                mimeType);
+                mimeType,
+                subType);
 }
 
 static void extractData(const VolumeTexture &image,
                         const QString &path,
-                        const QMimeType &mimeType)
+                        const QMimeType &mimeType,
+                        const QByteArray &subType)
 {
     for (int depth = 0; depth < image.depth(); ++depth) {
         extractData(image.slice(depth),
                     path + QStringLiteral("/slice %1").arg(depth),
-                    mimeType);
+                    mimeType,
+                    subType);
     }
 }
 
 static void extractData(const ImageContents &contents,
                         const QString &path,
                         const QMimeType &mimeType,
+                        const QByteArray &subType,
                         int index,
                         int level)
 {
     const auto resource = contents.resource(index, level);
     switch (resource.type()) {
     case ImageResource::Type::Image:
-        extractData(resource.image(), path, mimeType);
+        extractData(resource.image(), path, mimeType, subType);
         break;
     case ImageResource::Type::CubeTexture:
-        extractData(resource.cubeTexture(), path, mimeType);
+        extractData(resource.cubeTexture(), path, mimeType, subType);
         break;
     case ImageResource::Type::VolumeTexture:
-        extractData(resource.volumeTexture(), path, mimeType);
+        extractData(resource.volumeTexture(), path, mimeType, subType);
         break;
     default:
         throw RuntimeError(ExtractTool::tr("Invalid type for resource "
@@ -213,16 +224,18 @@ static void extractData(const ImageContents &contents,
 static void extractData(const ImageContents &contents,
                         const QString &path,
                         const QMimeType &mimeType,
+                        const QByteArray &subType,
                         int index)
 {
     const int count = contents.header().mipmapCount();
     if (count == 1) {
-        extractData(contents, path, mimeType, index, 0);
+        extractData(contents, path, mimeType, subType, index, 0);
     } else {
         for (int level = 0; level < count; ++level) {
             extractData(contents,
                         path + QStringLiteral("/mipmap %1").arg(level),
                         mimeType,
+                        subType,
                         index,
                         level);
         }
@@ -231,7 +244,8 @@ static void extractData(const ImageContents &contents,
 
 static void extractData(const ImageContents &contents,
                         const QString &path,
-                        const QMimeType &mimeType)
+                        const QMimeType &mimeType,
+                        const QByteArray &subType)
 {
     const int count = contents.header().imageCount();
     if (count == 1) {
@@ -241,6 +255,7 @@ static void extractData(const ImageContents &contents,
             extractData(contents,
                         path + QStringLiteral("/frame %1").arg(index),
                         mimeType,
+                        subType,
                         index);
         }
     }
@@ -301,7 +316,8 @@ static void extract(const Options &options)
     extractHeader(header, info.absoluteFilePath());
     extractData(contents,
                 info.absoluteFilePath() + QStringLiteral("/data"),
-                mimeType);
+                mimeType,
+                options.subType);
 }
 
 } // namespace
