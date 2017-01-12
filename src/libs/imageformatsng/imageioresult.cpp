@@ -9,20 +9,20 @@
     \enum ImageIOResult::Status
     This enum describes the different types of errors that can occur when reading image files.
 
-    \var ImageIOResult::NoError
+    \var ImageIOResult::Ok
     No error occured.
 
-    \var ImageIOResult::InvalidMimeTypeError
+    \var ImageIOResult::InvalidMimeType
     ImageIO was used with an invalid mime type.
 
-    \var ImageIOResult::FileNotFoundError
-    ImageIO was used with a file name, but not file was found with that name.
+    \var ImageIOResult::FileNotFound
+    ImageIO was used with a file name, but no file was found with that name.
 
     \var ImageIOResult::DeviceError
     ImageIO encountered a device error when reading the image.
     You can consult your particular device for more details on what went wrong.
 
-    \var ImageIOResult::UnsupportedMimeTypeError
+    \var ImageIOResult::UnsupportedMimeType
     ImageIO does not support the requested mime type.
 
     \var ImageIOResult::IOError
@@ -30,13 +30,18 @@
 */
 
 /*!
-    \fn ImageIOResult::ImageIOResult(ErrorCode errorCode = NoError)
+    \fn ImageIOResult::ImageIOResult(Status status = Status::Ok)
     Constructs Error with the given \a errorCode.
 */
 
 /*!
     \fn ImageIOResult::ImageIOResult(const ImageIOResult &lhs)
     Copy-constructs ImageIOResult with the given \a lhs ImageIOResult.
+*/
+
+/*!
+    \fn ImageIOResult::~ImageIOResult
+    Destroys ImageIOResult object.
 */
 
 /*!
@@ -51,12 +56,12 @@ ImageIOResult &ImageIOResult::operator=(const ImageIOResult& other) Q_DECL_NOEXC
 }
 
 /*!
-    \fn ImageIOResult::ErrorCode ImageIOResult::errorCode() const
-    Returns error code.
+    \fn ImageIOResult::Status ImageIOResult::status() const
+    Returns status code.
 */
 
 /*!
-    Returns the human-readable message of the an error.
+    Returns the human-readable message describing the status.
 */
 
 QString ImageIOResult::toString() const
@@ -79,8 +84,24 @@ QString ImageIOResult::toString() const
 }
 
 /*!
+    \fn bool ImageIOResult::toBool() const
+    Returns true if status() is equal to ImageIOResult::Status::Ok.
+
+    \sa ImageIOResult::operator bool()
+*/
+
+/*!
     \fn ImageIOResult::operator bool() const
-    Returns true if errorCode is equal to ImageIOResult::NoError.
+    Returns true if errorCode is equal to ImageIOResult::Status::Ok.
+
+    \sa toBool(), bool ImageIOResult::operator!()
+*/
+
+/*!
+    \fn bool ImageIOResult::operator!() const
+    Returns true if errorCode is not equal to ImageIOResult::Status::Ok.
+
+    \sa toBool(), ImageIOResult::operator bool()
 */
 
 /*!
