@@ -266,7 +266,7 @@ std::pair<ImageIOResult, ImageHeader> ImageIO::readHeader()
                "ImageIO::readHeader should be called before readData()");
 
     if (d->state != ImageIOPrivate::State::Idle)
-        return {ImageIOResult::Status::IOError, ImageHeader()};
+        return {ImageIOResult::Status::HandlerError, ImageHeader()};
 
     ImageHeader header;
     auto ok = d->ensureHandlerCreated(QIODevice::ReadOnly);
@@ -275,11 +275,11 @@ std::pair<ImageIOResult, ImageHeader> ImageIO::readHeader()
 
     if (d->handler->readHeader(header)) {
         if (header.isNull() || !header.validate())
-            ok = ImageIOResult::Status::IOError;
+            ok = ImageIOResult::Status::HandlerError;
         else
             ok = ImageIOResult::Status::Ok;
     } else {
-        ok = ImageIOResult::Status::IOError;
+        ok = ImageIOResult::Status::HandlerError;
     }
     d->state = ImageIOPrivate::State::HeaderRead;
 
@@ -295,12 +295,12 @@ std::pair<ImageIOResult, ImageContents> ImageIO::readData(const ImageHeader& hea
                "ImageIO::readHeader should be called first");
 
     if (d->state != ImageIOPrivate::State::HeaderRead)
-        return {ImageIOResult::Status::IOError, ImageContents()};
+        return {ImageIOResult::Status::HandlerError, ImageContents()};
 
     ImageContents contents(header);
     ImageIOResult ok;
     if (!d->handler->read(contents))
-        ok = ImageIOResult::Status::IOError;
+        ok = ImageIOResult::Status::HandlerError;
 
     d->state = ImageIOPrivate::State::Idle;
     return {ok, ok ? contents : ImageContents()};
@@ -334,7 +334,7 @@ ImageIOResult ImageIO::write(const ImageContents &contents, const ImageOptions &
         return ok;
 
     if (!d->handler->write(contents, options))
-        return ImageIOResult::Status::IOError;
+        return ImageIOResult::Status::HandlerError;
 
     if (d->file)
         d->file->flush();

@@ -77,7 +77,7 @@ QString ImageIOResult::toString() const
         return ImageIOResult::tr("Device error");
     case ImageIOResult::Status::UnsupportedMimeType:
         return ImageIOResult::tr("Unsupported format");
-    case ImageIOResult::Status::IOError:
+    case ImageIOResult::Status::HandlerError:
         return ImageIOResult::tr("Handler error");
     }
     return QString();

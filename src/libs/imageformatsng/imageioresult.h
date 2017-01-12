@@ -15,7 +15,7 @@ public:
         FileNotFound,
         DeviceError,
         UnsupportedMimeType,
-        IOError,
+        HandlerError,
     };
 
     inline ImageIOResult(Status status = Status::Ok) Q_DECL_NOEXCEPT

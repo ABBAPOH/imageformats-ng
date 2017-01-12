@@ -34,7 +34,7 @@ void TestImageIOResult::construction_data()
     QTest::newRow("FileNotFound") << ImageIOResult::Status::FileNotFound << false;
     QTest::newRow("DeviceError") << ImageIOResult::Status::DeviceError << false;
     QTest::newRow("UnsupportedMimeType") << ImageIOResult::Status::UnsupportedMimeType << false;
-    QTest::newRow("IOError") << ImageIOResult::Status::IOError << false;
+    QTest::newRow("IOError") << ImageIOResult::Status::HandlerError << false;
 }
 
 void TestImageIOResult::construction()
