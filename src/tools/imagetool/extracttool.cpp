@@ -270,14 +270,14 @@ static void extract(const Options &options)
                            arg(info.absoluteFilePath()));
     }
 
-    QDir outDir(options.outputFolder);
-    const auto entries = outDir.entryList(filters);
-    if (!entries.isEmpty()) {
+    const auto outputPath = options.outputFolder
+            + '/' + QFileInfo(options.inputFile).baseName();
+    info = QFileInfo(outputPath);
+    if (info.exists()) {
         if (options.force) {
-            for (auto entry: entries)
-                removePath(outDir.absoluteFilePath(entry));
+            removePath(outputPath);
         } else {
-            throw RuntimeError(ExtractTool::tr("%1 is not an empty dir").
+            throw RuntimeError(ExtractTool::tr("%1 already exists").
                                arg(info.absoluteFilePath()));
         }
     }
