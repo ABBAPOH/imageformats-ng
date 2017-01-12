@@ -133,17 +133,14 @@ static void extractHeader(const ImageHeader &header, const QString &path)
 
 static void extractData(const QImage &image,
                         const QString &path,
-                        const QString &mimeType)
+                        const QMimeType &mimeType)
 {
-    const auto mt = QMimeDatabase().mimeTypeForName(mimeType);
-    const auto suffix = !mt.suffixes().empty()
-            ? QStringLiteral(".") + mt.suffixes().first()
+    const auto suffix = !mimeType.suffixes().empty()
+            ? QStringLiteral(".") + mimeType.suffixes().first()
             : QStringLiteral("");
     QDir dir(QFileInfo(path).absolutePath());
     dir.mkpath(".");
-    ImageIO io(path + suffix);
-    if (!mimeType.isEmpty())
-        io.setMimeType(mimeType);
+    ImageIO io(path + suffix, mimeType);
 //    io.setSubType(subType);
     const auto ok = io.write(ImageContents(image));
     if (!ok) {
@@ -155,7 +152,7 @@ static void extractData(const QImage &image,
 
 static void extractData(const CubeTexture &image,
                         const QString &path,
-                        const QString &mimeType)
+                        const QMimeType &mimeType)
 {
     extractData(image.side(CubeTexture::Side::NegativeX),
                 path + QStringLiteral("/NegativeX"),
@@ -179,7 +176,7 @@ static void extractData(const CubeTexture &image,
 
 static void extractData(const VolumeTexture &image,
                         const QString &path,
-                        const QString &mimeType)
+                        const QMimeType &mimeType)
 {
     for (int depth = 0; depth < image.depth(); ++depth) {
         extractData(image.slice(depth),
@@ -190,7 +187,7 @@ static void extractData(const VolumeTexture &image,
 
 static void extractData(const ImageContents &contents,
                         const QString &path,
-                        const QString &mimeType,
+                        const QMimeType &mimeType,
                         int index,
                         int level)
 {
@@ -215,7 +212,7 @@ static void extractData(const ImageContents &contents,
 
 static void extractData(const ImageContents &contents,
                         const QString &path,
-                        const QString &mimeType,
+                        const QMimeType &mimeType,
                         int index)
 {
     const int count = contents.header().mipmapCount();
@@ -234,7 +231,7 @@ static void extractData(const ImageContents &contents,
 
 static void extractData(const ImageContents &contents,
                         const QString &path,
-                        const QString &mimeType)
+                        const QMimeType &mimeType)
 {
     const int count = contents.header().imageCount();
     if (count == 1) {
@@ -292,7 +289,7 @@ static void extract(const Options &options)
     extractHeader(header, info.absoluteFilePath());
     extractData(contents,
                 info.absoluteFilePath() + QStringLiteral("/data"),
-                mt.name());
+                mt);
 }
 
 } // namespace
