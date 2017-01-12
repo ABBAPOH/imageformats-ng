@@ -276,7 +276,6 @@ static void extract(const Options &options)
         if (options.force) {
             for (auto entry: entries)
                 removePath(outDir.absoluteFilePath(entry));
-            // TODO: clear dir
         } else {
             throw RuntimeError(ExtractTool::tr("%1 is not an empty dir").
                                arg(info.absoluteFilePath()));
