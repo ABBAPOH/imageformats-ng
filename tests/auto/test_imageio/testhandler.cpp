@@ -78,7 +78,7 @@ bool TestHandler::readHeader(ImageHeader &header)
     return true;
 }
 
-bool TestHandler::read(ImageContents &contents)
+bool TestHandler::read(ImageContents &contents, const ImageOptions &/*options*/)
 {
     for (int level = 0, i = 0; level < contents.header().mipmapCount(); ++level) {
         for (int index = 0; index < contents.header().imageCount(); ++index, i++) {

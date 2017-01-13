@@ -53,7 +53,7 @@ bool DefaultHandler::readHeader(ImageHeader &header)
     return true;
 }
 
-bool DefaultHandler::read(ImageContents &contents)
+bool DefaultHandler::read(ImageContents &contents, const ImageOptions &/*options*/)
 {
     int count = _reader->imageCount();
     if (_reader->supportsOption(QImageIOHandler::Animation)) {

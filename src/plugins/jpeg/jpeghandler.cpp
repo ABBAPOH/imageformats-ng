@@ -1037,7 +1037,7 @@ bool JpegHandler::canRead(QIODevice *device)
     return uchar(buffer[0]) == 0xff && uchar(buffer[1]) == 0xd8;
 }
 
-bool JpegHandler::read(ImageContents &contents)
+bool JpegHandler::read(ImageContents &contents, const ImageOptions &options)
 {
     if(d->state != JpegHandlerPrivate::ReadHeader)
         return false;

@@ -13,7 +13,7 @@ public:
 public: // ImageIOHandler interface
     bool canRead() const override { return true; }
     bool readHeader(ImageHeader &header) override;
-    bool read(ImageContents &contents) override;
+    bool read(ImageContents &contents, const ImageOptions &options) override;
     bool write(const ImageContents &contents, const ImageOptions &options) override;
 
 private:

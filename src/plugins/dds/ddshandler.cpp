@@ -1425,7 +1425,7 @@ bool DDSHandler::readHeader(ImageHeader &header)
     return true;
 }
 
-bool DDSHandler::read(ImageContents &contents)
+bool DDSHandler::read(ImageContents &contents, const ImageOptions &/*options*/)
 {
     setSubType(formatName(m_format));
     for (quint32 i = 0; i < qMax<quint32>(1, m_header.mipMapCount); i++) {

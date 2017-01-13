@@ -286,7 +286,8 @@ std::pair<ImageIOResult, ImageHeader> ImageIO::readHeader()
     return {ok, ok ? header : ImageHeader()};
 }
 
-std::pair<ImageIOResult, ImageContents> ImageIO::readData(const ImageHeader& header)
+std::pair<ImageIOResult, ImageContents> ImageIO::readData(
+    const ImageHeader& header, const ImageOptions &options)
 {
     Q_D(ImageIO);
 
@@ -299,7 +300,7 @@ std::pair<ImageIOResult, ImageContents> ImageIO::readData(const ImageHeader& hea
 
     ImageContents contents(header);
     ImageIOResult ok;
-    if (!d->handler->read(contents))
+    if (!d->handler->read(contents, options))
         ok = ImageIOResult::Status::HandlerError;
 
     d->state = ImageIOPrivate::State::Idle;
@@ -311,13 +312,14 @@ std::pair<ImageIOResult, ImageContents> ImageIO::readData(const ImageHeader& hea
 
     Empty optional is returned in case of en error. Use error() to retrive error code and message.
 */
-std::pair<ImageIOResult, ImageContents> ImageIO::read()
+std::pair<ImageIOResult, ImageContents> ImageIO::read(
+    const ImageOptions &options)
 {
     auto result = readHeader();
     const auto ok = result.first;
     if (!ok)
         return {ok, ImageContents()};
-    return readData(result.second);
+    return readData(result.second, options);
 }
 
 /*!

@@ -57,7 +57,7 @@ public:
 
     bool canRead() const override;
     bool readHeader(ImageHeader &header) override;
-    bool read(ImageContents &contents) override;
+    bool read(ImageContents &contents, const ImageOptions &options) override;
     bool write(const ImageContents &contents, const ImageOptions &options) override;
 
     static bool canRead(QIODevice *device);

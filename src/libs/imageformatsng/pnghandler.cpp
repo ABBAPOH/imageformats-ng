@@ -1033,7 +1033,7 @@ bool QPngHandler::readHeader(ImageHeader &header)
     return true;
 }
 
-bool QPngHandler::read(ImageContents &contents)
+bool QPngHandler::read(ImageContents &contents, const ImageOptions &/*options*/)
 {
     if (!canRead())
         return false;
