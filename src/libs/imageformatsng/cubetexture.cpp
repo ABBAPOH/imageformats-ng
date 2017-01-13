@@ -122,8 +122,9 @@ CubeTexture::CubeTexture(CubeTexture &&other) :
 
 /*!
     Constructs a texture with the given \a extent and \a format.
-    Extent is th leght of the side of the cube, i.e. is widht = heigth = depth = extent.
-    A null texture will be created if parameters are not valid.
+    Extent is the legth of the side of the cube, i.e. is width = height = depth
+    = \a extent.
+    A null texture is created if parameters are not valid.
 */
 CubeTexture::CubeTexture(int extent, QImage::Format format) :
     CubeTexture(CubeTextureData::create(extent, format))
