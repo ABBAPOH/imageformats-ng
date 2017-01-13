@@ -130,10 +130,9 @@ bool ImageHeader::isNull() const
 }
 
 /*!
-    \property ImageHeader::Type
-    This property holds the type of an image (i.e. image, cube texture or volume texture).
-
-    \sa ImageHeader::Type
+    \property ImageHeader::type
+    This property holds the type of an image.
+    Possible types are image, cube texture or volume texture.
 */
 
 ImageResource::Type ImageHeader::type() const
