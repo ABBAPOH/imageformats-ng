@@ -2,12 +2,13 @@
 
 /*!
     \class ImageIOResult
-    This is a helper class that wraps error code.
+    This is a helper class that wraps status enum.
 */
 
 /*!
     \enum ImageIOResult::Status
-    This enum describes the different types of errors that can occur when reading image files.
+    This enum describes the different types of errors that can occur when
+    reading image files.
 
     \var ImageIOResult::Ok
     No error occured.
@@ -31,7 +32,7 @@
 
 /*!
     \fn ImageIOResult::ImageIOResult(Status status = Status::Ok)
-    Constructs Error with the given \a errorCode.
+    Constructs ImageIOResult with the given \a status code.
 */
 
 /*!
@@ -107,11 +108,11 @@ QString ImageIOResult::toString() const
 /*!
     \fn inline bool operator==(const ImageIOResult &lhs, const ImageIOResult &rhs)
     \related ImageIOResult
-    Returns true if \lhs errorCode() is equal to the \a rhs errorCode().
+    Returns true if \a lhs status() is equal to the \a rhs status().
 */
 
 /*!
     \fn inline bool operator!=(const ImageIOResult &lhs, const ImageIOResult &rhs)
     \related ImageIOResult
-    Returns true if \lhs errorCode() is not equal to the \a rhs errorCode().
+    Returns true if \a lhs status() is not equal to the \a rhs status().
 */
