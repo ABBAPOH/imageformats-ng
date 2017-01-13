@@ -28,12 +28,13 @@ void handleImage(const QImage &image);
 int main(int argc, char *argv[])
 {
     ImageIO reader("image.png");
-    Optional<ImageContents> maybeContents = reader.read();
-    if (!maybeContents) {
-        qWarning() << "Error reading image:" << reader.error().errorString();
+    auto result = reader.read();
+    ImageIOResult ok = result.first;
+    if (!ok) {
+        qWarning() << "Error reading image:" << ok.toString();
         return 1;
     }
-    ImageContents contents = *maybeContents;
+    ImageContents contents = result.second;
     handleImage(contents.image());
     return 0;
 }
@@ -51,8 +52,9 @@ int main(int argc, char *argv[])
     QImage image = createImage();
     ImageIO writer("image.png");
     ImageContents contents(image);
-    if (!writer.write(contents)) {
-        qWarning() << "Error writing image:" << writer.error().errorString();
+    ImageIOResult ok = writer.write(contents);
+    if (!ok) {
+        qWarning() << "Error writing image:" << ok.toString();
         return 1;
     }
     return 0;
@@ -67,16 +69,20 @@ int main(int argc, char *argv[])
 int main(int argc, char *argv[])
 {
     ImageIO reader("image.png");
-    const auto maybeHeader = reader.readHeader();
-    if (!maybeHeader) {
-        qWarning() << "Error reading header:" << reader.error().errorString();
+    const auto result = reader.readHeader();
+    if (!result.first) {
+        qWarning() << "Error reading header:" << result.first.toString();
         return 1;
     }
-    ImageHeader header = *maybeHeader;
+    ImageHeader header = result.second;
     qDebug() << "size = " << header.size();
     qDebug() << "format = " << header.imageFormat();
     qDebug() << "image count = " << header.imageCount();
     qDebug() << "mipmap count = " << header.mipmapCount();
+
+    const auto contentsResult = reader.readData(header);
+    // if (!contentsResult.first) ...
+
     return 0;
 }
 //! [3]
@@ -89,13 +95,14 @@ int main(int argc, char *argv[])
 int main(int argc, char *argv[])
 {
     ImageIO reader("texture.dds");
-    auto contents = reader.read();
+    const auto result = reader.read();
 
-    // if (!contents) ...
+    // if (!result.first) ...
 
-    for (int index = 0; index < contents->header().imageCount(); ++index) { // read array
-        for (int level = 0; level < contents->header().mipmapCount(); ++level) { // read mipmaps
-            ImageResource resource = contents->resource(index, level);
+    const auto &contents = result.second;
+    for (int index = 0; index < contents.header().imageCount(); ++index) { // read array
+        for (int level = 0; level < contents.header().mipmapCount(); ++level) { // read mipmaps
+            ImageResource resource = contents.resource(index, level);
             if (resource.type() == ImageResource::Type::Image) {
                 const QImage image = resource.image();
                 // ...
@@ -109,7 +116,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    ImageExifMeta exif = contents->exifMeta();
+    ImageExifMeta exif = contents.exifMeta();
     if (!exif.isEmpty()) {
         // ...
     }
