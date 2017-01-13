@@ -8,8 +8,8 @@ namespace ImageTool {
 /*!
     \class MainParser
     This is the parser for the arguments passed to main().
-    Checks that input arguments has format ./imagetool [common options] <tool> [options] and
-    that <tool> is valid tool.
+    Checks that input arguments has format ./imagetool [common options] \<tool\> [options] and
+    that \<tool\> is valid tool.
 */
 
 /*!
