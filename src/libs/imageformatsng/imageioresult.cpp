@@ -26,7 +26,7 @@
     \var ImageIOResult::UnsupportedMimeType
     ImageIO does not support the requested mime type.
 
-    \var ImageIOResult::IOError
+    \var ImageIOResult::HandlerError
     Error occured within an undelying ImageIOHandler.
 */
 
