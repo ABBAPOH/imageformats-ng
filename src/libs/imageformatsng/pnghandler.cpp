@@ -1033,10 +1033,13 @@ bool QPngHandler::readHeader(ImageHeader &header)
     return true;
 }
 
-bool QPngHandler::read(ImageContents &contents, const ImageOptions &/*options*/)
+bool QPngHandler::read(ImageContents &contents, const ImageOptions &options)
 {
     if (!canRead())
         return false;
+
+    d->scaledSize = options.scaledSize();
+
     QImage image;
     bool ok = d->readPngImage(&image);
     if (ok) {
@@ -1048,6 +1051,9 @@ bool QPngHandler::read(ImageContents &contents, const ImageOptions &/*options*/)
 bool QPngHandler::write(const ImageContents &contents, const ImageOptions &options)
 {
     Q_UNUSED(options);
+    d->gamma = options.gamma();
+    d->quality = options.quality();
+
     return write_png_image(contents.image(), device(), d->quality, d->gamma, d->description);
 }
 
