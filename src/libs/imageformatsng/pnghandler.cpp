@@ -1061,51 +1061,6 @@ bool QPngHandler::canRead(QIODevice *device)
     return device->peek(8) == "\x89\x50\x4E\x47\x0D\x0A\x1A\x0A";
 }
 
-//bool QPngHandler::supportsOption(ImageOption option) const
-//{
-//    return option == Gamma
-//        || option == Description
-//        || option == ImageFormat
-//        || option == Quality
-//        || option == Size
-//        || option == ScaledSize;
-//}
-
-//QVariant QPngHandler::option(ImageOption option) const
-//{
-//    if (d->state == QPngHandlerPrivate::Error)
-//        return QVariant();
-//    if (d->state == QPngHandlerPrivate::Ready && !d->readPngHeader())
-//        return QVariant();
-
-//    if (option == Gamma)
-//        return d->gamma;
-//    else if (option == Quality)
-//        return d->quality;
-//    else if (option == Description)
-//        return d->description;
-//    else if (option == Size)
-//        return QSize(png_get_image_width(d->png_ptr, d->info_ptr),
-//                     png_get_image_height(d->png_ptr, d->info_ptr));
-//    else if (option == ScaledSize)
-//        return d->scaledSize;
-//    else if (option == ImageFormat)
-//        return d->readImageFormat();
-//    return QVariant();
-//}
-
-//void QPngHandler::setOption(ImageOption option, const QVariant &value)
-//{
-//    if (option == Gamma)
-//        d->gamma = value.toFloat();
-//    else if (option == Quality)
-//        d->quality = value.toInt();
-//    else if (option == Description)
-//        d->description = value.toString();
-//    else if (option == ScaledSize)
-//        d->scaledSize = value.toSize();
-//}
-
 QT_END_NAMESPACE
 
 #endif // QT_NO_IMAGEFORMAT_PNG

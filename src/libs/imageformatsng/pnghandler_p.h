@@ -58,10 +58,6 @@ public:
     bool read(ImageContents &contents, const ImageOptions &options) override;
     bool write(const ImageContents &contents, const ImageOptions &options) override;
 
-//    QVariant option(ImageOption option) const;
-//    void setOption(ImageOption option, const QVariant &value);
-//    bool supportsOption(ImageOption option) const;
-
     static bool canRead(QIODevice *device);
 
 private:
