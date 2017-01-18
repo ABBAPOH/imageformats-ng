@@ -42,7 +42,7 @@ public:
     void setSubType(const QByteArray &subType);
 
     std::pair<ImageIOResult, ImageHeader> readHeader();
-    std::pair<ImageIOResult, ImageContents> readData(
+    std::pair<ImageIOResult, ImageContents> readContents(
             const ImageHeader &header,
             const ImageOptions &options = ImageOptions());
 

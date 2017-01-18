@@ -250,12 +250,13 @@ void ImageIO::setSubType(const QByteArray &subType)
 }
 
 /*!
-    Reads the header of the image and returns it as an optional.
+    Reads the header of an image.
 
-    This method can be used to determine common imae meta information (size, image format, etc)
-    whitout reading image data itself.
+    This method can be used to determine common imaпe meta information (size, image format, etc)
+    without reading image data itself.
 
-    Empty optional is returned in case of en error. Use error() to retrive error code and message.
+    Returns the status of the operation as an ImageIOResult. Empty ImageHeader is returned in case
+    of an error.
 */
 std::pair<ImageIOResult, ImageHeader> ImageIO::readHeader()
 {
@@ -286,7 +287,16 @@ std::pair<ImageIOResult, ImageHeader> ImageIO::readHeader()
     return {ok, ok ? header : ImageHeader()};
 }
 
-std::pair<ImageIOResult, ImageContents> ImageIO::readData(
+/*!
+    Reads the contents of an image.
+
+    This method should be called after readHeader().
+    If you don't need to read image header and contents separately, use read() instead.
+
+    Returns the status of the operation as an ImageIOResult. Empty ImageContents is returned in case
+    of an error.
+*/
+std::pair<ImageIOResult, ImageContents> ImageIO::readContents(
     const ImageHeader& header, const ImageOptions &options)
 {
     Q_D(ImageIO);
@@ -308,10 +318,9 @@ std::pair<ImageIOResult, ImageContents> ImageIO::readData(
 }
 
 /*!
-    Reads the contents of the image and returns it as an optional.
+    Reads both header and contents of an image.
 
-    Returns status of the operation and an ImageContents object. In case of an
-    error, null ImageContents is returned.
+    In case of an error, null ImageContents is returned.
 */
 std::pair<ImageIOResult, ImageContents> ImageIO::read(
     const ImageOptions &options)
@@ -320,7 +329,7 @@ std::pair<ImageIOResult, ImageContents> ImageIO::read(
     const auto ok = result.first;
     if (!ok)
         return {ok, ImageContents()};
-    return readData(result.second, options);
+    return readContents(result.second, options);
 }
 
 /*!
