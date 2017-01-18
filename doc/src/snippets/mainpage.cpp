@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     qDebug() << "image count = " << header.imageCount();
     qDebug() << "mipmap count = " << header.mipmapCount();
 
-    const auto contentsResult = reader.readData(header);
+    const auto contentsResult = reader.readContents(header);
     // if (!contentsResult.first) ...
 
     return 0;

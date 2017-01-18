@@ -257,6 +257,13 @@ void ImageIO::setSubType(const QByteArray &subType)
 
     Returns the status of the operation as an ImageIOResult. Empty ImageHeader is returned in case
     of an error.
+
+    After reading header, you should call readContents() function to retreive actual image data.
+
+    Typical usage is following:
+    \snippet imageio.cpp 0
+
+    \sa readContents(), read()
 */
 std::pair<ImageIOResult, ImageHeader> ImageIO::readHeader()
 {
@@ -295,6 +302,8 @@ std::pair<ImageIOResult, ImageHeader> ImageIO::readHeader()
 
     Returns the status of the operation as an ImageIOResult. Empty ImageContents is returned in case
     of an error.
+
+    \sa readHeader(), read()
 */
 std::pair<ImageIOResult, ImageContents> ImageIO::readContents(
     const ImageHeader& header, const ImageOptions &options)
@@ -320,7 +329,14 @@ std::pair<ImageIOResult, ImageContents> ImageIO::readContents(
 /*!
     Reads both header and contents of an image.
 
-    In case of an error, null ImageContents is returned.
+    Returns the status of the operation as an ImageIOResult. Empty ImageContents is returned in case
+    of an error.
+
+    This is the easiest way to read an image. This can be done as following:
+    \snippet imageio.cpp 1
+
+    Reading can be customised by passing ImageOptions:
+    \snippet imageio.cpp 2
 */
 std::pair<ImageIOResult, ImageContents> ImageIO::read(
     const ImageOptions &options)
@@ -333,7 +349,7 @@ std::pair<ImageIOResult, ImageContents> ImageIO::read(
 }
 
 /*!
-    Reads the given \a contents with the given \a options to the device.
+    Writes the given \a contents with the given \a options to the device.
 
     Returns the status of the operation.
 */
@@ -353,8 +369,10 @@ ImageIOResult ImageIO::write(const ImageContents &contents, const ImageOptions &
 }
 
 /*!
-    Returns true if current format (i.e. specified by current ImageIO::mimeType) supports
-    the given \a option for the given \a subType, otherwise returns false.
+    Returns true if current format supports the given \a option for the given \a subType, otherwise
+    returns false.
+
+    Current format is the format specified by the ImageIO::mimeType.
 */
 bool ImageIO::supportsOption(ImageOptions::Option option, const QByteArray &subType) const
 {
