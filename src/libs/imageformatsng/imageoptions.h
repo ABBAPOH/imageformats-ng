@@ -21,6 +21,12 @@ class IMAGEFORMATSNG_EXPORT ImageOptions
     Q_PROPERTY(int quality READ quality WRITE setQuality)
 public:
     ImageOptions();
+    ImageOptions(const ImageOptions &other);
+    ImageOptions(ImageOptions &&other);
+    ~ImageOptions();
+
+    ImageOptions &operator=(const ImageOptions &other);
+    ImageOptions &operator=(ImageOptions &&other);
 
     enum Option {
         // read options
@@ -66,7 +72,10 @@ public:
     int quality(int defaultValue = 100) const;
     void setQuality(int quality);
 
-    inline void swap(ImageOptions &other) { _options.swap(other._options); }
+    inline void swap(ImageOptions &other) Q_DECL_NOEXCEPT
+    {
+        _options.swap(other._options);
+    }
 
     static QString optionToString(ImageOptions::Option option);
     static QString optionsToString(const QVector<ImageOptions::Option> &options);
