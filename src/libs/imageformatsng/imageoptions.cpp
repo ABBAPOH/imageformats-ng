@@ -304,3 +304,9 @@ bool operator!=(const ImageOptions &lhs, const ImageOptions &rhs)
 {
     return !(lhs == rhs);
 }
+
+/*!
+    \typedef ImageOptionsSet
+
+    Set of the ImageOptions::Option.
+*/
