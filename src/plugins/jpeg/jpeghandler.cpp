@@ -261,8 +261,12 @@ static bool ensureValidImage(QImage *dest, struct jpeg_decompress_struct *info,
 }
 
 static bool read_jpeg_image(QImage *outImage,
-                            QSize scaledSize, QRect scaledClipRect,
-                            QRect clipRect, volatile int inQuality, j_decompress_ptr info, struct my_error_mgr* err  )
+                            QSize scaledSize,
+                            QRect scaledClipRect,
+                            QRect clipRect,
+                            volatile int inQuality,
+                            j_decompress_ptr info,
+                            struct my_error_mgr* err  )
 {
     if (!setjmp(err->setjmp_buffer)) {
         // -1 means default quality.
@@ -740,9 +744,13 @@ public:
     bool read(QImage *image);
     void applyExifOrientation(QImage *image);
 
-    int exifOrientation;
+    int quality {-1};
+    QSize scaledSize;
+    QRect scaledClipRect;
+    QRect clipRect;
     QString description;
     QStringList readTexts;
+    int exifOrientation;
 
     struct jpeg_decompress_struct info;
     struct my_jpeg_source_mgr * iod_src;
@@ -969,10 +977,10 @@ bool JpegHandlerPrivate::read(QImage *image)
     if(state == ReadHeader)
     {
         bool success = read_jpeg_image(image,
-                                       QSize(),
-                                       QRect(),
-                                       QRect(),
-                                       -1,
+                                       scaledSize,
+                                       scaledClipRect,
+                                       clipRect,
+                                       quality,
                                        &info,
                                        &err);
         if (success) {
@@ -1041,6 +1049,11 @@ bool JpegHandler::read(ImageContents &contents, const ImageOptions &options)
 {
     if(d->state != JpegHandlerPrivate::ReadHeader)
         return false;
+
+    d->clipRect = options.clipRect();
+    d->scaledSize = options.scaledSize();
+    d->scaledClipRect = options.scaledCliptRect();
+    d->quality = options.inputQuality(d->quality);
 
     QImage image;
     bool ok = d->read(&image);
