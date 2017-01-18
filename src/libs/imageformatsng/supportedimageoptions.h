@@ -2,6 +2,7 @@
 
 #include <ImageOptions>
 #include <QtCore/QBitArray>
+#include <QtCore/QSet>
 
 class SupportedImageOptions
 {
@@ -29,6 +30,8 @@ public:
     {
         _data[option] = false;
     }
+
+    QSet<ImageOptions::Option> toSet() const;
 
 private:
     QBitArray _data {ImageOptions::OptionsCount, false};

@@ -1077,7 +1077,7 @@ QByteArray PngHandlerPlugin::name() const
     return "png";
 }
 
-QVector<ImageOptions::Option> PngHandlerPlugin::supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const
+SupportedImageOptions PngHandlerPlugin::supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const
 {
     Q_UNUSED(mimeType);
     Q_UNUSED(subType);

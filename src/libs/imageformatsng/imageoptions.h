@@ -8,6 +8,8 @@
 #include <QtCore/QVector>
 #include <QtGui/QColor>
 
+class SupportedImageOptions;
+
 class IMAGEFORMATSNG_EXPORT ImageOptions
 {
     Q_GADGET
@@ -79,7 +81,7 @@ public:
     }
 
     static QString optionToString(ImageOptions::Option option);
-    static QString optionsToString(const QVector<ImageOptions::Option> &options);
+    static QString optionsToString(const SupportedImageOptions &options);
 
 private:
     QHash<Option, QVariant> _options;

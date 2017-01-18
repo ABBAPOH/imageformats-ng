@@ -134,12 +134,12 @@ QVector<QByteArray> ImageFormatInfo::supportedSubTypes() const
     Write options should be retrieved for a particular subtype if format supports multiple
     subtypes or for an unnamed subtype if format supports single subtype.
 */
-QVector<ImageOptions::Option> ImageFormatInfo::supportedOptions(const QByteArray &subType) const
+SupportedImageOptions ImageFormatInfo::supportedOptions(const QByteArray &subType) const
 {
     const auto it = d->options.find(subType);
     if (it == d->options.end()) {
         qWarning() << "Unknown subtype" << subType << "for" << d->name << "image format";
-        return QVector<ImageOptions::Option>();
+        return SupportedImageOptions();
     }
     return it.value();
 }

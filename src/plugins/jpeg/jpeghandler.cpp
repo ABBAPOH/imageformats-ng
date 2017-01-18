@@ -1078,7 +1078,7 @@ QByteArray JpegHandlerPlugin::name() const
     return "jpeg";
 }
 
-QVector<ImageOptions::Option> JpegHandlerPlugin::supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const
+SupportedImageOptions JpegHandlerPlugin::supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const
 {
     Q_UNUSED(mimeType);
     Q_UNUSED(subType);
