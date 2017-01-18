@@ -72,7 +72,7 @@ class JpegHandlerPlugin : public ImageIOHandlerPlugin
     Q_PLUGIN_METADATA(IID "org.arch.ImageDocument.JpegHandlerPlugin" FILE "jpeg.json")
 public:
     QByteArray name() const override;
-    SupportedImageOptions supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const override;
+    ImageOptionsSet supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const override;
     JpegHandler *create(QIODevice *device, const QMimeType &mimeType) override;
     ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const override;
 };

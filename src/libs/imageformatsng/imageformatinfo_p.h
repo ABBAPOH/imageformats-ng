@@ -1,7 +1,5 @@
 #pragma once
 
-#include <SupportedImageOptions>
-
 #include "imageformatinfo.h"
 
 class ImageFormatInfoData : public QSharedData
@@ -11,5 +9,5 @@ public:
     QMimeType mimeType;
     ImageFormatInfo::Capabilities capabilities;
     QVector<QByteArray> subTypes;
-    QMap<QByteArray, SupportedImageOptions> options;
+    QMap<QByteArray, ImageOptionsSet> options;
 };

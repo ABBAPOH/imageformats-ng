@@ -1077,7 +1077,7 @@ QByteArray PngHandlerPlugin::name() const
     return "png";
 }
 
-SupportedImageOptions PngHandlerPlugin::supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const
+ImageOptionsSet PngHandlerPlugin::supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const
 {
     Q_UNUSED(mimeType);
     Q_UNUSED(subType);

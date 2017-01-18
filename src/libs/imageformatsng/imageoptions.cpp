@@ -1,7 +1,5 @@
 #include "imageoptions.h"
 
-#include <SupportedImageOptions>
-
 #include <QtCore/QMetaEnum>
 
 /*!
@@ -281,10 +279,10 @@ QString ImageOptions::optionToString(ImageOptions::Option option)
 /*!
     \internal
 */
-QString ImageOptions::optionsToString(const SupportedImageOptions &options)
+QString ImageOptions::optionsToString(const OptionsSet &options)
 {
     QStringList result;
-    for (auto option : options.toSet())
+    for (auto option : options)
         result.append(optionToString(option));
     return result.join("|");
 }

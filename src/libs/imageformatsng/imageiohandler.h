@@ -3,7 +3,6 @@
 #include "imageformatsng_global.h"
 
 #include <ImageIO>
-#include <SupportedImageOptions>
 
 #include <QtCore/QSet>
 
@@ -48,7 +47,7 @@ public:
     virtual QByteArray name() const = 0;
     virtual ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const = 0;
     virtual QVector<QByteArray> supportedSubTypes(const QMimeType &mimeType) const;
-    virtual SupportedImageOptions supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const;
+    virtual ImageOptionsSet supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const;
 
     virtual ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) = 0;
 };

@@ -5,10 +5,8 @@
 #include <QtCore/QHash>
 #include <QtCore/QRect>
 #include <QtCore/QVariant>
-#include <QtCore/QVector>
+#include <QtCore/QSet>
 #include <QtGui/QColor>
-
-class SupportedImageOptions;
 
 class IMAGEFORMATSNG_EXPORT ImageOptions
 {
@@ -46,6 +44,8 @@ public:
     };
     Q_ENUM(Option)
 
+    using OptionsSet = QSet<ImageOptions::Option>;
+
     bool isEmpty() const;
 
     bool contains(Option option) const;
@@ -81,7 +81,7 @@ public:
     }
 
     static QString optionToString(ImageOptions::Option option);
-    static QString optionsToString(const SupportedImageOptions &options);
+    static QString optionsToString(const OptionsSet &options);
 
 private:
     QHash<Option, QVariant> _options;
@@ -92,5 +92,7 @@ private:
 
 bool IMAGEFORMATSNG_EXPORT operator==(const ImageOptions &lhs, const ImageOptions &rhs);
 bool IMAGEFORMATSNG_EXPORT operator!=(const ImageOptions &lhs, const ImageOptions &rhs);
+
+using ImageOptionsSet = ImageOptions::OptionsSet;
 
 Q_DECLARE_METATYPE(ImageOptions);

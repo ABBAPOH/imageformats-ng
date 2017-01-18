@@ -3,7 +3,6 @@
 #include "imageformatsng_global.h"
 
 #include <ImageOptions>
-#include <SupportedImageOptions>
 
 #include <QtCore/QMimeType>
 #include <QtCore/QVector>
@@ -38,7 +37,7 @@ public:
 
     QVector<QByteArray> supportedSubTypes() const;
 
-    SupportedImageOptions supportedOptions(const QByteArray &subType = QByteArray()) const;
+    ImageOptionsSet supportedOptions(const QByteArray &subType = QByteArray()) const;
     bool supportsOption(ImageOptions::Option option, const QByteArray &subType = QByteArray()) const;
 
     inline void swap(ImageFormatInfo &other) { qSwap(d, other.d); }

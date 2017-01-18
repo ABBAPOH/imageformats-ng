@@ -167,10 +167,10 @@ QVector<QByteArray> ImageIOHandlerPlugin::supportedSubTypes(const QMimeType &mim
     non-empty subtype. If handler doesn't support subtypes, return write options for the empty
     subtype too.
 */
-SupportedImageOptions ImageIOHandlerPlugin::supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const
+ImageOptionsSet ImageIOHandlerPlugin::supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const
 {
     Q_UNUSED(mimeType);
     Q_UNUSED(subType);
 
-    return SupportedImageOptions();
+    return ImageOptionsSet();
 }

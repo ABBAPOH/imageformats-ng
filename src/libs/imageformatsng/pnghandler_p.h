@@ -72,7 +72,7 @@ class PngHandlerPlugin : public ImageIOHandlerPlugin
 public:
     PngHandlerPlugin() {}
     QByteArray name() const override;
-    SupportedImageOptions supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const override;
+    ImageOptionsSet supportedOptions(const QMimeType &mimeType, const QByteArray &subType) const override;
     ImageIOHandler *create(QIODevice *device, const QMimeType &mimeType) override;
     ImageFormatInfo::Capabilities capabilities(QIODevice *device, const QMimeType &mimeType) const override;
 };
