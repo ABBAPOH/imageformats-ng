@@ -310,7 +310,8 @@ std::pair<ImageIOResult, ImageContents> ImageIO::readData(
 /*!
     Reads the contents of the image and returns it as an optional.
 
-    Empty optional is returned in case of en error. Use error() to retrive error code and message.
+    Returns status of the operation and an ImageContents object. In case of an
+    error, null ImageContents is returned.
 */
 std::pair<ImageIOResult, ImageContents> ImageIO::read(
     const ImageOptions &options)
@@ -325,8 +326,7 @@ std::pair<ImageIOResult, ImageContents> ImageIO::read(
 /*!
     Reads the given \a contents with the given \a options to the device.
 
-    Returns true in case of success, otherwise returns false. Use error() to retrive error code
-    and message.
+    Returns the status of the operation.
 */
 ImageIOResult ImageIO::write(const ImageContents &contents, const ImageOptions &options)
 {
