@@ -1355,7 +1355,7 @@ static bool readVolumeMap(QDataStream &s, const DDSHeader &dds, const int fmt, I
     const int depth = std::max<quint32>(1, dds.depth / (1 << level));
 
     VolumeTexture tex(width, height, depth, QImage::Format_ARGB32);
-    for (quint32 i = 0; i < depth; i++) {
+    for (int i = 0; i < depth; i++) {
         const QImage face = readLayer(s, dds, fmt, width, height);
         tex.setSlice(i, face);
     }
