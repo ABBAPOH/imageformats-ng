@@ -50,6 +50,7 @@ Project {
     property stringList linkFlags: []
 
     qbsSearchPaths: "qbs"
+    minimumQbsVersion: "1.6"
 
     name: "Image Formats NG"
 
