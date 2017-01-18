@@ -199,6 +199,23 @@ void ImageOptions::setBackgroundColor(const QColor &color)
 }
 
 /*!
+    \property ImageOptions::skipMipmaps
+
+    If handler supports this option, it can be used to skip reading mipmaps.
+    Default value is false.
+*/
+
+bool ImageOptions::skipMipmaps() const
+{
+    return _options.value(SkipMipmaps, false).toBool();
+}
+
+void ImageOptions::setSkipMipmaps(bool skip)
+{
+    _options.insert(SkipMipmaps, skip);
+}
+
+/*!
     \property ImageOptions::compression
 
     The compression ratio of the image data. A handler that supports this

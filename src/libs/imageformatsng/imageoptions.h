@@ -16,6 +16,7 @@ class IMAGEFORMATSNG_EXPORT ImageOptions
     Q_PROPERTY(QRect scaledCliptRect READ scaledCliptRect WRITE setScaledCliptRect)
     Q_PROPERTY(int inputQuality READ inputQuality WRITE setInputQuality)
     Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor)
+    Q_PROPERTY(bool skipMipmaps READ skipMipmaps WRITE setSkipMipmaps)
     Q_PROPERTY(int compression READ compression WRITE setCompression)
     Q_PROPERTY(float gamma READ gamma WRITE setGamma)
     Q_PROPERTY(int quality READ quality WRITE setQuality)
@@ -35,6 +36,7 @@ public:
         ScaledClipRect,
         InputQuality,
         BackgroundColor,
+        SkipMipmaps,
 
         // write options
         CompressionRatio,
@@ -65,6 +67,9 @@ public:
 
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &color);
+
+    bool skipMipmaps() const;
+    void setSkipMipmaps(bool skip);
 
     int compression(int defaultValue = 0) const;
     void setCompression(int compression);
