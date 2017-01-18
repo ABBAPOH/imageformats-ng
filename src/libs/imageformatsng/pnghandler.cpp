@@ -1051,8 +1051,8 @@ bool QPngHandler::read(ImageContents &contents, const ImageOptions &options)
 bool QPngHandler::write(const ImageContents &contents, const ImageOptions &options)
 {
     Q_UNUSED(options);
-    d->gamma = options.gamma();
-    d->quality = options.quality();
+    d->gamma = options.gamma(d->gamma);
+    d->quality = options.quality(d->quality);
 
     return write_png_image(contents.image(), device(), d->quality, d->gamma, d->description);
 }

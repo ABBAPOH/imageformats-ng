@@ -11,6 +11,16 @@ bool ImageOptions::isEmpty() const
     return _options.isEmpty();
 }
 
+bool ImageOptions::contains(ImageOptions::Option option) const
+{
+    return _options.contains(option);
+}
+
+void ImageOptions::remove(ImageOptions::Option option)
+{
+    _options.remove(option);
+}
+
 QRect ImageOptions::clipRect() const
 {
     return _options.value(ClipRect, QRect()).toRect();
@@ -41,9 +51,9 @@ void ImageOptions::setScaledCliptRect(const QRect &rect)
     _options.insert(ScaledClipRect, rect);
 }
 
-int ImageOptions::inputQuality() const
+int ImageOptions::inputQuality(int defaultValue) const
 {
-    return _options.value(InputQuality, -1).toInt();
+    return _options.value(InputQuality, defaultValue).toInt();
 }
 
 void ImageOptions::setInputQuality(int quality)
@@ -61,9 +71,9 @@ void ImageOptions::setBackgroundColor(const QColor &color)
     _options.insert(BackgroundColor, color);
 }
 
-int ImageOptions::compression() const
+int ImageOptions::compression(int defaultValue) const
 {
-    return _options.value(CompressionRatio, -1).toInt();
+    return _options.value(CompressionRatio, defaultValue).toInt();
 }
 
 void ImageOptions::setCompression(int compression)
@@ -71,9 +81,9 @@ void ImageOptions::setCompression(int compression)
     _options.insert(CompressionRatio, compression);
 }
 
-float ImageOptions::gamma() const
+float ImageOptions::gamma(float defaultValue) const
 {
-    return _options.value(Gamma, 1.0).toFloat();
+    return _options.value(Gamma, defaultValue).toFloat();
 }
 
 void ImageOptions::setGamma(float gamma)
@@ -81,9 +91,9 @@ void ImageOptions::setGamma(float gamma)
     _options.insert(Gamma, gamma);
 }
 
-int ImageOptions::quality() const
+int ImageOptions::quality(int defaultValue) const
 {
-    return _options.value(Quality, -1).toInt();
+    return _options.value(Quality, defaultValue).toInt();
 }
 
 void ImageOptions::setQuality(int quality)

@@ -31,6 +31,9 @@ public:
 
     bool isEmpty() const;
 
+    bool contains(Option option) const;
+    void remove(Option option);
+
     QRect clipRect() const;
     void setClipRect(const QRect &rect);
 
@@ -40,19 +43,19 @@ public:
     QRect scaledCliptRect() const;
     void setScaledCliptRect(const QRect &rect);
 
-    int inputQuality() const;
+    int inputQuality(int defaultValue = 100) const;
     void setInputQuality(int quality);
 
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &color);
 
-    int compression() const;
+    int compression(int defaultValue = 0) const;
     void setCompression(int compression);
 
-    float gamma() const;
+    float gamma(float defaultValue = 0.0) const;
     void setGamma(float gamma);
 
-    int quality() const;
+    int quality(int defaultValue = 100) const;
     void setQuality(int quality);
 
     inline void swap(ImageOptions &other) { _options.swap(other._options); }
