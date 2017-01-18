@@ -57,11 +57,11 @@ signals:
     void documentChanged();
 
 protected:
-    void paintEvent(QPaintEvent *event);
+    void paintEvent(QPaintEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
-    bool viewportEvent(QEvent *event);
+    bool viewportEvent(QEvent *event) override;
 
 protected:
     QScopedPointer<ImageViewPrivate> d_ptr;

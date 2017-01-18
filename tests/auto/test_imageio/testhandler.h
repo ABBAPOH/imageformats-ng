@@ -7,10 +7,10 @@
 class TestHandler : public ImageIOHandler
 {
 public:
-    virtual bool canRead() const;
+    virtual bool canRead() const override;
     virtual bool readHeader(ImageHeader &header) override;
     virtual bool read(ImageContents &contents, const ImageOptions &options) override;
-    virtual bool write(const ImageContents &contents, const ImageOptions &options);
+    virtual bool write(const ImageContents &contents, const ImageOptions &options) override;
 
 private:
     TestImageData _data;

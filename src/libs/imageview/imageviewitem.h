@@ -12,7 +12,7 @@ class IMAGEVIEW_EXPORT ImageViewItem : public QQuickPaintedItem
 public:
     ImageViewItem();
 
-    void paint(QPainter *painter);
+    void paint(QPainter *painter) override;
 
 signals:
 
