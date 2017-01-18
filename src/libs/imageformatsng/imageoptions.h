@@ -13,7 +13,7 @@ class IMAGEFORMATSNG_EXPORT ImageOptions
     Q_GADGET
     Q_PROPERTY(QRect clipRect READ clipRect WRITE setClipRect)
     Q_PROPERTY(QSize scaledSize READ scaledSize WRITE setScaledSize)
-    Q_PROPERTY(QRect scaledCliptRect READ scaledCliptRect WRITE setScaledSize)
+    Q_PROPERTY(QRect scaledCliptRect READ scaledCliptRect WRITE setScaledCliptRect)
     Q_PROPERTY(int inputQuality READ inputQuality WRITE setInputQuality)
     Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor)
     Q_PROPERTY(int compression READ compression WRITE setCompression)
