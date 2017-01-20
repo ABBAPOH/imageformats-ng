@@ -1,6 +1,7 @@
 #ifndef IMAGERESOURCE_H
 #define IMAGERESOURCE_H
 
+#include "imageformatsng_global.h"
 #include "cubetexture.h"
 #include "volumetexture.h"
 
@@ -9,7 +10,7 @@
 
 class ImageResourceData;
 
-class ImageResource
+class IMAGEFORMATSNG_EXPORT ImageResource
 {
     Q_GADGET
 public:
