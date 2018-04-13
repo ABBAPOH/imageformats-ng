@@ -15,16 +15,6 @@ class IMAGEFORMATSNG_EXPORT ImageContents
 {
     Q_GADGET
 public:
-    enum Side {
-        PositiveX = 0x1,
-        NegativeX = 0x2,
-        PositiveY = 0x3,
-        NegativeY = 0x4,
-        PositiveZ = 0x5,
-        NegativeZ = 0x6,
-    };
-    Q_ENUM(Side)
-
     ImageContents() Q_DECL_NOEXCEPT;
     explicit ImageContents(const QImage &image);
     explicit ImageContents(const QVector<CubeTexture> &frames);
