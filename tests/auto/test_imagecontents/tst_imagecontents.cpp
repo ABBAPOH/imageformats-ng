@@ -8,6 +8,9 @@ class TestImageContents : public QObject
     Q_OBJECT
 private slots:
     void defaultValues();
+    void constructFromImage();
+    void constructFromCubeTexture();
+    void constructFromVolumeTexture();
     void setters();
     void equals_data();
     void equals();
@@ -18,6 +21,53 @@ void TestImageContents::defaultValues()
     ImageContents contents;
     QCOMPARE(contents.exifMeta(), ImageExifMeta());
     QCOMPARE(contents.image(), QImage());
+}
+
+void TestImageContents::constructFromImage()
+{
+    auto format = QImage::Format_ARGB32;
+    QImage image(32, 64, format);
+    image.fill(Qt::white);
+
+    ImageContents res(image);
+    QVERIFY(!res.isNull());
+    QCOMPARE(res.header().type(), ImageResource::Type::Image);
+    QCOMPARE(res.header().width(), 32);
+    QCOMPARE(res.header().height(), 64);
+    QCOMPARE(res.header().depth(), 1);
+    QCOMPARE(res.header().imageFormat(), format);
+    QCOMPARE(res.image(), image);
+}
+
+void TestImageContents::constructFromCubeTexture()
+{
+    auto format = QImage::Format_ARGB32;
+    CubeTexture texture(64, format);
+
+    ImageContents res(texture);
+    QVERIFY(!res.isNull());
+    QCOMPARE(res.header().type(), ImageResource::Type::CubeTexture);
+    QCOMPARE(res.header().width(), 64);
+    QCOMPARE(res.header().height(), 64);
+    QCOMPARE(res.header().depth(), 64);
+    QCOMPARE(res.header().imageFormat(), format);
+    QCOMPARE(res.resource().cubeTexture(), texture);
+}
+
+void TestImageContents::constructFromVolumeTexture()
+{
+    auto format = QImage::Format_ARGB32;
+    VolumeTexture texture(16, 32, 64, format);
+    texture.fill(Qt::white);
+
+    ImageContents res(texture);
+    QVERIFY(!res.isNull());
+    QCOMPARE(res.header().type(), ImageResource::Type::VolumeTexture);
+    QCOMPARE(res.header().width(), 16);
+    QCOMPARE(res.header().height(), 32);
+    QCOMPARE(res.header().depth(), 64);
+    QCOMPARE(res.header().imageFormat(), format);
+    QCOMPARE(res.resource().volumeTexture(), texture);
 }
 
 void TestImageContents::setters()
