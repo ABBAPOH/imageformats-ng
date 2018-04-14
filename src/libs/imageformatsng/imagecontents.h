@@ -16,7 +16,7 @@ class IMAGEFORMATSNG_EXPORT ImageContents
     Q_GADGET
 public:
     ImageContents() Q_DECL_NOEXCEPT;
-    explicit ImageContents(const QImage &image);
+    explicit ImageContents(const ImageResource &resource);
     explicit ImageContents(const ImageHeader &header);
     ImageContents(const ImageContents &other);
     ImageContents(ImageContents &&other) Q_DECL_NOEXCEPT;

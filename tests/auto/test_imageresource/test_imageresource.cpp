@@ -6,7 +6,7 @@ class TestImageResource : public QObject
     Q_OBJECT
 private slots:
     void defaultConstructed();
-    void image();
+    void constructFromImage();
     void cubeTexture();
     void volumeTexture();
     void copyConstruct();
@@ -20,7 +20,7 @@ void TestImageResource::defaultConstructed()
     QCOMPARE(res.type(), ImageResource::Type::Invalid);
 }
 
-void TestImageResource::image()
+void TestImageResource::constructFromImage()
 {
     QImage image(64, 64, QImage::Format_ARGB32);
     image.fill(Qt::white);

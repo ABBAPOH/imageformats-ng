@@ -67,19 +67,17 @@ ImageContents::ImageContents() Q_DECL_NOEXCEPT
 }
 
 /*!
-    Constructs an ImageContents from the given \a image.
-    Fills the header and the data with the image.
+    Constructs an ImageContents from the given \a resource.
+    Fills the header and the data with the resource.
 */
-ImageContents::ImageContents(const QImage &image)
+ImageContents::ImageContents(const ImageResource &resource)
 {
-    if (image.isNull())
+    if (resource.isNull())
         return;
 
     d = new ImageContentsData();
-    d->header.setType(ImageResource::Type::Image);
-    d->header.setSize(image.size());
-    d->header.setImageFormat(image.format());
-    setImage(image);
+    d->header = ImageHeader::fromImageResource(resource);
+    setResource(resource);
 }
 
 /*!
