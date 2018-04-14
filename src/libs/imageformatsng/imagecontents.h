@@ -17,8 +17,6 @@ class IMAGEFORMATSNG_EXPORT ImageContents
 public:
     ImageContents() Q_DECL_NOEXCEPT;
     explicit ImageContents(const QImage &image);
-    explicit ImageContents(const QVector<CubeTexture> &frames);
-    explicit ImageContents(const QVector<VolumeTexture> &frames);
     explicit ImageContents(const ImageHeader &header);
     ImageContents(const ImageContents &other);
     ImageContents(ImageContents &&other) Q_DECL_NOEXCEPT;
@@ -42,6 +40,10 @@ public:
 
     void clear();
     inline void swap(ImageContents &other) { qSwap(d, other.d); }
+
+    static ImageContents fromFrames(const QVector<QImage> &frames);
+    static ImageContents fromFrames(const QVector<CubeTexture> &frames);
+    static ImageContents fromFrames(const QVector<VolumeTexture> &frames);
 
 private:
     QSharedDataPointer<ImageContentsData> d;
