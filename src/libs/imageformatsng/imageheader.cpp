@@ -343,6 +343,43 @@ bool ImageHeader::validate(QString *error) const
 }
 
 /*!
+    Creates an ImageHeader from the given \a resource.
+*/
+ImageHeader ImageHeader::fromImageResource(const ImageResource &resource)
+{
+    ImageHeader result;
+    if (resource.isNull())
+        return result;
+
+    result.setType(resource.type());
+
+    switch (resource.type()) {
+    case ImageResource::Type::Image:
+        result.setWidth(resource.image().width());
+        result.setHeight(resource.image().height());
+        result.setDepth(1);
+        result.setImageFormat(resource.image().format());
+        break;
+    case ImageResource::Type::CubeTexture:
+        result.setWidth(resource.cubeTexture().width());
+        result.setHeight(resource.cubeTexture().height());
+        result.setDepth(resource.cubeTexture().depth());
+        result.setImageFormat(resource.cubeTexture().format());
+        break;
+    case ImageResource::Type::VolumeTexture:
+        result.setWidth(resource.volumeTexture().width());
+        result.setHeight(resource.volumeTexture().height());
+        result.setDepth(resource.volumeTexture().depth());
+        result.setImageFormat(resource.volumeTexture().format());
+        break;
+    default:
+        break;
+    }
+
+    return result;
+}
+
+/*!
     Returns true if the \a lhs header and the \a rhs header have the same contents; otherwise
     returns false.
 */

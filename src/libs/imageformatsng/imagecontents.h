@@ -41,9 +41,7 @@ public:
     void clear();
     inline void swap(ImageContents &other) { qSwap(d, other.d); }
 
-    static ImageContents fromFrames(const QVector<QImage> &frames);
-    static ImageContents fromFrames(const QVector<CubeTexture> &frames);
-    static ImageContents fromFrames(const QVector<VolumeTexture> &frames);
+    static ImageContents fromResources(const QVector<ImageResource> &resources);
 
 private:
     QSharedDataPointer<ImageContentsData> d;

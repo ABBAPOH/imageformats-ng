@@ -74,6 +74,8 @@ public:
 
     bool validate(QString *error = nullptr) const;
 
+    static ImageHeader fromImageResource(const ImageResource &resource);
+
 private:
     QSharedDataPointer<ImageHeaderData> d;
 

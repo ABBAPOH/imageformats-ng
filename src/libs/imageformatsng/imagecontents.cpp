@@ -208,99 +208,25 @@ void ImageContents::clear()
 }
 
 /*!
-    Creates an ImageContents from the given \a frames array of QImage.
-
-    The header is filled with the data from the array. Each element in the array must have the same
-    size and format, otherwise an invalid contents is contructed.
-*/
-ImageContents ImageContents::fromFrames(const QVector<QImage> &frames)
-{
-    ImageContents result;
-    if (frames.isEmpty())
-        return result;
-
-    const auto width = frames.first().width();
-    const auto height = frames.first().height();
-    const auto depth = 1;
-    const auto format = frames.first().format();
-    // TODO: validate frames
-
-    auto d = std::unique_ptr<ImageContentsData>(new ImageContentsData());
-    d->header.setType(ImageResource::Type::Image);
-    d->header.setWidth(width);
-    d->header.setHeight(height);
-    d->header.setDepth(depth);
-    d->header.setImageFormat(format);
-    d->header.setImageCount(frames.count());
-
-    result.d = d.release();
-    for (int i = 0; i < frames.count(); ++i) {
-        result.setResource(frames.at(i));
-    }
-
-    return result;
-}
-
-/*!
-    Creates an ImageContents from the given \a frames array of CubeTextures.
-
-    The header is filled with the data from the array. Each element in the array must have the same
-    size and format, otherwise an invalid contents is contructed.
-*/
-ImageContents ImageContents::fromFrames(const QVector<CubeTexture> &frames)
-{
-    ImageContents result;
-    if (frames.isEmpty())
-        return result;
-    const auto extent = frames.first().depth();
-    const auto format = frames.first().format();
-    // TODO: validate frames
-
-    auto d = std::unique_ptr<ImageContentsData>(new ImageContentsData());
-    d->header.setType(ImageResource::Type::CubeTexture);
-    d->header.setWidth(extent);
-    d->header.setHeight(extent);
-    d->header.setDepth(extent);
-    d->header.setImageFormat(format);
-    d->header.setImageCount(frames.count());
-
-    result.d = d.release();
-    for (int i = 0; i < frames.count(); ++i) {
-        result.setResource(frames.at(i));
-    }
-
-    return result;
-}
-
-/*!
-    Creates an ImageContents from the given \a frames array of VolumeTextures.
+    Creates an ImageContents from the given \a resources array of ImageResources.
 
     The header is filled with the data from the array. Each element in the array must have the same
     width, heigth, depth and format, otherwise an invalid contents is contructed.
 */
-ImageContents ImageContents::fromFrames(const QVector<VolumeTexture> &frames)
+ImageContents ImageContents::fromResources(const QVector<ImageResource> &resources)
 {
     ImageContents result;
-    if (frames.isEmpty())
+    if (resources.isEmpty())
         return result;
 
-    const auto width = frames.first().width();
-    const auto height = frames.first().height();
-    const auto depth = frames.first().depth();
-    const auto format = frames.first().format();
-    // TODO: validate frames
-
     auto d = std::unique_ptr<ImageContentsData>(new ImageContentsData());
-    d->header.setType(ImageResource::Type::VolumeTexture);
-    d->header.setWidth(width);
-    d->header.setHeight(height);
-    d->header.setDepth(depth);
-    d->header.setImageFormat(format);
-    d->header.setImageCount(frames.count());
+    d->header = ImageHeader::fromImageResource(resources.first());
+    // TODO: validate frames
+    d->header.setImageCount(resources.count());
 
     result.d = d.release();
-    for (int i = 0; i < frames.count(); ++i) {
-        result.setResource(frames.at(i));
+    for (int i = 0; i < resources.count(); ++i) {
+        result.setResource(resources.at(i));
     }
 
     return result;
